@@ -1,11 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 
-// line 7 "model.ump"
-// line 74 "model.ump"
+
+// line 9 "model.ump"
+// line 92 "model.ump"
+
+import jakarta.persistence.Entity;
 @Entity
 public class Person
 {
@@ -15,8 +16,6 @@ public class Person
   //------------------------
 
   //Person Attributes
-  @Id
-  private int id;
   private String name;
   private String email;
   private String password;
@@ -28,9 +27,8 @@ public class Person
   // CONSTRUCTOR
   //------------------------
 
-  public Person(int aId, String aName, String aEmail, String aPassword, PersonRole aPersonRoles)
+  public Person(String aName, String aEmail, String aPassword, PersonRole aPersonRoles)
   {
-    id = aId;
     name = aName;
     email = aEmail;
     password = aPassword;
@@ -43,14 +41,6 @@ public class Person
   //------------------------
   // INTERFACE
   //------------------------
-
-  public boolean setId(int aId)
-  {
-    boolean wasSet = false;
-    id = aId;
-    wasSet = true;
-    return wasSet;
-  }
 
   public boolean setName(String aName)
   {
@@ -74,11 +64,6 @@ public class Person
     password = aPassword;
     wasSet = true;
     return wasSet;
-  }
-
-  public int getId()
-  {
-    return id;
   }
 
   public String getName()
@@ -121,7 +106,6 @@ public class Person
   public String toString()
   {
     return super.toString() + "["+
-            "id" + ":" + getId()+ "," +
             "name" + ":" + getName()+ "," +
             "email" + ":" + getEmail()+ "," +
             "password" + ":" + getPassword()+ "]" + System.getProperties().getProperty("line.separator") +
