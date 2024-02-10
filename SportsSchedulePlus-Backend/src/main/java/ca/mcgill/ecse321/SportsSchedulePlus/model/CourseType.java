@@ -31,7 +31,7 @@ public class CourseType
   private float price;
 
   //CourseType Associations
-  private List<ScheduledCourse> scheduledCourse;
+  private List<ScheduledCourse> scheduledCourses;
 
   //------------------------
   // CONSTRUCTOR
@@ -45,7 +45,7 @@ public class CourseType
     {
       throw new RuntimeException("Cannot create due to duplicate description. See http://manual.umple.org?RE003ViolationofUniqueness.html");
     }
-    scheduledCourse = new ArrayList<ScheduledCourse>();
+    scheduledCourses = new ArrayList<ScheduledCourse>();
   }
 
   //------------------------
@@ -131,19 +131,19 @@ public class CourseType
 
   public int numberOfScheduledCourse()
   {
-    int number = scheduledCourse.size();
+    int number = scheduledCourses.size();
     return number;
   }
 
   public boolean hasScheduledCourse()
   {
-    boolean has = scheduledCourse.size() > 0;
+    boolean has = scheduledCourses.size() > 0;
     return has;
   }
 
   public int indexOfScheduledCourse(ScheduledCourse aScheduledCourse)
   {
-    int index = scheduledCourse.indexOf(aScheduledCourse);
+    int index = scheduledCourses.indexOf(aScheduledCourse);
     return index;
   }
   /* Code from template association_MinimumNumberOfMethod */
@@ -160,7 +160,7 @@ public class CourseType
   public boolean addScheduledCourse(ScheduledCourse aScheduledCourse)
   {
     boolean wasAdded = false;
-    if (scheduledCourse.contains(aScheduledCourse)) { return false; }
+    if (scheduledCourses.contains(aScheduledCourse)) { return false; }
     CourseType existingCourseType = aScheduledCourse.getCourseType();
     boolean isNewCourseType = existingCourseType != null && !this.equals(existingCourseType);
     if (isNewCourseType)
@@ -169,7 +169,7 @@ public class CourseType
     }
     else
     {
-      scheduledCourse.add(aScheduledCourse);
+      scheduledCourses.add(aScheduledCourse);
     }
     wasAdded = true;
     return wasAdded;
@@ -181,7 +181,7 @@ public class CourseType
     //Unable to remove aScheduledCourse, as it must always have a courseType
     if (!this.equals(aScheduledCourse.getCourseType()))
     {
-      scheduledCourse.remove(aScheduledCourse);
+      scheduledCourses.remove(aScheduledCourse);
       wasRemoved = true;
     }
     return wasRemoved;
@@ -194,8 +194,8 @@ public class CourseType
     {
       if(index < 0 ) { index = 0; }
       if(index > numberOfScheduledCourse()) { index = numberOfScheduledCourse() - 1; }
-      scheduledCourse.remove(aScheduledCourse);
-      scheduledCourse.add(index, aScheduledCourse);
+      scheduledCourses.remove(aScheduledCourse);
+      scheduledCourses.add(index, aScheduledCourse);
       wasAdded = true;
     }
     return wasAdded;
@@ -204,12 +204,12 @@ public class CourseType
   public boolean addOrMoveScheduledCourseAt(ScheduledCourse aScheduledCourse, int index)
   {
     boolean wasAdded = false;
-    if(scheduledCourse.contains(aScheduledCourse))
+    if(scheduledCourses.contains(aScheduledCourse))
     {
       if(index < 0 ) { index = 0; }
       if(index > numberOfScheduledCourse()) { index = numberOfScheduledCourse() - 1; }
-      scheduledCourse.remove(aScheduledCourse);
-      scheduledCourse.add(index, aScheduledCourse);
+      scheduledCourses.remove(aScheduledCourse);
+      scheduledCourses.add(index, aScheduledCourse);
       wasAdded = true;
     } 
     else 
@@ -222,11 +222,11 @@ public class CourseType
   public void delete()
   {
     coursetypesByDescription.remove(getDescription());
-    while (scheduledCourse.size() > 0)
+    while (scheduledCourses.size() > 0)
     {
-      ScheduledCourse aScheduledCourse = scheduledCourse.get(scheduledCourse.size() - 1);
+      ScheduledCourse aScheduledCourse = scheduledCourses.get(scheduledCourses.size() - 1);
       aScheduledCourse.delete();
-      scheduledCourse.remove(aScheduledCourse);
+      scheduledCourses.remove(aScheduledCourse);
     }
     
   }
