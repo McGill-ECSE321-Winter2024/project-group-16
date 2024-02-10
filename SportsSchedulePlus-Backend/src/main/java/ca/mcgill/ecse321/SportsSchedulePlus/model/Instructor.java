@@ -6,8 +6,8 @@ import java.util.*;
 
 import jakarta.persistence.Entity;
 
-// line 29 "model.ump"
-// line 92 "model.ump"
+// line 30 "model.ump"
+// line 112 "model.ump"
 @Entity
 public class Instructor extends Customer
 {
@@ -20,18 +20,18 @@ public class Instructor extends Customer
   private String experience;
 
   //Instructor Associations
-  private List<CourseType> instructorSuggestedCourseType;
+  private List<CourseType> instructorSuggestedCourseTypes;
   private List<ScheduledCourse> supervisedCourses;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Instructor(String aExperience)
+  public Instructor(int aId, String aExperience)
   {
-    super();
+    super(aId);
     experience = aExperience;
-    instructorSuggestedCourseType = new ArrayList<CourseType>();
+    instructorSuggestedCourseTypes = new ArrayList<CourseType>();
     supervisedCourses = new ArrayList<ScheduledCourse>();
   }
 
@@ -54,31 +54,31 @@ public class Instructor extends Customer
   /* Code from template association_GetMany */
   public CourseType getInstructorSuggestedCourseType(int index)
   {
-    CourseType aInstructorSuggestedCourseType = instructorSuggestedCourseType.get(index);
+    CourseType aInstructorSuggestedCourseType = instructorSuggestedCourseTypes.get(index);
     return aInstructorSuggestedCourseType;
   }
 
-  public List<CourseType> getInstructorSuggestedCourseType()
+  public List<CourseType> getInstructorSuggestedCourseTypes()
   {
-    List<CourseType> newInstructorSuggestedCourseType = Collections.unmodifiableList(instructorSuggestedCourseType);
-    return newInstructorSuggestedCourseType;
+    List<CourseType> newInstructorSuggestedCourseTypes = Collections.unmodifiableList(instructorSuggestedCourseTypes);
+    return newInstructorSuggestedCourseTypes;
   }
 
-  public int numberOfInstructorSuggestedCourseType()
+  public int numberOfInstructorSuggestedCourseTypes()
   {
-    int number = instructorSuggestedCourseType.size();
+    int number = instructorSuggestedCourseTypes.size();
     return number;
   }
 
-  public boolean hasInstructorSuggestedCourseType()
+  public boolean hasInstructorSuggestedCourseTypes()
   {
-    boolean has = instructorSuggestedCourseType.size() > 0;
+    boolean has = instructorSuggestedCourseTypes.size() > 0;
     return has;
   }
 
   public int indexOfInstructorSuggestedCourseType(CourseType aInstructorSuggestedCourseType)
   {
-    int index = instructorSuggestedCourseType.indexOf(aInstructorSuggestedCourseType);
+    int index = instructorSuggestedCourseTypes.indexOf(aInstructorSuggestedCourseType);
     return index;
   }
   /* Code from template association_GetMany */
@@ -112,7 +112,7 @@ public class Instructor extends Customer
     return index;
   }
   /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfInstructorSuggestedCourseType()
+  public static int minimumNumberOfInstructorSuggestedCourseTypes()
   {
     return 0;
   }
@@ -120,8 +120,8 @@ public class Instructor extends Customer
   public boolean addInstructorSuggestedCourseType(CourseType aInstructorSuggestedCourseType)
   {
     boolean wasAdded = false;
-    if (instructorSuggestedCourseType.contains(aInstructorSuggestedCourseType)) { return false; }
-    instructorSuggestedCourseType.add(aInstructorSuggestedCourseType);
+    if (instructorSuggestedCourseTypes.contains(aInstructorSuggestedCourseType)) { return false; }
+    instructorSuggestedCourseTypes.add(aInstructorSuggestedCourseType);
     wasAdded = true;
     return wasAdded;
   }
@@ -129,9 +129,9 @@ public class Instructor extends Customer
   public boolean removeInstructorSuggestedCourseType(CourseType aInstructorSuggestedCourseType)
   {
     boolean wasRemoved = false;
-    if (instructorSuggestedCourseType.contains(aInstructorSuggestedCourseType))
+    if (instructorSuggestedCourseTypes.contains(aInstructorSuggestedCourseType))
     {
-      instructorSuggestedCourseType.remove(aInstructorSuggestedCourseType);
+      instructorSuggestedCourseTypes.remove(aInstructorSuggestedCourseType);
       wasRemoved = true;
     }
     return wasRemoved;
@@ -143,9 +143,9 @@ public class Instructor extends Customer
     if(addInstructorSuggestedCourseType(aInstructorSuggestedCourseType))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfInstructorSuggestedCourseType()) { index = numberOfInstructorSuggestedCourseType() - 1; }
-      instructorSuggestedCourseType.remove(aInstructorSuggestedCourseType);
-      instructorSuggestedCourseType.add(index, aInstructorSuggestedCourseType);
+      if(index > numberOfInstructorSuggestedCourseTypes()) { index = numberOfInstructorSuggestedCourseTypes() - 1; }
+      instructorSuggestedCourseTypes.remove(aInstructorSuggestedCourseType);
+      instructorSuggestedCourseTypes.add(index, aInstructorSuggestedCourseType);
       wasAdded = true;
     }
     return wasAdded;
@@ -154,12 +154,12 @@ public class Instructor extends Customer
   public boolean addOrMoveInstructorSuggestedCourseTypeAt(CourseType aInstructorSuggestedCourseType, int index)
   {
     boolean wasAdded = false;
-    if(instructorSuggestedCourseType.contains(aInstructorSuggestedCourseType))
+    if(instructorSuggestedCourseTypes.contains(aInstructorSuggestedCourseType))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfInstructorSuggestedCourseType()) { index = numberOfInstructorSuggestedCourseType() - 1; }
-      instructorSuggestedCourseType.remove(aInstructorSuggestedCourseType);
-      instructorSuggestedCourseType.add(index, aInstructorSuggestedCourseType);
+      if(index > numberOfInstructorSuggestedCourseTypes()) { index = numberOfInstructorSuggestedCourseTypes() - 1; }
+      instructorSuggestedCourseTypes.remove(aInstructorSuggestedCourseType);
+      instructorSuggestedCourseTypes.add(index, aInstructorSuggestedCourseType);
       wasAdded = true;
     } 
     else 
@@ -228,7 +228,7 @@ public class Instructor extends Customer
 
   public void delete()
   {
-    instructorSuggestedCourseType.clear();
+    instructorSuggestedCourseTypes.clear();
     supervisedCourses.clear();
     super.delete();
   }

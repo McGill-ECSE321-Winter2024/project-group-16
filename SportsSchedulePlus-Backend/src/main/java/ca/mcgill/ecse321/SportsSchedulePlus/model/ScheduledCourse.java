@@ -5,10 +5,12 @@
 import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
-import jakarta.persistence.Entity;
-// line 40 "model.ump"
-// line 101 "model.ump"
-@Entity
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+// line 41 "model.ump"
+// line 122 "model.ump"
 public class ScheduledCourse
 {
 
@@ -17,6 +19,9 @@ public class ScheduledCourse
   //------------------------
 
   //ScheduledCourse Attributes
+  @Id
+  @GeneratedValue
+  private int id;
   private Date date;
   private Time startTime;
   private Time endTime;
@@ -30,8 +35,9 @@ public class ScheduledCourse
   // CONSTRUCTOR
   //------------------------
 
-  public ScheduledCourse(Date aDate, Time aStartTime, Time aEndTime, String aLocation, CourseType aCourseType)
+  public ScheduledCourse(int aId, Date aDate, Time aStartTime, Time aEndTime, String aLocation, CourseType aCourseType)
   {
+    id = aId;
     date = aDate;
     startTime = aStartTime;
     endTime = aEndTime;
@@ -47,6 +53,14 @@ public class ScheduledCourse
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
 
   public boolean setDate(Date aDate)
   {
@@ -78,6 +92,11 @@ public class ScheduledCourse
     location = aLocation;
     wasSet = true;
     return wasSet;
+  }
+
+  public int getId()
+  {
+    return id;
   }
 
   public Date getDate()
@@ -226,6 +245,7 @@ public class ScheduledCourse
   public String toString()
   {
     return super.toString() + "["+
+            "id" + ":" + getId()+ "," +
             "location" + ":" + getLocation()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "startTime" + "=" + (getStartTime() != null ? !getStartTime().equals(this)  ? getStartTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +

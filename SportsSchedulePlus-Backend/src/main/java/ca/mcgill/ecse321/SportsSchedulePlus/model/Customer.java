@@ -6,8 +6,8 @@ import java.util.*;
 
 import jakarta.persistence.Entity;
 
-// line 25 "model.ump"
-// line 87 "model.ump"
+// line 26 "model.ump"
+// line 107 "model.ump"
 @Entity
 public class Customer extends PersonRole
 {
@@ -24,9 +24,9 @@ public class Customer extends PersonRole
   // CONSTRUCTOR
   //------------------------
 
-  public Customer()
+  public Customer(int aId)
   {
-    super();
+    super(aId);
     customerPayments = new ArrayList<Payment>();
     coursesRegistered = new ArrayList<ScheduledCourse>();
   }

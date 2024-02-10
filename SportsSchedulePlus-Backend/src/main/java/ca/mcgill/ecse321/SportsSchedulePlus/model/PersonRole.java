@@ -4,7 +4,13 @@
 
 
 // line 2 "model.ump"
-// line 69 "model.ump"
+// line 87 "model.ump"
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+@Entity
 public abstract class PersonRole
 {
 
@@ -12,18 +18,44 @@ public abstract class PersonRole
   // MEMBER VARIABLES
   //------------------------
 
+  //PersonRole Attributes
+  @Id
+  @GeneratedValue
+  private int id;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public PersonRole()
-  {}
+  public PersonRole(int aId)
+  {
+    id = aId;
+  }
 
   //------------------------
   // INTERFACE
   //------------------------
 
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getId()
+  {
+    return id;
+  }
+
   public void delete()
   {}
 
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "]";
+  }
 }
