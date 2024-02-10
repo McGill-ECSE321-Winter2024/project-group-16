@@ -6,8 +6,8 @@ import java.util.*;
 
 import jakarta.persistence.Entity;
 
-// line 30 "model.ump"
-// line 112 "model.ump"
+// line 29 "model.ump"
+// line 105 "model.ump"
 @Entity
 public class Instructor extends Customer
 {

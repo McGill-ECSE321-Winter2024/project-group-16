@@ -6,8 +6,8 @@ import java.util.*;
 
 import jakarta.persistence.Entity;
 
-// line 26 "model.ump"
-// line 107 "model.ump"
+// line 25 "model.ump"
+// line 100 "model.ump"
 @Entity
 public class Customer extends PersonRole
 {

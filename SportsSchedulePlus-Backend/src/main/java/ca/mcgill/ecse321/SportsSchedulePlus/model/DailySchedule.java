@@ -6,8 +6,8 @@ import java.sql.Time;
 
 import jakarta.persistence.Entity;
 
-// line 69 "model.ump"
-// line 144 "model.ump"
+// line 66 "model.ump"
+// line 131 "model.ump"
 @Entity
 public class DailySchedule
 {

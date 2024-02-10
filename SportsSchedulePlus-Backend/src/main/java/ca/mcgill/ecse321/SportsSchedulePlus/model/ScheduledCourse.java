@@ -9,8 +9,8 @@ import java.util.*;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
-// line 41 "model.ump"
-// line 122 "model.ump"
+// line 40 "model.ump"
+// line 119 "model.ump"
 public class ScheduledCourse
 {
 
