@@ -7,7 +7,7 @@ import java.util.*;
 import jakarta.persistence.Entity;
 
 // line 19 "model.ump"
-// line 92 "model.ump"
+// line 88 "model.ump"
 @Entity
 public class Owner extends PersonRole
 {
@@ -17,24 +17,22 @@ public class Owner extends PersonRole
   //------------------------
 
   //Owner Associations
-  private List<ScheduledCourse> approvedCourses;
+  private List<CourseType> approvedCourses;
   private List<CourseType> ownerSuggestedCourses;
-  private List<DailySchedule> dailySchedules;
+  private DailySchedule dailySchedule;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Owner(int aId, DailySchedule... allDailySchedules)
+  public Owner(int aId, DailySchedule aDailySchedule)
   {
     super(aId);
-    approvedCourses = new ArrayList<ScheduledCourse>();
+    approvedCourses = new ArrayList<CourseType>();
     ownerSuggestedCourses = new ArrayList<CourseType>();
-    dailySchedules = new ArrayList<DailySchedule>();
-    boolean didAddDailySchedules = setDailySchedules(allDailySchedules);
-    if (!didAddDailySchedules)
+    if (!setDailySchedule(aDailySchedule))
     {
-      throw new RuntimeException("Unable to create Owner, must have 7 dailySchedules. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create Owner due to aDailySchedule. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 
@@ -42,15 +40,15 @@ public class Owner extends PersonRole
   // INTERFACE
   //------------------------
   /* Code from template association_GetMany */
-  public ScheduledCourse getApprovedCourse(int index)
+  public CourseType getApprovedCourse(int index)
   {
-    ScheduledCourse aApprovedCourse = approvedCourses.get(index);
+    CourseType aApprovedCourse = approvedCourses.get(index);
     return aApprovedCourse;
   }
 
-  public List<ScheduledCourse> getApprovedCourses()
+  public List<CourseType> getApprovedCourses()
   {
-    List<ScheduledCourse> newApprovedCourses = Collections.unmodifiableList(approvedCourses);
+    List<CourseType> newApprovedCourses = Collections.unmodifiableList(approvedCourses);
     return newApprovedCourses;
   }
 
@@ -66,7 +64,7 @@ public class Owner extends PersonRole
     return has;
   }
 
-  public int indexOfApprovedCourse(ScheduledCourse aApprovedCourse)
+  public int indexOfApprovedCourse(CourseType aApprovedCourse)
   {
     int index = approvedCourses.indexOf(aApprovedCourse);
     return index;
@@ -101,35 +99,10 @@ public class Owner extends PersonRole
     int index = ownerSuggestedCourses.indexOf(aOwnerSuggestedCourse);
     return index;
   }
-  /* Code from template association_GetMany */
-  public DailySchedule getDailySchedule(int index)
+  /* Code from template association_GetOne */
+  public DailySchedule getDailySchedule()
   {
-    DailySchedule aDailySchedule = dailySchedules.get(index);
-    return aDailySchedule;
-  }
-
-  public List<DailySchedule> getDailySchedules()
-  {
-    List<DailySchedule> newDailySchedules = Collections.unmodifiableList(dailySchedules);
-    return newDailySchedules;
-  }
-
-  public int numberOfDailySchedules()
-  {
-    int number = dailySchedules.size();
-    return number;
-  }
-
-  public boolean hasDailySchedules()
-  {
-    boolean has = dailySchedules.size() > 0;
-    return has;
-  }
-
-  public int indexOfDailySchedule(DailySchedule aDailySchedule)
-  {
-    int index = dailySchedules.indexOf(aDailySchedule);
-    return index;
+    return dailySchedule;
   }
   /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfApprovedCourses()
@@ -137,7 +110,7 @@ public class Owner extends PersonRole
     return 0;
   }
   /* Code from template association_AddUnidirectionalMany */
-  public boolean addApprovedCourse(ScheduledCourse aApprovedCourse)
+  public boolean addApprovedCourse(CourseType aApprovedCourse)
   {
     boolean wasAdded = false;
     if (approvedCourses.contains(aApprovedCourse)) { return false; }
@@ -146,7 +119,7 @@ public class Owner extends PersonRole
     return wasAdded;
   }
 
-  public boolean removeApprovedCourse(ScheduledCourse aApprovedCourse)
+  public boolean removeApprovedCourse(CourseType aApprovedCourse)
   {
     boolean wasRemoved = false;
     if (approvedCourses.contains(aApprovedCourse))
@@ -157,7 +130,7 @@ public class Owner extends PersonRole
     return wasRemoved;
   }
   /* Code from template association_AddIndexControlFunctions */
-  public boolean addApprovedCourseAt(ScheduledCourse aApprovedCourse, int index)
+  public boolean addApprovedCourseAt(CourseType aApprovedCourse, int index)
   {  
     boolean wasAdded = false;
     if(addApprovedCourse(aApprovedCourse))
@@ -171,7 +144,7 @@ public class Owner extends PersonRole
     return wasAdded;
   }
 
-  public boolean addOrMoveApprovedCourseAt(ScheduledCourse aApprovedCourse, int index)
+  public boolean addOrMoveApprovedCourseAt(CourseType aApprovedCourse, int index)
   {
     boolean wasAdded = false;
     if(approvedCourses.contains(aApprovedCourse))
@@ -245,43 +218,15 @@ public class Owner extends PersonRole
     }
     return wasAdded;
   }
-  /* Code from template association_RequiredNumberOfMethod */
-  public static int requiredNumberOfDailySchedules()
-  {
-    return 7;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfDailySchedules()
-  {
-    return 7;
-  }
-  /* Code from template association_MaximumNumberOfMethod */
-  public static int maximumNumberOfDailySchedules()
-  {
-    return 7;
-  }
-  /* Code from template association_SetUnidirectionalN */
-  public boolean setDailySchedules(DailySchedule... newDailySchedules)
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setDailySchedule(DailySchedule aNewDailySchedule)
   {
     boolean wasSet = false;
-    ArrayList<DailySchedule> verifiedDailySchedules = new ArrayList<DailySchedule>();
-    for (DailySchedule aDailySchedule : newDailySchedules)
+    if (aNewDailySchedule != null)
     {
-      if (verifiedDailySchedules.contains(aDailySchedule))
-      {
-        continue;
-      }
-      verifiedDailySchedules.add(aDailySchedule);
+      dailySchedule = aNewDailySchedule;
+      wasSet = true;
     }
-
-    if (verifiedDailySchedules.size() != newDailySchedules.length || verifiedDailySchedules.size() != requiredNumberOfDailySchedules())
-    {
-      return wasSet;
-    }
-
-    dailySchedules.clear();
-    dailySchedules.addAll(verifiedDailySchedules);
-    wasSet = true;
     return wasSet;
   }
 
@@ -289,7 +234,7 @@ public class Owner extends PersonRole
   {
     approvedCourses.clear();
     ownerSuggestedCourses.clear();
-    dailySchedules.clear();
+    dailySchedule = null;
     super.delete();
   }
 

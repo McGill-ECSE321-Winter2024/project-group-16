@@ -4,9 +4,10 @@
 
 
 // line 9 "model.ump"
-// line 92 "model.ump"
+// line 83 "model.ump"
 
 import jakarta.persistence.Entity;
+
 @Entity
 public class Person
 {
