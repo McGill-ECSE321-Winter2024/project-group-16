@@ -3,11 +3,15 @@
 
 
 import java.util.*;
+
+import jakarta.persistence.Entity;
+
 import java.sql.Date;
 import java.sql.Time;
 
 // line 50 "model.ump"
 // line 112 "model.ump"
+@Entity
 public class CourseType
 {
 

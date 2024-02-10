@@ -4,8 +4,11 @@
 
 import java.util.*;
 
+import jakarta.persistence.Entity;
+
 // line 18 "model.ump"
 // line 79 "model.ump"
+@Entity
 public class Owner extends PersonRole
 {
 

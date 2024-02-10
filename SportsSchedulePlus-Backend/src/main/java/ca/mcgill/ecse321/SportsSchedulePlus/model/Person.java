@@ -1,10 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 // line 7 "model.ump"
 // line 74 "model.ump"
+@Entity
 public class Person
 {
 
@@ -13,6 +15,7 @@ public class Person
   //------------------------
 
   //Person Attributes
+  @Id
   private int id;
   private String name;
   private String email;

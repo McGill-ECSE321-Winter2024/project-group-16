@@ -4,8 +4,11 @@
 
 import java.util.*;
 
+import jakarta.persistence.Entity;
+
 // line 29 "model.ump"
 // line 92 "model.ump"
+@Entity
 public class Instructor extends Customer
 {
 

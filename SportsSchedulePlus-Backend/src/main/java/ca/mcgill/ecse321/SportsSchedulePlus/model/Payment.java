@@ -1,10 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 // line 36 "model.ump"
 // line 120 "model.ump"
+@Entity
 public class Payment
 {
 
@@ -13,6 +15,7 @@ public class Payment
   //------------------------
 
   //Payment Attributes
+  @Id
   private int confirmationNumber;
 
   //------------------------

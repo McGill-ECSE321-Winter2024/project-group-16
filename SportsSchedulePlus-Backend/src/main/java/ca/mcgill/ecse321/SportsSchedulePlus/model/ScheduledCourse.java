@@ -5,9 +5,10 @@
 import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
-
+import jakarta.persistence.Entity;
 // line 40 "model.ump"
 // line 101 "model.ump"
+@Entity
 public class ScheduledCourse
 {
 
