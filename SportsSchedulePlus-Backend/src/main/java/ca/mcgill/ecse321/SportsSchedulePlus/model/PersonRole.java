@@ -30,7 +30,9 @@ public abstract class PersonRole
   //------------------------
   // CONSTRUCTOR
   //------------------------
-
+  public PersonRole(){
+    
+  }
   public PersonRole(int aId)
   {
     id = aId;

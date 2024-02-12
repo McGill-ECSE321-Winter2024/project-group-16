@@ -7,11 +7,15 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 // line 40 "model.ump"
 // line 119 "model.ump"
+@Entity
 public class ScheduledCourse
 {
 
@@ -29,13 +33,17 @@ public class ScheduledCourse
   private String location;
 
   //ScheduledCourse Associations
+  @ManyToOne
   private CourseType courseType;
+  @OneToMany
   private List<Payment> coursePayments;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public ScheduledCourse(){
 
+  }
   public ScheduledCourse(int aId, Date aDate, Time aStartTime, Time aEndTime, String aLocation, CourseType aCourseType)
   {
     id = aId;

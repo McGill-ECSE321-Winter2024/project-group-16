@@ -27,7 +27,9 @@ public class Payment {
   //------------------------
   // CONSTRUCTOR
   //------------------------
-
+  public Payment(){
+    
+  }
   public Payment(int aConfirmationNumber) {
     confirmationNumber = aConfirmationNumber;
   }
