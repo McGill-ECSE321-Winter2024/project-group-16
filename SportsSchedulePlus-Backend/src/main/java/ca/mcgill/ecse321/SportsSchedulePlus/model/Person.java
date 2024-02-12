@@ -1,3 +1,4 @@
+package ca.mcgill.ecse321.SportsSchedulePlus.model;
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
@@ -28,13 +29,16 @@ public class Person
   private String password;
 
   //Person Associations
-  private PersonRole personRoles;
+  private PersonRole personRole;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Person(String aName, String aEmail, String aPassword, PersonRole aPersonRoles)
+  public Person(){
+    
+  }
+  public Person(String aName, String aEmail, String aPassword, PersonRole aPersonRole)
   {
     name = aName;
     password = aPassword;
@@ -42,7 +46,7 @@ public class Person
     {
       throw new RuntimeException("Cannot create due to duplicate email. See http://manual.umple.org?RE003ViolationofUniqueness.html");
     }
-    if (!setPersonRoles(aPersonRoles))
+    if (!setPersonRole(aPersonRole))
     {
       throw new RuntimeException("Unable to create Person due to aPersonRoles. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
@@ -112,17 +116,17 @@ public class Person
     return password;
   }
   /* Code from template association_GetOne */
-  public PersonRole getPersonRoles()
+  public PersonRole getPersonRole()
   {
-    return personRoles;
+    return personRole;
   }
   /* Code from template association_SetUnidirectionalOne */
-  public boolean setPersonRoles(PersonRole aNewPersonRoles)
+  public boolean setPersonRole(PersonRole aNewPersonRole)
   {
     boolean wasSet = false;
-    if (aNewPersonRoles != null)
+    if (aNewPersonRole != null)
     {
-      personRoles = aNewPersonRoles;
+      personRole = aNewPersonRole;
       wasSet = true;
     }
     return wasSet;
@@ -131,7 +135,7 @@ public class Person
   public void delete()
   {
     personsByEmail.remove(getEmail());
-    personRoles = null;
+    personRole = null;
   }
 
 
@@ -141,6 +145,6 @@ public class Person
             "name" + ":" + getName()+ "," +
             "email" + ":" + getEmail()+ "," +
             "password" + ":" + getPassword()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "personRoles = "+(getPersonRoles()!=null?Integer.toHexString(System.identityHashCode(getPersonRoles())):"null");
+            "  " + "personRole = "+(getPersonRole()!=null?Integer.toHexString(System.identityHashCode(getPersonRole())):"null");
   }
 }

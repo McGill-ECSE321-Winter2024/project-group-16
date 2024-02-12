@@ -1,3 +1,4 @@
+package ca.mcgill.ecse321.SportsSchedulePlus.model;
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
@@ -24,6 +25,9 @@ public class Customer extends PersonRole
   // CONSTRUCTOR
   //------------------------
 
+  public Customer(){
+    
+  }
   public Customer(int aId)
   {
     super(aId);

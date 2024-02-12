@@ -1,3 +1,4 @@
+package ca.mcgill.ecse321.SportsSchedulePlus.model;
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
@@ -9,17 +10,11 @@ import jakarta.persistence.Entity;
 import java.sql.Date;
 import java.sql.Time;
 
-// line 51 "model.ump"
-// line 124 "model.ump"
+// line 50 "model.ump"
+// line 126 "model.ump"
 @Entity
 public class CourseType
 {
-
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  private static Map<String, CourseType> coursetypesByDescription = new HashMap<String, CourseType>();
 
   //------------------------
   // MEMBER VARIABLES
@@ -37,14 +32,14 @@ public class CourseType
   // CONSTRUCTOR
   //------------------------
 
+  public CourseType(){
+    
+  }
   public CourseType(String aDescription, boolean aApprovedByOwner, float aPrice)
   {
+    description = aDescription;
     approvedByOwner = aApprovedByOwner;
     price = aPrice;
-    if (!setDescription(aDescription))
-    {
-      throw new RuntimeException("Cannot create due to duplicate description. See http://manual.umple.org?RE003ViolationofUniqueness.html");
-    }
     scheduledCourses = new ArrayList<ScheduledCourse>();
   }
 
@@ -55,19 +50,8 @@ public class CourseType
   public boolean setDescription(String aDescription)
   {
     boolean wasSet = false;
-    String anOldDescription = getDescription();
-    if (anOldDescription != null && anOldDescription.equals(aDescription)) {
-      return true;
-    }
-    if (hasWithDescription(aDescription)) {
-      return wasSet;
-    }
     description = aDescription;
     wasSet = true;
-    if (anOldDescription != null) {
-      coursetypesByDescription.remove(anOldDescription);
-    }
-    coursetypesByDescription.put(aDescription, this);
     return wasSet;
   }
 
@@ -91,16 +75,6 @@ public class CourseType
   {
     return description;
   }
-  /* Code from template attribute_GetUnique */
-  public static CourseType getWithDescription(String aDescription)
-  {
-    return coursetypesByDescription.get(aDescription);
-  }
-  /* Code from template attribute_HasUnique */
-  public static boolean hasWithDescription(String aDescription)
-  {
-    return getWithDescription(aDescription) != null;
-  }
 
   public boolean getApprovedByOwner()
   {
@@ -119,23 +93,23 @@ public class CourseType
   /* Code from template association_GetMany */
   public ScheduledCourse getScheduledCourse(int index)
   {
-    ScheduledCourse aScheduledCourse = scheduledCourse.get(index);
+    ScheduledCourse aScheduledCourse = scheduledCourses.get(index);
     return aScheduledCourse;
   }
 
-  public List<ScheduledCourse> getScheduledCourse()
+  public List<ScheduledCourse> getScheduledCourses()
   {
-    List<ScheduledCourse> newScheduledCourse = Collections.unmodifiableList(scheduledCourse);
-    return newScheduledCourse;
+    List<ScheduledCourse> newScheduledCourses = Collections.unmodifiableList(scheduledCourses);
+    return newScheduledCourses;
   }
 
-  public int numberOfScheduledCourse()
+  public int numberOfScheduledCourses()
   {
     int number = scheduledCourses.size();
     return number;
   }
 
-  public boolean hasScheduledCourse()
+  public boolean hasScheduledCourses()
   {
     boolean has = scheduledCourses.size() > 0;
     return has;
@@ -147,7 +121,7 @@ public class CourseType
     return index;
   }
   /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfScheduledCourse()
+  public static int minimumNumberOfScheduledCourses()
   {
     return 0;
   }
@@ -193,7 +167,7 @@ public class CourseType
     if(addScheduledCourse(aScheduledCourse))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfScheduledCourse()) { index = numberOfScheduledCourse() - 1; }
+      if(index > numberOfScheduledCourses()) { index = numberOfScheduledCourses() - 1; }
       scheduledCourses.remove(aScheduledCourse);
       scheduledCourses.add(index, aScheduledCourse);
       wasAdded = true;
@@ -207,7 +181,7 @@ public class CourseType
     if(scheduledCourses.contains(aScheduledCourse))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfScheduledCourse()) { index = numberOfScheduledCourse() - 1; }
+      if(index > numberOfScheduledCourses()) { index = numberOfScheduledCourses() - 1; }
       scheduledCourses.remove(aScheduledCourse);
       scheduledCourses.add(index, aScheduledCourse);
       wasAdded = true;
@@ -221,7 +195,6 @@ public class CourseType
 
   public void delete()
   {
-    coursetypesByDescription.remove(getDescription());
     while (scheduledCourses.size() > 0)
     {
       ScheduledCourse aScheduledCourse = scheduledCourses.get(scheduledCourses.size() - 1);

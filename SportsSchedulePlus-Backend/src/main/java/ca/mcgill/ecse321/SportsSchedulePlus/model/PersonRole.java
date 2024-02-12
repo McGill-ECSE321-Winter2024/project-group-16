@@ -1,3 +1,4 @@
+package ca.mcgill.ecse321.SportsSchedulePlus.model;
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
@@ -29,7 +30,9 @@ public abstract class PersonRole
   //------------------------
   // CONSTRUCTOR
   //------------------------
-
+  public PersonRole(){
+    
+  }
   public PersonRole(int aId)
   {
     id = aId;
