@@ -12,55 +12,51 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
+
+
+
 @Repository
 public class SportsSchedulePlusRepository {
 
 	@Autowired
 	EntityManager entityManager;
 
-
 	@Transactional
-	public Person createPerson(String name,String email,String password,PersonRole personRole) {
-		Person person = new Person(name, email, password, personRole);
-		person.setName(name);
-		person.setEmail(email);
-		person.setPassword(password);
-		person.setPersonRole(personRole);
-		entityManager.persist(person);
-		return person;
+	public Person createPerson(String name) {
+		Person p = new Person();
+		p.setName(name);
+		entityManager.persist(p);
+		return p;
 	}
 
 	@Transactional
 	public Person getPerson(String name) {
-		Person person = entityManager.find(Person.class, name);
-		return person;
+		Person p = entityManager.find(Person.class, name);
+		return p;
 	}
 
 	@Transactional
-	public ScheduledCourse createScheduledClass(int id,String name, Date date, Time startTime, Time endTime,String location, CourseType courseType) {
-		ScheduledCourse course = new ScheduledCourse(id,date, startTime, endTime, location, courseType);
-		course.setId(id);
-		course.setDate(date);
-		course.setStartTime(startTime);
-		course.setEndTime(endTime);
-		course.setLocation(location);
-		entityManager.persist(course);
-		return course;
+    public ScheduledCourse createClass(int id, Date date, Time startTime, Time endTime, String location, CourseType courseType) {
+        ScheduledCourse scheduledCourse = new ScheduledCourse(id, date, startTime, endTime, location, courseType);
+        entityManager.persist(scheduledCourse);
+        return scheduledCourse;
+    }
+
+	@Transactional
+	public ScheduledCourse getClass(int id) {
+		ScheduledCourse c = entityManager.find(ScheduledCourse.class, id);
+		return c;
 	}
 
 	@Transactional
-	public ScheduledCourse getScheduledCourse(int id) {
-		ScheduledCourse course  = entityManager.find(ScheduledCourse.class, id);
-		return course;
-	}
-	@Transactional
-	public List<ScheduledCourse> getEventsBeforeADeadline(Date deadline) {
-		TypedQuery<ScheduledCourse> query = entityManager.createQuery("select c from ScheduledCourse c where c.date < :deadline",ScheduledCourse.class);
-		query.setParameter("deadline", deadline);
-		List<ScheduledCourse> resultList = query.getResultList();
+	public List<ScheduledCourse> getClassesBeforeADeadline(Date deadline) {
+		TypedQuery<ScheduledCourse> q = entityManager.createQuery("select c from ScheduledCourse c where c.date < :deadline", ScheduledCourse.class);
+		q.setParameter("deadline", deadline);
+		List<ScheduledCourse> resultList = q.getResultList();
 		return resultList;
 	}
 

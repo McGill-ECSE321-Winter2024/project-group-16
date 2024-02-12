@@ -6,6 +6,8 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 import java.util.*;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 // line 19 "model.ump"
 // line 88 "model.ump"
@@ -18,8 +20,11 @@ public class Owner extends PersonRole
   //------------------------
 
   //Owner Associations
+  @OneToMany
   private List<CourseType> approvedCourses;
+  @OneToMany
   private List<CourseType> ownerSuggestedCourses;
+  @OneToOne
   private DailySchedule dailySchedule;
 
   //------------------------

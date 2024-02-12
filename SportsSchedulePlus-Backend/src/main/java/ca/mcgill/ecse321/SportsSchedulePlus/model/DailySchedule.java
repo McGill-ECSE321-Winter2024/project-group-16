@@ -5,7 +5,11 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.sql.Time;
 
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 // line 66 "model.ump"
 // line 131 "model.ump"
@@ -18,6 +22,9 @@ public class DailySchedule
   //------------------------
 
   //DailySchedule Attributes
+  @Id
+  @GeneratedValue(strategy=GenerationType.AUTO)
+  private Long id;
   private Time openingTime;
   private Time closingTime;
 

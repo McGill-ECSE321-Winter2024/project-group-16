@@ -16,12 +16,14 @@ public class PersonRepositoryTests {
 
     @Autowired
     private PersonRepository personRepository;
-
+    @Autowired
+    private PersonRoleRepository personRoleRepository;
 
 
     @AfterEach
     public void clearDatabase() {
         personRepository.deleteAll();
+        personRoleRepository.deleteAll();
     }
 
     // Test case for reading and writing Person
@@ -34,11 +36,15 @@ public class PersonRepositoryTests {
         PersonRole role = new Customer(1);      
         Person person = new Person(name, email, password, role);
 
+        // Save role
+        personRoleRepository.save(role);
         // Save person
         personRepository.save(person);
+        
 
         // Read person from database.
         Person loadedPerson = personRepository.findPersonByEmail(email);
+  
 
         // Assert that person is not null and has correct attributes.
         assertNotNull(loadedPerson);
@@ -46,7 +52,7 @@ public class PersonRepositoryTests {
         assertEquals(email, loadedPerson.getEmail());
         assertEquals(password, loadedPerson.getPassword());
         assertNotNull(loadedPerson.getPersonRole());
-        assertEquals(role, loadedPerson.getPersonRole());
+        assertEquals(role.getId(), loadedPerson.getPersonRole().getId());
     }
 
    

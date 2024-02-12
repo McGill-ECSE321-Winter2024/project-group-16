@@ -18,5 +18,4 @@ public interface PaymentRepository extends CrudRepository<Payment, Payment.Key> 
     // Find payments by scheduled course
     List<Payment> findPaymentsByKeyScheduledCourse(ScheduledCourse scheduledCourse);
 
-    // Add more custom queries as needed
 }

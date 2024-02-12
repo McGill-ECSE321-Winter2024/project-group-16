@@ -6,6 +6,10 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 import java.util.*;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -21,11 +25,15 @@ public class CourseType
   //------------------------
 
   //CourseType Attributes
+  @Id
+  @GeneratedValue(strategy=GenerationType.AUTO)
+  private Long id;
   private String description;
   private boolean approvedByOwner;
   private float price;
 
   //CourseType Associations
+  @OneToMany
   private List<ScheduledCourse> scheduledCourses;
 
   //------------------------

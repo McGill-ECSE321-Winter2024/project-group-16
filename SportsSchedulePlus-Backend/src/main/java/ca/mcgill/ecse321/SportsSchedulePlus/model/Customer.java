@@ -6,6 +6,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 import java.util.*;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 
 // line 25 "model.ump"
 // line 100 "model.ump"
@@ -18,7 +19,9 @@ public class Customer extends PersonRole
   //------------------------
 
   //Customer Associations
+  @OneToMany
   private List<Payment> customerPayments;
+  @OneToMany
   private List<ScheduledCourse> coursesRegistered;
 
   //------------------------

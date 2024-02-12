@@ -6,6 +6,10 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 import java.util.*;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 // line 9 "model.ump"
 // line 84 "model.ump"
@@ -24,11 +28,15 @@ public class Person
   //------------------------
 
   //Person Attributes
+  @Id
+  @GeneratedValue(strategy=GenerationType.AUTO)
+  private Long id;
   private String name;
   private String email;
   private String password;
 
   //Person Associations
+  @ManyToOne
   private PersonRole personRole;
 
   //------------------------
