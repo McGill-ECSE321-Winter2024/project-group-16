@@ -11,8 +11,6 @@ public interface InstructorRepository extends CrudRepository<Instructor, Integer
     List<Instructor> findInstructorByExperience(String experience);
     List<Instructor> findInstructorByScheduledCourse(ScheduledCourse scheduledCourse);
     Instructor findInstructorBySuggestedCourseType(CourseType courseType);
-    boolean addSupervisedCourseToInstructor(Instructor instructor, CourseType courseType);
-    boolean removeSupervisedCourseFromInstructor(Instructor instructor, CourseType coursetype);
 
 
 }
