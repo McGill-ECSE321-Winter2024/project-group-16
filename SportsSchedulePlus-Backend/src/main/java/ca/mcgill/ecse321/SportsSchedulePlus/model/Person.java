@@ -31,7 +31,7 @@ public class Person
   //Person Attributes
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO)
-  private Long id;
+  private int id;
   private String name;
   @Column(unique=true)
   private String email;
@@ -155,7 +155,7 @@ public class Person
       if (this == obj) return true;
       if (obj == null || getClass() != obj.getClass()) return false;
       Person person = (Person) obj;
-      return id.equals(person.id) &&
+      return id == (person.id) &&
               name.equals(person.name) &&
               email.equals(person.email) &&
               password.equals(person.password) &&
