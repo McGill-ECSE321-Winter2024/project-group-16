@@ -27,7 +27,7 @@ public class CourseType
   //CourseType Attributes
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO)
-  private Long id;
+  private Integer id;
   private String description;
   private boolean approvedByOwner;
   private float price;
@@ -219,5 +219,14 @@ public class CourseType
             "description" + ":" + getDescription()+ "," +
             "approvedByOwner" + ":" + getApprovedByOwner()+ "," +
             "price" + ":" + getPrice()+ "]";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    CourseType that = (CourseType) o;
+    return Objects.equals(getDescription(), that.getDescription()) &&
+    Objects.equals(getPrice(), that.getPrice());
   }
 }
