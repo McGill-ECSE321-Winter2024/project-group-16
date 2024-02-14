@@ -3,9 +3,9 @@ import org.springframework.data.repository.CrudRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 
 
-public interface CustomerRepository extends CrudRepository<Customer,Long> {
+public interface CustomerRepository extends CrudRepository<Customer,Integer> {
     
  
-   Customer findCustomerById(Long id);
+   Customer findCustomerById(Integer id);
 
 }
