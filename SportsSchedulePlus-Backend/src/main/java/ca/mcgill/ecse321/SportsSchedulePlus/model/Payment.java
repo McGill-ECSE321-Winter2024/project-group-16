@@ -61,10 +61,22 @@ public class Payment {
     this.key = key;
   }
 
+  @Override
+  public boolean equals(Object obj) {
+    Payment other = (Payment) obj;
+    return this.key.equals(other.getKey());
+  }
+  
+  @Override
+  public int hashCode() {
+    return Objects.hash(key);
+  }
+
   public String toString() {
     return super.toString() + "[" +
       "confirmationNumber" + ":" + getConfirmationNumber() + "]";
   }
+
 
   @Embeddable
   public static class Key implements Serializable {
