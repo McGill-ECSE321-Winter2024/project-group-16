@@ -5,6 +5,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.util.*;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,8 +31,9 @@ public class Person
   //Person Attributes
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO)
-  private Long id;
+  private int id;
   private String name;
+  @Column(unique=true)
   private String email;
   private String password;
 
@@ -140,12 +142,30 @@ public class Person
     return wasSet;
   }
 
+  
+
   public void delete()
   {
     personsByEmail.remove(getEmail());
     personRole = null;
   }
 
+  @Override
+  public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (obj == null || getClass() != obj.getClass()) return false;
+      Person person = (Person) obj;
+      return id == (person.id) &&
+              name.equals(person.name) &&
+              email.equals(person.email) &&
+              password.equals(person.password) &&
+              personRole.equals(person.personRole);
+  }
+
+  @Override
+  public int hashCode() {
+      return Objects.hash(id, name, email, password, personRole);
+  }
 
   public String toString()
   {

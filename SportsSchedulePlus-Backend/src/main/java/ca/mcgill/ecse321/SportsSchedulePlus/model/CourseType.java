@@ -27,7 +27,7 @@ public class CourseType
   //CourseType Attributes
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO)
-  private Long id;
+  private Integer id;
   private String description;
   private boolean approvedByOwner;
   private float price;
