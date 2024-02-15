@@ -9,8 +9,8 @@ import java.util.List;
 public interface InstructorRepository extends CrudRepository<Instructor, Integer> {
 
     List<Instructor> findInstructorByExperience(String experience);
-    List<Instructor> findInstructorByScheduledCourse(ScheduledCourse scheduledCourse);
-    Instructor findInstructorBySuggestedCourseType(CourseType courseType);
+    List<Instructor> findInstructorBySupervisedCourses(ScheduledCourse scheduledCourse);
+    Instructor findInstructorByInstructorSuggestedCourseTypes(CourseType courseType);
 
 
 }
