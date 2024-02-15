@@ -7,7 +7,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
-public interface ScheduledCourseRepository extends CrudRepository<ScheduledCourse, String>{
+public interface ScheduledCourseRepository extends CrudRepository<ScheduledCourse, Integer>{
 
 	// Find scheduled courses by location
     List <ScheduledCourse> findScheduledCourseByLocation(String location);

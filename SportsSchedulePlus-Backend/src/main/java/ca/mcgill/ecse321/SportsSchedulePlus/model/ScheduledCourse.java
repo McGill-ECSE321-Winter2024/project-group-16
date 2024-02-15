@@ -250,6 +250,22 @@ public class ScheduledCourse
     coursePayments.clear();
   }
 
+  @Override
+  public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      ScheduledCourse that = (ScheduledCourse) o;
+      return Objects.equals(getLocation(), that.getLocation()) &&
+              getId() == that.getId() &&
+              getDate().compareTo(that.getDate()) == 0 &&
+              getStartTime().compareTo(that.getStartTime()) == 0 &&
+              getEndTime().compareTo(that.getEndTime()) == 0;
+  }
+  
+  @Override
+  public int hashCode() {
+      return Objects.hash(getLocation(), getId(), getDate(), getStartTime(), getEndTime());
+  }
 
   public String toString()
   {
@@ -261,4 +277,7 @@ public class ScheduledCourse
             "  " + "endTime" + "=" + (getEndTime() != null ? !getEndTime().equals(this)  ? getEndTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "courseType = "+(getCourseType()!=null?Integer.toHexString(System.identityHashCode(getCourseType())):"null");
   }
+
+
+  
 }

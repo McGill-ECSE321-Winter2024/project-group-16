@@ -4,6 +4,8 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 
 
+import java.util.Objects;
+
 // line 2 "model.ump"
 // line 87 "model.ump"
 
@@ -58,6 +60,18 @@ public abstract class PersonRole
   public void delete()
   {}
 
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null || getClass() != obj.getClass()) return false;
+    PersonRole that = (PersonRole) obj;
+    return id == that.id;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 
   public String toString()
   {

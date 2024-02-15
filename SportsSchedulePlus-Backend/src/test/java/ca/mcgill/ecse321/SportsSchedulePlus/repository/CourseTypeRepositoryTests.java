@@ -26,10 +26,7 @@ public class CourseTypeRepositoryTests {
         String description = "Zumba";
         boolean approvedByOwner = true;
         Float price = (float) 50.99;
-        CourseType courseType = new CourseType();
-        courseType.setApprovedByOwner(approvedByOwner);
-        courseType.setDescription(description);
-        courseType.setPrice(price);
+        CourseType courseType = new CourseType(description, approvedByOwner, price);
 
         // Save CourseType
         courseTypeRepository.save(courseType);
