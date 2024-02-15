@@ -220,4 +220,13 @@ public class CourseType
             "approvedByOwner" + ":" + getApprovedByOwner()+ "," +
             "price" + ":" + getPrice()+ "]";
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    CourseType that = (CourseType) o;
+    return Objects.equals(getDescription(), that.getDescription()) &&
+    Objects.equals(getPrice(), that.getPrice());
+  }
 }
