@@ -14,4 +14,5 @@ public interface CourseTypeRepository extends CrudRepository<CourseType, Integer
     List<CourseType> findByPriceLessThan(float maxPrice);
 
     List<CourseType> findByApprovedByOwnerTrue();
+
 }
