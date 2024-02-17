@@ -30,7 +30,7 @@ public class Person
 
   //Person Attributes
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue
   private int id;
   private String name;
   @Column(unique=true)

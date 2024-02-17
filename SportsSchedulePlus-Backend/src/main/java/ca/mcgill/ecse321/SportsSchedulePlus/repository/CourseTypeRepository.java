@@ -6,8 +6,8 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 
 import java.util.List;
 
-public interface CourseTypeRepository extends CrudRepository<CourseType,Long> {
-    
+public interface CourseTypeRepository extends CrudRepository<CourseType,Integer> {
+
  // Find CourseType by description
  List<CourseType> findByDescription(String description);
 

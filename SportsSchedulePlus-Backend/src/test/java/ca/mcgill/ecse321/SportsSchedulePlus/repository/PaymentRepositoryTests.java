@@ -33,6 +33,9 @@ public class PaymentRepositoryTests {
     @Autowired
     private ScheduledCourseRepository scheduledCourseRepository;
 
+    @Autowired
+    private PersonRoleRepository personRoleRepository;
+
     // Clears the database after each test
     @AfterEach
     public void clearDatabase() {
@@ -40,6 +43,7 @@ public class PaymentRepositoryTests {
         scheduledCourseRepository.deleteAll();
         courseTypeRepository.deleteAll();
         customerRepository.deleteAll();
+        personRoleRepository.deleteAll();
     }
 
     // Tests finding payments by confirmation number
@@ -102,9 +106,9 @@ public class PaymentRepositoryTests {
 
     // Helper method to create a payment with dummy data
     private Payment createPayment() {
-        Customer customer = new Customer(1);
+        Customer customer = new Customer();
         customerRepository.save(customer);
-
+       
         ScheduledCourse scheduledCourse = createScheduledCourse();
         scheduledCourseRepository.save(scheduledCourse);
 

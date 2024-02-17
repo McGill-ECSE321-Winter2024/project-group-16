@@ -23,7 +23,7 @@ public class DailySchedule
 
   //DailySchedule Attributes
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue
   private int id;
   private Time openingTime;
   private Time closingTime;
