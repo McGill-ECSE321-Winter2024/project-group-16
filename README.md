@@ -33,5 +33,5 @@ The individual contributions of each member are clearly identified in the budget
 In order to allow for all the members in our team to participate in every aspect of the project, we have decided to make the roles of the project flexible. This allows the members to pitch in whenever they have an interest about a certain feature, or technology.
 
 ## Individual Efforts (Budget)
-We have created a excel spreadsheet in order to visualize the hours every member of the team has put in for iteration 1, including which main tasks they worked on.
+We have created a excel spreadsheet in order to visualize the hours every member of the team has put in for iteration 1, including which main tasks they worked on.\
 [Sprint 1 Budget](https://docs.google.com/spreadsheets/d/1xLnBuVPIr9tvh49kfRFqiPK2vfZRNgzemxMTLZt0INA/edit?usp=sharing)
