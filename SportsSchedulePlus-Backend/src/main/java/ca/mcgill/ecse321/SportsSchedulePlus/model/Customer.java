@@ -22,21 +22,22 @@ public class Customer extends PersonRole {
 
   //Customer Associations
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  private List < Payment > customerPayments = new ArrayList < > ();
+  private List <Payment> customerPayments;
   @OneToMany(fetch = FetchType.EAGER)
-  private List < ScheduledCourse > coursesRegistered = new ArrayList < > ();
+  private List <ScheduledCourse> coursesRegistered;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
   public Customer() {
-
+    customerPayments = new ArrayList <Payment> ();
+    coursesRegistered = new ArrayList <ScheduledCourse> ();
   }
   public Customer(int aId) {
     super(aId);
-    customerPayments = new ArrayList < Payment > ();
-    coursesRegistered = new ArrayList < ScheduledCourse > ();
+    customerPayments = new ArrayList <Payment> ();
+    coursesRegistered = new ArrayList <ScheduledCourse> ();
   }
 
   //------------------------

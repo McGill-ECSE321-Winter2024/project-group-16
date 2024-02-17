@@ -6,8 +6,10 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 import java.util.*;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import ca.mcgill.ecse321.util.Helper;
 
 
 // line 29 "model.ump"
@@ -24,9 +26,9 @@ public class Instructor extends Customer
   private String experience;
 
   //Instructor Associations
-  @OneToMany
+  @OneToMany(fetch = FetchType.EAGER)
   private List<CourseType> instructorSuggestedCourseTypes;
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   private List<ScheduledCourse> supervisedCourses;
 
   //------------------------
@@ -242,40 +244,30 @@ public class Instructor extends Customer
   }
 
   @Override
-  public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
-      if (!super.equals(obj)) return false;
-  
-      Instructor that = (Instructor) obj;
-      System.out.println("CHECK COURSES 1");
-      if (!experience.equals(that.experience)) return false;
-      System.out.println("CHECK COURSES 2");
-      // Check equality for instructorSuggestedCourseTypes
-      if (instructorSuggestedCourseTypes.size() != that.instructorSuggestedCourseTypes.size()) {
-          return false;
-      }
-      for (int i = 0; i < instructorSuggestedCourseTypes.size(); i++) {
-          if (!instructorSuggestedCourseTypes.get(i).equals(that.instructorSuggestedCourseTypes.get(i))) {
-              return false;
-          }
-      }
-  
-      // Check equality for supervisedCourses
-      if (supervisedCourses.size() != that.supervisedCourses.size()) {
-        
-          return false;
-      }
-      System.out.println("CHECK COURSES");
-      for (int i = 0; i < supervisedCourses.size(); i++) {
-          if (!supervisedCourses.get(i).equals(that.supervisedCourses.get(i))) {
-              return false;
-          }
-      }
-  
-      return true;
-  }
-  
+public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null || getClass() != obj.getClass()) return false;
+    if (!super.equals(obj)) return false;
+
+    Instructor that = (Instructor) obj;
+
+    if (getId() != that.getId()) return false;
+
+    if (!Objects.equals(experience, that.experience)) return false;
+
+    // Check equality for instructorSuggestedCourseTypes
+    if (!Helper.compareListsElementWise(instructorSuggestedCourseTypes, that.instructorSuggestedCourseTypes)) {
+        return false;
+    }
+
+    // Check equality for supervisedCourses
+    if (!Helper.compareListsElementWise(supervisedCourses, that.supervisedCourses)) {
+        return false;
+    }
+
+    return true;
+}
+
 
   @Override
   public int hashCode() {

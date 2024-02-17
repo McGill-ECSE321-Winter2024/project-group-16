@@ -4,7 +4,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 
 import java.sql.Time;
-
+import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -71,6 +71,57 @@ public class DailySchedule
 
   public void delete()
   {}
+
+  @Override
+  public boolean equals(Object obj) {
+    System.out.println("check daily schedule");
+
+    if (this == obj) {
+      System.out.println("Objects are the same instance");
+      return true;
+    }
+
+    if (obj == null || getClass() != obj.getClass()) {
+      System.out.println("Objects are of different classes or null");
+      return false;
+    }
+
+    DailySchedule that = (DailySchedule) obj;
+
+    // Check equality for id
+    if (id != that.id) {
+      System.out.println("id mismatch: " + id + " != " + that.id);
+      return false;
+    }
+
+    // Check equality for openingTime
+    if (openingTime.compareTo(that.openingTime) != 0) {
+      System.out.println("openingTime mismatch: " + openingTime + " != " + that.openingTime);
+      return false;
+    }
+
+    // Check equality for closingTime
+    if (closingTime.compareTo(that.closingTime) != 0) {
+      System.out.println("closingTime mismatch: " + closingTime + " != " + that.closingTime);
+      return false;
+    }
+
+    System.out.println("Objects are equal");
+    return true;
+  }
+
+  private boolean compareTime(Time time1, Time time2) {
+    if (time1 == null && time2 == null) return true;
+    if (time1 == null || time2 == null) return false;
+
+    return time1.compareTo(time2) == 0;
+  }
+
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, openingTime, closingTime);
+  }
 
 
   public String toString()
