@@ -34,7 +34,8 @@ public class PersonRepositoryTests {
     @Test
     public void testFindPersonByName() {
         // Create a PersonRole
-        PersonRole personRole = new Customer(1);
+        PersonRole personRole = new Customer();
+   
         personRoleRepository.save(personRole);
 
         // Create a new person with a specific name, email, password, and associated PersonRole
@@ -48,27 +49,28 @@ public class PersonRepositoryTests {
         assertNotNull(foundPersons);
         assertEquals(1, foundPersons.size());
         Person foundPerson = foundPersons.get(0);
-
-        assertEquals(newPerson.getName(), foundPerson.getName());
+        assertNotNull(personRoleRepository.findPersonRoleById(personRole.getId()));
+        assertEquals(newPerson, foundPerson);
     }
 
     // Test finding a person by email
     @Test
     public void testFindPersonByEmail() {
         // Create a PersonRole
-        PersonRole personRole = new Customer(1);
+        PersonRole personRole = new Customer();
         personRoleRepository.save(personRole);
 
         // Create a new person with a specific name, email, password, and associated PersonRole
         Person newPerson = new Person("John", "john@example.com", "password", personRole);
         personRepository.save(newPerson);
+        
 
         // When finding a person by email
         Person foundPerson = personRepository.findPersonByEmail("john@example.com");
 
         // Then ensure the found person is not null and the email matches the expected
         assertNotNull(foundPerson);
-        assertEquals(newPerson.getEmail(), foundPerson.getEmail());
+        assertEquals(newPerson,foundPerson);
     }
 
     // Test finding a person by email when the person is not found

@@ -7,6 +7,7 @@ import java.util.*;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 
 // line 29 "model.ump"
@@ -23,7 +24,7 @@ public class Instructor extends Customer
   private String experience;
 
   //Instructor Associations
-  @ManyToMany
+  @OneToMany
   private List<CourseType> instructorSuggestedCourseTypes;
   @ManyToMany
   private List<ScheduledCourse> supervisedCourses;
@@ -238,6 +239,47 @@ public class Instructor extends Customer
     instructorSuggestedCourseTypes.clear();
     supervisedCourses.clear();
     super.delete();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (obj == null || getClass() != obj.getClass()) return false;
+      if (!super.equals(obj)) return false;
+  
+      Instructor that = (Instructor) obj;
+      System.out.println("CHECK COURSES 1");
+      if (!experience.equals(that.experience)) return false;
+      System.out.println("CHECK COURSES 2");
+      // Check equality for instructorSuggestedCourseTypes
+      if (instructorSuggestedCourseTypes.size() != that.instructorSuggestedCourseTypes.size()) {
+          return false;
+      }
+      for (int i = 0; i < instructorSuggestedCourseTypes.size(); i++) {
+          if (!instructorSuggestedCourseTypes.get(i).equals(that.instructorSuggestedCourseTypes.get(i))) {
+              return false;
+          }
+      }
+  
+      // Check equality for supervisedCourses
+      if (supervisedCourses.size() != that.supervisedCourses.size()) {
+        
+          return false;
+      }
+      System.out.println("CHECK COURSES");
+      for (int i = 0; i < supervisedCourses.size(); i++) {
+          if (!supervisedCourses.get(i).equals(that.supervisedCourses.get(i))) {
+              return false;
+          }
+      }
+  
+      return true;
+  }
+  
+
+  @Override
+  public int hashCode() {
+      return Objects.hash(super.hashCode(), experience, instructorSuggestedCourseTypes, supervisedCourses);
   }
 
 

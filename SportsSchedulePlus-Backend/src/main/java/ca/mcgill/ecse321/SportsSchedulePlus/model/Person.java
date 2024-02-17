@@ -8,7 +8,6 @@ import java.util.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
@@ -30,7 +29,7 @@ public class Person
 
   //Person Attributes
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue
   private int id;
   private String name;
   @Column(unique=true)
@@ -154,13 +153,22 @@ public class Person
   public boolean equals(Object obj) {
       if (this == obj) return true;
       if (obj == null || getClass() != obj.getClass()) return false;
+      
       Person person = (Person) obj;
-      return id == (person.id) &&
-              name.equals(person.name) &&
-              email.equals(person.email) &&
-              password.equals(person.password) &&
-              personRole.equals(person.personRole);
+  
+      System.out.println("Debug: id - " + id + ", person.id - " + person.id);
+      System.out.println("Debug: name - " + name + ", person.name - " + person.name);
+      System.out.println("Debug: email - " + email + ", person.email - " + person.email);
+      System.out.println("Debug: password - " + password + ", person.password - " + person.password);
+      System.out.println("Debug: personRole - " + personRole + ", person.personRole - " + person.personRole);
+  
+      return id == person.id &&
+             name.equals(person.name) &&
+             email.equals(person.email) &&
+             password.equals(person.password) &&
+             personRole.equals(person.personRole);
   }
+  
 
   @Override
   public int hashCode() {

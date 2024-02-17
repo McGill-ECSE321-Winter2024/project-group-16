@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class CourseTypeRepositoryTests {
         CourseType loadedCourseType = courseTypeRepository.findCourseTypeByDescription(description);
 
         // Asserts
-        assertNotNull(courseType);
+        assertNotNull(loadedCourseType);
         assertEquals(courseType, loadedCourseType);
     }
 
@@ -67,6 +68,7 @@ public class CourseTypeRepositoryTests {
         assertEquals(approvedCourseTypes, LoadedApprovedCourseTypes);
     }
 
+    // Test to find all course types that costs less than a max price.
     @Test
     public void testFindByPriceLessThan() {
         // Create and save CourseTypes objects
@@ -85,6 +87,22 @@ public class CourseTypeRepositoryTests {
         for (CourseType courseType : courseTypesLessThanMax) {
             assertTrue(courseType.getPrice() < maxPrice);
         }
+    }
+
+    // Negative result of searching course types by description
+    @Test
+    public void testFindCourseTypeByDescriptionNotFound() {
+        // Create and save CourseTypes.
+        List <CourseType> courseTypes = createCourseTypes();
+        for (CourseType courseType : courseTypes) {
+            courseTypeRepository.save(courseType);
+        }
+
+        // Load from database
+        CourseType loadedCourseType = courseTypeRepository.findCourseTypeByDescription("NE");
+
+        // Assert
+        assertNull(loadedCourseType);
     }
 
     // Helper Method to create list of CourseTypes

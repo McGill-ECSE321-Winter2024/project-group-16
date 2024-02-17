@@ -24,10 +24,14 @@ public class OwnerRepositoryTests {
     @Autowired
     private DailyScheduleRepository dailyScheduleRepository;
 
+    @Autowired
+    private ScheduledCourseRepository scheduledCourseRepository;
+
     @AfterEach
     public void clearDatabase(){
         ownerRepository.deleteAll();
         personRepository.deleteAll();
+        scheduledCourseRepository.deleteAll();
         courseTypeRepository.deleteAll();
         dailyScheduleRepository.deleteAll();
     }

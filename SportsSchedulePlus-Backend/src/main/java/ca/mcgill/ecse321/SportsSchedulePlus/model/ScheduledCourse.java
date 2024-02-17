@@ -255,7 +255,7 @@ public class ScheduledCourse
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
       ScheduledCourse that = (ScheduledCourse) o;
-      return Objects.equals(getLocation(), that.getLocation()) &&
+      return getLocation().equals(that.getLocation()) &&
               getId() == that.getId() &&
               getDate().compareTo(that.getDate()) == 0 &&
               getStartTime().compareTo(that.getStartTime()) == 0 &&
