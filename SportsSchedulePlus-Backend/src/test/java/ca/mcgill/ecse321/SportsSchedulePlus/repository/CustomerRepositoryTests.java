@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 
 @SpringBootTest
 public class CustomerRepositoryTests {
@@ -27,11 +28,11 @@ public class CustomerRepositoryTests {
     @Test
     public void findCustomerById() {
         // Create and save Customer
-        Customer customer = new Customer(1);
+        Customer customer = new Customer();
         customerRepository.save(customer);
 
         // Load Customer from database
-        Customer loadedCustomer = (Customer) personRoleRepository.findPersonRoleById(1);
+        PersonRole loadedCustomer =  customerRepository.findCustomerById(customer.getId());
 
         // Asserts
         assertNotNull(loadedCustomer);

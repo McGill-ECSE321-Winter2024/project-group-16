@@ -7,7 +7,6 @@ import java.util.*;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
@@ -26,7 +25,7 @@ public class CourseType
 
   //CourseType Attributes
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue
   private Integer id;
   private String description;
   private boolean approvedByOwner;
@@ -226,7 +225,8 @@ public class CourseType
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     CourseType that = (CourseType) o;
-    return Objects.equals(getDescription(), that.getDescription()) &&
-    Objects.equals(getPrice(), that.getPrice());
+    return getDescription().equals(that.getDescription()) &&
+    getPrice() == that.getPrice() &&
+    Objects.equals(getScheduledCourses(), that.getScheduledCourses());
   }
 }

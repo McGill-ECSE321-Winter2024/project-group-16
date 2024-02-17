@@ -66,7 +66,7 @@ public class CourseTypeRepositoryTests {
 
         // Asserts
         assertNotNull(LoadedApprovedCourseTypes);
-        assertEquals(approvedCourseTypes, LoadedApprovedCourseTypes);
+        assertTrue(approvedCourseTypes.equals(LoadedApprovedCourseTypes));
     }
 
     // Test to find all course types that costs less than a max price.
