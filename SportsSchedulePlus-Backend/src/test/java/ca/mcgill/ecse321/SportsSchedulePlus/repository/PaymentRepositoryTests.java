@@ -109,6 +109,7 @@ public class PaymentRepositoryTests {
         Customer customer = new Customer();
         customerRepository.save(customer);
        
+
         ScheduledCourse scheduledCourse = createScheduledCourse();
         scheduledCourseRepository.save(scheduledCourse);
 

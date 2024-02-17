@@ -1,12 +1,16 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
-import org.springframework.data.repository.CrudRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
+
+import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
+import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+public interface InstructorRepository extends CrudRepository<Instructor, Integer> {
 
-public interface InstructorRepository extends CrudRepository<Instructor,Integer> {
-    
- 
-   Instructor findInstructorById(int id);
+    List<Instructor> findInstructorByExperience(String experience);
+    List<Instructor> findInstructorBySupervisedCourses(ScheduledCourse scheduledCourse);
+    Instructor findInstructorByInstructorSuggestedCourseTypes(CourseType courseType);
+
 
 }

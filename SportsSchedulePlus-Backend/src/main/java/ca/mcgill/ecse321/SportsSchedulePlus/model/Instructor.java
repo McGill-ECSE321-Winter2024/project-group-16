@@ -7,6 +7,7 @@ import java.util.*;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 
 // line 29 "model.ump"
@@ -23,7 +24,7 @@ public class Instructor extends Customer
   private String experience;
 
   //Instructor Associations
-  @ManyToMany
+  @OneToMany
   private List<CourseType> instructorSuggestedCourseTypes;
   @ManyToMany
   private List<ScheduledCourse> supervisedCourses;

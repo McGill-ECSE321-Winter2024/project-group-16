@@ -35,6 +35,7 @@ public class PersonRepositoryTests {
     public void testFindPersonByName() {
         // Create a PersonRole
         PersonRole personRole = new Customer();
+   
         personRoleRepository.save(personRole);
 
         // Create a new person with a specific name, email, password, and associated PersonRole
@@ -56,7 +57,7 @@ public class PersonRepositoryTests {
     @Test
     public void testFindPersonByEmail() {
         // Create a PersonRole
-        PersonRole personRole = new Customer(1);
+        PersonRole personRole = new Customer();
         personRoleRepository.save(personRole);
 
         // Create a new person with a specific name, email, password, and associated PersonRole

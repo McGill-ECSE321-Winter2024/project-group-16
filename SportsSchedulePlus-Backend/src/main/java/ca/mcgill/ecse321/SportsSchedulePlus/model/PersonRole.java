@@ -62,12 +62,16 @@ public abstract class PersonRole
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null || getClass() != obj.getClass()) return false;
-    PersonRole that = (PersonRole) obj;
-    return id == that.id;
+      if (this == obj) return true;
+      if (obj == null || getClass() != obj.getClass()) return false;
+     
+      PersonRole that = (PersonRole) obj;
+      
+      System.out.println("Debug: PERSON ROLE id - " + id + ", that.id - " + that.id);
+  
+      return id == that.id;
   }
-
+  
   @Override
   public int hashCode() {
     return Objects.hash(id);
