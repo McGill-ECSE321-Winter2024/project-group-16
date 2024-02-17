@@ -3,7 +3,6 @@ package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -66,7 +65,7 @@ public class CourseTypeRepositoryTests {
 
         // Asserts
         assertNotNull(LoadedApprovedCourseTypes);
-        assertTrue(approvedCourseTypes.equals(LoadedApprovedCourseTypes));
+        assertEquals(approvedCourseTypes, LoadedApprovedCourseTypes);
     }
 
     // Test to find all course types that costs less than a max price.
@@ -93,9 +92,13 @@ public class CourseTypeRepositoryTests {
     // Negative result of searching course types by description
     @Test
     public void testFindCourseTypeByDescriptionNotFound() {
-        // Create CourseTypes.
-        createCourseTypes();
+        // Create and save CourseTypes.
+        List <CourseType> courseTypes = createCourseTypes();
+        for (CourseType courseType : courseTypes) {
+            courseTypeRepository.save(courseType);
+        }
 
+        // Load from database
         CourseType loadedCourseType = courseTypeRepository.findCourseTypeByDescription("NE");
 
         // Assert
