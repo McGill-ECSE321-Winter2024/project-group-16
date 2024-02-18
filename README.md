@@ -30,7 +30,10 @@ Our goals with this project are:
 
 ## Member Roles
 The individual contributions of each member are clearly identified in the budget (see below).
+
 In order to allow for all the members in our team to participate in every aspect of the project, we have decided to make the roles of the project flexible. This allows the members to pitch in whenever they have an interest about a certain feature, or technology.
+
+However, to ensure a good flow in the project workload, we have decided to split the team into sub-groups for some of the tasks. These separations are detailed in each of the deliverables.
 
 ## Individual Efforts (Budget)
 We have created a excel spreadsheet in order to visualize the hours every member of the team has put in for iteration 1, including which main tasks they worked on.\
