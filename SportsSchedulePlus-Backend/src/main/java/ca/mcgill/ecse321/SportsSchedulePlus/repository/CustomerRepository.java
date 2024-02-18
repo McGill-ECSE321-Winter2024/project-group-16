@@ -6,7 +6,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 public interface CustomerRepository extends CrudRepository<Customer,Integer> {
     
  
-   Customer findCustomerById(Integer id);
+   Customer findCustomerById(int id);
 
 }
 

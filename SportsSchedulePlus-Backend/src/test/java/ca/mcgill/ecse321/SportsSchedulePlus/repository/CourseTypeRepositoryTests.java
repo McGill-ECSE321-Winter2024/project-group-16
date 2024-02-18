@@ -50,6 +50,7 @@ public class CourseTypeRepositoryTests {
 
         // Asserts
         assertNotNull(loadedCourseType);
+        assertNotNull(loadedCourseType);
         assertEquals(courseType, loadedCourseType);
     }
 
@@ -76,6 +77,7 @@ public class CourseTypeRepositoryTests {
     }
 
     // Test to find all course types that costs less than a max price.
+    // Test to find all course types that costs less than a max price.
     @Test
     public void testFindByPriceLessThan() {
         // Create and save CourseTypes objects
@@ -94,6 +96,22 @@ public class CourseTypeRepositoryTests {
         for (CourseType courseType : courseTypesLessThanMax) {
             assertTrue(courseType.getPrice() < maxPrice);
         }
+    }
+
+    // Negative result of searching course types by description
+    @Test
+    public void testFindCourseTypeByDescriptionNotFound() {
+        // Create and save CourseTypes.
+        List <CourseType> courseTypes = createCourseTypes();
+        for (CourseType courseType : courseTypes) {
+            courseTypeRepository.save(courseType);
+        }
+
+        // Load from database
+        CourseType loadedCourseType = courseTypeRepository.findCourseTypeByDescription("NE");
+
+        // Assert
+        assertNull(loadedCourseType);
     }
 
     // Negative result of searching course types by description

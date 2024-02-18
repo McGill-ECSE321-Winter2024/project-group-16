@@ -24,10 +24,14 @@ public class OwnerRepositoryTests {
     @Autowired
     private DailyScheduleRepository dailyScheduleRepository;
 
+    @Autowired
+    private ScheduledCourseRepository scheduledCourseRepository;
+
     @AfterEach
     public void clearDatabase(){
         ownerRepository.deleteAll();
         personRepository.deleteAll();
+        scheduledCourseRepository.deleteAll();
         courseTypeRepository.deleteAll();
         dailyScheduleRepository.deleteAll();
     }
@@ -57,8 +61,8 @@ public class OwnerRepositoryTests {
         // Assertions
         assertNotNull(foundOwnerSuggested);
         assertNotNull(foundOwnerApproved);
-        assertEquals(foundOwnerSuggested.getId(),owner.getId());
-        assertEquals(foundOwnerApproved.getId(), owner.getId());
+        assertEquals(foundOwnerSuggested,owner);
+        assertEquals(foundOwnerApproved, owner);
     }
 
     @Test
@@ -83,11 +87,9 @@ public class OwnerRepositoryTests {
 
         // Assertions
         assertNotNull(foundOwner);
-        assertEquals(foundOwner.getId(), owner.getId());
+        assertEquals(foundOwner, owner);
 
     }
-
-
 
 
     }

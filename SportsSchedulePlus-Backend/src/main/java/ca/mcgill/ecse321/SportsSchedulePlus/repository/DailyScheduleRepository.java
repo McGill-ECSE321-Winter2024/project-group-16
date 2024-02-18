@@ -4,7 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.sql.Time;
 import java.util.List;
-public interface DailyScheduleRepository extends CrudRepository<DailySchedule, Long> {
+public interface DailyScheduleRepository extends CrudRepository<DailySchedule, Integer> {
 
     List<DailySchedule> findDailyScheduleByOpeningTime(Time openingTime);
     List<DailySchedule> findDailyScheduleByClosingTime(Time closingTime);

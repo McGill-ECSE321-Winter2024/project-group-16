@@ -46,7 +46,7 @@ public class ScheduledCourseRepositoryTests {
         // Assert that the created ScheduledCourse matches the found ScheduledCourse
         assertEquals(scheduledCourse, foundCourse);
     }
-
+     
     // Test finding ScheduledCourses by date
     @Test
     public void testFindScheduledCoursesByDate() {
@@ -59,7 +59,7 @@ public class ScheduledCourseRepositoryTests {
 
         assertEquals(scheduledCourse, foundCourse);
     }
-
+    
     // Test finding ScheduledCourses by course type
     @Test
     public void testFindScheduledCoursesByCourseType() {
@@ -72,7 +72,7 @@ public class ScheduledCourseRepositoryTests {
 
         assertEquals(scheduledCourse, foundCourse);
     }
-
+    
     // Test finding ScheduledCourses by start time
     @Test
     public void testFindScheduledCoursesByStartTime() {

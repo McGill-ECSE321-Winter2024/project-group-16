@@ -6,7 +6,10 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 import java.util.*;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import ca.mcgill.ecse321.util.Helper;
 
 
 // line 29 "model.ump"
@@ -23,9 +26,9 @@ public class Instructor extends Customer
   private String experience;
 
   //Instructor Associations
-  @ManyToMany
+  @OneToMany(fetch = FetchType.EAGER)
   private List<CourseType> instructorSuggestedCourseTypes;
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   private List<ScheduledCourse> supervisedCourses;
 
   //------------------------
@@ -238,6 +241,37 @@ public class Instructor extends Customer
     instructorSuggestedCourseTypes.clear();
     supervisedCourses.clear();
     super.delete();
+  }
+
+  @Override
+public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null || getClass() != obj.getClass()) return false;
+    if (!super.equals(obj)) return false;
+
+    Instructor that = (Instructor) obj;
+
+    if (getId() != that.getId()) return false;
+
+    if (!Objects.equals(experience, that.experience)) return false;
+
+    // Check equality for instructorSuggestedCourseTypes
+    if (!Helper.compareListsElementWise(instructorSuggestedCourseTypes, that.instructorSuggestedCourseTypes)) {
+        return false;
+    }
+
+    // Check equality for supervisedCourses
+    if (!Helper.compareListsElementWise(supervisedCourses, that.supervisedCourses)) {
+        return false;
+    }
+
+    return true;
+}
+
+
+  @Override
+  public int hashCode() {
+      return Objects.hash(super.hashCode(), experience, instructorSuggestedCourseTypes, supervisedCourses);
   }
 
 

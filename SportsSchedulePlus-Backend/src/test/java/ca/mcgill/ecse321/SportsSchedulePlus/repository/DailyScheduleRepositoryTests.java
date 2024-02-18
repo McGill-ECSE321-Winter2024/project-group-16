@@ -46,12 +46,9 @@ public class DailyScheduleRepositoryTests {
         // Assertions
         assertNotNull(foundOpeningTimes);
         assertNotNull(foundClosingTimes);
-        assertEquals(open, foundOpeningTimes.get(0).getOpeningTime());
-        assertEquals(close, foundClosingTimes.get(0).getClosingTime());
-
-
-
-
+       
+        assertEquals(dailySchedule,foundOpeningTimes.get(0));
+        assertEquals(dailySchedule,foundClosingTimes.get(0));
 
 
     }

@@ -8,7 +8,6 @@ import java.util.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
@@ -154,13 +153,16 @@ public class Person
   public boolean equals(Object obj) {
       if (this == obj) return true;
       if (obj == null || getClass() != obj.getClass()) return false;
+      
       Person person = (Person) obj;
-      return id == (person.id) &&
-              name.equals(person.name) &&
-              email.equals(person.email) &&
-              password.equals(person.password) &&
-              personRole.equals(person.personRole);
+
+      return id == person.id &&
+             name.equals(person.name) &&
+             email.equals(person.email) &&
+             password.equals(person.password) &&
+             personRole.equals(person.personRole);
   }
+  
 
   @Override
   public int hashCode() {
