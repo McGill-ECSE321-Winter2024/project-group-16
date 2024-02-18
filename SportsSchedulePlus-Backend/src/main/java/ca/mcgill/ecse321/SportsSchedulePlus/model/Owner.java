@@ -21,9 +21,9 @@ public class Owner extends PersonRole {
 
   //Owner Associations
   @OneToMany(fetch = FetchType.EAGER)
-  private List < CourseType > approvedCourses;
+  private List <CourseType> approvedCourses;
   @OneToMany(fetch = FetchType.EAGER)
-  private List < CourseType > ownerSuggestedCourses;
+  private List <CourseType> ownerSuggestedCourses;
   @OneToOne
   private DailySchedule dailySchedule;
 
@@ -32,13 +32,13 @@ public class Owner extends PersonRole {
   //------------------------
 
   public Owner() {
-    approvedCourses = new ArrayList < CourseType > ();
-    ownerSuggestedCourses = new ArrayList < CourseType > ();
+    approvedCourses = new ArrayList <CourseType> ();
+    ownerSuggestedCourses = new ArrayList <CourseType> ();
   }
   public Owner(int aId, DailySchedule aDailySchedule) {
     super(aId);
-    approvedCourses = new ArrayList < CourseType > ();
-    ownerSuggestedCourses = new ArrayList < CourseType > ();
+    approvedCourses = new ArrayList <CourseType> ();
+    ownerSuggestedCourses = new ArrayList <CourseType> ();
     if (!setDailySchedule(aDailySchedule)) {
       throw new RuntimeException("Unable to create Owner due to aDailySchedule. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
@@ -53,8 +53,8 @@ public class Owner extends PersonRole {
     return aApprovedCourse;
   }
 
-  public List < CourseType > getApprovedCourses() {
-    List < CourseType > newApprovedCourses = Collections.unmodifiableList(approvedCourses);
+  public List <CourseType> getApprovedCourses() {
+    List <CourseType> newApprovedCourses = Collections.unmodifiableList(approvedCourses);
     return newApprovedCourses;
   }
 
@@ -78,8 +78,8 @@ public class Owner extends PersonRole {
     return aOwnerSuggestedCourse;
   }
 
-  public List < CourseType > getOwnerSuggestedCourses() {
-    List < CourseType > newOwnerSuggestedCourses = Collections.unmodifiableList(ownerSuggestedCourses);
+  public List <CourseType> getOwnerSuggestedCourses() {
+    List <CourseType> newOwnerSuggestedCourses = Collections.unmodifiableList(ownerSuggestedCourses);
     return newOwnerSuggestedCourses;
   }
 
@@ -240,20 +240,20 @@ public class Owner extends PersonRole {
   /**
    * Overrides the equals method to compare two Owner objects for equality.
    *
-   * @param obj The object to compare with.
+   * @param object The object to compare with.
    * @return True if the objects are equal, false otherwise.
    */
   @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null || getClass() != obj.getClass()) return false;
+  public boolean equals(Object object) {
+    if (this == object) return true;
+    if (object == null || getClass() != object.getClass()) return false;
 
-    Owner that = (Owner) obj;
+    Owner other = (Owner) object;
 
-    return getId() == that.getId() &&
-      Helper.compareListsElementWise(approvedCourses, that.approvedCourses) &&
-      Helper.compareListsElementWise(ownerSuggestedCourses, that.ownerSuggestedCourses) &&
-      dailySchedule.equals(that.dailySchedule);
+    return getId() == other.getId() &&
+      Helper.compareListsElementWise(approvedCourses, other.approvedCourses) &&
+      Helper.compareListsElementWise(ownerSuggestedCourses, other.ownerSuggestedCourses) &&
+      dailySchedule.equals(other.dailySchedule);
   }
 
   /**

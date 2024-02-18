@@ -238,26 +238,26 @@ public class ScheduledCourse {
   /**
    * Compares this ScheduledCourse object with the specified object for equality.
    *
-   * @param o The object to compare with this ScheduledCourse.
+   * @param object The object to compare with this ScheduledCourse.
    * @return true if the given object is equal to this ScheduledCourse; false otherwise.
    */
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(Object object) {
     // Check if the compared object is the same instance
-    if (this == o) return true;
+    if (this == object) return true;
 
     // Check if the compared object is of the same class
-    if (o == null || getClass() != o.getClass()) return false;
+    if (object == null || getClass() != object.getClass()) return false;
 
     // Cast the compared object to ScheduledCourse for detailed attribute comparison
-    ScheduledCourse that = (ScheduledCourse) o;
+    ScheduledCourse other = (ScheduledCourse) object;
 
     // Compare individual attributes for equality
-    return getLocation().equals(that.getLocation()) &&
-      getId() == that.getId() &&
-      getDate().compareTo(that.getDate()) == 0 &&
-      getStartTime().compareTo(that.getStartTime()) == 0 &&
-      getEndTime().compareTo(that.getEndTime()) == 0;
+    return getLocation().equals(other.getLocation()) &&
+      getId() == other.getId() &&
+      getDate().compareTo(other.getDate()) == 0 &&
+      getStartTime().compareTo(other.getStartTime()) == 0 &&
+      getEndTime().compareTo(other.getEndTime()) == 0;
   }
 
   /**

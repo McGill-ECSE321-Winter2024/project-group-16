@@ -1,15 +1,10 @@
-/**
- * This class contains unit tests for the PaymentRepository.
- * The overridden equals method in the Payment model is used for assertions.
- */
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.sql.Date;
-import java.sql.Time;
+
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -25,7 +20,8 @@ import ca.mcgill.ecse321.util.Helper;
 
 
 /**
- * Springboot tests for the PaymentRepository class.
+ * This class contains unit tests for the PaymentRepository.
+ * The overridden equals method in the Payment model is used for assertions.
  */
 @SpringBootTest
 public class PaymentRepositoryTests {
@@ -63,7 +59,13 @@ public class PaymentRepositoryTests {
     @Test
     public void testFindPaymentsByConfirmationNumber() {
         // Create and save a payment
-        Payment newPayment = createPayment();
+        Customer customer = new Customer();
+        customerRepository.save(customer);
+        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+        courseTypeRepository.save(courseType);
+        ScheduledCourse course = Helper.createScheduledCourse(courseType);
+        scheduledCourseRepository.save(course);
+        Payment newPayment = Helper.createPayment(customer,course);
         paymentRepository.save(newPayment);
 
         // Find payments by confirmation number
@@ -82,7 +84,13 @@ public class PaymentRepositoryTests {
     @Test
     public void testFindPaymentsByKeyCustomer() {
         // Create and save a payment
-        Payment newPayment = createPayment();
+        Customer customer = new Customer();
+        customerRepository.save(customer);
+        CourseType courseType = new CourseType("New Sample Description", true, 99.99f);
+        courseTypeRepository.save(courseType);
+        ScheduledCourse course = Helper.createScheduledCourse(courseType);
+        scheduledCourseRepository.save(course);
+        Payment newPayment = Helper.createPayment(customer,course);
         paymentRepository.save(newPayment);
 
         // Find payments by key customer
@@ -102,7 +110,13 @@ public class PaymentRepositoryTests {
     @Test
     public void testFindPaymentsByKeyScheduledCourse() {
         // Create and save a payment
-        Payment newPayment = createPayment();
+        Customer customer = new Customer();
+        customerRepository.save(customer);
+        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+        courseTypeRepository.save(courseType);
+        ScheduledCourse course = Helper.createScheduledCourse(courseType);
+        scheduledCourseRepository.save(course);
+        Payment newPayment = Helper.createPayment(customer,course);
         paymentRepository.save(newPayment);
 
         // Find payments by key scheduled course
@@ -117,7 +131,7 @@ public class PaymentRepositoryTests {
     }
 
     /**
-     * Test finding no payments for a customer with no payments.
+     * Tests finding no payments for a customer with no payments.
      */
     @Test
     public void testFindNoPaymentsForCustomerWithNoPayments() {
@@ -134,7 +148,7 @@ public class PaymentRepositoryTests {
     }
 
     /**
-     * Test finding no payments for a scheduled course with no payments.
+     * Tests finding no payments for a scheduled course with no payments.
      */
     @Test
     public void testFindNoPaymentsForScheduledCourseWithNoPayments() {
@@ -153,14 +167,10 @@ public class PaymentRepositoryTests {
     }
 
     /**
-     * Test finding payments by non-existing confirmation number.
+     * Tests finding payments by non-existing confirmation number.
      */
     @Test
     public void testFindPaymentsByNonExistingConfirmationNumber() {
-        // Create a payment
-        Payment newPayment = createPayment();
-        paymentRepository.save(newPayment);
-
         // Try to find payments by a non-existing confirmation number
         List<Payment> foundPayments = paymentRepository.findPaymentsByConfirmationNumber(99999);
 
@@ -170,24 +180,5 @@ public class PaymentRepositoryTests {
     }
 
   
-
-    /**
-     * Helper method to create a payment with dummy data.
-     */
-    private Payment createPayment() {
-        Customer customer = new Customer();
-        customerRepository.save(customer);
-        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
-        courseTypeRepository.save(courseType);
-        ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
-        scheduledCourseRepository.save(scheduledCourse);
-
-        Payment.Key paymentKey = new Payment.Key(customer, scheduledCourse);
-        Payment newPayment = new Payment(paymentKey);
-
-        newPayment.setConfirmationNumber(12345);
-
-        return newPayment;
-    }
 }
 

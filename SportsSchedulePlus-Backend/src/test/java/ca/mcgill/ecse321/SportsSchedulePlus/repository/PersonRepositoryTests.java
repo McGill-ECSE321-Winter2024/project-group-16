@@ -1,7 +1,3 @@
-/**
- * This class contains unit tests for the PersonRepository.
- * The overridden equals method in the Person model is used for assertions.
- */
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,7 +16,8 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 
 /**
- * Springboot tests for the PersonRepository class.
+ * This class contains unit tests for the PersonRepository.
+ * The overridden equals method in the Person model is used for assertions.
  */
 @SpringBootTest
 public class PersonRepositoryTests {

@@ -132,7 +132,9 @@ public class ScheduledCourseRepositoryTests {
     assertEquals(scheduledCourse, foundCourse);
   }
 
-  // Test finding no ScheduledCourses for an existing date with no courses
+  /**
+   * Test finding no ScheduledCourses for an existing date with no courses
+   */
   @Test
   public void testFindNoScheduledCoursesForDate() {
     // Attempt to find ScheduledCourses for an existing date with no courses
@@ -142,7 +144,9 @@ public class ScheduledCourseRepositoryTests {
     assertTrue(foundCourses.isEmpty());
   }
 
-  // Test finding no ScheduledCourses for an existing start time with no courses
+  /**
+   *  Test finding no ScheduledCourses for an existing start time with no courses
+   */
   @Test
   public void testFindNoScheduledCoursesForStartTime() {
     // Attempt to find ScheduledCourses for an existing start time with no courses
@@ -151,8 +155,9 @@ public class ScheduledCourseRepositoryTests {
     // Assert that no courses were found
     assertTrue(foundCourses.isEmpty());
   }
-
-  // Test finding no ScheduledCourses for an existing end time with no courses
+   /**
+    *  Test finding no ScheduledCourses for an existing end time with no courses
+    */
   @Test
   public void testFindNoScheduledCoursesForEndTime() {
     // Attempt to find ScheduledCourses for an existing end time with no courses

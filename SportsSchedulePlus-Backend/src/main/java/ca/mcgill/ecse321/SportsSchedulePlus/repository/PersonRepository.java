@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 
-// Interface for managing data related to Persons in the application
+/**
+ * Interface for managing data related to Persons in the application
+ */
 public interface PersonRepository extends CrudRepository<Person, Integer>{
 
     // Find persons by name

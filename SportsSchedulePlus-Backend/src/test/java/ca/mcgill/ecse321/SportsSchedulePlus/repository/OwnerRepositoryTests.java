@@ -1,7 +1,3 @@
-/**
- * This class contains unit tests for the OwnerRepository.
- * The overridden equals method in the Owner model is used for assertions.
- */
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,7 +14,8 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 import java.sql.Time;
 import java.time.LocalTime;
 /**
- * Springboot tests for the OwnerRepository class.
+ * This class contains unit tests for the OwnerRepository.
+ * The overridden equals method in the Owner model is used for assertions.
  */
 @SpringBootTest
 public class OwnerRepositoryTests {
@@ -75,6 +72,9 @@ public class OwnerRepositoryTests {
         assertEquals(foundOwnerSuggested, owner); // Uses the overriden equals in the Owner model
         assertEquals(foundOwnerApproved, owner); // Uses the overriden equals in the Owner model
     }
+    /**
+     * Test finding an owner courses they did not approve/suggest.
+     */
     @Test
     public void testFindOwnerByApprovedAndSuggestedCoursesNotFound(){
         // Create Daily Schedule
@@ -124,7 +124,10 @@ public class OwnerRepositoryTests {
         // Assertions
         assertEquals(foundOwner, owner); // Uses the overriden equals in the Owner model
     }
-
+    /**
+     *
+     * Test finding owner by a daily schedule that does not have owners associated with it
+     */
     @Test
     public void testFindOwnerByDailyScheduleNotFound(){
 

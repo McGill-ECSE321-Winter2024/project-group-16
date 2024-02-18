@@ -5,7 +5,9 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
 import org.springframework.data.repository.CrudRepository;
 
-// Interface for managing data related to Owners in the application
+/**
+ * Interface for managing data related to Owners in the application
+ */
 public interface OwnerRepository extends CrudRepository<Owner, Integer> {
 
     // Find Owner by suggested courses

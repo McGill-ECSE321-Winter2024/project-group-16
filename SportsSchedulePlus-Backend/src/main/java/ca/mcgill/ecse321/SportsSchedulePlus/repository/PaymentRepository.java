@@ -7,7 +7,9 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
 import java.util.List;
 
-// Interface for managing data related to Payments in the application
+/**
+ * Interface for managing data related to Payments in the application
+ */
 public interface PaymentRepository extends CrudRepository<Payment, Payment.Key> {
 
     // Find Payments by confirmation number

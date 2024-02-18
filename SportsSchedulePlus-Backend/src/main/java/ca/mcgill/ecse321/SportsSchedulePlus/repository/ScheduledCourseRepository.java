@@ -8,7 +8,9 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
-// Interface for managing data related to ScheduledCourses in the application
+/**
+ * Interface for managing data related to ScheduledCourses in the application
+ */
 public interface ScheduledCourseRepository extends CrudRepository<ScheduledCourse, Integer> {
 
     // Find scheduled courses by location
