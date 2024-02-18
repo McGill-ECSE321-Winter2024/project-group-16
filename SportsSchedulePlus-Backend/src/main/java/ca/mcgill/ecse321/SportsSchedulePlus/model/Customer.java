@@ -244,12 +244,13 @@ public class Customer extends PersonRole {
       return false;
     }
 
+
     // Check if both lists are empty, consider them equal
     if (customerPayments.isEmpty() && customer.customerPayments.isEmpty() &&
       coursesRegistered.isEmpty() && customer.coursesRegistered.isEmpty()) {
       return true;
     }
-
+    
     // Check if the lists contain the same elements
     if (!Helper.compareListsElementWise(customerPayments, customer.customerPayments) ||
       !Helper.compareListsElementWise(coursesRegistered, customer.coursesRegistered)) {

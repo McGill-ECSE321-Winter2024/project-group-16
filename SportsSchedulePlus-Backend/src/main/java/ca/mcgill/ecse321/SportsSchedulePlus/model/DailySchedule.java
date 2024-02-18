@@ -74,7 +74,7 @@ public class DailySchedule
 
   @Override
   public boolean equals(Object obj) {
-    System.out.println("check daily schedule");
+    System.out.println("check daily schedule"+ obj);
 
     if (this == obj) {
       System.out.println("Objects are the same instance");
@@ -94,6 +94,9 @@ public class DailySchedule
       return false;
     }
 
+    if (openingTime == null && that.openingTime == null && closingTime == null && that.closingTime == null )
+    return true;
+    
     // Check equality for openingTime
     if (openingTime.compareTo(that.openingTime) != 0) {
       System.out.println("openingTime mismatch: " + openingTime + " != " + that.openingTime);
@@ -107,15 +110,11 @@ public class DailySchedule
     }
 
     System.out.println("Objects are equal");
+    
     return true;
   }
 
-  private boolean compareTime(Time time1, Time time2) {
-    if (time1 == null && time2 == null) return true;
-    if (time1 == null || time2 == null) return false;
-
-    return time1.compareTo(time2) == 0;
-  }
+ 
 
 
   @Override
