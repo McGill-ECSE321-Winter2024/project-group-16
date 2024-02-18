@@ -264,7 +264,7 @@ public class Owner extends PersonRole {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(getId(), approvedCourses, ownerSuggestedCourses, dailySchedule);
+    return Objects.hash(super.hashCode(),getId(), approvedCourses, ownerSuggestedCourses, dailySchedule);
   }
 
 }

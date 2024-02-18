@@ -245,7 +245,7 @@ public class Customer extends PersonRole {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), customerPayments, coursesRegistered);
+    return Objects.hash(super.hashCode(),getId(), customerPayments, coursesRegistered);
   }
 
 }
