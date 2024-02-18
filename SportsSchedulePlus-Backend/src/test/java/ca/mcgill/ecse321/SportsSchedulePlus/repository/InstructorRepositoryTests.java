@@ -1,8 +1,5 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +9,9 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 import ca.mcgill.ecse321.util.Helper;
 
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
  * Springboot tests for the InstructorRepository class.
  */
@@ -51,6 +51,18 @@ public class InstructorRepositoryTests {
         assertEquals(instructor, foundInstructors.get(0));
     }
 
+    @Test
+    public void testFindInstructorByExperienceNotFound(){
+        // Create Instructor
+        Instructor instructor = new Instructor();
+
+        // Read Instructor From Database
+        List<Instructor> foundInstructors = instructorRepository.findInstructorByExperience(instructor.getExperience());
+
+        // Assertions
+        assertTrue(foundInstructors.isEmpty());
+    }
+
     /**
      * Test finding instructors by supervised course.
      */
@@ -77,6 +89,25 @@ public class InstructorRepositoryTests {
         assertEquals(instructor, foundInstructors.get(0));
     }
 
+    @Test
+    public void testFindInstructorByScheduledCourseNotFound(){
+        // Create Instructor
+        Instructor instructor = new Instructor();
+
+        // Create Scheduled Course
+        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+        courseTypeRepository.save(courseType);
+        ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+        scheduledCourseRepository.save(scheduledCourse);
+
+        // Read Instructor From Database
+        List<Instructor> foundInstructors = instructorRepository.findInstructorBySupervisedCourses(scheduledCourse);
+
+        // Assertions
+        assertTrue(foundInstructors.isEmpty());
+
+    }
+
     /**
      * Test finding instructors by suggested course.
      */
@@ -99,6 +130,23 @@ public class InstructorRepositoryTests {
         // Assertions
         assertNotNull(foundInstructor);
         assertEquals(instructor, foundInstructor);
+    }
+
+    @Test
+    public void testFindInstructorBySuggestedCourseNotFound(){
+        // Create Instructor
+        Instructor instructor = new Instructor();
+
+        // Create Course Type
+        CourseType courseType = new CourseType("pilates", true, 12.99F);
+        courseTypeRepository.save(courseType);
+
+        // Read Instructor From Database
+        Instructor foundInstructor = instructorRepository.findInstructorByInstructorSuggestedCourseTypes(courseType);
+
+        // Assertions
+        assertNull(foundInstructor);
+
     }
 
 
