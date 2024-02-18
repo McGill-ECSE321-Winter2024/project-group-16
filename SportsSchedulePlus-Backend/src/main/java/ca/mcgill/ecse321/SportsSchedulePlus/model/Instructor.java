@@ -24,9 +24,9 @@ public class Instructor extends Customer {
 
   //Instructor Associations
   @OneToMany(fetch = FetchType.EAGER)
-  private List < CourseType > instructorSuggestedCourseTypes;
+  private List <CourseType> instructorSuggestedCourseTypes;
   @ManyToMany(fetch = FetchType.EAGER)
-  private List < ScheduledCourse > supervisedCourses;
+  private List <ScheduledCourse> supervisedCourses;
 
   //------------------------
   // CONSTRUCTOR
@@ -37,8 +37,8 @@ public class Instructor extends Customer {
   public Instructor(int aId, String aExperience) {
     super(aId);
     experience = aExperience;
-    instructorSuggestedCourseTypes = new ArrayList < CourseType > ();
-    supervisedCourses = new ArrayList < ScheduledCourse > ();
+    instructorSuggestedCourseTypes = new ArrayList <CourseType> ();
+    supervisedCourses = new ArrayList <ScheduledCourse> ();
   }
 
   //------------------------
@@ -61,8 +61,8 @@ public class Instructor extends Customer {
     return aInstructorSuggestedCourseType;
   }
 
-  public List < CourseType > getInstructorSuggestedCourseTypes() {
-    List < CourseType > newInstructorSuggestedCourseTypes = Collections.unmodifiableList(instructorSuggestedCourseTypes);
+  public List <CourseType> getInstructorSuggestedCourseTypes() {
+    List <CourseType> newInstructorSuggestedCourseTypes = Collections.unmodifiableList(instructorSuggestedCourseTypes);
     return newInstructorSuggestedCourseTypes;
   }
 
@@ -86,8 +86,8 @@ public class Instructor extends Customer {
     return aSupervisedCourse;
   }
 
-  public List < ScheduledCourse > getSupervisedCourses() {
-    List < ScheduledCourse > newSupervisedCourses = Collections.unmodifiableList(supervisedCourses);
+  public List <ScheduledCourse> getSupervisedCourses() {
+    List <ScheduledCourse> newSupervisedCourses = Collections.unmodifiableList(supervisedCourses);
     return newSupervisedCourses;
   }
 
@@ -234,20 +234,20 @@ public class Instructor extends Customer {
   /**
    * Compares this Instructor object with the specified object for equality.
    *
-   * @param obj The object to compare with this Instructor.
+   * @param object The object to compare with this Instructor.
    * @return true if the given object is equal to this Instructor; false otherwise.
    */
   @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (!(obj instanceof Instructor) || !super.equals(obj)) return false;
+  public boolean equals(Object object) {
+    if (this == object) return true;
+    if (!(object instanceof Instructor) || !super.equals(object)) return false;
 
-    Instructor that = (Instructor) obj;
+    Instructor other = (Instructor) object;
 
-    return getId() == that.getId() &&
-      (experience == null ? that.experience == null : experience.equals(that.experience)) &&
-      Helper.compareListsElementWise(instructorSuggestedCourseTypes, that.instructorSuggestedCourseTypes) &&
-      Helper.compareListsElementWise(supervisedCourses, that.supervisedCourses);
+    return getId() == other.getId() &&
+      (experience == null ? other.experience == null : experience.equals(other.experience)) &&
+      Helper.compareListsElementWise(instructorSuggestedCourseTypes, other.instructorSuggestedCourseTypes) &&
+      Helper.compareListsElementWise(supervisedCourses, other.supervisedCourses);
   }
 
   /**

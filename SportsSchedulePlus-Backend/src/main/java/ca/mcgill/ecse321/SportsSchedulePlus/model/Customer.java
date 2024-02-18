@@ -22,22 +22,22 @@ public class Customer extends PersonRole {
 
   //Customer Associations
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  private List < Payment > customerPayments;
+  private List <Payment> customerPayments;
   @OneToMany(fetch = FetchType.EAGER)
-  private List < ScheduledCourse > coursesRegistered;
+  private List <ScheduledCourse> coursesRegistered;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
   public Customer() {
-    customerPayments = new ArrayList < Payment > ();
-    coursesRegistered = new ArrayList < ScheduledCourse > ();
+    customerPayments = new ArrayList <Payment> ();
+    coursesRegistered = new ArrayList <ScheduledCourse> ();
   }
   public Customer(int aId) {
     super(aId);
-    customerPayments = new ArrayList < Payment > ();
-    coursesRegistered = new ArrayList < ScheduledCourse > ();
+    customerPayments = new ArrayList <Payment> ();
+    coursesRegistered = new ArrayList <ScheduledCourse> ();
   }
 
   //------------------------
@@ -49,8 +49,8 @@ public class Customer extends PersonRole {
     return aCustomerPayment;
   }
 
-  public List < Payment > getCustomerPayments() {
-    List < Payment > newCustomerPayments = Collections.unmodifiableList(customerPayments);
+  public List <Payment> getCustomerPayments() {
+    List <Payment> newCustomerPayments = Collections.unmodifiableList(customerPayments);
     return newCustomerPayments;
   }
 
@@ -74,8 +74,8 @@ public class Customer extends PersonRole {
     return aCoursesRegistered;
   }
 
-  public List < ScheduledCourse > getCoursesRegistered() {
-    List < ScheduledCourse > newCoursesRegistered = Collections.unmodifiableList(coursesRegistered);
+  public List <ScheduledCourse> getCoursesRegistered() {
+    List <ScheduledCourse> newCoursesRegistered = Collections.unmodifiableList(coursesRegistered);
     return newCoursesRegistered;
   }
 
@@ -222,15 +222,15 @@ public class Customer extends PersonRole {
   /**
    * Overrides the equals method to compare two Customer objects for equality.
    *
-   * @param obj The object to compare with.
+   * @param object The object to compare with.
    * @return True if the objects are equal, false otherwise.
    */
   @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (!super.equals(obj) || !(obj instanceof Customer)) return false;
+  public boolean equals(Object object) {
+    if (this == object) return true;
+    if (!super.equals(object) || !(object instanceof Customer)) return false;
 
-    Customer customer = (Customer) obj;
+    Customer customer = (Customer) object;
 
     return customer.getId() == this.getId() &&
       Helper.compareListsElementWise(customerPayments, customer.customerPayments) &&

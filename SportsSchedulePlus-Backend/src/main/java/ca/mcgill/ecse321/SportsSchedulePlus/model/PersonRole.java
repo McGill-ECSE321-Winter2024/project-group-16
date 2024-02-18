@@ -61,22 +61,22 @@ public abstract class PersonRole {
   /**
    * Compares this PersonRole object with the specified object for equality.
    *
-   * @param obj The object to compare with this PersonRole.
+   * @param object The object to compare with this PersonRole.
    * @return true if the given object is equal to this PersonRole; false otherwise.
    */
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(Object object) {
     // Check if the compared object is the same instance
-    if (this == obj) return true;
+    if (this == object) return true;
 
     // Check if the compared object is of the same class
-    if (obj == null || getClass() != obj.getClass()) return false;
+    if (object == null || getClass() != object.getClass()) return false;
 
     // Cast the compared object to PersonRole for detailed attribute comparison
-    PersonRole that = (PersonRole) obj;
+    PersonRole other = (PersonRole) object;
 
     // Compare the unique identifier for equality
-    return id == that.id;
+    return id == other.id;
   }
 
   /**

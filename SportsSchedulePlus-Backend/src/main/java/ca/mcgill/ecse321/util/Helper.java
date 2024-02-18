@@ -7,37 +7,46 @@ import java.util.List;
 import java.util.Objects;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
-
+/**
+ * Helper class that contains methods for list comparison useful for the override of equals in the models
+ * and methods to create models for testing purposes.
+ */
 public class Helper {
-    
 
-    // Compare two lists element-wise
-public static boolean compareListsElementWise(List<?> list1, List<?> list2) {
-    if (list1.size() != list2.size()) {
+  /**
+   /**
+   * Compare two lists element-wise
+   * @param firstList
+   * @param secondList
+   * @return boolean indicating equality
+   */
+  public static boolean compareListsElementWise(List <?> firstList, List <?> secondList) {
+    if (firstList.size() != secondList.size()) {
+      return false;
+    }
+
+    Iterator <?> firstIterator = firstList.iterator();
+    Iterator <?> secondIterator = secondList.iterator();
+
+    while (firstIterator.hasNext() && secondIterator.hasNext()) {
+      Object firstElement = firstIterator.next();
+      Object secondElement = secondIterator.next();
+
+      if (!Objects.equals(firstElement, secondElement)) {
         return false;
+      }
     }
-
-    Iterator<?> iterator1 = list1.iterator();
-    Iterator<?> iterator2 = list2.iterator();
-
-    while (iterator1.hasNext() && iterator2.hasNext()) {
-        Object element1 = iterator1.next();
-        Object element2 = iterator2.next();
-
-        if (!Objects.equals(element1, element2)) {
-            return false;
-        }
-    }
-
     return true;
-}
+  }
 
- /**
+  /**
    * Helper method to create a ScheduledCourse with dummy data.
    */
   public static ScheduledCourse createScheduledCourse(CourseType courseType) {
-  
+
     return new ScheduledCourse(
       1,
       Date.valueOf("2024-01-01"),
@@ -48,7 +57,15 @@ public static boolean compareListsElementWise(List<?> list1, List<?> list2) {
     );
   }
 
-  
+  /**
+   * Helper method to create a payment with dummy data.
+   */
+  public static Payment createPayment(Customer customer, ScheduledCourse scheduledCourse) {
+    Payment.Key paymentKey = new Payment.Key(customer, scheduledCourse);
+    Payment newPayment = new Payment(paymentKey);
+    newPayment.setConfirmationNumber(12345);
 
+    return newPayment;
+  }
 
 }

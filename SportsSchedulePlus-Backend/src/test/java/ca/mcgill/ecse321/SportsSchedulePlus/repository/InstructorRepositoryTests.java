@@ -13,7 +13,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Springboot tests for the InstructorRepository class.
+ * This class contains unit tests for the InstructorRepository.
+ * The overridden equals method in the Instructor model is used for assertions.
  */
 @SpringBootTest
 public class InstructorRepositoryTests {
@@ -90,10 +91,7 @@ public class InstructorRepositoryTests {
     }
 
     @Test
-    public void testFindInstructorByScheduledCourseNotFound(){
-        // Create Instructor
-        Instructor instructor = new Instructor();
-
+    public void testFindInstructorBySupervisedCourseNotFound(){
         // Create Scheduled Course
         CourseType courseType = new CourseType("Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
@@ -134,9 +132,7 @@ public class InstructorRepositoryTests {
 
     @Test
     public void testFindInstructorBySuggestedCourseNotFound(){
-        // Create Instructor
-        Instructor instructor = new Instructor();
-
+ 
         // Create Course Type
         CourseType courseType = new CourseType("pilates", true, 12.99F);
         courseTypeRepository.save(courseType);

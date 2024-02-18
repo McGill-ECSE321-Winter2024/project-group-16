@@ -5,8 +5,9 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
-
-// Interface for managing data related to CourseTypes in the application
+/**
+ *  Interface for managing data related to CourseTypes in the application
+ */
 public interface CourseTypeRepository extends CrudRepository<CourseType, Integer> {
 
     // Find CourseType by description

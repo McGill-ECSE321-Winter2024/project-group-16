@@ -19,7 +19,7 @@ public class Person {
   // STATIC VARIABLES
   //------------------------
 
-  private static Map < String, Person > personsByEmail = new HashMap < String, Person > ();
+  private static Map <String, Person> personsByEmail = new HashMap <String, Person> ();
 
   //------------------------
   // MEMBER VARIABLES
@@ -108,6 +108,10 @@ public class Person {
     return getWithEmail(aEmail) != null;
   }
 
+  public int getId(){
+    return id;
+  }
+  
   public String getPassword() {
     return password;
   }
@@ -141,19 +145,19 @@ public class Person {
   /**
    * Compares this Person object with the specified object for equality.
    *
-   * @param obj The object to compare with this Person.
+   * @param object The object to compare with this Person.
    * @return true if the given object is equal to this Person; false otherwise.
    */
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(Object object) {
     // Check if the compared object is the same instance
-    if (this == obj) return true;
+    if (this == object) return true;
 
     // Check if the compared object is of the same class
-    if (obj == null || getClass() != obj.getClass()) return false;
+    if (object == null || getClass() != object.getClass()) return false;
 
     // Cast the compared object to Person for detailed attribute comparison
-    Person person = (Person) obj;
+    Person person = (Person) object;
 
     // Compare individual attributes for equality
     return id == person.id &&

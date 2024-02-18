@@ -7,7 +7,9 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-// Interface for managing data related to Instructors in the application
+/**
+ * Interface for managing data related to Instructors in the application
+ */
 public interface InstructorRepository extends CrudRepository<Instructor, Integer> {
 
     // Find instructors based on their experience

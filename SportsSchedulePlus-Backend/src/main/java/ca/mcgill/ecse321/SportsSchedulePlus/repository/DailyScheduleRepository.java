@@ -6,7 +6,9 @@ import org.springframework.data.repository.CrudRepository;
 import java.sql.Time;
 import java.util.List;
 
-// Interface for managing data related to DailySchedules in the application
+/**
+ * Interface for managing data related to DailySchedules in the application
+ */
 public interface DailyScheduleRepository extends CrudRepository<DailySchedule, Integer> {
 
     // Find DailySchedule by openingTime

@@ -69,13 +69,13 @@ public class Payment {
   /**
    * Compares this Payment object with the specified object for equality.
    *
-   * @param obj The object to compare with this Payment.
+   * @param object The object to compare with this Payment.
    * @return true if the given object is equal to this Payment; false otherwise.
    */
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(Object object) {
     // Cast the compared object to Payment for detailed attribute comparison
-    Payment other = (Payment) obj;
+    Payment other = (Payment) object;
 
     // Compare the keys for equality
     return this.key.equals(other.getKey());

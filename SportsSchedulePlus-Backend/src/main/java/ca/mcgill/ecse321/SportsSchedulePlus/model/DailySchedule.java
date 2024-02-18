@@ -54,6 +54,10 @@ public class DailySchedule {
     return wasSet;
   }
 
+  public int getId(){
+    return id;
+  }
+
   public Time getOpeningTime() {
     return openingTime;
   }
@@ -73,28 +77,28 @@ public class DailySchedule {
   /**
    * Overrides the equals method to compare two DailySchedule objects for equality.
    *
-   * @param obj The object to compare with.
+   * @param object The object to compare with.
    * @return True if the objects are equal, false otherwise.
    */
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(Object object) {
     // Check if comparing with the same object
-    if (this == obj) return true;
+    if (this == object) return true;
 
     // Check if the compared object is null or belongs to a different class
-    if (obj == null || getClass() != obj.getClass()) return false;
+    if (object == null || getClass() != object.getClass()) return false;
 
     // Cast the compared object to DailySchedule for detailed attribute comparison
-    DailySchedule that = (DailySchedule) obj;
+    DailySchedule other = (DailySchedule) object;
 
     // Check equality for the id attribute
-    boolean idsEqual = id == that.id;
+    boolean idsEqual = id == other.id;
 
     // Check equality for openingTime using compareTo or handle nulls
-    boolean openingTimeEqual = openingTime == null ? that.openingTime == null : openingTime.compareTo(that.openingTime) == 0;
+    boolean openingTimeEqual = openingTime == null ? other.openingTime == null : openingTime.compareTo(other.openingTime) == 0;
 
     // Check equality for closingTime using compareTo or handle nulls
-    boolean closingTimeEqual = closingTime == null ? that.closingTime == null : closingTime.compareTo(that.closingTime) == 0;
+    boolean closingTimeEqual = closingTime == null ? other.closingTime == null : closingTime.compareTo(other.closingTime) == 0;
 
     // Return true only if all checks pass
     return idsEqual && openingTimeEqual && closingTimeEqual;

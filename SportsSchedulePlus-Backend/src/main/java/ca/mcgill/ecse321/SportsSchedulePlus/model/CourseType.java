@@ -33,7 +33,7 @@ public class CourseType {
 
   //CourseType Associations
   @OneToMany(fetch = FetchType.EAGER)
-  private List < ScheduledCourse > scheduledCourses;
+  private List <ScheduledCourse> scheduledCourses;
 
   //------------------------
   // CONSTRUCTOR
@@ -207,30 +207,30 @@ public class CourseType {
   /**
    * Compares this CourseType object with the specified object for equality.
    *
-   * @param o The object to compare with this CourseType.
+   * @param object The object to compare with this CourseType.
    * @return  true if the given object is equal to this CourseType; false otherwise.
    */
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(Object object) {
     // Check if the compared object is the same instance
-    if (this == o) return true;
+    if (this == object) return true;
 
     // Check if the compared object is of the same class
-    if (o == null || getClass() != o.getClass()) return false;
+    if (object == null || getClass() != object.getClass()) return false;
 
     // Cast the compared object to CourseType for detailed attribute comparison
-    CourseType that = (CourseType) o;
+    CourseType other = (CourseType) object;
 
     // If both Lists of scheduled courses are empty, they are considered equal
-    if (getScheduledCourses().isEmpty() && that.getScheduledCourses().isEmpty()) return true;
+    if (getScheduledCourses().isEmpty() && other.getScheduledCourses().isEmpty()) return true;
 
     // If the lists do not have the same elements, they are not considered equal
-    if (!Helper.compareListsElementWise(getScheduledCourses(), that.getScheduledCourses())) return false;
+    if (!Helper.compareListsElementWise(getScheduledCourses(), other.getScheduledCourses())) return false;
 
     // Compare individual attributes for equality
-    return getId() == that.getId() &&
-      getDescription().equals(that.getDescription()) &&
-      getPrice() == that.getPrice();
+    return getId() == other.getId() &&
+      getDescription().equals(other.getDescription()) &&
+      getPrice() == other.getPrice();
   }
 
   /**

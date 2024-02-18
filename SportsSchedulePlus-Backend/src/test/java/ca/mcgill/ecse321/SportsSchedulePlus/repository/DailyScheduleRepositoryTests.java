@@ -1,7 +1,5 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for the DailyScheduleRepository.
+ * This class contains unit tests for the DailyScheduleRepository.
+ * The overridden equals method in the DailySchedule model is used for assertions.
  */
 @SpringBootTest
 public class DailyScheduleRepositoryTests {
@@ -32,7 +31,7 @@ public class DailyScheduleRepositoryTests {
   }
 
   /**
-   * Test the persistence and loading of DailySchedule entities in the database.
+   * Tests the persistence and loading of DailySchedule entities in the database.
    */
   @Test
   public void testPersistAndLoadDailySchedule() {
@@ -54,26 +53,22 @@ public class DailyScheduleRepositoryTests {
     assertEquals(dailySchedule, foundOpeningTimes.get(0));
     assertEquals(dailySchedule, foundClosingTimes.get(0));
   }
-
+  /**
+   * Tests the case where DailySchedule objects are not found
+   */
   @Test
   public void testByDailyScheduleNotFound(){
 
-    // Create and save an empty daily schedule
+    // Create, but do not save save an empty daily schedule
     DailySchedule dailySchedule = new DailySchedule();
-    dailyScheduleRepository.save(dailySchedule);
 
     // Find opening and closing time for empty daily schedule
     List<DailySchedule> foundOpening = dailyScheduleRepository.findDailyScheduleByOpeningTime(dailySchedule.getOpeningTime());
     List<DailySchedule> foundClosing = dailyScheduleRepository.findDailyScheduleByClosingTime(dailySchedule.getClosingTime());
 
     // Assert that both lists are empty.
-    assertNull(foundOpening.get(0).getOpeningTime());
-    assertNull(foundOpening.get(0).getClosingTime());
-    assertNull(foundClosing.get(0).getOpeningTime());
-    assertNull(foundClosing.get(0).getClosingTime());
-
-    assertEquals(dailySchedule, foundOpening.get(0));
-    assertEquals(dailySchedule, foundClosing.get(0));
+    assertTrue(foundOpening.isEmpty());
+    assertTrue(foundClosing.isEmpty());
 
   }
 
