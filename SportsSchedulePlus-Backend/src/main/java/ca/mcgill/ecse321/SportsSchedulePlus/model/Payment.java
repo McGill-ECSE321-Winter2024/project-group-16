@@ -27,8 +27,8 @@ public class Payment {
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public Payment(){
-    
+  public Payment() {
+
   }
   public Payment(int aConfirmationNumber) {
     confirmationNumber = aConfirmationNumber;
@@ -61,22 +61,36 @@ public class Payment {
     this.key = key;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    Payment other = (Payment) obj;
-    return this.key.equals(other.getKey());
-  }
-  
-  @Override
-  public int hashCode() {
-    return Objects.hash(key);
-  }
-
   public String toString() {
     return super.toString() + "[" +
       "confirmationNumber" + ":" + getConfirmationNumber() + "]";
   }
 
+  /**
+   * Compares this Payment object with the specified object for equality.
+   *
+   * @param obj The object to compare with this Payment.
+   * @return true if the given object is equal to this Payment; false otherwise.
+   */
+  @Override
+  public boolean equals(Object obj) {
+    // Cast the compared object to Payment for detailed attribute comparison
+    Payment other = (Payment) obj;
+
+    // Compare the keys for equality
+    return this.key.equals(other.getKey());
+  }
+
+  /**
+   * Generates a hash code for this Payment object based on its attributes.
+   *
+   * @return A hash code value for this Payment.
+   */
+  @Override
+  public int hashCode() {
+    // Using Objects.hash to generate hash code based on the key attribute
+    return Objects.hash(key);
+  }
 
   @Embeddable
   public static class Key implements Serializable {

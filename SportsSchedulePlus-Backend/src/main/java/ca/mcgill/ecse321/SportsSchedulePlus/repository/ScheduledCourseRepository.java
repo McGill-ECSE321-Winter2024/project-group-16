@@ -1,4 +1,5 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
+
 import org.springframework.data.repository.CrudRepository;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
@@ -7,10 +8,11 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
-public interface ScheduledCourseRepository extends CrudRepository<ScheduledCourse, Integer>{
+// Interface for managing data related to ScheduledCourses in the application
+public interface ScheduledCourseRepository extends CrudRepository<ScheduledCourse, Integer> {
 
-	// Find scheduled courses by location
-    List <ScheduledCourse> findScheduledCourseByLocation(String location);
+    // Find scheduled courses by location
+    List<ScheduledCourse> findScheduledCourseByLocation(String location);
     
     // Find scheduled courses by date
     List<ScheduledCourse> findScheduledCoursesByDate(Date date);

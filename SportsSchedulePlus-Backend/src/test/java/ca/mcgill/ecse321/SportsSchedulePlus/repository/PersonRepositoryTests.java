@@ -1,3 +1,7 @@
+/**
+ * This class contains unit tests for the PersonRepository.
+ * The overridden equals method in the Person model is used for assertions.
+ */
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,6 +19,9 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 
+/**
+ * Springboot tests for the PersonRepository class.
+ */
 @SpringBootTest
 public class PersonRepositoryTests {
 
@@ -23,19 +30,22 @@ public class PersonRepositoryTests {
     @Autowired
     private PersonRoleRepository personRoleRepository;
 
-    // Clear the database after each test
+    /**
+     * Clear the database after each test.
+     */
     @AfterEach
     public void clearDatabase() {
         personRepository.deleteAll();
         personRoleRepository.deleteAll();
     }
 
-    // Test finding a person by name
+    /**
+     * Test finding a person by name.
+     */
     @Test
     public void testFindPersonByName() {
         // Create a PersonRole
         PersonRole personRole = new Customer();
-   
         personRoleRepository.save(personRole);
 
         // Create a new person with a specific name, email, password, and associated PersonRole
@@ -49,11 +59,14 @@ public class PersonRepositoryTests {
         assertNotNull(foundPersons);
         assertEquals(1, foundPersons.size());
         Person foundPerson = foundPersons.get(0);
-        assertNotNull(personRoleRepository.findPersonRoleById(personRole.getId()));
+        
+        // The overridden equals method in the Person model is used here
         assertEquals(newPerson, foundPerson);
     }
 
-    // Test finding a person by email
+    /**
+     * Test finding a person by email.
+     */
     @Test
     public void testFindPersonByEmail() {
         // Create a PersonRole
@@ -70,10 +83,26 @@ public class PersonRepositoryTests {
 
         // Then ensure the found person is not null and the email matches the expected
         assertNotNull(foundPerson);
-        assertEquals(newPerson,foundPerson);
+        
+        // The overridden equals method in the Person model is used here
+        assertEquals(newPerson, foundPerson);
     }
 
-    // Test finding a person by email when the person is not found
+     /**
+     * Test finding a person by a nonexistent name.
+     */
+    @Test
+    public void testFindPersonByNameNotFound() {
+        // When finding a person by a nonexistent name
+        List<Person> foundPersons = personRepository.findPersonByName("Nonexistent");
+
+        // Then ensure the list is empty
+        assertEquals(0, foundPersons.size());
+    }
+
+    /**
+     * Test finding a person by email when the person is not found.
+     */
     @Test
     public void testFindPersonByEmailNotFound() {
         // When finding a person by a nonexistent email

@@ -2,8 +2,6 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
-
-
 import java.util.Objects;
 
 // line 2 "model.ump"
@@ -17,8 +15,7 @@ import jakarta.persistence.InheritanceType;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class PersonRole
-{
+public abstract class PersonRole {
 
   //------------------------
   // MEMBER VARIABLES
@@ -32,11 +29,10 @@ public abstract class PersonRole
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public PersonRole(){
-    
+  public PersonRole() {
+
   }
-  public PersonRole(int aId)
-  {
+  public PersonRole(int aId) {
     id = aId;
   }
 
@@ -44,40 +40,54 @@ public abstract class PersonRole
   // INTERFACE
   //------------------------
 
-  public boolean setId(int aId)
-  {
+  public boolean setId(int aId) {
     boolean wasSet = false;
     id = aId;
     wasSet = true;
     return wasSet;
   }
 
-  public int getId()
-  {
+  public int getId() {
     return id;
   }
 
-  public void delete()
-  {}
+  public void delete() {}
 
+  public String toString() {
+    return super.toString() + "[" +
+      "id" + ":" + getId() + "]";
+  }
+
+  /**
+   * Compares this PersonRole object with the specified object for equality.
+   *
+   * @param obj The object to compare with this PersonRole.
+   * @return true if the given object is equal to this PersonRole; false otherwise.
+   */
   @Override
   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
-     
-      PersonRole that = (PersonRole) obj;
+    // Check if the compared object is the same instance
+    if (this == obj) return true;
 
-      return id == that.id;
+    // Check if the compared object is of the same class
+    if (obj == null || getClass() != obj.getClass()) return false;
+
+    // Cast the compared object to PersonRole for detailed attribute comparison
+    PersonRole that = (PersonRole) obj;
+
+    // Compare the unique identifier for equality
+    return id == that.id;
   }
-  
+
+  /**
+   * Generates a hash code for this PersonRole object based on its attributes.
+   *
+   * @return A hash code value for this PersonRole.
+   */
   @Override
   public int hashCode() {
+    // Using Objects.hash to generate hash code based on the unique identifier
     return Objects.hash(id);
   }
 
-  public String toString()
-  {
-    return super.toString() + "["+
-            "id" + ":" + getId()+ "]";
-  }
 }

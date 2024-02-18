@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -13,104 +14,153 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
+import ca.mcgill.ecse321.util.Helper;
 
+/**
+ * This class contains unit tests for the ScheduledCourseRepository.
+ * The overridden equals method in the ScheduledCourse model is used for assertions.
+ */
 @SpringBootTest
 public class ScheduledCourseRepositoryTests {
 
-    @Autowired
-    private ScheduledCourseRepository scheduledCourseRepository;
+  @Autowired
+  private ScheduledCourseRepository scheduledCourseRepository;
 
-    @Autowired
-    private CourseTypeRepository courseTypeRepository;
+  @Autowired
+  private CourseTypeRepository courseTypeRepository;
 
-    // Cleanup the database after each test
-    @AfterEach
-    public void clearDatabase() {
-        scheduledCourseRepository.deleteAll();
-        courseTypeRepository.deleteAll();
-    }
+  /**
+   * Cleanup the database after each test.
+   */
+  @AfterEach
+  public void clearDatabase() {
+    scheduledCourseRepository.deleteAll();
+    courseTypeRepository.deleteAll();
+  }
 
-    // Test finding ScheduledCourse by location
-    @Test
-    public void testFindScheduledCourseByLocation() {
-        // Create and save a ScheduledCourse
-        ScheduledCourse scheduledCourse = createScheduledCourse();
-        scheduledCourseRepository.save(scheduledCourse);
+  /**
+   * Test finding ScheduledCourse by location.
+   */
+  @Test
+  public void testFindScheduledCourseByLocation() {
+    // Create and save a ScheduledCourse
+    CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+    courseTypeRepository.save(courseType);
+    ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+    scheduledCourseRepository.save(scheduledCourse);
+    // Find ScheduledCourse by location
+    List <ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCourseByLocation(scheduledCourse.getLocation());
 
-        // Find ScheduledCourse by location
-        List<ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCourseByLocation(scheduledCourse.getLocation());
+    // Retrieve the found ScheduledCourse
+    ScheduledCourse foundCourse = foundCourses.get(0);
 
-        // Retrieve the found ScheduledCourse
-        ScheduledCourse foundCourse = foundCourses.get(0);
+    // Assert that the created ScheduledCourse matches the found ScheduledCourse
+    assertEquals(scheduledCourse, foundCourse);
+  }
 
-        // Assert that the created ScheduledCourse matches the found ScheduledCourse
-        assertEquals(scheduledCourse, foundCourse);
-    }
-     
-    // Test finding ScheduledCourses by date
-    @Test
-    public void testFindScheduledCoursesByDate() {
-        ScheduledCourse scheduledCourse = createScheduledCourse();
-        scheduledCourseRepository.save(scheduledCourse);
+  /**
+   * Test finding ScheduledCourses by date.
+   */
+  @Test
+  public void testFindScheduledCoursesByDate() {
+    CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+    courseTypeRepository.save(courseType);
+    ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+    scheduledCourseRepository.save(scheduledCourse);
+    List <ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByDate(scheduledCourse.getDate());
 
-        List<ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByDate(scheduledCourse.getDate());
+    // Retrieve the found ScheduledCourse
+    ScheduledCourse foundCourse = foundCourses.get(0);
 
-        ScheduledCourse foundCourse = foundCourses.get(0);
+    // Assert that the created ScheduledCourse matches the found ScheduledCourse
+    assertEquals(scheduledCourse, foundCourse);
+  }
 
-        assertEquals(scheduledCourse, foundCourse);
-    }
-    
-    // Test finding ScheduledCourses by course type
-    @Test
-    public void testFindScheduledCoursesByCourseType() {
-        ScheduledCourse scheduledCourse = createScheduledCourse();
-        scheduledCourseRepository.save(scheduledCourse);
+  /**
+   * Test finding ScheduledCourses by course type.
+   */
+  @Test
+  public void testFindScheduledCoursesByCourseType() {
+    CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+    courseTypeRepository.save(courseType);
+    ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+    scheduledCourseRepository.save(scheduledCourse);
 
-        List<ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByCourseType(scheduledCourse.getCourseType());
+    List <ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByCourseType(scheduledCourse.getCourseType());
 
-        ScheduledCourse foundCourse = foundCourses.get(0);
+    // Retrieve the found ScheduledCourse
+    ScheduledCourse foundCourse = foundCourses.get(0);
 
-        assertEquals(scheduledCourse, foundCourse);
-    }
-    
-    // Test finding ScheduledCourses by start time
-    @Test
-    public void testFindScheduledCoursesByStartTime() {
-        ScheduledCourse scheduledCourse = createScheduledCourse();
-        scheduledCourseRepository.save(scheduledCourse);
+    // Assert that the created ScheduledCourse matches the found ScheduledCourse
+    assertEquals(scheduledCourse, foundCourse);
+  }
 
-        List<ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByStartTime(scheduledCourse.getStartTime());
+  /**
+   * Test finding ScheduledCourses by start time.
+   */
+  @Test
+  public void testFindScheduledCoursesByStartTime() {
+    CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+    courseTypeRepository.save(courseType);
+    ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+    scheduledCourseRepository.save(scheduledCourse);
+    List <ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByStartTime(scheduledCourse.getStartTime());
 
-        ScheduledCourse foundCourse = foundCourses.get(0);
+    // Retrieve the found ScheduledCourse
+    ScheduledCourse foundCourse = foundCourses.get(0);
 
-        assertEquals(scheduledCourse, foundCourse);
-    }
+    // Assert that the created ScheduledCourse matches the found ScheduledCourse
+    assertEquals(scheduledCourse, foundCourse);
+  }
 
-    // Test finding ScheduledCourses by end time
-    @Test
-    public void testFindScheduledCoursesByEndTime() {
-        ScheduledCourse scheduledCourse = createScheduledCourse();
-        scheduledCourseRepository.save(scheduledCourse);
+  /**
+   * Test finding ScheduledCourses by end time.
+   */
+  @Test
+  public void testFindScheduledCoursesByEndTime() {
+    CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+    courseTypeRepository.save(courseType);
+    ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+    scheduledCourseRepository.save(scheduledCourse);
 
-        List<ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByEndTime(scheduledCourse.getEndTime());
+    List <ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByEndTime(scheduledCourse.getEndTime());
 
-        ScheduledCourse foundCourse = foundCourses.get(0);
+    // Retrieve the found ScheduledCourse
+    ScheduledCourse foundCourse = foundCourses.get(0);
 
-        assertEquals(scheduledCourse, foundCourse);
-    }
+    // Assert that the created ScheduledCourse matches the found ScheduledCourse
+    assertEquals(scheduledCourse, foundCourse);
+  }
 
-    // Helper method to create a ScheduledCourse with dummy data
-    private ScheduledCourse createScheduledCourse() {
-        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
-        courseTypeRepository.save(courseType);
+  // Test finding no ScheduledCourses for an existing date with no courses
+  @Test
+  public void testFindNoScheduledCoursesForDate() {
+    // Attempt to find ScheduledCourses for an existing date with no courses
+    List <ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByDate(Date.valueOf("2024-01-01"));
 
-        return new ScheduledCourse(
-            1,
-            Date.valueOf("2024-01-01"),
-            Time.valueOf("12:00:00"),
-            Time.valueOf("13:00:00"),
-            "Test Location",
-            courseType
-        );
-    }
+    // Assert that no courses were found
+    assertTrue(foundCourses.isEmpty());
+  }
+
+  // Test finding no ScheduledCourses for an existing start time with no courses
+  @Test
+  public void testFindNoScheduledCoursesForStartTime() {
+    // Attempt to find ScheduledCourses for an existing start time with no courses
+    List <ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByStartTime(Time.valueOf("12:00:00"));
+
+    // Assert that no courses were found
+    assertTrue(foundCourses.isEmpty());
+  }
+
+  // Test finding no ScheduledCourses for an existing end time with no courses
+  @Test
+  public void testFindNoScheduledCoursesForEndTime() {
+    // Attempt to find ScheduledCourses for an existing end time with no courses
+    List <ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByEndTime(Time.valueOf("13:00:00"));
+
+    // Assert that no courses were found
+    assertTrue(foundCourses.isEmpty());
+  }
+
+
 }
