@@ -5,7 +5,9 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.util.*;
 
+import ca.mcgill.ecse321.util.Helper;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
@@ -20,9 +22,9 @@ public class Owner extends PersonRole
   //------------------------
 
   //Owner Associations
-  @OneToMany
+  @OneToMany(fetch = FetchType.EAGER)
   private List<CourseType> approvedCourses;
-  @OneToMany
+  @OneToMany(fetch = FetchType.EAGER)
   private List<CourseType> ownerSuggestedCourses;
   @OneToOne
   private DailySchedule dailySchedule;
@@ -32,7 +34,8 @@ public class Owner extends PersonRole
   //------------------------
   
   public Owner(){
-    
+    approvedCourses = new ArrayList<CourseType>();
+    ownerSuggestedCourses = new ArrayList<CourseType>();
   }
   public Owner(int aId, DailySchedule aDailySchedule)
   {
@@ -246,5 +249,57 @@ public class Owner extends PersonRole
     dailySchedule = null;
     super.delete();
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    System.out.println("helloe");
+    
+
+    if (this == obj) {
+      System.out.println("Objects are the same instance");
+      return true;
+    }
+
+    if (obj == null || getClass() != obj.getClass()) {
+      System.out.println("Objects are of different classes or null");
+      return false;
+    }
+
+    Owner that = (Owner) obj;
+
+    // Check equality for id (from the superclass)
+    if (getId() != that.getId()) {
+      System.out.println("id mismatch: ");
+      return false;
+    }
+
+    // Check equality for approvedCourses
+    if (!Helper.compareListsElementWise(approvedCourses, that.approvedCourses)) {
+      System.out.println("approvedCourses mismatch");
+      return false;
+    }
+
+    // Check equality for ownerSuggestedCourses
+    if (!Helper.compareListsElementWise(ownerSuggestedCourses, that.ownerSuggestedCourses)) {
+      System.out.println("ownerSuggestedCourses mismatch");
+      return false;
+    }
+
+    // Check equality for dailySchedule
+    if (!dailySchedule.equals(that.dailySchedule)) {
+      System.out.println("dailySchedule mismatch: " + dailySchedule + " != " + that.dailySchedule);
+      return false;
+    }
+
+    System.out.println("Objects are equal");
+    return true;
+  }
+
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(approvedCourses, ownerSuggestedCourses, dailySchedule);
+  }
+
 
 }

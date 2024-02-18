@@ -22,21 +22,22 @@ public class Customer extends PersonRole {
 
   //Customer Associations
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  private List < Payment > customerPayments = new ArrayList < > ();
+  private List <Payment> customerPayments;
   @OneToMany(fetch = FetchType.EAGER)
-  private List < ScheduledCourse > coursesRegistered = new ArrayList < > ();
+  private List <ScheduledCourse> coursesRegistered;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
   public Customer() {
-
+    customerPayments = new ArrayList <Payment> ();
+    coursesRegistered = new ArrayList <ScheduledCourse> ();
   }
   public Customer(int aId) {
     super(aId);
-    customerPayments = new ArrayList < Payment > ();
-    coursesRegistered = new ArrayList < ScheduledCourse > ();
+    customerPayments = new ArrayList <Payment> ();
+    coursesRegistered = new ArrayList <ScheduledCourse> ();
   }
 
   //------------------------
@@ -243,12 +244,13 @@ public class Customer extends PersonRole {
       return false;
     }
 
+
     // Check if both lists are empty, consider them equal
     if (customerPayments.isEmpty() && customer.customerPayments.isEmpty() &&
       coursesRegistered.isEmpty() && customer.coursesRegistered.isEmpty()) {
       return true;
     }
-
+    
     // Check if the lists contain the same elements
     if (!Helper.compareListsElementWise(customerPayments, customer.customerPayments) ||
       !Helper.compareListsElementWise(coursesRegistered, customer.coursesRegistered)) {

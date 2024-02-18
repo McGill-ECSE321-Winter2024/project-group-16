@@ -41,7 +41,7 @@ public class InstructorRepositoryTests {
 
         // Assertions
         assertNotNull(foundInstructors);
-        assertEquals(instructor.getId(), foundInstructors.get(0).getId());
+        assertEquals(instructor, foundInstructors.get(0));
     }
 
     @Test
@@ -62,7 +62,7 @@ public class InstructorRepositoryTests {
 
         // Assertions
         assertNotNull(foundInstructors);
-        assertEquals(foundInstructors.get(0).getId(), instructor.getId());
+        assertEquals(instructor,foundInstructors.get(0));
 
     }
 
@@ -84,7 +84,8 @@ public class InstructorRepositoryTests {
 
         // Assertions
         assertNotNull(foundInstructor);
-        assertEquals(foundInstructor.getId(), instructor.getId());
+
+        assertEquals(instructor,foundInstructor);
 
     }
 
