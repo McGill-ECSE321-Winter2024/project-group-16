@@ -5,9 +5,9 @@ import org.springframework.data.repository.CrudRepository;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 
-public interface CourseTypeRepository extends CrudRepository<CourseType, Integer> {
-    
-    CourseType findCourseTypeById(Integer id);
+public interface CourseTypeRepository extends CrudRepository<CourseType,Integer> {
+
+    // Find CourseType by description
 
     CourseType findCourseTypeByDescription(String description);
 

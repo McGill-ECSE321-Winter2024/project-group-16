@@ -5,7 +5,10 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.util.*;
 
+import ca.mcgill.ecse321.util.Helper;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -32,7 +35,7 @@ public class CourseType
   private float price;
 
   //CourseType Associations
-  @OneToMany
+  @OneToMany(fetch = FetchType.EAGER)
   private List<ScheduledCourse> scheduledCourses;
 
   //------------------------
@@ -225,6 +228,13 @@ public class CourseType
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     CourseType that = (CourseType) o;
+
+    // If both Lists are empty, they are equal
+    if (getScheduledCourses().isEmpty() && that.getScheduledCourses().isEmpty()) return true;
+
+    // If both lists do not have same elements, they are not equal 
+    if (!Helper.compareListsElementWise(getScheduledCourses(), that.getScheduledCourses())) return false;
+
     return getDescription().equals(that.getDescription()) &&
     getPrice() == that.getPrice();
   }

@@ -37,11 +37,13 @@ public class CourseTypeRepositoryTests {
 
         // Save CourseType
         courseTypeRepository.save(courseType);
+        
 
         // Read CourseType from database.
         CourseType loadedCourseType = courseTypeRepository.findCourseTypeByDescription(description);
 
         // Asserts
+        assertNotNull(loadedCourseType);
         assertNotNull(loadedCourseType);
         assertEquals(courseType, loadedCourseType);
     }
@@ -104,6 +106,7 @@ public class CourseTypeRepositoryTests {
         // Assert
         assertNull(loadedCourseType);
     }
+
 
     // Helper Method to create list of CourseTypes
     private static List<CourseType> createCourseTypes() {
