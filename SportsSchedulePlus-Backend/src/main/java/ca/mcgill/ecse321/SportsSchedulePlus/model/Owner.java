@@ -252,16 +252,12 @@ public class Owner extends PersonRole
 
   @Override
   public boolean equals(Object obj) {
-    System.out.println("helloe");
-    
 
     if (this == obj) {
-      System.out.println("Objects are the same instance");
       return true;
     }
 
     if (obj == null || getClass() != obj.getClass()) {
-      System.out.println("Objects are of different classes or null");
       return false;
     }
 
@@ -269,29 +265,24 @@ public class Owner extends PersonRole
 
     // Check equality for id (from the superclass)
     if (getId() != that.getId()) {
-      System.out.println("id mismatch: ");
       return false;
     }
 
     // Check equality for approvedCourses
     if (!Helper.compareListsElementWise(approvedCourses, that.approvedCourses)) {
-      System.out.println("approvedCourses mismatch");
       return false;
     }
 
     // Check equality for ownerSuggestedCourses
     if (!Helper.compareListsElementWise(ownerSuggestedCourses, that.ownerSuggestedCourses)) {
-      System.out.println("ownerSuggestedCourses mismatch");
       return false;
     }
 
     // Check equality for dailySchedule
     if (!dailySchedule.equals(that.dailySchedule)) {
-      System.out.println("dailySchedule mismatch: " + dailySchedule + " != " + that.dailySchedule);
       return false;
     }
 
-    System.out.println("Objects are equal");
     return true;
   }
 

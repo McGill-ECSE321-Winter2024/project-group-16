@@ -66,9 +66,7 @@ public abstract class PersonRole
       if (obj == null || getClass() != obj.getClass()) return false;
      
       PersonRole that = (PersonRole) obj;
-      
-      System.out.println("Debug: PERSON ROLE id - " + id + ", that.id - " + that.id);
-  
+
       return id == that.id;
   }
   

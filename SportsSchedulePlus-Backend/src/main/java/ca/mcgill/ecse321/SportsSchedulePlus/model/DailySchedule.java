@@ -77,12 +77,10 @@ public class DailySchedule
     System.out.println("check daily schedule"+ obj);
 
     if (this == obj) {
-      System.out.println("Objects are the same instance");
       return true;
     }
 
     if (obj == null || getClass() != obj.getClass()) {
-      System.out.println("Objects are of different classes or null");
       return false;
     }
 
@@ -90,7 +88,6 @@ public class DailySchedule
 
     // Check equality for id
     if (id != that.id) {
-      System.out.println("id mismatch: " + id + " != " + that.id);
       return false;
     }
 
@@ -99,18 +96,14 @@ public class DailySchedule
     
     // Check equality for openingTime
     if (openingTime.compareTo(that.openingTime) != 0) {
-      System.out.println("openingTime mismatch: " + openingTime + " != " + that.openingTime);
       return false;
     }
 
     // Check equality for closingTime
     if (closingTime.compareTo(that.closingTime) != 0) {
-      System.out.println("closingTime mismatch: " + closingTime + " != " + that.closingTime);
       return false;
     }
 
-    System.out.println("Objects are equal");
-    
     return true;
   }
 

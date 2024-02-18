@@ -227,13 +227,11 @@ public class Customer extends PersonRole {
       return true;
     }
     if (obj == null || getClass() != obj.getClass()) {
-      System.out.println("DEBUG - Class mismatch");
       return false;
     }
 
     // Call the superclass equals method
     if (!super.equals(obj)) {
-      System.out.println("DEBUG - Superclass not equal");
       return false;
     }
 
