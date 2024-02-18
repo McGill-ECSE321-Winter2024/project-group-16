@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,14 +17,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
 @SpringBootTest
 public class CourseTypeRepositoryTests {
     @Autowired
     private CourseTypeRepository courseTypeRepository;
+    @Autowired
+    private ScheduledCourseRepository scheduledCourseRepository;
 
     @AfterEach
     public void clearDatabase() {
+        //scheduledCourseRepository.deleteAll();
         courseTypeRepository.deleteAll();
     }
 
@@ -37,6 +43,7 @@ public class CourseTypeRepositoryTests {
 
         // Save CourseType
         courseTypeRepository.save(courseType);
+        
 
         // Read CourseType from database.
         CourseType loadedCourseType = courseTypeRepository.findCourseTypeByDescription(description);
@@ -116,5 +123,18 @@ public class CourseTypeRepositoryTests {
         courseTypes.add(new CourseType("Yoga", false, 22.0f)); // Not approved by owner
 
         return courseTypes;
+    }
+
+    public static ScheduledCourse createScheduledCourse() {
+        ScheduledCourse scheduledCourse = new ScheduledCourse();
+        
+        // Example values
+        scheduledCourse.setId(1);
+        scheduledCourse.setDate(new Date(12));
+        scheduledCourse.setStartTime(new Time(123));
+        scheduledCourse.setEndTime(new Time(1234));
+        scheduledCourse.setLocation("Sample Location");
+
+        return scheduledCourse;
     }
 }

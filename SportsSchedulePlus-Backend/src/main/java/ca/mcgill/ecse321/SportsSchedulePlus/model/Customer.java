@@ -223,14 +223,14 @@ public class Customer extends PersonRole
     super.delete();
   }
 
-  @Override
+  /*@Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Customer that = (Customer) o;
-    return Objects.equals(getId(), that.getId()) &&
+    return getId() == that.getId() &&
     Objects.equals(getCoursesRegistered(), that.getCoursesRegistered()) &&
     Objects.equals(getCustomerPayments(), that.getCustomerPayments());
-  }
+  }*/
 
 }
