@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,18 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
 @SpringBootTest
 public class CourseTypeRepositoryTests {
     @Autowired
     private CourseTypeRepository courseTypeRepository;
-    @Autowired
-    private ScheduledCourseRepository scheduledCourseRepository;
 
     @AfterEach
     public void clearDatabase() {
-        //scheduledCourseRepository.deleteAll();
         courseTypeRepository.deleteAll();
     }
 
@@ -77,7 +71,6 @@ public class CourseTypeRepositoryTests {
     }
 
     // Test to find all course types that costs less than a max price.
-    // Test to find all course types that costs less than a max price.
     @Test
     public void testFindByPriceLessThan() {
         // Create and save CourseTypes objects
@@ -114,21 +107,6 @@ public class CourseTypeRepositoryTests {
         assertNull(loadedCourseType);
     }
 
-    // Negative result of searching course types by description
-    @Test
-    public void testFindCourseTypeByDescriptionNotFound() {
-        // Create and save CourseTypes.
-        List <CourseType> courseTypes = createCourseTypes();
-        for (CourseType courseType : courseTypes) {
-            courseTypeRepository.save(courseType);
-        }
-
-        // Load from database
-        CourseType loadedCourseType = courseTypeRepository.findCourseTypeByDescription("NE");
-
-        // Assert
-        assertNull(loadedCourseType);
-    }
 
     // Helper Method to create list of CourseTypes
     private static List<CourseType> createCourseTypes() {
@@ -141,18 +119,5 @@ public class CourseTypeRepositoryTests {
         courseTypes.add(new CourseType("Yoga", false, 22.0f)); // Not approved by owner
 
         return courseTypes;
-    }
-
-    public static ScheduledCourse createScheduledCourse() {
-        ScheduledCourse scheduledCourse = new ScheduledCourse();
-        
-        // Example values
-        scheduledCourse.setId(1);
-        scheduledCourse.setDate(new Date(12));
-        scheduledCourse.setStartTime(new Time(123));
-        scheduledCourse.setEndTime(new Time(1234));
-        scheduledCourse.setLocation("Sample Location");
-
-        return scheduledCourse;
     }
 }

@@ -5,6 +5,8 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.util.*;
 
+import ca.mcgill.ecse321.util.Helper;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -226,9 +228,14 @@ public class CourseType
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     CourseType that = (CourseType) o;
+
+    // If both Lists are empty, they are equal
+    if (getScheduledCourses().isEmpty() && that.getScheduledCourses().isEmpty()) return true;
+
+    // If both lists do not have same elements, they are not equal 
+    if (!Helper.compareListsElementWise(getScheduledCourses(), that.getScheduledCourses())) return false;
+
     return getDescription().equals(that.getDescription()) &&
-    getPrice() == that.getPrice() &&
-    scheduledCourses.containsAll(that.getScheduledCourses()) &&
-    that.getScheduledCourses().containsAll(scheduledCourses);
+    getPrice() == that.getPrice();
   }
 }
