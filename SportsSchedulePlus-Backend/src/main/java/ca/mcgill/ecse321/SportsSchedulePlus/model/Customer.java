@@ -22,22 +22,22 @@ public class Customer extends PersonRole {
 
   //Customer Associations
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  private List <Payment> customerPayments;
+  private List < Payment > customerPayments;
   @OneToMany(fetch = FetchType.EAGER)
-  private List <ScheduledCourse> coursesRegistered;
+  private List < ScheduledCourse > coursesRegistered;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
   public Customer() {
-    customerPayments = new ArrayList <Payment> ();
-    coursesRegistered = new ArrayList <ScheduledCourse> ();
+    customerPayments = new ArrayList < Payment > ();
+    coursesRegistered = new ArrayList < ScheduledCourse > ();
   }
   public Customer(int aId) {
     super(aId);
-    customerPayments = new ArrayList <Payment> ();
-    coursesRegistered = new ArrayList <ScheduledCourse> ();
+    customerPayments = new ArrayList < Payment > ();
+    coursesRegistered = new ArrayList < ScheduledCourse > ();
   }
 
   //------------------------
@@ -214,49 +214,38 @@ public class Customer extends PersonRole {
     super.delete();
   }
 
-  @Override
-  public int hashCode() {
-    int result = super.hashCode(); // Call the superclass hashCode method if applicable
-    result = 31 * result + Objects.hash(customerPayments, coursesRegistered);
-    return result;
+  public String toString() {
+    return super.toString() + "[" +
+      "id" + ":" + getId() + "]";
   }
 
+  /**
+   * Overrides the equals method to compare two Customer objects for equality.
+   *
+   * @param obj The object to compare with.
+   * @return True if the objects are equal, false otherwise.
+   */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || getClass() != obj.getClass()) {
-      return false;
-    }
+    if (this == obj) return true;
+    if (!super.equals(obj) || !(obj instanceof Customer)) return false;
 
-    // Call the superclass equals method
-    if (!super.equals(obj)) {
-      return false;
-    }
-
-    // Custom equality check for Customer class
     Customer customer = (Customer) obj;
 
-    if (customer.getId() != this.getId()) {
-      return false;
-    }
+    return customer.getId() == this.getId() &&
+      Helper.compareListsElementWise(customerPayments, customer.customerPayments) &&
+      Helper.compareListsElementWise(coursesRegistered, customer.coursesRegistered);
+  }
 
-
-    // Check if both lists are empty, consider them equal
-    if (customerPayments.isEmpty() && customer.customerPayments.isEmpty() &&
-      coursesRegistered.isEmpty() && customer.coursesRegistered.isEmpty()) {
-      return true;
-    }
-    
-    // Check if the lists contain the same elements
-    if (!Helper.compareListsElementWise(customerPayments, customer.customerPayments) ||
-      !Helper.compareListsElementWise(coursesRegistered, customer.coursesRegistered)) {
-
-      return false;
-    }
-
-    return true;
+  /**
+   * Overrides the hashCode method to generate a hash code based on
+   * id, customerPayments, and coursesRegistered.
+   *
+   * @return The hash code for the object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), customerPayments, coursesRegistered);
   }
 
 }

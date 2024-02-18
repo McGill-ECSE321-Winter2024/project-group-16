@@ -1,3 +1,7 @@
+/**
+ * This class contains unit tests for the PaymentRepository.
+ * The overridden equals method in the Payment model is used for assertions.
+ */
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +21,12 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
+import ca.mcgill.ecse321.util.Helper;
 
+
+/**
+ * Springboot tests for the PaymentRepository class.
+ */
 @SpringBootTest
 public class PaymentRepositoryTests {
 
@@ -36,7 +45,9 @@ public class PaymentRepositoryTests {
     @Autowired
     private PersonRoleRepository personRoleRepository;
 
-    // Clears the database after each test
+    /**
+     * Clears the database after each test.
+     */
     @AfterEach
     public void clearDatabase() {
         paymentRepository.deleteAll();
@@ -46,7 +57,9 @@ public class PaymentRepositoryTests {
         personRoleRepository.deleteAll();
     }
 
-    // Tests finding payments by confirmation number
+    /**
+     * Tests finding payments by confirmation number.
+     */
     @Test
     public void testFindPaymentsByConfirmationNumber() {
         // Create and save a payment
@@ -55,14 +68,17 @@ public class PaymentRepositoryTests {
 
         // Find payments by confirmation number
         List<Payment> foundPayments = paymentRepository.findPaymentsByConfirmationNumber(newPayment.getConfirmationNumber());
-
+        
         // Assertions
         assertNotNull(foundPayments);
-        assertTrue(foundPayments.stream().anyMatch(p -> p.getConfirmationNumber() == newPayment.getConfirmationNumber()));
-        assertEquals(newPayment, foundPayments.get(0));
+        Payment foundPayment = foundPayments.get(0);
+        // The overridden equals method in the Payment model is used here
+        assertEquals(newPayment, foundPayment);
     }
 
-    // Tests finding payments by customer
+    /**
+     * Tests finding payments by key customer.
+     */
     @Test
     public void testFindPaymentsByKeyCustomer() {
         // Create and save a payment
@@ -75,10 +91,14 @@ public class PaymentRepositoryTests {
         // Assertions
         assertNotNull(foundPayments);
         Payment foundPayment = foundPayments.get(0);
+        
+        // The overridden equals method in the Payment model is used here
         assertEquals(newPayment, foundPayment);
     }
 
-    // Tests finding payments by scheduled course
+    /**
+     * Tests finding payments by key scheduled course.
+     */
     @Test
     public void testFindPaymentsByKeyScheduledCourse() {
         // Create and save a payment
@@ -92,32 +112,82 @@ public class PaymentRepositoryTests {
         assertNotNull(foundPayments);
         Payment foundPayment = foundPayments.get(0);
         
+        // The overridden equals method in the Payment model is used here
         assertEquals(newPayment, foundPayment);
     }
 
-    // Helper method to create a scheduled course with dummy data
-    private ScheduledCourse createScheduledCourse() {
-        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
-        courseTypeRepository.save(courseType);
+    /**
+     * Test finding no payments for a customer with no payments.
+     */
+    @Test
+    public void testFindNoPaymentsForCustomerWithNoPayments() {
+        // Create and save a customer without payments
+        Customer customerWithNoPayments = new Customer();
+        customerRepository.save(customerWithNoPayments);
 
-        return new ScheduledCourse(1, Date.valueOf("2024-01-01"), Time.valueOf("12:00:00"),
-                Time.valueOf("13:00:00"), "Test Location", courseType);
+        // Find payments for a customer with no payments
+        List<Payment> foundPayments = paymentRepository.findPaymentsByKeyCustomer(customerWithNoPayments);
+
+        // Assert that the list is empty
+        assertNotNull(foundPayments);
+        assertTrue(foundPayments.isEmpty());
     }
 
-    // Helper method to create a payment with dummy data
+    /**
+     * Test finding no payments for a scheduled course with no payments.
+     */
+    @Test
+    public void testFindNoPaymentsForScheduledCourseWithNoPayments() {
+        // Create and save a scheduled course without payments
+        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+        courseTypeRepository.save(courseType);
+        ScheduledCourse scheduledCourseWithNoPayments = Helper.createScheduledCourse(courseType);
+        scheduledCourseRepository.save(scheduledCourseWithNoPayments);
+
+        // Find payments for a scheduled course with no payments
+        List<Payment> foundPayments = paymentRepository.findPaymentsByKeyScheduledCourse(scheduledCourseWithNoPayments);
+
+        // Assert that the list is empty
+        assertNotNull(foundPayments);
+        assertTrue(foundPayments.isEmpty());
+    }
+
+    /**
+     * Test finding payments by non-existing confirmation number.
+     */
+    @Test
+    public void testFindPaymentsByNonExistingConfirmationNumber() {
+        // Create a payment
+        Payment newPayment = createPayment();
+        paymentRepository.save(newPayment);
+
+        // Try to find payments by a non-existing confirmation number
+        List<Payment> foundPayments = paymentRepository.findPaymentsByConfirmationNumber(99999);
+
+        // Assert that the list is empty
+        assertNotNull(foundPayments);
+        assertTrue(foundPayments.isEmpty());
+    }
+
+  
+
+    /**
+     * Helper method to create a payment with dummy data.
+     */
     private Payment createPayment() {
         Customer customer = new Customer();
         customerRepository.save(customer);
-       
-
-        ScheduledCourse scheduledCourse = createScheduledCourse();
+        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+        courseTypeRepository.save(courseType);
+        ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(scheduledCourse);
 
         Payment.Key paymentKey = new Payment.Key(customer, scheduledCourse);
         Payment newPayment = new Payment(paymentKey);
-        
+
         newPayment.setConfirmationNumber(12345);
 
         return newPayment;
     }
 }
+

@@ -9,14 +9,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
+import ca.mcgill.ecse321.util.Helper;
 
-
-import java.sql.Date;
-import java.sql.Time;
 import java.util.List;
-
+/**
+ * Springboot tests for the InstructorRepository class.
+ */
 @SpringBootTest
 public class InstructorRepositoryTests {
+
     @Autowired
     private InstructorRepository instructorRepository;
     @Autowired
@@ -24,6 +25,9 @@ public class InstructorRepositoryTests {
     @Autowired
     private CourseTypeRepository courseTypeRepository;
 
+    /**
+     * Clean up the database after each test.
+     */
     @AfterEach
     public void clearDatabase() {
         instructorRepository.deleteAll();
@@ -31,6 +35,9 @@ public class InstructorRepositoryTests {
         courseTypeRepository.deleteAll();
     }
 
+    /**
+     * Test finding instructors by experience.
+     */
     @Test
     public void testFindInstructorByExperience() {
         // Create Instructor
@@ -44,13 +51,18 @@ public class InstructorRepositoryTests {
         assertEquals(instructor, foundInstructors.get(0));
     }
 
+    /**
+     * Test finding instructors by supervised course.
+     */
     @Test
     public void testFindInstructorByScheduledCourse() {
         // Create Instructor
         Instructor instructor = createInstructor();
 
         // Create Scheduled Course
-        ScheduledCourse scheduledCourse = createScheduledCourse();
+        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+        courseTypeRepository.save(courseType);
+        ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(scheduledCourse);
 
         // Add Scheduled Course to Instructor
@@ -62,12 +74,14 @@ public class InstructorRepositoryTests {
 
         // Assertions
         assertNotNull(foundInstructors);
-        assertEquals(instructor,foundInstructors.get(0));
-
+        assertEquals(instructor, foundInstructors.get(0));
     }
 
+    /**
+     * Test finding instructors by suggested course.
+     */
     @Test
-    public void testFindInstructorBySuggestedCourse(){
+    public void testFindInstructorBySuggestedCourse() {
         // Create Instructor
         Instructor instructor = createInstructor();
 
@@ -84,28 +98,14 @@ public class InstructorRepositoryTests {
 
         // Assertions
         assertNotNull(foundInstructor);
-
-        assertEquals(instructor,foundInstructor);
-
+        assertEquals(instructor, foundInstructor);
     }
 
-    // Helper method to create a scheduled course
-    private ScheduledCourse createScheduledCourse() {
-        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
-        courseTypeRepository.save(courseType);
 
-        return new ScheduledCourse(
-                1,
-                Date.valueOf("2024-01-01"),
-                Time.valueOf("12:00:00"),
-                Time.valueOf("13:00:00"),
-                "Test Location",
-                courseType
-        );
-    }
-
-    // Helper method to create an instructor
-    private Instructor createInstructor(){
+    /**
+     * Helper method to create an instructor.
+     */
+    private Instructor createInstructor() {
         Instructor instructor = new Instructor(1, "dance, yoga, pilates");
         instructorRepository.save(instructor);
         return instructor;

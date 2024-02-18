@@ -1,7 +1,11 @@
+/**
+ * This class contains unit tests for the OwnerRepository.
+ * The overridden equals method in the Owner model is used for assertions.
+ */
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -12,9 +16,12 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 
 import java.sql.Time;
 import java.time.LocalTime;
-
+/**
+ * Springboot tests for the OwnerRepository class.
+ */
 @SpringBootTest
 public class OwnerRepositoryTests {
+
     @Autowired
     private OwnerRepository ownerRepository;
     @Autowired
@@ -23,12 +30,14 @@ public class OwnerRepositoryTests {
     private CourseTypeRepository courseTypeRepository;
     @Autowired
     private DailyScheduleRepository dailyScheduleRepository;
-
     @Autowired
     private ScheduledCourseRepository scheduledCourseRepository;
 
+    /**
+     * Clean up the database after each test.
+     */
     @AfterEach
-    public void clearDatabase(){
+    public void clearDatabase() {
         ownerRepository.deleteAll();
         personRepository.deleteAll();
         scheduledCourseRepository.deleteAll();
@@ -36,15 +45,16 @@ public class OwnerRepositoryTests {
         dailyScheduleRepository.deleteAll();
     }
 
+    /**
+     * Test finding owner by approved and suggested courses.
+     */
     @Test
-    public void testFindOwnerByApprovedAndSuggestedCourses(){
+    public void testFindOwnerByApprovedAndSuggestedCourses() {
         // Create Daily Schedule
         DailySchedule dailySchedule = new DailySchedule();
         dailyScheduleRepository.save(dailySchedule);
-
         // Create Owner Using Daily Schedule
         Owner owner = new Owner(1, dailySchedule);
-
         // Create Course Type
         CourseType courseType = new CourseType("Yoga", true, 15.99F);
         courseTypeRepository.save(courseType);
@@ -59,18 +69,18 @@ public class OwnerRepositoryTests {
         Owner foundOwnerApproved = ownerRepository.findOwnerByApprovedCourses(courseType);
 
         // Assertions
-        assertNotNull(foundOwnerSuggested);
-        assertNotNull(foundOwnerApproved);
-        assertEquals(foundOwnerSuggested,owner);
-        assertEquals(foundOwnerApproved, owner);
+        assertEquals(foundOwnerSuggested, owner); // Uses the overriden equals in the Owner model
+        assertEquals(foundOwnerApproved, owner); // Uses the overriden equals in the Owner model
     }
 
+    /**
+     * Test finding owner by daily schedule.
+     */
     @Test
-    public void testFindOwnerByDailySchedule(){
+    public void testFindOwnerByDailySchedule() {
         // Create Daily Schedule
-        Time open = Time.valueOf(LocalTime.of(8,0));
-        Time close = Time.valueOf(LocalTime.of(17,0));
-
+        Time open = Time.valueOf(LocalTime.of(8, 0));
+        Time close = Time.valueOf(LocalTime.of(17, 0));
         DailySchedule dailySchedule = new DailySchedule();
         dailySchedule.setOpeningTime(open);
         dailySchedule.setClosingTime(close);
@@ -86,10 +96,6 @@ public class OwnerRepositoryTests {
         Owner foundOwner = ownerRepository.findOwnerByDailySchedule(dailySchedule);
 
         // Assertions
-        assertNotNull(foundOwner);
-        assertEquals(foundOwner, owner);
-
+        assertEquals(foundOwner, owner); // Uses the overriden equals in the Owner model
     }
-
-
-    }
+}

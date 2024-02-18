@@ -1,9 +1,6 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,70 +13,92 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 
+/**
+ * Spring boot tests for the CourseTypeRepository class.
+ */
 @SpringBootTest
 public class CourseTypeRepositoryTests {
+
     @Autowired
     private CourseTypeRepository courseTypeRepository;
 
+    /**
+     * Clears the database after each test.
+     */
     @AfterEach
     public void clearDatabase() {
         courseTypeRepository.deleteAll();
     }
 
-    // Test to find CourseType by description/name
+    /**
+     * Test to find CourseType by description/name.
+     */
     @Test
     public void testFindCourseTypeByDescription() {
-        // Create CourseType.
         String description = "Zumba";
         boolean approvedByOwner = true;
         Float price = (float) 50.99;
         CourseType courseType = new CourseType(description, approvedByOwner, price);
 
-        // Save CourseType
         courseTypeRepository.save(courseType);
-        
 
         // Read CourseType from database.
         CourseType loadedCourseType = courseTypeRepository.findCourseTypeByDescription(description);
 
         // Asserts
         assertNotNull(loadedCourseType);
-        assertNotNull(loadedCourseType);
         assertEquals(courseType, loadedCourseType);
     }
 
-    // Test to find all approved course types by the owner
+    /**
+     * Test to find all approved course types by the owner.
+     */
     @Test
     public void testFindByApprovedByOwnerTrue() {
-        // Create CourseTypes
         List<CourseType> courseTypes = createCourseTypes();
 
-        // Save CourseTypes
         for (CourseType courseType : courseTypes) {
             courseTypeRepository.save(courseType);
         }
 
         // Filter Approved CourseTypes
-        List<CourseType> approvedCourseTypes = courseTypes.stream().filter(CourseType::getApprovedByOwner).collect(Collectors.toList());
+        List<CourseType> approvedCourseTypes = courseTypes.stream().filter(CourseType::getApprovedByOwner)
+                .collect(Collectors.toList());
 
         // Read CourseTypes from database
-        List<CourseType> LoadedApprovedCourseTypes = courseTypeRepository.findByApprovedByOwnerTrue();
+        List<CourseType> loadedApprovedCourseTypes = courseTypeRepository.findByApprovedByOwnerTrue();
 
         // Asserts
-        assertNotNull(LoadedApprovedCourseTypes);
-        assertEquals(approvedCourseTypes, LoadedApprovedCourseTypes);
+        assertNotNull(loadedApprovedCourseTypes);
+        assertEquals(approvedCourseTypes, loadedApprovedCourseTypes);
     }
 
-    // Test to find all course types that costs less than a max price.
+    /**
+     * Negative result of searching course types by description.
+     */
+    @Test
+    public void testFindByApprovedByOwnerTrueNegative() {
+        // Create CourseType not approved by the owner
+        CourseType notApprovedCourseType = new CourseType("Pilates", false, 28.0f);
+        courseTypeRepository.save(notApprovedCourseType);
+
+        // Read CourseTypes from database
+        List<CourseType> loadedApprovedCourseTypes = courseTypeRepository.findByApprovedByOwnerTrue();
+
+        // Asserts
+        assertTrue(loadedApprovedCourseTypes.isEmpty());
+    }
+
+    /**
+     * Test to find all course types that cost less than a max price.
+     */
     @Test
     public void testFindByPriceLessThan() {
-        // Create and save CourseTypes objects
         List<CourseType> courseTypes = createCourseTypes();
         for (CourseType courseType : courseTypes) {
             courseTypeRepository.save(courseType);
         }
 
-        // Read CourseTypes smaller than maxPrice
         float maxPrice = 25.0f;
         List<CourseType> courseTypesLessThanMax = courseTypeRepository.findByPriceLessThan(maxPrice);
 
@@ -91,24 +110,44 @@ public class CourseTypeRepositoryTests {
         }
     }
 
-    // Negative result of searching course types by description
+    /**
+     * Negative result of searching course types by max price.
+     */
     @Test
-    public void testFindCourseTypeByDescriptionNotFound() {
-        // Create and save CourseTypes.
-        List <CourseType> courseTypes = createCourseTypes();
+    public void testFindByPriceLessThanNegative() {
+        List<CourseType> courseTypes = createCourseTypes();
         for (CourseType courseType : courseTypes) {
             courseTypeRepository.save(courseType);
         }
 
-        // Load from database
+        float maxPrice = 5.0f;
+        List<CourseType> courseTypesGreaterThanOrEqualToMax = courseTypeRepository.findByPriceLessThan(maxPrice);
+
+        // Asserts
+        assertTrue(courseTypesGreaterThanOrEqualToMax.isEmpty());
+    }
+
+    /**
+     * Negative result of searching course types by description.
+     */
+    @Test
+    public void testFindCourseTypeByDescriptionNotFound() {
+        List<CourseType> courseTypes = createCourseTypes();
+        for (CourseType courseType : courseTypes) {
+            courseTypeRepository.save(courseType);
+        }
+
         CourseType loadedCourseType = courseTypeRepository.findCourseTypeByDescription("NE");
 
-        // Assert
+        // Asserts
         assertNull(loadedCourseType);
     }
 
-
-    // Helper Method to create list of CourseTypes
+    /**
+     * Helper Method to create a list of CourseTypes.
+     * 
+     * @return List of CourseTypes
+     */
     private static List<CourseType> createCourseTypes() {
         List<CourseType> courseTypes = new ArrayList<>();
 
