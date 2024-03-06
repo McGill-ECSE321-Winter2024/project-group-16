@@ -2,11 +2,16 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.PersonRoleResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.controller.OwnerRestContoller;
+import ca.mcgill.ecse321.SportsSchedulePlus.controller.InstructorRestController;
+import ca.mcgill.ecse321.SportsSchedulePlus.controller.CustomerRestController;
 
 
 // line 9 "model.ump"
 // line 116 "model.ump"
-public class PersonDTO
+public class PersonResponseDTO
 {
 
   //------------------------
@@ -19,13 +24,13 @@ public class PersonDTO
   private String password;
 
   //PersonDTO Associations
-  private PersonRole personRoles;
+  private PersonRoleResponseDTO personRoles;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public PersonDTO(String aName, String aEmail, String aPassword, PersonRole aPersonRoles)
+  public PersonResponseDTO(String aName, String aEmail, String aPassword, PersonRoleResponseDTO aPersonRoles)
   {
     name = aName;
     email = aEmail;
@@ -33,6 +38,30 @@ public class PersonDTO
     if (!setPersonRoles(aPersonRoles))
     {
       throw new RuntimeException("Unable to create PersonDTO due to aPersonRoles. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+  }
+
+  public PersonResponseDTO(Person p) {
+    name = p.getName();
+    email = p.getEmail();
+    password = p.getPassword();
+    int personRoleID = p.getPersonRole().getId();
+    
+    if (OwnerRestContoller.getOwner().getId() == personRoleID) {
+      setPersonRoles(OwnerRestContoller.getOwner());
+    } 
+    for (InstructorDTO i : InstructorRestController.getInstructors()) {
+      if (i.getId() == personRoleID) {
+        setPersonRoles(i);
+      }
+    }
+    for (CustomerDTO c : CustomerRestController.getCustomers()) {
+      if (c.getId() == personRoleID) {
+        setPersonRoles(c);
+      }
+    }
+    if (this.getPersonRoles() == null) {
+      throw new RuntimeException("Unable to create PersonDTO due to missing Person Role.");
     }
   }
 
@@ -79,12 +108,12 @@ public class PersonDTO
     return password;
   }
   /* Code from template association_GetOne */
-  public PersonRole getPersonRoles()
+  public PersonRoleResponseDTO getPersonRoles()
   {
     return personRoles;
   }
   /* Code from template association_SetUnidirectionalOne */
-  public boolean setPersonRoles(PersonRole aNewPersonRoles)
+  public boolean setPersonRoles(PersonRoleResponseDTO aNewPersonRoles)
   {
     boolean wasSet = false;
     if (aNewPersonRoles != null)

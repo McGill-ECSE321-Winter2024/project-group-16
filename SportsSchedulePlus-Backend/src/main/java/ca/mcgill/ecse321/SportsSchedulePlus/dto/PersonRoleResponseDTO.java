@@ -2,11 +2,11 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
-
+import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 
 // line 2 "model.ump"
 // line 81 "model.ump"
-public abstract class PersonRole
+public abstract class PersonRoleResponseDTO
 {
 
   //------------------------
@@ -20,7 +20,7 @@ public abstract class PersonRole
   // CONSTRUCTOR
   //------------------------
 
-  public PersonRole(int aId)
+  public PersonRoleResponseDTO(int aId)
   {
     id = aId;
   }

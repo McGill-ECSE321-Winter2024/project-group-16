@@ -30,13 +30,13 @@ public class DailyScheduleRestController {
     /*
      * get the opening hours
      */
-    @GetMapping(value = { "/dailySchedule", "/dailySchedule/" })
+    @GetMapping(value = { "/openingHours", "/openingHours/" })
     public List<DailyScheduleResponseDTO> getAllDailySchedules() {
         return dailyScheduleService.getAllDailySchedules().stream().map(ds ->
         new DailyScheduleResponseDTO(ds)).collect(Collectors.toList());
     }
 
-    @GetMapping(value = { "/dailySchedule/{id}", "/dailySchedule/{id}/" })
+    @GetMapping(value = { "/openingHours/{id}", "/openingHours/{id}/" })
     public DailyScheduleResponseDTO getDailyScheduleById(@PathVariable("id") int id) {
         return new DailyScheduleResponseDTO(dailyScheduleService.getDailyScheduleById(id));
     }
@@ -44,7 +44,7 @@ public class DailyScheduleRestController {
     /*
      * update the opening hours for a day in the week
      */
-    @PutMapping(value = { "/dailySchedule/{id}", "/dailySchedule/{id}/" })
+    @PutMapping(value = { "/openingHours/{id}", "/openingHours/{id}/" })
     public DailyScheduleResponseDTO updateDailySchedule(@PathVariable("id") int id, @RequestBody DailyScheduleRequestDTO request) {
         Time openingTime = Time.valueOf(request.getOpeningTime());
         Time closingTime = Time.valueOf(request.getClosingTime());

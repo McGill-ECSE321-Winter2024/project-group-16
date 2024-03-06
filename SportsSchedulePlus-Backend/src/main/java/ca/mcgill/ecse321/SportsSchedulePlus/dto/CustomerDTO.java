@@ -8,7 +8,7 @@ import java.util.*;
 
 // line 26 "model.ump"
 // line 126 "model.ump"
-public class CustomerDTO extends PersonRole
+public class CustomerDTO extends PersonRoleResponseDTO
 {
 
   //------------------------
