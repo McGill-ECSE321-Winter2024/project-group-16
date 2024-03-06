@@ -26,7 +26,7 @@ public class ScheduledCourseDTO
 
   //ScheduledCourseDTO Associations
   private CourseTypeDTO courseType;
-  private List<PaymentDTO> coursePayments;
+  private List<PaymentResponseDTO> coursePayments;
 
   //------------------------
   // CONSTRUCTOR
@@ -44,7 +44,7 @@ public class ScheduledCourseDTO
     {
       throw new RuntimeException("Unable to create scheduledCourse due to courseType. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
-    coursePayments = new ArrayList<PaymentDTO>();
+    coursePayments = new ArrayList<PaymentResponseDTO>();
   }
 
   //------------------------
@@ -121,15 +121,15 @@ public class ScheduledCourseDTO
     return courseType;
   }
   /* Code from template association_GetMany */
-  public PaymentDTO getCoursePayment(int index)
+  public PaymentResponseDTO getCoursePayment(int index)
   {
-    PaymentDTO aCoursePayment = coursePayments.get(index);
+    PaymentResponseDTO aCoursePayment = coursePayments.get(index);
     return aCoursePayment;
   }
 
-  public List<PaymentDTO> getCoursePayments()
+  public List<PaymentResponseDTO> getCoursePayments()
   {
-    List<PaymentDTO> newCoursePayments = Collections.unmodifiableList(coursePayments);
+    List<PaymentResponseDTO> newCoursePayments = Collections.unmodifiableList(coursePayments);
     return newCoursePayments;
   }
 
@@ -145,7 +145,7 @@ public class ScheduledCourseDTO
     return has;
   }
 
-  public int indexOfCoursePayment(PaymentDTO aCoursePayment)
+  public int indexOfCoursePayment(PaymentResponseDTO aCoursePayment)
   {
     int index = coursePayments.indexOf(aCoursePayment);
     return index;
@@ -175,7 +175,7 @@ public class ScheduledCourseDTO
     return 0;
   }
   /* Code from template association_AddUnidirectionalMany */
-  public boolean addCoursePayment(PaymentDTO aCoursePayment)
+  public boolean addCoursePayment(PaymentResponseDTO aCoursePayment)
   {
     boolean wasAdded = false;
     if (coursePayments.contains(aCoursePayment)) { return false; }
@@ -184,7 +184,7 @@ public class ScheduledCourseDTO
     return wasAdded;
   }
 
-  public boolean removeCoursePayment(PaymentDTO aCoursePayment)
+  public boolean removeCoursePayment(PaymentResponseDTO aCoursePayment)
   {
     boolean wasRemoved = false;
     if (coursePayments.contains(aCoursePayment))
@@ -195,7 +195,7 @@ public class ScheduledCourseDTO
     return wasRemoved;
   }
   /* Code from template association_AddIndexControlFunctions */
-  public boolean addCoursePaymentAt(PaymentDTO aCoursePayment, int index)
+  public boolean addCoursePaymentAt(PaymentResponseDTO aCoursePayment, int index)
   {  
     boolean wasAdded = false;
     if(addCoursePayment(aCoursePayment))
@@ -209,7 +209,7 @@ public class ScheduledCourseDTO
     return wasAdded;
   }
 
-  public boolean addOrMoveCoursePaymentAt(PaymentDTO aCoursePayment, int index)
+  public boolean addOrMoveCoursePaymentAt(PaymentResponseDTO aCoursePayment, int index)
   {
     boolean wasAdded = false;
     if(coursePayments.contains(aCoursePayment))

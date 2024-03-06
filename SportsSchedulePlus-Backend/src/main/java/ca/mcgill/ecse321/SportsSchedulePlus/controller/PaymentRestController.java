@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PaymentService;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.PaymentDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.PaymentResponseDTO;
 
 /**
  * Rest controller for managing data related to Payments in the application
@@ -28,35 +28,35 @@ public class PaymentRestController {
      * get all payments
      */
     @GetMapping(value = { "/payments", "/payments/" })
-    public List<PaymentDTO> getAllPayments() {
+    public List<PaymentResponseDTO> getAllPayments() {
         return paymentService.getAllPayments().stream().map(p -> 
-        new PaymentDTO(p)).collect(Collectors.toList());
+        new PaymentResponseDTO(p)).collect(Collectors.toList());
     }
 
     /*
      * get payment by confirmation number
      */
     @GetMapping(value = { "/payments/{confirmationNumber}", "/payments/{confirmationNumber}/" })
-    public PaymentDTO getPaymentByConfirmationNumber(@PathVariable("confirmationNumber") int confirmationNumber) {
-        return new PaymentDTO(paymentService.getPaymentByConfirmationNumber(confirmationNumber));
+    public PaymentResponseDTO getPaymentByConfirmationNumber(@PathVariable("confirmationNumber") int confirmationNumber) {
+        return new PaymentResponseDTO(paymentService.getPaymentByConfirmationNumber(confirmationNumber));
     }
 
     /*
      * get payment by customer
      */
     @GetMapping(value = { "/customers/{customerID}/payments", "/customers/{customerID}/payments/" })
-    public List<PaymentDTO> getPaymentsByCustomer(@PathVariable("customerId") int customerId) {
+    public List<PaymentResponseDTO> getPaymentsByCustomer(@PathVariable("customerId") int customerId) {
         return paymentService.getPaymentsByCustomer(customerId).stream().map(p -> 
-        new PaymentDTO(p)).collect(Collectors.toList());
+        new PaymentResponseDTO(p)).collect(Collectors.toList());
     }
 
     /*
      * get payment by scheduled course
      */
     @GetMapping(value = { "/courses/{courseID}/payments", "/courses/{courseID}/payments/" })
-    public List<PaymentDTO> getPaymentsByCourse(@PathVariable("courseId") int courseId) {
+    public List<PaymentResponseDTO> getPaymentsByCourse(@PathVariable("courseId") int courseId) {
         return paymentService.getPaymentsByCourse(courseId).stream().map(p -> 
-        new PaymentDTO(p)).collect(Collectors.toList());
+        new PaymentResponseDTO(p)).collect(Collectors.toList());
     }
 
     /*
@@ -64,7 +64,7 @@ public class PaymentRestController {
      * might need to /signup
      */
     @PutMapping(value = { "/payments/{customerID}/{courseID}", "/payments/{customerID}/{courseID}/" })
-    public PaymentDTO createPayment(@PathVariable("customerId") int customerId, @PathVariable("courseId") int courseId) {
-        return new PaymentDTO(paymentService.createPayment(customerId, courseId));
+    public PaymentResponseDTO createPayment(@PathVariable("customerId") int customerId, @PathVariable("courseId") int courseId) {
+        return new PaymentResponseDTO(paymentService.createPayment(customerId, courseId));
     }
 }

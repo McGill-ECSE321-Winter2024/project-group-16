@@ -16,7 +16,7 @@ public class CustomerDTO extends PersonRoleResponseDTO
   //------------------------
 
   //CustomerDTO Associations
-  private List<PaymentDTO> customerPayments;
+  private List<PaymentResponseDTO> customerPayments;
   private List<ScheduledCourseDTO> coursesRegistered;
 
   //------------------------
@@ -26,7 +26,7 @@ public class CustomerDTO extends PersonRoleResponseDTO
   public CustomerDTO(int aId)
   {
     super(aId);
-    customerPayments = new ArrayList<PaymentDTO>();
+    customerPayments = new ArrayList<PaymentResponseDTO>();
     coursesRegistered = new ArrayList<ScheduledCourseDTO>();
   }
 
@@ -34,15 +34,15 @@ public class CustomerDTO extends PersonRoleResponseDTO
   // INTERFACE
   //------------------------
   /* Code from template association_GetMany */
-  public PaymentDTO getCustomerPayment(int index)
+  public PaymentResponseDTO getCustomerPayment(int index)
   {
-    PaymentDTO aCustomerPayment = customerPayments.get(index);
+    PaymentResponseDTO aCustomerPayment = customerPayments.get(index);
     return aCustomerPayment;
   }
 
-  public List<PaymentDTO> getCustomerPayments()
+  public List<PaymentResponseDTO> getCustomerPayments()
   {
-    List<PaymentDTO> newCustomerPayments = Collections.unmodifiableList(customerPayments);
+    List<PaymentResponseDTO> newCustomerPayments = Collections.unmodifiableList(customerPayments);
     return newCustomerPayments;
   }
 
@@ -58,7 +58,7 @@ public class CustomerDTO extends PersonRoleResponseDTO
     return has;
   }
 
-  public int indexOfCustomerPayment(PaymentDTO aCustomerPayment)
+  public int indexOfCustomerPayment(PaymentResponseDTO aCustomerPayment)
   {
     int index = customerPayments.indexOf(aCustomerPayment);
     return index;
@@ -99,7 +99,7 @@ public class CustomerDTO extends PersonRoleResponseDTO
     return 0;
   }
   /* Code from template association_AddUnidirectionalMany */
-  public boolean addCustomerPayment(PaymentDTO aCustomerPayment)
+  public boolean addCustomerPayment(PaymentResponseDTO aCustomerPayment)
   {
     boolean wasAdded = false;
     if (customerPayments.contains(aCustomerPayment)) { return false; }
@@ -108,7 +108,7 @@ public class CustomerDTO extends PersonRoleResponseDTO
     return wasAdded;
   }
 
-  public boolean removeCustomerPayment(PaymentDTO aCustomerPayment)
+  public boolean removeCustomerPayment(PaymentResponseDTO aCustomerPayment)
   {
     boolean wasRemoved = false;
     if (customerPayments.contains(aCustomerPayment))
@@ -119,7 +119,7 @@ public class CustomerDTO extends PersonRoleResponseDTO
     return wasRemoved;
   }
   /* Code from template association_AddIndexControlFunctions */
-  public boolean addCustomerPaymentAt(PaymentDTO aCustomerPayment, int index)
+  public boolean addCustomerPaymentAt(PaymentResponseDTO aCustomerPayment, int index)
   {  
     boolean wasAdded = false;
     if(addCustomerPayment(aCustomerPayment))
@@ -133,7 +133,7 @@ public class CustomerDTO extends PersonRoleResponseDTO
     return wasAdded;
   }
 
-  public boolean addOrMoveCustomerPaymentAt(PaymentDTO aCustomerPayment, int index)
+  public boolean addOrMoveCustomerPaymentAt(PaymentResponseDTO aCustomerPayment, int index)
   {
     boolean wasAdded = false;
     if(customerPayments.contains(aCustomerPayment))

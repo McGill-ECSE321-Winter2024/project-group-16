@@ -6,7 +6,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 
 // line 37 "model.ump"
 // line 93 "model.ump"
-public class PaymentDTO
+public class PaymentResponseDTO
 {
 
   //------------------------
@@ -22,14 +22,14 @@ public class PaymentDTO
   // CONSTRUCTOR
   //------------------------
 
-  public PaymentDTO(int aConfirmationNumber, CustomerDTO aCustomer, ScheduledCourseDTO aScheduledCourse)
+  public PaymentResponseDTO(int aConfirmationNumber, CustomerDTO aCustomer, ScheduledCourseDTO aScheduledCourse)
   {
     confirmationNumber = aConfirmationNumber;
     customer = aCustomer;
     scheduledCourse = aScheduledCourse;
   }
 
-  public PaymentDTO(Payment aPayment) {
+  public PaymentResponseDTO(Payment aPayment) {
     confirmationNumber = aPayment.getConfirmationNumber();
     customer = new CustomerDTO(aPayment.getKey().getCustomer());
     scheduledCourse = new ScheduledCourseDTO(aPayment.getKey().getScheduledCourse());
