@@ -43,4 +43,14 @@ public class ScheduledCourseController {
         }
         return new ScheduledCourseListDto(dtos);
     }
+
+    @DeleteMapping("/scheduledCourses/{id}")
+    public void deleteScheduledCourse(@PathVariable int id) {
+        service.deleteScheduledCourse(id);
+    }
+
+    @DeleteMapping("/scheduledCourses")
+    public void deleteAllScheduledCourses() {
+        service.deleteAllScheduledCourses();
+    }
 }

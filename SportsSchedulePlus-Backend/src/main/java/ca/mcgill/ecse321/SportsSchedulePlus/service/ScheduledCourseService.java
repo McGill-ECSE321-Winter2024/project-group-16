@@ -7,6 +7,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -81,6 +82,11 @@ public class ScheduledCourseService {
     @Transactional
     public void deleteScheduledCourse(int id) {
         scheduledCourseRepository.deleteById(id);
+    }
+    
+    @Transactional
+    public void deleteAllScheduledCourses() {
+        scheduledCourseRepository.deleteAll();
     }
 
     private <T> List<T> toList(Iterable<T> iterable){

@@ -40,4 +40,14 @@ public class CourseTypeController {
         }
         return new CourseTypeListDto(dtos);
     }
+    
+    @DeleteMapping("/courseTypes/{id}")
+    public void deleteCourseType(@PathVariable int id) {
+        service.deleteCourseType(id);
+    }
+
+    @DeleteMapping("/courseTypes")
+    public void deleteAllCourseTypes() {
+        service.deleteAllCourseTypes();
+    }
 }

@@ -37,6 +37,16 @@ public class CourseTypeService {
         return toList(courseTypeRepository.findAll());
     }
 
+    @Transactional
+    public void deleteCourseType(Integer id) {
+        courseTypeRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteAllCourseTypes() {
+        courseTypeRepository.deleteAll();
+    }
+
     private <T> List<T> toList(Iterable<T> iterable){
 		List<T> resultList = new ArrayList<T>();
 		for (T t : iterable) {
