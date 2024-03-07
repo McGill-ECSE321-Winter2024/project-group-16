@@ -22,9 +22,9 @@ public class Customer extends PersonRole {
 
   //Customer Associations
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  private List <Payment> customerPayments;
+  private final List <Payment> customerPayments;
   @OneToMany(fetch = FetchType.EAGER)
-  private List <ScheduledCourse> coursesRegistered;
+  private final List <ScheduledCourse> coursesRegistered;
 
   //------------------------
   // CONSTRUCTOR
@@ -228,9 +228,7 @@ public class Customer extends PersonRole {
   @Override
   public boolean equals(Object object) {
     if (this == object) return true;
-    if (!super.equals(object) || !(object instanceof Customer)) return false;
-
-    Customer customer = (Customer) object;
+    if (!super.equals(object) || !(object instanceof Customer customer)) return false;
 
     return customer.getId() == this.getId() &&
       Helper.compareListsElementWise(customerPayments, customer.customerPayments) &&

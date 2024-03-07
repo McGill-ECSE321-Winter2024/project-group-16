@@ -18,7 +18,7 @@ public class OwnerService {
     PersonRepository personRepository;
 
     @Transactional
-    public Owner getOwner(Integer id) {
+    public Owner getOwner(int id) {
         Optional<Owner> optionalOwner = ownerRepository.findById(id);
         if (optionalOwner.isPresent()) {
             Owner owner = optionalOwner.get();
@@ -37,7 +37,7 @@ public class OwnerService {
     }
 
     @Transactional
-    public Person updateOwner(Integer id, String password){
+    public Person updateOwner(int id, String password){
         Optional<Person> optionalPerson = personRepository.findById(id);
         if (optionalPerson.isPresent()) {
             Person person = optionalPerson.get();

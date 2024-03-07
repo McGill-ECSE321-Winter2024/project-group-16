@@ -124,10 +124,9 @@ public class Payment {
 
     @Override
     public boolean equals(Object obj) {
-      if (!(obj instanceof Key)) {
+      if (!(obj instanceof Key other)) {
         return false;
       }
-      Key other = (Key) obj;
       return this.getCustomer().getId() == other.getCustomer().getId() &&
         this.getScheduledCourse().getId() == other.getScheduledCourse().getId();
     }

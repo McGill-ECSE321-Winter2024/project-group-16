@@ -19,7 +19,7 @@ public class Person {
   // STATIC VARIABLES
   //------------------------
 
-  private static Map <String, Person> personsByEmail = new HashMap <String, Person> ();
+  private static final Map <String, Person> personsByEmail = new HashMap <String, Person> ();
 
   //------------------------
   // MEMBER VARIABLES

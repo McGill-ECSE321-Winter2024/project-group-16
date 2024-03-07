@@ -240,12 +240,10 @@ public class Instructor extends Customer {
   @Override
   public boolean equals(Object object) {
     if (this == object) return true;
-    if (!(object instanceof Instructor) || !super.equals(object)) return false;
-
-    Instructor other = (Instructor) object;
+    if (!(object instanceof Instructor other) || !super.equals(object)) return false;
 
     return getId() == other.getId() &&
-      (experience == null ? other.experience == null : experience.equals(other.experience)) &&
+      (Objects.equals(experience, other.experience)) &&
       Helper.compareListsElementWise(instructorSuggestedCourseTypes, other.instructorSuggestedCourseTypes) &&
       Helper.compareListsElementWise(supervisedCourses, other.supervisedCourses);
   }

@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.service;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
@@ -31,11 +30,11 @@ public class CustomerService {
         Person person = new Person(name, email, password, personRole);
         personRepository.save(person);
         return person;
-    };
+    }
 
     // Validation on customer inputs
     @Transactional
-    public Person updateCustomer(String name, String email, String password, Integer id){
+    public Person updateCustomer(String name, String email, String password, int id){
         Optional<Person> optionalPerson = personRepository.findById(id);
         if (optionalPerson.isPresent()) {
             Person person = optionalPerson.get();
@@ -54,13 +53,13 @@ public class CustomerService {
     }
 
     @Transactional
-    public Customer getCustomer(Integer id){
+    public Customer getCustomer(int id){
         Customer customer = customerRepository.findCustomerById(id);
         return customer;
     }
 
     @Transactional
-    public Customer deleteCustomer(Integer id){
+    public Customer deleteCustomer(int id){
         Customer customer = customerRepository.findCustomerById(id);
         customerRepository.delete(customer);
         return customer;

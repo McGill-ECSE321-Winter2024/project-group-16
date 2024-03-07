@@ -25,16 +25,16 @@ public class InstructorService {
 
     // Validation on instructor inputs
     @Transactional
-    public Person createInstructor(String name, String email, String password, Integer id, String experience){
+    public Person createInstructor(String name, String email, String password, String experience, int id){
         Customer customer = customerRepository.findCustomerById(id);
         PersonRole personRole = new Instructor(customer.getId(), experience);
         Person person = new Person(name, email, password, personRole);
         personRepository.save(person);
         return person;
-    };
+    }
 
     @Transactional
-    public Person updateInstructor(String name, String email, String password, String experience, Integer id){
+    public Person updateInstructor(String name, String email, String password, String experience, int id){
         Optional<Person> optionalPerson = personRepository.findById(id);
         if (optionalPerson.isPresent()) {
             Person person = optionalPerson.get();
@@ -55,7 +55,7 @@ public class InstructorService {
     }
 
     @Transactional
-    public Instructor deleteInstructor(Integer id){
+    public Instructor deleteInstructor(int id){
         Optional<Instructor> optionalInstructor = instructorRepository.findById(id);
         if (optionalInstructor.isPresent()){
             Instructor instructor = optionalInstructor.get();
@@ -67,7 +67,7 @@ public class InstructorService {
         }
     }
     @Transactional
-    public Instructor getInstructor(Integer id){
+    public Instructor getInstructor(int id){
         Instructor instructor = getInstructor(id);
         return instructor;
     }
