@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PaymentService;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.PaymentResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.PaymentListResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 
 /**
  * Rest controller for managing data related to Payments in the application
@@ -27,10 +30,13 @@ public class PaymentRestController {
     /*
      * get all payments
      */
-    @GetMapping(value = { "/payments", "/payments/" })
-    public List<PaymentResponseDTO> getAllPayments() {
-        return paymentService.getAllPayments().stream().map(p -> 
-        new PaymentResponseDTO(p)).collect(Collectors.toList());
+    @GetMapping(value = {"/payments", "/payments/"})
+    public PaymentListResponseDTO getAllPayments() {
+        List<PaymentResponseDTO> dtos = new ArrayList<>();
+        for (Payment p : paymentService.getAllPayments()) {
+            dtos.add(new PaymentResponseDTO(p));
+        }
+        return new PaymentListResponseDTO(dtos);
     }
 
     /*
