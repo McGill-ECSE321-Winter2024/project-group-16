@@ -1,14 +1,13 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 
-import java.sql.Date;
-import java.sql.Time;
 
 public class ScheduledCourseRequestDto {
     private int id;
-    private Date date;
-    private Time startTime;
-    private Time endTime;
+    private String date;
+    private String startTime;
+    private String endTime;
     private String location;
+
     private CourseTypeRequestDto courseType; // Assuming you have a CourseTypeRequestDto
 
     // Add any other fields or methods as needed
@@ -21,27 +20,27 @@ public class ScheduledCourseRequestDto {
         this.id = id;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public Time getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Time startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Time getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Time endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 

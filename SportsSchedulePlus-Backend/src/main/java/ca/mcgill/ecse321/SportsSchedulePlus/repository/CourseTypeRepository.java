@@ -16,7 +16,18 @@ public interface CourseTypeRepository extends CrudRepository<CourseType, Integer
     // Find CourseType by price less than
     List<CourseType> findByPriceLessThan(float maxPrice);
 
+    // Find CourseType by price
+    List<CourseType> findByPrice(float price);
+
     // Find CourseType that is approved by the owner
     List<CourseType> findByApprovedByOwnerTrue();
+
+    // Find CourseType that is not approved by the owner
+    List<CourseType> findByApprovedByOwnerFalse();
+
+    
+    // Find CourseType by id
+    CourseType findCourseTypeById(int id);
+
     
 }
