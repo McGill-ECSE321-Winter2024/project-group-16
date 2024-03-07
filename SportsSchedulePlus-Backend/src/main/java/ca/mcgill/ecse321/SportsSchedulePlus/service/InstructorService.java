@@ -8,11 +8,13 @@ import ca.mcgill.ecse321.util.SportsScheduleException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class InstructorService {
 
     @Autowired
@@ -72,21 +74,23 @@ public class InstructorService {
         return instructor;
     }
 
+    @Transactional
     public List<Instructor> getAllInstructors(){
         return toList(instructorRepository.findAll());
 
     }
 
+    @Transactional
     // Custom query methods
     public List<Instructor> getInstructorsBySupervisedCourse(ScheduledCourse scheduledCourse){
         return toList(instructorRepository.findInstructorBySupervisedCourses(scheduledCourse));
     }
-
+    @Transactional
     public Instructor getInstructorBySuggestedCourseTypes(CourseType courseType){
         return instructorRepository.findInstructorByInstructorSuggestedCourseTypes(courseType);
 
     }
-
+    @Transactional
     public List<Instructor> getInstructorByExperience(String experience){
         return toList(instructorRepository.findInstructorByExperience(experience));
     }

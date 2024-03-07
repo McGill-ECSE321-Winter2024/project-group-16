@@ -7,9 +7,11 @@ import ca.mcgill.ecse321.util.SportsScheduleException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class OwnerService {
 
     @Autowired
