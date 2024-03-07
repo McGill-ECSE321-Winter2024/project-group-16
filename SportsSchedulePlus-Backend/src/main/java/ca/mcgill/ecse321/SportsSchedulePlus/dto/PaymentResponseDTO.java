@@ -31,8 +31,8 @@ public class PaymentResponseDTO
 
   public PaymentResponseDTO(Payment aPayment) {
     confirmationNumber = aPayment.getConfirmationNumber();
-    // customer = new CustomerDTO(aPayment.getKey().getCustomer());
-    // scheduledCourse = new ScheduledCourseDTO(aPayment.getKey().getScheduledCourse());
+    customer = new CustomerDTO(aPayment.getKey().getCustomer());
+    scheduledCourse = new ScheduledCourseDTO(aPayment.getKey().getScheduledCourse());
   }
 
   //------------------------

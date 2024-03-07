@@ -51,18 +51,24 @@ public class PaymentRestController {
      * get payment by customer
      */
     @GetMapping(value = { "/customers/{customerID}/payments", "/customers/{customerID}/payments/" })
-    public List<PaymentResponseDTO> getPaymentsByCustomer(@PathVariable("customerId") int customerId) {
-        return paymentService.getPaymentsByCustomer(customerId).stream().map(p -> 
-        new PaymentResponseDTO(p)).collect(Collectors.toList());
+    public PaymentListResponseDTO getPaymentsByCustomer(@PathVariable("customerId") int customerId) {
+        List<PaymentResponseDTO> dtos = new ArrayList<>();
+        for (Payment p : paymentService.getPaymentsByCustomer(customerId)) {
+            dtos.add(new PaymentResponseDTO(p));
+        }
+        return new PaymentListResponseDTO(dtos);
     }
 
     /*
      * get payment by scheduled course
      */
     @GetMapping(value = { "/courses/{courseID}/payments", "/courses/{courseID}/payments/" })
-    public List<PaymentResponseDTO> getPaymentsByCourse(@PathVariable("courseId") int courseId) {
-        return paymentService.getPaymentsByCourse(courseId).stream().map(p -> 
-        new PaymentResponseDTO(p)).collect(Collectors.toList());
+    public PaymentListResponseDTO getPaymentsByCourse(@PathVariable("courseId") int courseId) {
+        List<PaymentResponseDTO> dtos = new ArrayList<>();
+        for (Payment p : paymentService.getPaymentsByCourse(courseId)) {
+            dtos.add(new PaymentResponseDTO(p));
+        }
+        return new PaymentListResponseDTO(dtos);
     }
 
     /*

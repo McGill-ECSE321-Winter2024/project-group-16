@@ -1,8 +1,7 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PersonService;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.PersonListResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.PersonResponseDTO;
 
 @CrossOrigin(origins = "*")
@@ -25,9 +25,12 @@ public class PersonRestController {
      * get all persons (all users)
      */
     @GetMapping(value = {"/persons", "/persons/"})
-    public List<PersonResponseDTO> getAllPersons() {
-        return personService.getAllPersons().stream().map(p ->
-        new PersonResponseDTO(p)).collect(Collectors.toList());
+    public PersonListResponseDTO getAllPersons() {
+        List<PersonResponseDTO> dtos = new ArrayList<>();
+        for (Person p : personService.getAllPersons()) {
+            dtos.add(new PersonResponseDTO(p));
+        }
+        return new PersonListResponseDTO(dtos);
     }
 
     /*

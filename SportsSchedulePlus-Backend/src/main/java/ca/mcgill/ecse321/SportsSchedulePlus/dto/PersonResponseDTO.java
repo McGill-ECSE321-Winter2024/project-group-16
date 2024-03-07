@@ -4,9 +4,9 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.PersonRoleResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.controller.OwnerRestContoller;
-import ca.mcgill.ecse321.SportsSchedulePlus.controller.InstructorRestController;
-import ca.mcgill.ecse321.SportsSchedulePlus.controller.CustomerRestController;
+// import ca.mcgill.ecse321.SportsSchedulePlus.controller.OwnerRestContoller;
+// import ca.mcgill.ecse321.SportsSchedulePlus.controller.InstructorRestController;
+// import ca.mcgill.ecse321.SportsSchedulePlus.controller.CustomerRestController;
 
 
 // line 9 "model.ump"
