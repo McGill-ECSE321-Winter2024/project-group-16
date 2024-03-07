@@ -21,12 +21,18 @@ public class PersonRestController {
     @Autowired
     private PersonService personService;
 
+    /*
+     * get all persons (all users)
+     */
     @GetMapping(value = {"/persons", "/persons/"})
     public List<PersonResponseDTO> getAllPersons() {
         return personService.getAllPersons().stream().map(p ->
         new PersonResponseDTO(p)).collect(Collectors.toList());
     }
 
+    /*
+     * get person by their person id
+     */
     @GetMapping(value = {"/persons/{id}", "/persons/{id}/"})
     public PersonResponseDTO getPerson(@PathVariable("id") int id) {
         Person p = personService.getPersonById(id);

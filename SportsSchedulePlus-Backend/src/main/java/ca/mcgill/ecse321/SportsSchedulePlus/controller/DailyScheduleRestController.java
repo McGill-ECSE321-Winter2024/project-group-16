@@ -36,6 +36,9 @@ public class DailyScheduleRestController {
         new DailyScheduleResponseDTO(ds)).collect(Collectors.toList());
     }
 
+    /*
+     * get the opening hours for a day in the week
+     */
     @GetMapping(value = { "/openingHours/{id}", "/openingHours/{id}/" })
     public DailyScheduleResponseDTO getDailyScheduleById(@PathVariable("id") int id) {
         return new DailyScheduleResponseDTO(dailyScheduleService.getDailyScheduleById(id));
