@@ -1,7 +1,8 @@
-package ca.mcgill.ecse321.util;
+package ca.mcgill.ecse321.utils;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -67,5 +68,14 @@ public class Helper {
 
     return newPayment;
   }
+
+
+    public static <T> List<T> toList(Iterable<T> iterable){
+		List<T> resultList = new ArrayList<T>();
+		for (T t : iterable) {
+			resultList.add(t);
+		}
+		return resultList;
+	}
 
 }

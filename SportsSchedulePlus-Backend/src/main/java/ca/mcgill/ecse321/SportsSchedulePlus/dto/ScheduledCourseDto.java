@@ -4,6 +4,9 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
+
 public class ScheduledCourseDto {
 
     private int id;
@@ -16,6 +19,23 @@ public class ScheduledCourseDto {
 
     public ScheduledCourseDto() {
         // Default constructor
+    }
+
+        public ScheduledCourseDto(ScheduledCourse scheduledCourse) {
+        this.id = scheduledCourse.getId();
+        this.date = scheduledCourse.getDate();
+        this.startTime = scheduledCourse.getStartTime();
+        this.endTime = scheduledCourse.getEndTime();
+        this.location = scheduledCourse.getLocation();
+        this.courseType = new CourseTypeDto(scheduledCourse.getCourseType());
+        // Assuming a constructor in CourseTypeDto that takes a CourseType object
+
+        // Assuming a similar constructor is available in PaymentDto
+        for (Payment payment : scheduledCourse.getCoursePayments()) {
+        PaymentDto paymentDto = new PaymentDto(payment);
+        this.coursePayments.add(paymentDto);
+        }
+        // Assuming a static method in PaymentDto to convert a list of Payment objects to a list of PaymentDto objects
     }
 
     public ScheduledCourseDto(int id, Date date, Time startTime, Time endTime, String location,

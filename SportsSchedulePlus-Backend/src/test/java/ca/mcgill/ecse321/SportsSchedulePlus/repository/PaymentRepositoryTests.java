@@ -16,7 +16,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
-import ca.mcgill.ecse321.util.Helper;
+import ca.mcgill.ecse321.utils.Helper;
 
 
 /**

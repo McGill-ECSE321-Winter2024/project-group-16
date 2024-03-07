@@ -2,6 +2,9 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 
 import java.util.List;
 
+import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
+
 public class CourseTypeDto {
 
     private Integer id;
@@ -21,6 +24,14 @@ public class CourseTypeDto {
         this.approvedByOwner = approvedByOwner;
         this.price = price;
         this.scheduledCourses = scheduledCourses;
+    }
+
+    public CourseTypeDto(CourseType courseType) {
+        this.id = courseType.getId();
+        this.description = courseType.getDescription();
+        this.approvedByOwner = courseType.isApprovedByOwner();
+        this.price = courseType.getPrice();
+
     }
 
     // Getters and setters for each attribute
