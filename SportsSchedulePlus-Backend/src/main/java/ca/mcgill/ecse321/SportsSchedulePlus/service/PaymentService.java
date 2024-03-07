@@ -1,6 +1,9 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.service;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.swing.text.html.Option;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,41 +46,41 @@ public class PaymentService {
 
     @Transactional
     public List<Payment> getPaymentsByCustomer(int customerId) {
-        Customer c = customerRepository.findById(customerId).get();
-        if (c == null) {
+        Optional<Customer> c = customerRepository.findById(customerId);
+        if (!c.isPresent()) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no customer with ID " + customerId + ".");
         }
-        return paymentRepository.findPaymentsByKeyCustomer(c);
+        return paymentRepository.findPaymentsByKeyCustomer(c.get());
     }
 
     @Transactional
     public List<Payment> getPaymentsByCourse(int courseId) {
-        ScheduledCourse sc = ScheduledCourseRepository.findById(courseId).get();
-        if (sc == null) {
+        Optional<ScheduledCourse> sc = ScheduledCourseRepository.findById(courseId);
+        if (!sc.isPresent()) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no scheduled course with ID " + courseId + ".");
         }
-        return paymentRepository.findPaymentsByKeyScheduledCourse(sc);
+        return paymentRepository.findPaymentsByKeyScheduledCourse(sc.get());
     }
 
     @Transactional
     public Payment createPayment(int customerId, int courseId) {
-        Customer c = customerRepository.findById(customerId).get();
-        if (c == null) {
+        Optional<Customer> c = customerRepository.findById(customerId);
+        if (!c.isPresent()) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no customer with ID " + customerId + ".");
         }
-        ScheduledCourse sc = ScheduledCourseRepository.findById(courseId).get();
-        if (sc == null) {
+        Optional<ScheduledCourse> sc = ScheduledCourseRepository.findById(courseId);
+        if (!sc.isPresent()) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no scheduled course with ID " + courseId + ".");
         }
         List<Payment> previousPayments = getPaymentsByCustomer(customerId);
         if (previousPayments != null) {
             for (Payment p : previousPayments) {
-                if (p.getKey().getScheduledCourse().equals(sc)) {
+                if (p.getKey().getScheduledCourse().equals(sc.get())) {
                     throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "The customer with ID " + customerId + " has already paid for the course with ID " + courseId + ".");
                 }
             }
         }
-        Key key = new Key(c, sc);
+        Key key = new Key(c.get(), sc.get());
         Payment p = new Payment(key);
         return p;
     }
