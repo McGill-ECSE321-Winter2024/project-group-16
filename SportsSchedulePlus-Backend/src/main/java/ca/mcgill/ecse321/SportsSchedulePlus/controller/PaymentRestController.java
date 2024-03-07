@@ -88,7 +88,7 @@ public class PaymentRestController {
         try {
             String userEmail = personService.getPersonById(payment.getKey().getCustomer().getId()).getEmail();
             String invoiceHtml = generateInvoiceHtml(payment);
-            MailConfigBean mailSender = new MailConfigBean("imap.gmail.com", "smtp.gmail.com", "sports.schedule.plus@gmail.com", "sports0912");
+            MailConfigBean mailSender = new MailConfigBean("imap.gmail.com", "smtp.gmail.com", "sports.schedule.plus@gmail.com", "aqlq ldup ymfh eejb");
             Mailer mailer = new Mailer(mailSender);
 
             // Sending the email using the custom Mailer
@@ -123,7 +123,7 @@ public class PaymentRestController {
      * create a new payment between a customer and a course,
      * might need to /signup
      */
-    @PutMapping(value = { "/payments/{customerID}/{courseID}", "/payments/{customerID}/{courseID}/" })
+    @PutMapping(value = { "/payments/{customerId}/{courseId}", "/payments/{customerId}/{courseId}/" })
     public PaymentResponseDTO createPayment(@PathVariable("customerId") int customerId, @PathVariable("courseId") int courseId) {
       Payment newPayment = paymentService.createPayment(customerId, courseId);
       PaymentResponseDTO paymentDTO = new PaymentResponseDTO(newPayment);
@@ -137,7 +137,7 @@ public class PaymentRestController {
      */
     @GetMapping(value = { "/paymentsTest"  })
     public String paymentTest () throws IOException {
-        MailConfigBean mailSender = new MailConfigBean("imap.gmail.com", "smtp.gmail.com", "sports.schedule.plus@gmail.com", "sports0912");
+        MailConfigBean mailSender = new MailConfigBean("imap.gmail.com", "smtp.gmail.com", "sports.schedule.plus@gmail.com", "aqlq ldup ymfh eejb");
         Mailer mailer = new Mailer(mailSender);
 
         // Sending the email using the custom Mailer
