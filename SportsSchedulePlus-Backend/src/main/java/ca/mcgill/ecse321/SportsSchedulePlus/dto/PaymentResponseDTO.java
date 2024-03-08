@@ -15,14 +15,14 @@ public class PaymentResponseDTO
 
   //PaymentDTO Attributes
   private int confirmationNumber;
-  private CustomerDto customer;
-  private ScheduledCourseDto scheduledCourse;
+  private CustomerDTO customer;
+  private ScheduledCourseDTO scheduledCourse;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public PaymentResponseDTO(int aConfirmationNumber, CustomerDto aCustomer, ScheduledCourseDto aScheduledCourse)
+  public PaymentResponseDTO(int aConfirmationNumber, CustomerDTO aCustomer, ScheduledCourseDTO aScheduledCourse)
   {
     confirmationNumber = aConfirmationNumber;
     customer = aCustomer;
@@ -31,8 +31,8 @@ public class PaymentResponseDTO
 
   public PaymentResponseDTO(Payment aPayment) {
     confirmationNumber = aPayment.getConfirmationNumber();
-    customer = new CustomerDto(aPayment.getKey().getCustomer());
-    scheduledCourse = new ScheduledCourseDto(aPayment.getKey().getScheduledCourse());
+    customer = new CustomerDTO(aPayment.getKey().getCustomer());
+    scheduledCourse = new ScheduledCourseDTO(aPayment.getKey().getScheduledCourse());
   }
 
   //------------------------
@@ -47,7 +47,7 @@ public class PaymentResponseDTO
     return wasSet;
   }
 
-  public boolean setCustomer(CustomerDto aCustomer)
+  public boolean setCustomer(CustomerDTO aCustomer)
   {
     boolean wasSet = false;
     customer = aCustomer;
@@ -55,7 +55,7 @@ public class PaymentResponseDTO
     return wasSet;
   }
 
-  public boolean setScheduledCourse(ScheduledCourseDto aScheduledCourse)
+  public boolean setScheduledCourse(ScheduledCourseDTO aScheduledCourse)
   {
     boolean wasSet = false;
     scheduledCourse = aScheduledCourse;
@@ -68,12 +68,12 @@ public class PaymentResponseDTO
     return confirmationNumber;
   }
 
-  public CustomerDto getCustomer()
+  public CustomerDTO getCustomer()
   {
     return customer;
   }
 
-  public ScheduledCourseDto getScheduledCourse()
+  public ScheduledCourseDTO getScheduledCourse()
   {
     return scheduledCourse;
   }

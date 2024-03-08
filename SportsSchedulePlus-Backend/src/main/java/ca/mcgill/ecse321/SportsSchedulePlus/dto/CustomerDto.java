@@ -7,23 +7,23 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
-public class CustomerDto extends PersonRoleDto {
+public class CustomerDTO extends PersonRoleDto {
 
     private List<PaymentDto> customerPayments;
-    private List<ScheduledCourseDto> coursesRegistered;
+    private List<ScheduledCourseDTO> coursesRegistered;
 
-    public CustomerDto() {
+    public CustomerDTO() {
         // Default constructor
     }
 
-    public CustomerDto(int id, List<PaymentDto> customerPayments, List<ScheduledCourseDto> coursesRegistered) {
+    public CustomerDTO(int id, List<PaymentDto> customerPayments, List<ScheduledCourseDTO> coursesRegistered) {
         super(id);
         this.customerPayments = customerPayments;
         this.coursesRegistered = coursesRegistered;
     }
 
        // Constructor to convert a Customer object to CustomerDto
-    public CustomerDto(Customer customer) {
+    public CustomerDTO(Customer customer) {
         super(customer.getId());
         // Assuming a constructor in PersonRoleDto that takes an ID as input
 
@@ -34,7 +34,7 @@ public class CustomerDto extends PersonRoleDto {
 
         this.coursesRegistered = new ArrayList<>();
         for (ScheduledCourse scheduledCourse : customer.getCoursesRegistered()) {
-            this.coursesRegistered.add(new ScheduledCourseDto(scheduledCourse));
+            this.coursesRegistered.add(new ScheduledCourseDTO(scheduledCourse));
         }
     }
     
@@ -49,11 +49,11 @@ public class CustomerDto extends PersonRoleDto {
         this.customerPayments = customerPayments;
     }
 
-    public List<ScheduledCourseDto> getCoursesRegistered() {
+    public List<ScheduledCourseDTO> getCoursesRegistered() {
         return coursesRegistered;
     }
 
-    public void setCoursesRegistered(List<ScheduledCourseDto> coursesRegistered) {
+    public void setCoursesRegistered(List<ScheduledCourseDTO> coursesRegistered) {
         this.coursesRegistered = coursesRegistered;
     }
 

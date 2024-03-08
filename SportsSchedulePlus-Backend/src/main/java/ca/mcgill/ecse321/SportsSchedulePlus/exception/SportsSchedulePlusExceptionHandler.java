@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.ErrorDTO;
 
 @ControllerAdvice
-public class SportsScheduleExceptionHandler {
-    @ExceptionHandler(SportsScheduleException.class)
-    public ResponseEntity<ErrorDTO> handleEventRegistrationException(SportsScheduleException e) {
+public class SportsSchedulePlusExceptionHandler {
+    @ExceptionHandler(SportsSchedulePlusException.class)
+    public ResponseEntity<ErrorDTO> handleEventRegistrationException(SportsSchedulePlusException e) {
         return new ResponseEntity<ErrorDTO>(new ErrorDTO(e.getMessage()), e.getStatus());
     }
 }

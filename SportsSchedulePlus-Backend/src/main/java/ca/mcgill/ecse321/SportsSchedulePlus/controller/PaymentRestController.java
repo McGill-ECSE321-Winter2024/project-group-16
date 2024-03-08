@@ -1,26 +1,32 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.ArrayList;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import ca.mcgill.ecse321.SportsSchedulePlus.service.CustomerService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.MailConfigBean;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.Mailer;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PaymentService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PersonService;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.PaymentResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.CustomerDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.PaymentListResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 
 /**
  * Rest controller for managing data related to Payments in the application
@@ -33,10 +39,24 @@ public class PaymentRestController {
     @Autowired
     private PaymentService paymentService;
 
-    @Autowired 
+
+
+    private  Mailer mailer; 
+
+    @Autowired
+    private CustomerService customerService;
+    @Autowired
     private PersonService personService;
 
-     private  Mailer mailer; 
+    @PostMapping("/customer")
+    public ResponseEntity<CustomerDTO> createCustomer() {
+        // Convert the DTO back to the entity
+        Customer createdCustomer = customerService.createCustomer();
+        // Convert the created entity back to DTO
+        CustomerDTO createdCustomerDto = new CustomerDTO(createdCustomer);
+
+        return new ResponseEntity<>(createdCustomerDto, HttpStatus.CREATED);
+    }
 
     /*
      * get all payments
@@ -62,7 +82,7 @@ public class PaymentRestController {
      * get payment by customer
      */
     @GetMapping(value = { "/customers/{customerID}/payments", "/customers/{customerID}/payments/" })
-    public PaymentListResponseDTO getPaymentsByCustomer(@PathVariable("customerId") int customerId) {
+    public PaymentListResponseDTO getPaymentsByCustomer(@PathVariable("customerID") int customerId) {
         List<PaymentResponseDTO> dtos = new ArrayList<>();
         for (Payment p : paymentService.getPaymentsByCustomer(customerId)) {
             dtos.add(new PaymentResponseDTO(p));
@@ -74,13 +94,14 @@ public class PaymentRestController {
      * get payment by scheduled course
      */
     @GetMapping(value = { "/courses/{courseID}/payments", "/courses/{courseID}/payments/" })
-    public PaymentListResponseDTO getPaymentsByCourse(@PathVariable("courseId") int courseId) {
+    public PaymentListResponseDTO getPaymentsByCourse(@PathVariable("courseID") int courseId) {
         List<PaymentResponseDTO> dtos = new ArrayList<>();
         for (Payment p : paymentService.getPaymentsByCourse(courseId)) {
             dtos.add(new PaymentResponseDTO(p));
         }
         return new PaymentListResponseDTO(dtos);
     }
+
 
 
     // Method to send payment confirmation email
@@ -118,30 +139,17 @@ public class PaymentRestController {
 
         return html.toString();
     }
-
-    /*
+   
+     /*
      * create a new payment between a customer and a course,
      * might need to /signup
      */
-    @PutMapping(value = { "/payments/{customerId}/{courseId}", "/payments/{customerId}/{courseId}/" })
-    public PaymentResponseDTO createPayment(@PathVariable("customerId") int customerId, @PathVariable("courseId") int courseId) {
+    @PutMapping(value = { "/payments/{customerID}/{courseID}", "/payments/{customerID}/{courseID}/" })
+    public PaymentResponseDTO createPayment(@PathVariable("customerID") int customerId, @PathVariable("courseID") int courseId) {
       Payment newPayment = paymentService.createPayment(customerId, courseId);
       PaymentResponseDTO paymentDTO = new PaymentResponseDTO(newPayment);
       sendPaymentConfirmationEmail(newPayment);
       return paymentDTO;
     }
-
-
-      /*
-     * get payment by confirmation number test
-     */
-    @GetMapping(value = { "/paymentsTest"  })
-    public String paymentTest () throws IOException {
-        MailConfigBean mailSender = new MailConfigBean("imap.gmail.com", "smtp.gmail.com", "sports.schedule.plus@gmail.com", "aqlq ldup ymfh eejb");
-        Mailer mailer = new Mailer(mailSender);
-
-        // Sending the email using the custom Mailer
-        mailer.sendEmail("Payment Confirmation", "Thank you for your payment", "", "sports.schedule.plus@gmail.com");
-        return "";
-    }
+    
 }

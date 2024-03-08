@@ -7,27 +7,27 @@ import java.util.List;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
-public class ScheduledCourseDto {
+public class ScheduledCourseDTO {
 
     private int id;
     private Date date;
     private Time startTime;
     private Time endTime;
     private String location;
-    private CourseTypeDto courseType;  // Assuming you have a CourseTypeDto class
+    private CourseTypeDTO courseType;  // Assuming you have a CourseTypeDto class
     private List<PaymentDto> coursePayments;  // Assuming you have a PaymentDto class
 
-    public ScheduledCourseDto() {
+    public ScheduledCourseDTO() {
         // Default constructor
     }
 
-        public ScheduledCourseDto(ScheduledCourse scheduledCourse) {
+        public ScheduledCourseDTO(ScheduledCourse scheduledCourse) {
         this.id = scheduledCourse.getId();
         this.date = scheduledCourse.getDate();
         this.startTime = scheduledCourse.getStartTime();
         this.endTime = scheduledCourse.getEndTime();
         this.location = scheduledCourse.getLocation();
-        this.courseType = new CourseTypeDto(scheduledCourse.getCourseType());
+        this.courseType = new CourseTypeDTO(scheduledCourse.getCourseType());
         // Assuming a constructor in CourseTypeDto that takes a CourseType object
 
         // Assuming a similar constructor is available in PaymentDto
@@ -38,8 +38,8 @@ public class ScheduledCourseDto {
         // Assuming a static method in PaymentDto to convert a list of Payment objects to a list of PaymentDto objects
     }
 
-    public ScheduledCourseDto(int id, Date date, Time startTime, Time endTime, String location,
-                              CourseTypeDto courseType, List<PaymentDto> coursePayments) {
+    public ScheduledCourseDTO(int id, Date date, Time startTime, Time endTime, String location,
+                              CourseTypeDTO courseType, List<PaymentDto> coursePayments) {
         this.id = id;
         this.date = date;
         this.startTime = startTime;
@@ -91,11 +91,11 @@ public class ScheduledCourseDto {
         this.location = location;
     }
 
-    public CourseTypeDto getCourseType() {
+    public CourseTypeDTO getCourseType() {
         return courseType;
     }
 
-    public void setCourseType(CourseTypeDto courseType) {
+    public void setCourseType(CourseTypeDTO courseType) {
         this.courseType = courseType;
     }
 

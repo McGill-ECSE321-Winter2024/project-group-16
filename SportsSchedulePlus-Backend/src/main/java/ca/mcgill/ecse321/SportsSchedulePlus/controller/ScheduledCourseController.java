@@ -51,6 +51,7 @@ public class ScheduledCourseController {
         List<InstructorResponseDto> instructorDtos = new ArrayList<>();
         List<Instructor> instructors = service.getInstructorsBySupervisedCourse(scheduledCourseId);
 
+        
         for (Instructor instructor : instructors) {
             instructorDtos.add(new InstructorResponseDto(instructor));
         }

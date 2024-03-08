@@ -1,32 +1,29 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 
-import java.util.List;
+
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
-public class CourseTypeDto {
+
+public class CourseTypeDTO {
 
     private Integer id;
     private String description;
     private boolean approvedByOwner;
     private float price;
-    private List<ScheduledCourseDto> scheduledCourses;
 
-    public CourseTypeDto() {
+    public CourseTypeDTO() {
         // Default constructor
     }
 
-    public CourseTypeDto(Integer id, String description, boolean approvedByOwner, float price,
-                         List<ScheduledCourseDto> scheduledCourses) {
+    public CourseTypeDTO(Integer id, String description, boolean approvedByOwner, float price) {
         this.id = id;
         this.description = description;
         this.approvedByOwner = approvedByOwner;
         this.price = price;
-        this.scheduledCourses = scheduledCourses;
     }
 
-    public CourseTypeDto(CourseType courseType) {
+    public CourseTypeDTO(CourseType courseType) {
         this.id = courseType.getId();
         this.description = courseType.getDescription();
         this.approvedByOwner = courseType.isApprovedByOwner();
@@ -66,13 +63,5 @@ public class CourseTypeDto {
 
     public void setPrice(float price) {
         this.price = price;
-    }
-
-    public List<ScheduledCourseDto> getScheduledCourses() {
-        return scheduledCourses;
-    }
-
-    public void setScheduledCourses(List<ScheduledCourseDto> scheduledCourses) {
-        this.scheduledCourses = scheduledCourses;
     }
 }
