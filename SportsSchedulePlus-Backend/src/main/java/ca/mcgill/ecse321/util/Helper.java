@@ -1,11 +1,10 @@
-package ca.mcgill.ecse321.utils;
+package ca.mcgill.ecse321.util;
 
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.ArrayList;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
@@ -69,14 +68,4 @@ public class Helper {
     return newPayment;
   }
 
-  /**
-   * Helper method to create a list from an iterable.
-   */
-  public static <T> List<T> toList(Iterable<T> iterable){
-		List<T> resultList = new ArrayList<T>();
-		for (T t : iterable) {
-			resultList.add(t);
-		}
-		return resultList;
-	}
 }

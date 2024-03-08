@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.PersonRoleResponseDTO;
 // import ca.mcgill.ecse321.SportsSchedulePlus.controller.OwnerRestContoller;
@@ -47,9 +48,13 @@ public class PersonResponseDTO
     password = p.getPassword();
     int personRoleID = p.getPersonRole().getId();
     
-    if (OwnerRestContoller.getOwner().getId() == personRoleID) {
-      setPersonRoles(OwnerRestContoller.getOwner());
+    if (OwnerRestController.getOwner().getId() == personRoleID) {
+      setPersonRoles(OwnerRestController.getOwner());
     } 
+    if (p.getPersonRole() instanceof Instructor) {
+      ;
+
+    }
     for (InstructorDTO i : InstructorRestController.getInstructors()) {
       if (i.getId() == personRoleID) {
         setPersonRoles(i);

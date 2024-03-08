@@ -13,7 +13,7 @@ import java.util.List;
 public interface PaymentRepository extends CrudRepository<Payment, Payment.Key> {
 
     // Find Payments by confirmation number
-    Payment findPaymentByConfirmationNumber(int confirmationNumber);
+    List<Payment> findPaymentsByConfirmationNumber(int confirmationNumber);
 
     // Find payments by customer
     List<Payment> findPaymentsByKeyCustomer(Customer customer);

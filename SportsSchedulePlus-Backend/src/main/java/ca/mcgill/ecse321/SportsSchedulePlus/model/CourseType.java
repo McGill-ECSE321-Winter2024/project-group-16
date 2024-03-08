@@ -4,7 +4,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.util.*;
 
-import ca.mcgill.ecse321.utils.Helper;
+import ca.mcgill.ecse321.util.Helper;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

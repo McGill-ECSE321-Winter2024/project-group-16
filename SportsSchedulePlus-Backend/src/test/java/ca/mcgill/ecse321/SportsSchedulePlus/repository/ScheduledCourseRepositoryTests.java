@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
-import ca.mcgill.ecse321.utils.Helper;
+import ca.mcgill.ecse321.util.Helper;
 
 /**
  * This class contains unit tests for the ScheduledCourseRepository.

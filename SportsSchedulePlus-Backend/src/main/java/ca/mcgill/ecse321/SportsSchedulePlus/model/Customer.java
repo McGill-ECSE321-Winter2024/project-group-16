@@ -4,11 +4,12 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.util.*;
 
-import ca.mcgill.ecse321.utils.Helper;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
+
+import ca.mcgill.ecse321.util.Helper;
 
 // line 25 "model.ump"
 // line 100 "model.ump"

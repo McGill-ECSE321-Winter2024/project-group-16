@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
-import ca.mcgill.ecse321.utils.Helper;
+import ca.mcgill.ecse321.util.Helper;
 
 import java.util.List;
 
