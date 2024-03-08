@@ -33,6 +33,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
 //            our public endpoints
             .requestMatchers(HttpMethod.GET, "/authentication/**").permitAll()
+            .requestMatchers(HttpMethod.POST, "/authentication/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/**").permitAll()
             .requestMatchers(HttpMethod.GET, "/**").permitAll()
             .requestMatchers(HttpMethod.PUT, "/**").permitAll()
