@@ -48,15 +48,7 @@ public class PaymentRestController {
     @Autowired
     private PersonService personService;
 
-    @PostMapping("/customer")
-    public ResponseEntity<CustomerDTO> createCustomer() {
-        // Convert the DTO back to the entity
-        Customer createdCustomer = customerService.createCustomer();
-        // Convert the created entity back to DTO
-        CustomerDTO createdCustomerDto = new CustomerDTO(createdCustomer);
 
-        return new ResponseEntity<>(createdCustomerDto, HttpStatus.CREATED);
-    }
 
     /*
      * get all payments
@@ -110,7 +102,7 @@ public class PaymentRestController {
             String userEmail = personService.getPersonById(payment.getKey().getCustomer().getId()).getEmail();
             String invoiceHtml = generateInvoiceHtml(payment);
             MailConfigBean mailSender = new MailConfigBean("imap.gmail.com", "smtp.gmail.com", "sports.schedule.plus@gmail.com", "aqlq ldup ymfh eejb");
-            Mailer mailer = new Mailer(mailSender);
+             mailer = new Mailer(mailSender);
 
             // Sending the email using the custom Mailer
             mailer.sendEmail("Payment Confirmation", "Thank you for your payment", invoiceHtml, userEmail);
