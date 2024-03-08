@@ -10,7 +10,6 @@ import jakarta.transaction.Transactional;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.utils.Helper;
 

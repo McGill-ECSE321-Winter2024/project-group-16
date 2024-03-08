@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.001s</div>
+<div class="counter">0.292s</div>
 <p>duration</p>
 </div>
 </td>
@@ -66,6 +66,9 @@
 <li>
 <a href="#tab1">Standard output</a>
 </li>
+<li>
+<a href="#tab2">Standard error</a>
+</li>
 </ul>
 <div id="tab0" class="tab">
 <h2>Tests</h2>
@@ -79,7 +82,7 @@
 </thead>
 <tr>
 <td class="success">contextLoads()</td>
-<td class="success">0.001s</td>
+<td class="success">0.292s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -87,8 +90,43 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>2024-03-07T22:30:54.091-05:00  INFO 55875 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplicationTests]: SportsSchedulePlusApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2024-03-07T22:30:54.093-05:00  INFO 55875 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplication for test class ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplicationTests
+<pre>23:24:28.073 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplicationTests]: SportsSchedulePlusApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+23:24:28.115 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplication for test class ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.2)
+
+2024-03-07T23:24:28.271-05:00  INFO 58160 --- [    Test worker] m.e.S.SportsSchedulePlusApplicationTests : Starting SportsSchedulePlusApplicationTests using Java 21.0.1 with PID 58160 (started by dania in /Users/dania/Desktop/school/W2024/ECSE321/project/project-group-16/SportsSchedulePlus-Backend)
+2024-03-07T23:24:28.272-05:00  INFO 58160 --- [    Test worker] m.e.S.SportsSchedulePlusApplicationTests : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2024-03-07T23:24:28.546-05:00  INFO 58160 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-03-07T23:24:28.574-05:00  INFO 58160 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 25 ms. Found 9 JPA repository interfaces.
+2024-03-07T23:24:28.777-05:00  INFO 58160 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-03-07T23:24:28.798-05:00  INFO 58160 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.1.Final
+2024-03-07T23:24:28.809-05:00  INFO 58160 --- [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-03-07T23:24:28.894-05:00  INFO 58160 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-03-07T23:24:28.903-05:00  INFO 58160 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-03-07T23:24:29.001-05:00  INFO 58160 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@370225c7
+2024-03-07T23:24:29.002-05:00  INFO 58160 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-03-07T23:24:29.475-05:00  INFO 58160 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-03-07T23:24:29.619-05:00  INFO 58160 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-03-07T23:24:29.891-05:00  WARN 58160 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-03-07T23:24:30.005-05:00  INFO 58160 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1134a934, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2cbd855e, org.springframework.security.web.context.SecurityContextHolderFilter@4349389d, org.springframework.security.web.header.HeaderWriterFilter@31aee6d9, org.springframework.security.web.authentication.logout.LogoutFilter@eea69a9, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@11df0bc7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@66c88fce, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@534c3b9d, org.springframework.security.web.session.SessionManagementFilter@6b578779, org.springframework.security.web.access.ExceptionTranslationFilter@8e100e7, org.springframework.security.web.access.intercept.AuthorizationFilter@52e5ad71]
+2024-03-07T23:24:30.138-05:00  INFO 58160 --- [    Test worker] m.e.S.SportsSchedulePlusApplicationTests : Started SportsSchedulePlusApplicationTests in 1.974 seconds (process running for 2.469)
+</pre>
+</span>
+</div>
+<div id="tab2" class="tab">
+<h2>Standard error</h2>
+<span class="code">
+<pre>WARNING: A Java agent has been loaded dynamically (/Users/dania/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.11/f9cb566608fbac6bc7bf54901a7aa11543a989ee/byte-buddy-agent-1.14.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
 </pre>
 </span>
 </div>
@@ -100,7 +138,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.4</a> at Mar 7, 2024, 10:30:54 p.m.</p>
+<a href="http://www.gradle.org">Gradle 8.4</a> at Mar 7, 2024, 11:24:31 p.m.</p>
 </div>
 </div>
 </body>

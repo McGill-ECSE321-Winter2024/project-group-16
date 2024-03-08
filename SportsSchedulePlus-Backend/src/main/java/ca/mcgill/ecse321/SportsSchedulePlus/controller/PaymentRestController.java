@@ -6,14 +6,10 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.service.CustomerService;
@@ -22,11 +18,8 @@ import ca.mcgill.ecse321.SportsSchedulePlus.service.Mailer;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PaymentService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PersonService;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.PaymentResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.CustomerDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.PaymentListResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 
 /**
  * Rest controller for managing data related to Payments in the application
@@ -43,8 +36,6 @@ public class PaymentRestController {
 
     private  Mailer mailer; 
 
-    @Autowired
-    private CustomerService customerService;
     @Autowired
     private PersonService personService;
 

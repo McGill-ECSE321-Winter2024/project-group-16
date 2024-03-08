@@ -12,6 +12,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
+import ca.mcgill.ecse321.utils.Helper;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -94,7 +95,7 @@ public class CourseTypeService {
 
     @Transactional
     public List<CourseType> getAllCourseTypes() {
-        return toList(courseTypeRepository.findAll());
+        return Helper.toList(courseTypeRepository.findAll());
     }
 
     @Transactional
@@ -113,7 +114,7 @@ public class CourseTypeService {
 
     @Transactional
     public void deleteAllCourseTypes() {
-        List<CourseType> courseTypes = toList(courseTypeRepository.findAll());
+        List<CourseType> courseTypes = Helper.toList(courseTypeRepository.findAll());
         if (courseTypes == null || courseTypes.isEmpty()){
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There are no course types.");
         }
@@ -145,16 +146,24 @@ public class CourseTypeService {
         return courseTypes;
     }
 
-    
-   
+    @Transactional
+    public CourseType approveCourseType(int id) {
+        CourseType courseType = getCourseType(id);
+        courseType.setApprovedByOwner(true);
+        // Save the updated course before returning
+        courseTypeRepository.save(courseType);
+        return courseType;
+    }
 
-    private <T> List<T> toList(Iterable<T> iterable){
-		List<T> resultList = new ArrayList<T>();
-		for (T t : iterable) {
-			resultList.add(t);
-		}
-		return resultList;
-	}
+    @Transactional
+    public CourseType disapproveCourseType(int id) {
+        CourseType courseType = getCourseType(id);
+        courseType.setApprovedByOwner(false);
+        // Save the updated course before returning
+        courseTypeRepository.save(courseType);
+        return courseType;
+    }
+
 
   
 }

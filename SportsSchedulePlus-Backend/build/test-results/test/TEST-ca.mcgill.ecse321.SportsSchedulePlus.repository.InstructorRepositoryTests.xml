@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-03-08T03:30:53" hostname="Danias-Air" time="0.085">
+<testsuite name="ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-03-08T04:24:30" hostname="Danias-Air" time="0.077">
   <properties/>
-  <testcase name="testFindInstructorByExperienceNotFound()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests" time="0.008"/>
-  <testcase name="testFindInstructorBySupervisedCourseNotFound()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests" time="0.013"/>
+  <testcase name="testFindInstructorByExperienceNotFound()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests" time="0.006"/>
+  <testcase name="testFindInstructorBySupervisedCourseNotFound()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests" time="0.011"/>
   <testcase name="testFindInstructorByScheduledCourse()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests" time="0.025"/>
-  <testcase name="testFindInstructorByExperience()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests" time="0.013"/>
-  <testcase name="testFindInstructorBySuggestedCourse()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests" time="0.02"/>
-  <testcase name="testFindInstructorBySuggestedCourseNotFound()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests" time="0.006"/>
-  <system-out><![CDATA[2024-03-07T22:30:53.805-05:00  INFO 55875 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests]: InstructorRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2024-03-07T22:30:53.805-05:00  INFO 55875 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplication for test class ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests
+  <testcase name="testFindInstructorByExperience()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests" time="0.012"/>
+  <testcase name="testFindInstructorBySuggestedCourse()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests" time="0.016"/>
+  <testcase name="testFindInstructorBySuggestedCourseNotFound()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests" time="0.005"/>
+  <system-out><![CDATA[2024-03-07T23:24:30.721-05:00  INFO 58160 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests]: InstructorRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-03-07T23:24:30.722-05:00  INFO 58160 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplication for test class ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepositoryTests
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

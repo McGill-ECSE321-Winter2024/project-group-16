@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.service;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
@@ -8,11 +7,6 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class InstructorService {
 
