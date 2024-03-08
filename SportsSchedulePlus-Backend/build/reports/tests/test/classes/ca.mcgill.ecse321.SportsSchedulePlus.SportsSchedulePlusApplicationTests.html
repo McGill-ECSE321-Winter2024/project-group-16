@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.292s</div>
+<div class="counter">0.412s</div>
 <p>duration</p>
 </div>
 </td>
@@ -82,7 +82,7 @@
 </thead>
 <tr>
 <td class="success">contextLoads()</td>
-<td class="success">0.292s</td>
+<td class="success">0.412s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -90,8 +90,8 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>23:24:28.073 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplicationTests]: SportsSchedulePlusApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-23:24:28.115 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplication for test class ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplicationTests
+<pre>10:09:15.453 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplicationTests]: SportsSchedulePlusApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+10:09:15.509 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplication for test class ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -101,22 +101,22 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.2.2)
 
-2024-03-07T23:24:28.271-05:00  INFO 58160 --- [    Test worker] m.e.S.SportsSchedulePlusApplicationTests : Starting SportsSchedulePlusApplicationTests using Java 21.0.1 with PID 58160 (started by dania in /Users/dania/Desktop/school/W2024/ECSE321/project/project-group-16/SportsSchedulePlus-Backend)
-2024-03-07T23:24:28.272-05:00  INFO 58160 --- [    Test worker] m.e.S.SportsSchedulePlusApplicationTests : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2024-03-07T23:24:28.546-05:00  INFO 58160 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2024-03-07T23:24:28.574-05:00  INFO 58160 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 25 ms. Found 9 JPA repository interfaces.
-2024-03-07T23:24:28.777-05:00  INFO 58160 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2024-03-07T23:24:28.798-05:00  INFO 58160 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.1.Final
-2024-03-07T23:24:28.809-05:00  INFO 58160 --- [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2024-03-07T23:24:28.894-05:00  INFO 58160 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2024-03-07T23:24:28.903-05:00  INFO 58160 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2024-03-07T23:24:29.001-05:00  INFO 58160 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@370225c7
-2024-03-07T23:24:29.002-05:00  INFO 58160 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2024-03-07T23:24:29.475-05:00  INFO 58160 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2024-03-07T23:24:29.619-05:00  INFO 58160 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2024-03-07T23:24:29.891-05:00  WARN 58160 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024-03-07T23:24:30.005-05:00  INFO 58160 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1134a934, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2cbd855e, org.springframework.security.web.context.SecurityContextHolderFilter@4349389d, org.springframework.security.web.header.HeaderWriterFilter@31aee6d9, org.springframework.security.web.authentication.logout.LogoutFilter@eea69a9, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@11df0bc7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@66c88fce, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@534c3b9d, org.springframework.security.web.session.SessionManagementFilter@6b578779, org.springframework.security.web.access.ExceptionTranslationFilter@8e100e7, org.springframework.security.web.access.intercept.AuthorizationFilter@52e5ad71]
-2024-03-07T23:24:30.138-05:00  INFO 58160 --- [    Test worker] m.e.S.SportsSchedulePlusApplicationTests : Started SportsSchedulePlusApplicationTests in 1.974 seconds (process running for 2.469)
+2024-03-08T10:09:15.731-05:00  INFO 60518 --- [    Test worker] m.e.S.SportsSchedulePlusApplicationTests : Starting SportsSchedulePlusApplicationTests using Java 21.0.1 with PID 60518 (started by dania in /Users/dania/Desktop/school/W2024/ECSE321/project/project-group-16/SportsSchedulePlus-Backend)
+2024-03-08T10:09:15.731-05:00  INFO 60518 --- [    Test worker] m.e.S.SportsSchedulePlusApplicationTests : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2024-03-08T10:09:16.071-05:00  INFO 60518 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-03-08T10:09:16.107-05:00  INFO 60518 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 9 JPA repository interfaces.
+2024-03-08T10:09:16.390-05:00  INFO 60518 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-03-08T10:09:16.429-05:00  INFO 60518 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.1.Final
+2024-03-08T10:09:16.449-05:00  INFO 60518 --- [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-03-08T10:09:16.608-05:00  INFO 60518 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-03-08T10:09:16.626-05:00  INFO 60518 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-03-08T10:09:17.086-05:00  INFO 60518 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2404abe2
+2024-03-08T10:09:17.087-05:00  INFO 60518 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-03-08T10:09:17.836-05:00  INFO 60518 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-03-08T10:09:18.079-05:00  INFO 60518 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-03-08T10:09:18.375-05:00  WARN 60518 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-03-08T10:09:18.537-05:00  INFO 60518 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@700b035b, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@786de0a3, org.springframework.security.web.context.SecurityContextHolderFilter@6ebf5f26, org.springframework.security.web.header.HeaderWriterFilter@4667c6d9, org.springframework.security.web.authentication.logout.LogoutFilter@475fb7, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3524ee20, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6bc1c8d0, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@472dc215, org.springframework.security.web.session.SessionManagementFilter@481b8d53, org.springframework.security.web.access.ExceptionTranslationFilter@207358ad, org.springframework.security.web.access.intercept.AuthorizationFilter@5b2c9a69]
+2024-03-08T10:09:18.727-05:00  INFO 60518 --- [    Test worker] m.e.S.SportsSchedulePlusApplicationTests : Started SportsSchedulePlusApplicationTests in 3.152 seconds (process running for 3.806)
 </pre>
 </span>
 </div>
@@ -138,7 +138,7 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.4</a> at Mar 7, 2024, 11:24:31 p.m.</p>
+<a href="http://www.gradle.org">Gradle 8.4</a> at Mar 8, 2024, 10:09:19 a.m.</p>
 </div>
 </div>
 </body>
