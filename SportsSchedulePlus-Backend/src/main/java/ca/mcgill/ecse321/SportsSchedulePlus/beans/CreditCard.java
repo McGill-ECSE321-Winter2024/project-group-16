@@ -20,12 +20,12 @@ public class CreditCard implements Serializable {
     private final Pattern visaPattern = Pattern.compile("^4[0-9]{12}(?:[0-9]{3})?$");
     private final Pattern mastercardPattern = Pattern.compile("^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$");
 
-    @NotNull(message = "{ca.qc.dawsoncollege.ga3w21.musicstorewebsite.cardRequired}")
+    @NotNull(message = "{cardRequired}")
    
     @CreditCardNumber(ignoreNonDigitCharacters = true)
     private String number;
 
-    @Future(message = "{ca.qc.dawsoncollege.ga3w21.musicstorewebsite.expiredCard}")
+    @Future(message = "{expiredCard}")
     private Date expirationDate;
 
     /**
@@ -37,7 +37,7 @@ public class CreditCard implements Serializable {
 
     private CardBrand cardBrand;
     
-    @NotNull(message = "{ca.qc.dawsoncollege.ga3w21.musicstorewebsite.cardHolderRequired}")
+    @NotNull(message = "{cardHolderRequired}")
     private String cardHolderName;
 
     /**

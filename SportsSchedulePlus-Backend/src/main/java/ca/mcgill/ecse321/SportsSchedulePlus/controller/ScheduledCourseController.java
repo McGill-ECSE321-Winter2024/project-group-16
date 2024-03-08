@@ -1,10 +1,10 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.InstructorListDto;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.InstructorResponseDto;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.ScheduledCourseListDto;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.ScheduledCourseRequestDto;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.ScheduledCourseResponseDto;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.InstructorListDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.InstructorResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.ScheduledCourseListDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.ScheduledCourseRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.ScheduledCourseResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.ScheduledCourseService;
@@ -24,17 +24,17 @@ public class ScheduledCourseController {
     private ScheduledCourseService service;
 
     @PostMapping("/scheduledCourses")
-    public ScheduledCourseResponseDto createScheduledCourse(@RequestBody ScheduledCourseRequestDto request) {
+    public ScheduledCourseResponseDTO createScheduledCourse(@RequestBody ScheduledCourseRequestDTO request) {
         // Assuming you have a createScheduledCourse method in your service
         ScheduledCourse createdScheduledCourse = service.createScheduledCourse(request.getId(),
                 request.getDate(), request.getStartTime(), request.getEndTime(), request.getLocation(),
                 request.getCourseType().getId());
-        return new ScheduledCourseResponseDto(createdScheduledCourse);
+        return new ScheduledCourseResponseDTO(createdScheduledCourse);
     }
 
     @PutMapping("/scheduledCourses/{id}")
-    public ScheduledCourseResponseDto updateScheduledCourse(@PathVariable(name = "id") int id,
-                                                           @RequestBody ScheduledCourseRequestDto request) {
+    public ScheduledCourseResponseDTO updateScheduledCourse(@PathVariable(name = "id") int id,
+                                                           @RequestBody ScheduledCourseRequestDTO request) {
         ScheduledCourse updatedScheduledCourse = service.updateScheduledCourse(
                 id,
                 request.getDate(),
@@ -43,35 +43,35 @@ public class ScheduledCourseController {
                 request.getLocation(),
                 request.getCourseType().getId()
         );
-        return new ScheduledCourseResponseDto(updatedScheduledCourse);
+        return new ScheduledCourseResponseDTO(updatedScheduledCourse);
     }
 
     @GetMapping("/scheduledCourses/instructors/{id}")
-    public InstructorListDto getInstructorsBySupervisedCourse(@PathVariable(name = "id") int scheduledCourseId) {
-        List<InstructorResponseDto> instructorDtos = new ArrayList<>();
+    public InstructorListDTO getInstructorsBySupervisedCourse(@PathVariable(name = "id") int scheduledCourseId) {
+        List<InstructorResponseDTO> instructorDtos = new ArrayList<>();
         List<Instructor> instructors = service.getInstructorsBySupervisedCourse(scheduledCourseId);
 
         
         for (Instructor instructor : instructors) {
-            instructorDtos.add(new InstructorResponseDto(instructor));
+            instructorDtos.add(new InstructorResponseDTO(instructor));
         }
 
-        return new InstructorListDto(instructorDtos);
+        return new InstructorListDTO(instructorDtos);
     }
 
     @GetMapping("/scheduledCourses/{id}")
-    public ScheduledCourseResponseDto findScheduledCourseById(@PathVariable(name="id") int id) {
+    public ScheduledCourseResponseDTO findScheduledCourseById(@PathVariable(name="id") int id) {
         ScheduledCourse scheduledCourse = service.getScheduledCourse(id);
-        return new ScheduledCourseResponseDto(scheduledCourse);
+        return new ScheduledCourseResponseDTO(scheduledCourse);
     }
 
     @GetMapping("/scheduledCourses")
-    public ScheduledCourseListDto findAllScheduledCourses() {
-        List<ScheduledCourseResponseDto> dtos = new ArrayList<>();
+    public ScheduledCourseListDTO findAllScheduledCourses() {
+        List<ScheduledCourseResponseDTO> dtos = new ArrayList<>();
         for (ScheduledCourse scheduledCourse : service.getAllScheduledCourses()) {
-            dtos.add(new ScheduledCourseResponseDto(scheduledCourse));
+            dtos.add(new ScheduledCourseResponseDTO(scheduledCourse));
         }
-        return new ScheduledCourseListDto(dtos);
+        return new ScheduledCourseListDTO(dtos);
     }
 
     @DeleteMapping("/scheduledCourses/{id}")

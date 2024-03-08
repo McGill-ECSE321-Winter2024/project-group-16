@@ -1,51 +1,59 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 
-import java.util.List;
-import java.util.ArrayList;
-
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
-public class CustomerDTO extends PersonRoleDto {
+import java.util.ArrayList;
+import java.util.List;
 
-    private List<PaymentDto> customerPayments;
+public class CustomerDTO extends PersonRoleDTO { 
+
+    private boolean hasApplied;
+    private List<PaymentDTO> customerPayments;
     private List<ScheduledCourseDTO> coursesRegistered;
-
     public CustomerDTO() {
-        // Default constructor
+        customerPayments = new ArrayList<>();
+        coursesRegistered = new ArrayList<>();
+        hasApplied = false;
     }
 
-    public CustomerDTO(int id, List<PaymentDto> customerPayments, List<ScheduledCourseDTO> coursesRegistered) {
+    public CustomerDTO(int id) {
+        super(id);
+        hasApplied = false;
+    }
+
+    public CustomerDTO(int id, List<PaymentDTO> customerPayments, List<ScheduledCourseDTO> coursesRegistered) {
         super(id);
         this.customerPayments = customerPayments;
         this.coursesRegistered = coursesRegistered;
+        hasApplied = false;
     }
 
-       // Constructor to convert a Customer object to CustomerDto
+    // Constructor to convert a Customer object to CustomerDTO
     public CustomerDTO(Customer customer) {
         super(customer.getId());
-        // Assuming a constructor in PersonRoleDto that takes an ID as input
 
         this.customerPayments = new ArrayList<>();
         for (Payment payment : customer.getCustomerPayments()) {
-            this.customerPayments.add(new PaymentDto(payment));
+            this.customerPayments.add(new PaymentDTO(payment));
         }
 
         this.coursesRegistered = new ArrayList<>();
         for (ScheduledCourse scheduledCourse : customer.getCoursesRegistered()) {
             this.coursesRegistered.add(new ScheduledCourseDTO(scheduledCourse));
         }
+
+        this.hasApplied = customer.getHasApplied();
     }
-    
 
     // Getters and setters for each attribute
 
-    public List<PaymentDto> getCustomerPayments() {
+    public List<PaymentDTO> getCustomerPayments() {
         return customerPayments;
     }
 
-    public void setCustomerPayments(List<PaymentDto> customerPayments) {
+    public void setCustomerPayments(List<PaymentDTO> customerPayments) {
         this.customerPayments = customerPayments;
     }
 
@@ -57,5 +65,11 @@ public class CustomerDTO extends PersonRoleDto {
         this.coursesRegistered = coursesRegistered;
     }
 
+    public boolean getHasApplied() {
+        return hasApplied;
+    }
 
+    public void setHasApplied(boolean hasApplied) {
+        this.hasApplied = hasApplied;
+    }
 }

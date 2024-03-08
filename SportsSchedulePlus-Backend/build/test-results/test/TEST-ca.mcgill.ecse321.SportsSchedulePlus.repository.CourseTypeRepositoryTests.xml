@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-03-08T15:09:19" hostname="Danias-Air" time="0.185">
+<testsuite name="ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-03-08T22:59:34" hostname="Danias-Air" time="0.168">
   <properties/>
-  <testcase name="testFindByApprovedByOwnerTrueNegative()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests" time="0.118"/>
+  <testcase name="testFindByApprovedByOwnerTrueNegative()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests" time="0.108"/>
   <testcase name="testFindByPriceLessThanNegative()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests" time="0.018"/>
-  <testcase name="testFindCourseTypeByDescriptionNotFound()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests" time="0.016"/>
-  <testcase name="testFindCourseTypeByDescription()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests" time="0.008"/>
+  <testcase name="testFindCourseTypeByDescriptionNotFound()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests" time="0.014"/>
+  <testcase name="testFindCourseTypeByDescription()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests" time="0.006"/>
   <testcase name="testFindByPriceLessThan()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests" time="0.009"/>
-  <testcase name="testFindByApprovedByOwnerTrue()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests" time="0.011"/>
-  <system-out><![CDATA[2024-03-08T10:09:19.156-05:00  INFO 60518 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests]: CourseTypeRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2024-03-08T10:09:19.162-05:00  INFO 60518 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplication for test class ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests
+  <testcase name="testFindByApprovedByOwnerTrue()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests" time="0.01"/>
+  <system-out><![CDATA[2024-03-08T17:59:34.619-05:00  INFO 81676 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests]: CourseTypeRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-03-08T17:59:34.623-05:00  INFO 81676 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplication for test class ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepositoryTests
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

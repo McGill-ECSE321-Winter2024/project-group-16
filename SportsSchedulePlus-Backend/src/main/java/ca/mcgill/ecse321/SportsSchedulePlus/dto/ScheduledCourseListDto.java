@@ -2,18 +2,18 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 
 import java.util.List;
 
-public class ScheduledCourseListDto {
-    private List<ScheduledCourseResponseDto> scheduledCourses;
+public class ScheduledCourseListDTO {
+    private List<ScheduledCourseResponseDTO> scheduledCourses;
 
-    public ScheduledCourseListDto(List<ScheduledCourseResponseDto> scheduledCourses) {
+    public ScheduledCourseListDTO(List<ScheduledCourseResponseDTO> scheduledCourses) {
         this.scheduledCourses = scheduledCourses;
     }
 
-    public List<ScheduledCourseResponseDto> getScheduledCourses() {
+    public List<ScheduledCourseResponseDTO> getScheduledCourses() {
         return scheduledCourses;
     }
 
-    public void setScheduledCourses(List<ScheduledCourseResponseDto> scheduledCourses) {
+    public void setScheduledCourses(List<ScheduledCourseResponseDTO> scheduledCourses) {
         this.scheduledCourses = scheduledCourses;
     }
 }

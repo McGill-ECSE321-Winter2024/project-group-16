@@ -15,7 +15,7 @@ public class ScheduledCourseDTO {
     private Time endTime;
     private String location;
     private CourseTypeDTO courseType;  // Assuming you have a CourseTypeDto class
-    private List<PaymentDto> coursePayments;  // Assuming you have a PaymentDto class
+    private List<PaymentDTO> coursePayments;  // Assuming you have a PaymentDto class
 
     public ScheduledCourseDTO() {
         // Default constructor
@@ -32,14 +32,14 @@ public class ScheduledCourseDTO {
 
         // Assuming a similar constructor is available in PaymentDto
         for (Payment payment : scheduledCourse.getCoursePayments()) {
-        PaymentDto paymentDto = new PaymentDto(payment);
+        PaymentDTO paymentDto = new PaymentDTO(payment);
         this.coursePayments.add(paymentDto);
         }
         // Assuming a static method in PaymentDto to convert a list of Payment objects to a list of PaymentDto objects
     }
 
     public ScheduledCourseDTO(int id, Date date, Time startTime, Time endTime, String location,
-                              CourseTypeDTO courseType, List<PaymentDto> coursePayments) {
+                              CourseTypeDTO courseType, List<PaymentDTO> coursePayments) {
         this.id = id;
         this.date = date;
         this.startTime = startTime;
@@ -99,11 +99,11 @@ public class ScheduledCourseDTO {
         this.courseType = courseType;
     }
 
-    public List<PaymentDto> getCoursePayments() {
+    public List<PaymentDTO> getCoursePayments() {
         return coursePayments;
     }
 
-    public void setCoursePayments(List<PaymentDto> coursePayments) {
+    public void setCoursePayments(List<PaymentDTO> coursePayments) {
         this.coursePayments = coursePayments;
     }
 }

@@ -2,13 +2,13 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 
-public class CourseTypeResponseDto {
+public class CourseTypeResponseDTO {
     private Integer id;
     private String description;
     private boolean approvedByOwner;
     private float price;
 
-    public CourseTypeResponseDto(Integer id, String description, boolean approvedByOwner, float price) {
+    public CourseTypeResponseDTO(Integer id, String description, boolean approvedByOwner, float price) {
         this.id = id;
         this.description = description;
         this.approvedByOwner = approvedByOwner;
@@ -16,7 +16,7 @@ public class CourseTypeResponseDto {
     }
 
     // Constructor that takes a CourseType as input
-    public CourseTypeResponseDto(CourseType courseType) {
+    public CourseTypeResponseDTO(CourseType courseType) {
         this.id = courseType.getId();
         this.description = courseType.getDescription();
         this.approvedByOwner = courseType.isApprovedByOwner();

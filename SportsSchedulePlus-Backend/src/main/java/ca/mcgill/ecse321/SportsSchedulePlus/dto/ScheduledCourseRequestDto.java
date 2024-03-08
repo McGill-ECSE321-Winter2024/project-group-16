@@ -1,16 +1,14 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 
 
-public class ScheduledCourseRequestDto {
+public class ScheduledCourseRequestDTO {
     private int id;
     private String date;
     private String startTime;
     private String endTime;
     private String location;
 
-    private CourseTypeRequestDto courseType; // Assuming you have a CourseTypeRequestDto
-
-    // Add any other fields or methods as needed
+    private CourseTypeRequestDTO courseType; 
 
     public int getId() {
         return id;
@@ -52,11 +50,11 @@ public class ScheduledCourseRequestDto {
         this.location = location;
     }
 
-    public CourseTypeRequestDto getCourseType() {
+    public CourseTypeRequestDTO getCourseType() {
         return courseType;
     }
 
-    public void setCourseType(CourseTypeRequestDto courseType) {
+    public void setCourseType(CourseTypeRequestDTO courseType) {
         this.courseType = courseType;
     }
 }

@@ -4,24 +4,18 @@ import java.util.regex.Pattern;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.service.Mailer;
 
-
 /**
  * Email Validator
  * @author Dania Bouhmidi
  */
 public class EmailValidator {
-private String email;
-    
-    
-    public EmailValidator(String email) {
-        this.email= email;
-    }
+
 
     /**
      * Validates the input email
      * @return boolean
      */
-    public boolean validate() {
+    public static boolean validate(String email) {
         return !isBlank(email) && validFormat(email) && emailExists(email);
     }
 
@@ -30,7 +24,7 @@ private String email;
      * @param email
      * @return boolean
      */
-    private boolean isBlank(String email) {
+    private static boolean isBlank(String email) {
         if (email.isBlank()) {
            return true;
         }
@@ -42,7 +36,7 @@ private String email;
      * @param email
      * @return boolean
      */
-    private boolean validFormat(String email) {
+    private static  boolean validFormat(String email) {
         String regex = "^[a-zA-Z0-9_+&*-]+(?:\\."+ 
                             "[a-zA-Z0-9_+&*-]+)*@" + 
                             "(?:[a-zA-Z0-9-]+\\.)+[a-z" + 
@@ -59,7 +53,7 @@ private String email;
      * @param email
      * @return boolean
      */
-    private boolean emailExists(String email){
+    private static boolean emailExists(String email){
         return Mailer.checkEmail(email);
     }
 }

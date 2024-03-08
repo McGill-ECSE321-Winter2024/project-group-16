@@ -15,7 +15,6 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository
 import ca.mcgill.ecse321.utils.Helper;
 
 import java.util.List;
-import java.util.ArrayList;
 
 @Service
 public class CourseTypeService {
@@ -38,7 +37,7 @@ public class CourseTypeService {
         courseType.setPrice(price);
 
         // Validate the course before saving
-        validateCourse(courseType);
+        validateCourseType(courseType);
 
         courseTypeRepository.save(courseType);
         return courseType;
@@ -54,7 +53,7 @@ public class CourseTypeService {
         courseType.setPrice(price);
 
         // Validate the updated course before saving
-        validateCourse(courseType);
+        validateCourseType(courseType);
 
         // Save the updated course
         return courseTypeRepository.save(courseType);
@@ -70,7 +69,7 @@ public class CourseTypeService {
         return instructorRepository.findInstructorByInstructorSuggestedCourseTypes(courseType);
     }
 
-    private void validateCourse(CourseType courseType) {
+    private void validateCourseType(CourseType courseType) {
         if (courseType.getDescription() == null || courseType.getDescription().trim().isEmpty()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description cannot be null or empty.");
         }
@@ -147,23 +146,13 @@ public class CourseTypeService {
     }
 
     @Transactional
-    public CourseType approveCourseType(int id) {
+    public CourseType updateCourseTypeApproval(int id, boolean approved) {
         CourseType courseType = getCourseType(id);
-        courseType.setApprovedByOwner(true);
+        courseType.setApprovedByOwner(approved);
         // Save the updated course before returning
         courseTypeRepository.save(courseType);
         return courseType;
     }
-
-    @Transactional
-    public CourseType disapproveCourseType(int id) {
-        CourseType courseType = getCourseType(id);
-        courseType.setApprovedByOwner(false);
-        // Save the updated course before returning
-        courseTypeRepository.save(courseType);
-        return courseType;
-    }
-
 
   
 }
