@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.OwnerService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,14 +17,17 @@ public class OwnerController {
     @Autowired
     private OwnerService ownerService;
 
+    @Autowired
+    private PersonService personService;
+
     @GetMapping(value={"/owner/{id}"})
-    public OwnerDto getOwner(@PathVariable("id") int id){
+    public PersonDto getOwner(@PathVariable("id") int id){
         Owner owner = ownerService.getOwner(id);
         return convertToDto(owner);
     }
 
     @GetMapping(value={"/owner/suggested-courses"})
-    public OwnerDto getOwnerByOwnerSuggestedCourses(@RequestParam CourseTypeDto courseTypeDto){
+    public PersonDto getOwnerByOwnerSuggestedCourses(@RequestParam CourseTypeDto courseTypeDto){
         CourseType courseType = new CourseType(courseTypeDto.getDescription(), courseTypeDto.isApprovedByOwner(), courseTypeDto.getPrice());
         Owner owner = ownerService.getInstructorByOwnerSuggestedCourses(courseType);
         return convertToDto(owner);
@@ -31,14 +35,14 @@ public class OwnerController {
     }
 
     @GetMapping(value={"/owner/approved-courses"})
-    public OwnerDto getOwnerByApprovedCourses(@RequestParam CourseTypeDto courseTypeDto){
+    public PersonDto getOwnerByApprovedCourses(@RequestParam CourseTypeDto courseTypeDto){
         CourseType courseType = new CourseType(courseTypeDto.getDescription(), courseTypeDto.isApprovedByOwner(), courseTypeDto.getPrice());
         Owner owner = ownerService.getOwnerByApprovedCourses(courseType);
         return convertToDto(owner);
     }
 
     @GetMapping(value={"/owner/daily-schedule"})
-    public OwnerDto getOwnerByDailySchedule(@RequestParam DailyScheduleDto dailyScheduleDto){
+    public PersonDto getOwnerByDailySchedule(@RequestParam DailyScheduleDto dailyScheduleDto){
         DailySchedule dailySchedule = new DailySchedule(dailyScheduleDto.getOpeningTime(),dailyScheduleDto.getClosingTime());
         Owner owner = ownerService.getOwnerByDailySchedule(dailySchedule);
         return convertToDto(owner);
@@ -63,7 +67,7 @@ public class OwnerController {
         PersonDto personDto = new PersonDto(p.getName(), p.getEmail(), p.getPassword());
         return personDto;
     }
-    private OwnerDto convertToDto(Owner owner){
+    private PersonDto convertToDto(Owner owner){
         if (owner == null){
             throw new IllegalArgumentException("There is no such owner!");
         }
@@ -72,8 +76,13 @@ public class OwnerController {
         Time openingTime = dailySchedule.getOpeningTime();
         Time closingTime = dailySchedule.getClosingTime();
         DailyScheduleDto dailyScheduleDto = new DailyScheduleDto(id, openingTime, closingTime);
-        OwnerDto ownerDto = new OwnerDto(owner.getId(),dailyScheduleDto);
-        return ownerDto;
+
+        PersonRoleDto personRoleDto = new OwnerDto(owner.getId(),dailyScheduleDto);
+
+        Person person = personService.getPersonById(owner.getId());
+
+        PersonDto personDto = new PersonDto(person.getName(), person.getEmail(), person.getPassword(), personRoleDto);
+        return personDto;
     }
 
 

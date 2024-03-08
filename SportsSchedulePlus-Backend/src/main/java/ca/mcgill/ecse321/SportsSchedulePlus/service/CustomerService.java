@@ -5,6 +5,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
 import ca.mcgill.ecse321.util.SportsScheduleException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,14 @@ public class CustomerService {
     CustomerRepository customerRepository;
     @Autowired
     PersonRepository personRepository;
+    @Autowired
+    PersonRoleRepository personRoleRepository;
 
     // Validation on customer inputs
     @Transactional
     public Person createCustomer(String name, String email, String password){
         PersonRole personRole = new Customer();
+        personRoleRepository.save(personRole);
         Person person = new Person(name, email, password, personRole);
         personRepository.save(person);
         return person;

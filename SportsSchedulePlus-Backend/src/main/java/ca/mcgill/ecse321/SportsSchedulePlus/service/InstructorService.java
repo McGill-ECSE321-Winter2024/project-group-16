@@ -70,8 +70,14 @@ public class InstructorService {
     }
     @Transactional
     public Instructor getInstructor(int id){
-        Instructor instructor = getInstructor(id);
-        return instructor;
+        Optional<Instructor> instructor = instructorRepository.findById(id);
+        if (instructor.isPresent()){
+            Instructor instructor1 = instructor.get();
+            return instructor1;
+        }else{
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Instructor with ID " + id + " does not exist.");
+        }
+
     }
 
     @Transactional

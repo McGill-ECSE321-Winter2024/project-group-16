@@ -9,6 +9,10 @@ public class PersonDto {
     private String password;
     private PersonRoleDto personRoleDto;
 
+    public PersonDto(){
+
+    }
+
     public PersonDto(String name, String email, String password){
         this.name = name;
         this.email = email;
