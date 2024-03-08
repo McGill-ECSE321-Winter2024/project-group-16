@@ -4,7 +4,10 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -148,13 +151,7 @@ public class ScheduledCourse {
     if (aCourseType == null) {
       return wasSet;
     }
-
-    CourseType existingCourseType = courseType;
-    courseType = aCourseType;
-    if (existingCourseType != null && !existingCourseType.equals(aCourseType)) {
-      existingCourseType.removeScheduledCourse(this);
-    }
-    courseType.addScheduledCourse(this);
+    this.courseType = aCourseType;
     wasSet = true;
     return wasSet;
   }
@@ -217,11 +214,8 @@ public class ScheduledCourse {
   }
 
   public void delete() {
-    CourseType placeholderCourseType = courseType;
     this.courseType = null;
-    if (placeholderCourseType != null) {
-      placeholderCourseType.removeScheduledCourse(this);
-    }
+    
     coursePayments.clear();
   }
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepositoryTests" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-03-08T03:30:53" hostname="Danias-Air" time="0.111">
+  <properties/>
+  <testcase name="testFindCustomerByIdNotFound()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepositoryTests" time="0.011"/>
+  <testcase name="testFindCustomerById()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepositoryTests" time="0.028"/>
+  <testcase name="testSaveCustomerWithPayments()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepositoryTests" time="0.044"/>
+  <testcase name="testSaveCustomerWithScheduledCourses()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepositoryTests" time="0.024"/>
+  <system-out><![CDATA[2024-03-07T22:30:53.690-05:00  INFO 55875 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepositoryTests]: CustomerRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-03-07T22:30:53.691-05:00  INFO 55875 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplication for test class ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepositoryTests
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

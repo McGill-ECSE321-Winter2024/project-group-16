@@ -3,7 +3,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
-import ca.mcgill.ecse321.util.Helper;
+import ca.mcgill.ecse321.utils.Helper;
 
 
 /**
@@ -69,11 +69,11 @@ public class PaymentRepositoryTests {
         paymentRepository.save(newPayment);
 
         // Find payments by confirmation number
-        List<Payment> foundPayments = paymentRepository.findPaymentsByConfirmationNumber(newPayment.getConfirmationNumber());
+        Payment foundPayment = paymentRepository.findPaymentByConfirmationNumber(newPayment.getConfirmationNumber());
         
         // Assertions
-        assertNotNull(foundPayments);
-        Payment foundPayment = foundPayments.get(0);
+        assertNotNull(foundPayment);
+        //Payment foundPayment = foundPayments.get(0);
         // The overridden equals method in the Payment model is used here
         assertEquals(newPayment, foundPayment);
     }
@@ -172,11 +172,10 @@ public class PaymentRepositoryTests {
     @Test
     public void testFindPaymentsByNonExistingConfirmationNumber() {
         // Try to find payments by a non-existing confirmation number
-        List<Payment> foundPayments = paymentRepository.findPaymentsByConfirmationNumber(99999);
+        Payment foundPayments = paymentRepository.findPaymentByConfirmationNumber(99999);
 
         // Assert that the list is empty
-        assertNotNull(foundPayments);
-        assertTrue(foundPayments.isEmpty());
+        assertNull(foundPayments);
     }
 
   
