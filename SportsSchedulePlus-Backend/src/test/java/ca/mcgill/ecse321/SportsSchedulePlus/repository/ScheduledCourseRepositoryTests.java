@@ -77,6 +77,26 @@ public class ScheduledCourseRepositoryTests {
   }
 
   /**
+   * Test finding ScheduledCourses by date between.
+   */
+  @Test
+  public void testFindScheduledCoursesByDateBetween() {
+    CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+    courseTypeRepository.save(courseType);
+    ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+    scheduledCourseRepository.save(scheduledCourse);
+    Date previousDate = Date.valueOf(scheduledCourse.getDate().toLocalDate().minusDays(1));
+    Date nextDate = Date.valueOf(scheduledCourse.getDate().toLocalDate().plusDays(1));
+    List <ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByDateBetween(previousDate, nextDate);
+
+    // Retrieve the found ScheduledCourse
+    ScheduledCourse foundCourse = foundCourses.get(0);
+
+    // Assert that the created ScheduledCourse matches the found ScheduledCourse
+    assertEquals(scheduledCourse, foundCourse);
+  }
+
+  /**
    * Test finding ScheduledCourses by course type.
    */
   @Test
