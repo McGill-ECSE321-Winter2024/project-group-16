@@ -5,17 +5,17 @@ import java.sql.Time;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
-public class ScheduledCourseResponseDto {
+public class ScheduledCourseResponseDTO {
     private int id;
     private Date date;
     private Time startTime;
     private Time endTime;
     private String location;
-    private CourseTypeResponseDto courseType; // Assuming you have a CourseTypeResponseDto
+    private CourseTypeResponseDTO courseType; // Assuming you have a CourseTypeResponseDto
 
 
       // Constructor that takes a ScheduledCourse as input
-    public ScheduledCourseResponseDto(ScheduledCourse scheduledCourse) {
+    public ScheduledCourseResponseDTO(ScheduledCourse scheduledCourse) {
         this.id = scheduledCourse.getId();
         this.date = scheduledCourse.getDate();
         this.startTime = scheduledCourse.getStartTime();
@@ -23,10 +23,10 @@ public class ScheduledCourseResponseDto {
         this.location = scheduledCourse.getLocation();
         
         // There's a constructor in CourseTypeResponseDto that takes a CourseType as input
-        this.courseType = new CourseTypeResponseDto(scheduledCourse.getCourseType());
+        this.courseType = new CourseTypeResponseDTO(scheduledCourse.getCourseType());
     }
 
-    public ScheduledCourseResponseDto(int id, Date date, Time startTime, Time endTime, String location, CourseTypeResponseDto courseType) {
+    public ScheduledCourseResponseDTO(int id, Date date, Time startTime, Time endTime, String location, CourseTypeResponseDTO courseType) {
         this.id = id;
         this.date = date;
         this.startTime = startTime;
@@ -75,11 +75,11 @@ public class ScheduledCourseResponseDto {
         this.location = location;
     }
 
-    public CourseTypeResponseDto getCourseType() {
+    public CourseTypeResponseDTO getCourseType() {
         return courseType;
     }
 
-    public void setCourseType(CourseTypeResponseDto courseType) {
+    public void setCourseType(CourseTypeResponseDTO courseType) {
         this.courseType = courseType;
     }
 }

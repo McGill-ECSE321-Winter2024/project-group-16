@@ -3,18 +3,18 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InstructorListDto {
+public class InstructorListDTO {
 
-    private List<InstructorResponseDto> instructors;
+    private List<InstructorResponseDTO> instructors;
 
-    public InstructorListDto(List<InstructorResponseDto> instructors) {
+    public InstructorListDTO(List<InstructorResponseDTO> instructors) {
         this.instructors = new ArrayList<>();
-        for (InstructorResponseDto instructor : instructors) {
+        for (InstructorResponseDTO instructor : instructors) {
             this.instructors.add(instructor);
         }
     }
 
-    public List<InstructorResponseDto> getInstructors() {
+    public List<InstructorResponseDTO> getInstructors() {
         return instructors;
     }
 }

@@ -4,11 +4,11 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.util.*;
 
-import ca.mcgill.ecse321.utils.Helper;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import ca.mcgill.ecse321.utils.Helper;
 
 // line 29 "model.ump"
 // line 105 "model.ump"
@@ -45,7 +45,10 @@ public class Instructor extends Customer {
   // INTERFACE
   //------------------------
 
-  public boolean setExperience(String aExperience) {
+  public Instructor(String experience) {
+  this.experience = experience;
+}
+public boolean setExperience(String aExperience) {
     boolean wasSet = false;
     experience = aExperience;
     wasSet = true;
@@ -240,12 +243,10 @@ public class Instructor extends Customer {
   @Override
   public boolean equals(Object object) {
     if (this == object) return true;
-    if (!(object instanceof Instructor) || !super.equals(object)) return false;
-
-    Instructor other = (Instructor) object;
+    if (!(object instanceof Instructor other) || !super.equals(object)) return false;
 
     return getId() == other.getId() &&
-      (experience == null ? other.experience == null : experience.equals(other.experience)) &&
+      (Objects.equals(experience, other.experience)) &&
       Helper.compareListsElementWise(instructorSuggestedCourseTypes, other.instructorSuggestedCourseTypes) &&
       Helper.compareListsElementWise(supervisedCourses, other.supervisedCourses);
   }

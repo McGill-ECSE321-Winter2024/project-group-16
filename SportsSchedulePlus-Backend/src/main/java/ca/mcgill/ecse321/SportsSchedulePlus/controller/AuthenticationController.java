@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
-import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.LoginDto;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.SignupDto;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.LoginDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.SignupDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
@@ -24,7 +23,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
 
 @RestController
 @RequestMapping("/authentication")
-public class HomeController {
+public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -35,7 +34,7 @@ public class HomeController {
     private PasswordEncoder passwordEncoder;
     
     @PostMapping("/login")
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDto) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -44,7 +43,7 @@ public class HomeController {
     
     
         @PostMapping("/signup")
-        public ResponseEntity<?> registerUser(@RequestBody SignupDto signUpDto){
+        public ResponseEntity<?> registerUser(@RequestBody SignupDTO signUpDto){
            
             // checking for email exists in a database
             if(userRepository.findPersonByEmail(signUpDto.getEmail()) != null){

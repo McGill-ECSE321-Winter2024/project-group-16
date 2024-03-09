@@ -1,10 +1,10 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification;
 
-public class LoginDto {
+public class LoginDTO {
     private String email;
     private String password;
 
-    public LoginDto() {
+    public LoginDTO() {
     }
 
     public String getEmail() {

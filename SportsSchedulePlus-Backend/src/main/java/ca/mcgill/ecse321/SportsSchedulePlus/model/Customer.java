@@ -4,11 +4,12 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.util.*;
 
-import ca.mcgill.ecse321.utils.Helper;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
+
+import ca.mcgill.ecse321.utils.Helper;
 
 // line 25 "model.ump"
 // line 100 "model.ump"
@@ -19,11 +20,13 @@ public class Customer extends PersonRole {
   // MEMBER VARIABLES
   //------------------------
 
+  private boolean hasApplied;
+
   //Customer Associations
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  private List <Payment> customerPayments;
+  private final List <Payment> customerPayments;
   @OneToMany(fetch = FetchType.EAGER)
-  private List <ScheduledCourse> coursesRegistered;
+  private final List <ScheduledCourse> coursesRegistered;
 
   //------------------------
   // CONSTRUCTOR
@@ -32,11 +35,13 @@ public class Customer extends PersonRole {
   public Customer() {
     customerPayments = new ArrayList <Payment> ();
     coursesRegistered = new ArrayList <ScheduledCourse> ();
+    hasApplied = false;
   }
   public Customer(int aId) {
     super(aId);
     customerPayments = new ArrayList <Payment> ();
     coursesRegistered = new ArrayList <ScheduledCourse> ();
+    hasApplied = false;
   }
 
   //------------------------
@@ -207,6 +212,17 @@ public class Customer extends PersonRole {
     return wasAdded;
   }
 
+  public boolean getHasApplied() {
+    return hasApplied;
+  }
+
+  public boolean setHasApplied(boolean aHasApplied) {
+    boolean wasSet = false;
+    hasApplied = aHasApplied;
+    wasSet = true;
+    return wasSet;
+  }
+
   public void delete() {
     customerPayments.clear();
     coursesRegistered.clear();
@@ -227,9 +243,7 @@ public class Customer extends PersonRole {
   @Override
   public boolean equals(Object object) {
     if (this == object) return true;
-    if (!super.equals(object) || !(object instanceof Customer)) return false;
-
-    Customer customer = (Customer) object;
+    if (!super.equals(object) || !(object instanceof Customer customer)) return false;
 
     return customer.getId() == this.getId() &&
       Helper.compareListsElementWise(customerPayments, customer.customerPayments) &&

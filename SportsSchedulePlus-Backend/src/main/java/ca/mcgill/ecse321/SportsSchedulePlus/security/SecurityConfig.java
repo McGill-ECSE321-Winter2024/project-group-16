@@ -37,6 +37,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/**").permitAll()
             .requestMatchers(HttpMethod.GET, "/**").permitAll()
             .requestMatchers(HttpMethod.PUT, "/**").permitAll()
+            .requestMatchers(HttpMethod.DELETE, "/**").permitAll()
 //            our private endpoints
             .anyRequest().authenticated())
         .authenticationManager(authenticationManager)

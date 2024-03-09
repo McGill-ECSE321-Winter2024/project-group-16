@@ -1,6 +1,6 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 
-public class CourseTypeRequestDto {
+public class CourseTypeRequestDTO {
     private int id;
     private String description;
     private boolean approvedByOwner;

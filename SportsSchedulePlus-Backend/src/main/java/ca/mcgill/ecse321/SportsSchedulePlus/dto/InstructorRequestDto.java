@@ -2,7 +2,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 
 import java.util.List;
 
-public class InstructorRequestDto {
+public class  InstructorRequestDTO {
 
     private String name;
     private String email;
@@ -14,11 +14,11 @@ public class InstructorRequestDto {
 
     // Constructors, getters, and setters
 
-    public InstructorRequestDto() {
+    public InstructorRequestDTO() {
         // Default constructor for JSON serialization
     }
 
-    public InstructorRequestDto(
+    public InstructorRequestDTO(
             String name, String email, String password, Integer id,
             String experience, List<Integer> instructorSuggestedCourseTypes, List<Integer> supervisedCourses) {
         this.name = name;

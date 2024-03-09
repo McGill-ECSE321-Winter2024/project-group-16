@@ -7,6 +7,8 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
+import ca.mcgill.ecse321.utils.Helper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,7 @@ import java.time.LocalDate;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
-import java.util.ArrayList;
+
 
 @Service
 public class ScheduledCourseService {
@@ -30,28 +32,7 @@ public class ScheduledCourseService {
     private InstructorRepository instructorRepository;
 
 
-    @Transactional
-    public ScheduledCourse createScheduledCourse(int id, Date date, Time startTime, Time endTime, String location, CourseType courseType) {
-        ScheduledCourse scheduledCourse = new ScheduledCourse(id, date, startTime, endTime, location, courseType);
-        scheduledCourseRepository.save(scheduledCourse);
-        return scheduledCourse;
-    }
-    @Transactional
-    public ScheduledCourse createScheduledCourse(int id, Date date, Time startTime, Time endTime, String location, int courseTypeId) {
-        // Retrieve the CourseType from the repository
-        CourseType courseType = courseTypeRepository.findById(courseTypeId)
-                .orElseThrow(() -> new IllegalArgumentException("CourseType not found"));
-
-        // Create a new ScheduledCourse
-        ScheduledCourse scheduledCourse = new ScheduledCourse(id, date, startTime, endTime, location, courseType);
-
-        // Save the ScheduledCourse to the repository
-        scheduledCourseRepository.save(scheduledCourse);
-
-        return scheduledCourse;
-    }
-
-
+  
     @Transactional
     public ScheduledCourse createScheduledCourse(int id, String date, String startTime, String endTime, String location, int courseTypeId) {
         // Parse date string
@@ -71,7 +52,9 @@ public class ScheduledCourseService {
         scheduledCourse.setEndTime(parsedEndTime);
         scheduledCourse.setLocation(location);
         scheduledCourse.setCourseType(courseTypeRepository.findById(courseTypeId).orElse(null));
+
         validateScheduledCourse(scheduledCourse);
+
         scheduledCourseRepository.save(scheduledCourse);
         return scheduledCourse;
     }
@@ -155,7 +138,7 @@ public class ScheduledCourseService {
 
     @Transactional
     public List<ScheduledCourse> getAllScheduledCourses() {
-        return toList(scheduledCourseRepository.findAll());
+        return Helper.toList(scheduledCourseRepository.findAll());
     }
 
     @Transactional
@@ -195,7 +178,7 @@ public class ScheduledCourseService {
     
     @Transactional
     public void deleteAllScheduledCourses() {
-        List<ScheduledCourse> courses = toList(scheduledCourseRepository.findAll());
+        List<ScheduledCourse> courses = Helper.toList(scheduledCourseRepository.findAll());
 
         if (courses == null || courses.isEmpty()){
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There are no course types.");
@@ -205,12 +188,6 @@ public class ScheduledCourseService {
 
     }
 
-    private <T> List<T> toList(Iterable<T> iterable){
-        List<T> resultList = new ArrayList<>();
-        for (T t : iterable) {
-            resultList.add(t);
-        }
-        return resultList;
-    }
+
 
 }

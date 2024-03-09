@@ -2,17 +2,17 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto;
 
 import java.sql.Time;
 
-public class DailyScheduleDto {
+public class DailyScheduleDTO {
 
     private int id;
     private Time openingTime;
     private Time closingTime;
 
-    public DailyScheduleDto() {
+    public DailyScheduleDTO() {
         // Default constructor
     }
 
-    public DailyScheduleDto(int id, Time openingTime, Time closingTime) {
+    public DailyScheduleDTO(int id, Time openingTime, Time closingTime) {
         this.id = id;
         this.openingTime = openingTime;
         this.closingTime = closingTime;

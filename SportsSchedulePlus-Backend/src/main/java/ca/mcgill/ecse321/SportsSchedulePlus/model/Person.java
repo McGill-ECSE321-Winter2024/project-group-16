@@ -6,7 +6,6 @@ import java.util.*;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
@@ -19,7 +18,7 @@ public class Person {
   // STATIC VARIABLES
   //------------------------
 
-  private static Map <String, Person> personsByEmail = new HashMap <String, Person> ();
+  private static final Map <String, Person> personsByEmail = new HashMap <String, Person> ();
 
   //------------------------
   // MEMBER VARIABLES
@@ -27,7 +26,6 @@ public class Person {
 
   //Person Attributes
   @Id
-  @GeneratedValue
   private int id;
   private String name;
   @Column(unique = true)
@@ -46,6 +44,8 @@ public class Person {
 
   }
   public Person(String aName, String aEmail, String aPassword, PersonRole aPersonRole) {
+    //ADDED THIS ID -JESS
+    this.id = aPersonRole.getId();
     name = aName;
     password = aPassword;
     if (!setEmail(aEmail)) {

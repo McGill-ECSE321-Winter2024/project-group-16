@@ -7,14 +7,14 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
-public class InstructorResponseDto {
+public class InstructorResponseDTO {
 
     private int id;
     private String experience;
-    private List<Integer> instructorSuggestedCourseTypes;  // Updated to list of integers
-    private List<Integer> supervisedCourses;  // Assuming these are integers representing IDs
+    private List<Integer> instructorSuggestedCourseTypes;  
+    private List<Integer> supervisedCourses;  
 
-    public InstructorResponseDto(Instructor instructor) {
+    public InstructorResponseDTO(Instructor instructor) {
         this.id = instructor.getId();
         this.experience = instructor.getExperience();
 

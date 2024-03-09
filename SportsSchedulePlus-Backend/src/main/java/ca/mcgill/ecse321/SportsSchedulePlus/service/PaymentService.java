@@ -85,6 +85,7 @@ public class PaymentService {
         }
         Key key = new Key(c, sc);
         Payment p = new Payment(key);
+        paymentRepository.save(p);
         return p;
     }
 }
