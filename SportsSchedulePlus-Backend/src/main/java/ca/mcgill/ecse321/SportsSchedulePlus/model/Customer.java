@@ -24,9 +24,9 @@ public class Customer extends PersonRole {
 
   //Customer Associations
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  private final List <Payment> customerPayments;
+  private  List <Payment> customerPayments;
   @OneToMany(fetch = FetchType.EAGER)
-  private final List <ScheduledCourse> coursesRegistered;
+  private  List <ScheduledCourse> coursesRegistered;
 
   //------------------------
   // CONSTRUCTOR
@@ -221,6 +221,14 @@ public class Customer extends PersonRole {
     hasApplied = aHasApplied;
     wasSet = true;
     return wasSet;
+  }
+
+  public void setCustomerPayments(List<Payment> customerPayments) {
+    this.customerPayments = new ArrayList<>(customerPayments);
+  }
+
+  public void setCoursesRegistered(List<ScheduledCourse> coursesRegistered) {
+    this.coursesRegistered = new ArrayList<>(coursesRegistered);
   }
 
   public void delete() {

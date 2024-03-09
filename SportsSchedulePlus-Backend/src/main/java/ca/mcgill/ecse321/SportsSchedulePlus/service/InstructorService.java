@@ -5,13 +5,13 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
+import ca.mcgill.ecse321.utils.Helper;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,8 +38,7 @@ public class InstructorService {
     
             Customer customer = customerRepository.findCustomerById(person.getId());
 
-            PersonRole personRole1 = new Instructor(experience);
-    
+            PersonRole personRole1 = new Instructor(customer,experience);
     
             personRepository.delete(person);
             customerRepository.delete(customer);
@@ -52,7 +51,7 @@ public class InstructorService {
     
             return person;
         } else {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "DEBUG - Customer with email " + email + " needs to exist before they can become an Instructor.");
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Customer with email " + email + " needs to exist before they can become an Instructor.");
         }
     }
     
@@ -106,14 +105,14 @@ public class InstructorService {
 
     @Transactional
     public List<Instructor> getAllInstructors(){
-        return toList(instructorRepository.findAll());
+        return Helper.toList(instructorRepository.findAll());
 
     }
 
     @Transactional
     // Custom query methods
     public List<Instructor> getInstructorsBySupervisedCourse(ScheduledCourse scheduledCourse){
-        return toList(instructorRepository.findInstructorBySupervisedCourses(scheduledCourse));
+        return Helper.toList(instructorRepository.findInstructorBySupervisedCourses(scheduledCourse));
     }
     @Transactional
     public Instructor getInstructorBySuggestedCourseTypes(CourseType courseType){
@@ -122,16 +121,10 @@ public class InstructorService {
     }
     @Transactional
     public List<Instructor> getInstructorByExperience(String experience){
-        return toList(instructorRepository.findInstructorByExperience(experience));
+      return Helper.toList(instructorRepository.findInstructorByExperience(experience));
     }
 
-    // To be defined in a separate helper class
-    private <T> List<T> toList(Iterable<T> iterable){
-        List<T> resultList = new ArrayList<T>();
-        for (T t: iterable){
-            resultList.add(t);
-        }
-        return resultList;
-    }
+   
+
 
 }
