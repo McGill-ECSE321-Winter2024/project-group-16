@@ -48,6 +48,19 @@ public class Instructor extends Customer {
   public Instructor(String experience) {
   this.experience = experience;
 }
+
+public Instructor(Customer customer, String experience) {
+    // Copy applied boolean from the customer
+    super.setHasApplied(customer.getHasApplied());
+    // Copy arrays from the customer
+    super.setCoursesRegistered(customer.getCoursesRegistered());
+    super.setCustomerPayments(customer.getCustomerPayments());
+    // Set fields specific to the Instructor
+    this.experience = experience;
+    this.instructorSuggestedCourseTypes = new ArrayList<>();
+    this.supervisedCourses = new ArrayList<>();
+}
+
 public boolean setExperience(String aExperience) {
     boolean wasSet = false;
     experience = aExperience;

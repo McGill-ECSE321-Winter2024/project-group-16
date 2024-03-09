@@ -1,4 +1,10 @@
-/SportsSchedulePlus-Backend/.gradle/
-/SportsSchedulePlus-Backend/build/
-.gradle/
-build/
+# .gitignore
+
+# Gradle
+SportsSchedulePlus-Backend/.gradle/
+
+bin/
+SportsSchedulePlus-Backend/bin/
+
+# Compiled class files
+SportsSchedulePlus-Backend/build/
