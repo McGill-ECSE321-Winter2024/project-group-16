@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepositoryTests" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-03-08T22:59:35" hostname="Danias-Air" time="0.061">
+<testsuite name="ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepositoryTests" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-03-09T02:57:22" hostname="Danias-Air" time="0.067">
   <properties/>
-  <testcase name="testFindOwnerByDailySchedule()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepositoryTests" time="0.019"/>
-  <testcase name="testFindOwnerByApprovedAndSuggestedCoursesNotFound()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepositoryTests" time="0.014"/>
+  <testcase name="testFindOwnerByDailySchedule()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepositoryTests" time="0.017"/>
+  <testcase name="testFindOwnerByApprovedAndSuggestedCoursesNotFound()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepositoryTests" time="0.016"/>
   <testcase name="testFindOwnerByDailyScheduleNotFound()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepositoryTests" time="0.01"/>
-  <testcase name="testFindOwnerByApprovedAndSuggestedCourses()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepositoryTests" time="0.018"/>
-  <system-out><![CDATA[2024-03-08T17:59:35.006-05:00  INFO 81676 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepositoryTests]: OwnerRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2024-03-08T17:59:35.006-05:00  INFO 81676 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplication for test class ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepositoryTests
+  <testcase name="testFindOwnerByApprovedAndSuggestedCourses()" classname="ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepositoryTests" time="0.023"/>
+  <system-out><![CDATA[2024-03-08T21:57:22.503-05:00  INFO 90218 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepositoryTests]: OwnerRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-03-08T21:57:22.504-05:00  INFO 90218 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ca.mcgill.ecse321.SportsSchedulePlus.SportsSchedulePlusApplication for test class ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepositoryTests
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

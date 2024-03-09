@@ -37,11 +37,12 @@ public class InstructorController {
                 (instructor -> convertToDTO(instructor)).collect(Collectors.toList());
     }
 
-    @GetMapping(value={"/instructors/{id}"})
-    public PersonDTO getInstructor(@PathVariable("id") int id){
-        Instructor instructor = instructorService.getInstructor(id);
+        @GetMapping(value={"/instructors/{email}"})
+    public PersonDTO getInstructor(@PathVariable("email") String email){
+        Instructor instructor = instructorService.getInstructor(email);
         return convertToDTO(instructor);
     }
+
 
     @GetMapping(value={"/instructors/supervised-course/{id}"})
     public List<PersonDTO> getInstructorsBySupervisedCourse(@PathVariable("id") int scheduledCourseId){
@@ -62,12 +63,13 @@ public class InstructorController {
         return convertToDTO(instructor);
     }
 
-    @PostMapping(value={"/instructors"})
-    public PersonDTO createInstructor(@RequestBody PersonDTO personDTO, @RequestBody InstructorDTO instructorDTO){
-        Person person = instructorService.createInstructor(personDTO.getName(),
-                personDTO.getEmail(), personDTO.getPassword(), instructorDTO.getExperience(), instructorDTO.getId());
+    @PostMapping(value={"/instructors/{email}"})
+    public PersonDTO createInstructor(@PathVariable("email") String email, @RequestBody String experience){
+        Person person = instructorService.createInstructor(email, experience);
         return convertToDTO(person);
     }
+    
+    
 
     @PutMapping(value={"/instructors/{id}"})
     public PersonDTO updateInstructor(@PathVariable("id") int id, @RequestBody PersonDTO personDTO, @RequestBody InstructorDTO instructorDTO){
@@ -79,18 +81,19 @@ public class InstructorController {
         if (p == null){
             throw new IllegalArgumentException("There is no such customer!");
         }
-        PersonRoleDTO personRoleDTO = new InstructorDTO();
-        PersonDTO instructorDTO = new PersonDTO(p.getName(), p.getEmail(), p.getPassword(), personRoleDTO);
-        return instructorDTO;
+        Instructor instructor = instructorService.getInstructor(p.getEmail());
+        InstructorDTO instructorDTO = new InstructorDTO(instructor);
+        PersonDTO personDTO = new PersonDTO(p.getName(), p.getEmail(), p.getPassword(), instructorDTO);
+        return personDTO;
     }
     
     private PersonDTO convertToDTO(Instructor i){
         if (i == null){
             throw new IllegalArgumentException("There is no such instructor!");
         }
-        PersonRoleDTO personRoleDTO = new InstructorDTO(i.getId(), i.getExperience());
+        InstructorDTO instructorDTO = new InstructorDTO(i);
         Person person = personService.getPersonById(i.getId());
-        PersonDTO personDTO = new PersonDTO(person.getName(), person.getEmail(), person.getPassword(), personRoleDTO);
+        PersonDTO personDTO = new PersonDTO(person.getName(), person.getEmail(), person.getPassword(), instructorDTO);
         return personDTO;
     }
 }

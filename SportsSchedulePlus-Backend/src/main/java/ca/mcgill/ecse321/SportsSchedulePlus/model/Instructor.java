@@ -45,7 +45,10 @@ public class Instructor extends Customer {
   // INTERFACE
   //------------------------
 
-  public boolean setExperience(String aExperience) {
+  public Instructor(String experience) {
+  this.experience = experience;
+}
+public boolean setExperience(String aExperience) {
     boolean wasSet = false;
     experience = aExperience;
     wasSet = true;

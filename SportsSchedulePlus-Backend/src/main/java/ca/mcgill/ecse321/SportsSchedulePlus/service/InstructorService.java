@@ -1,12 +1,11 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.service;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
-import ca.mcgill.ecse321.utils.EmailValidator;
-import ca.mcgill.ecse321.utils.PasswordValidator;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.exception.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,17 +25,38 @@ public class InstructorService {
 
     @Autowired
     CustomerRepository customerRepository;
+    @Autowired
+    PersonRoleRepository personRoleRepository;
 
-    // Validation on instructor inputs
     @Transactional
-    public Person createInstructor(String name, String email, String password, String experience, int id){
-        validateUser(name, email, password);
-        Customer customer = customerRepository.findCustomerById(id);
-        PersonRole personRole = new Instructor(customer.getId(), experience);
-        Person person = new Person(name, email, password, personRole);
-        personRepository.save(person);
-        return person;
+    public Person createInstructor(String email, String experience){
+        Person person = personRepository.findPersonByEmail(email);
+        if (person != null){
+            String name = person.getName();
+            String password = person.getPassword();
+            PersonRole personRole = person.getPersonRole();
+    
+            Customer customer = customerRepository.findCustomerById(person.getId());
+
+            PersonRole personRole1 = new Instructor(experience);
+    
+    
+            personRepository.delete(person);
+            customerRepository.delete(customer);
+            personRoleRepository.delete(personRole);
+            person.delete();
+            
+            personRoleRepository.save(personRole1);
+            Person newPerson = new Person(name, email, password, personRole1);
+            personRepository.save(newPerson);
+    
+            return person;
+        } else {
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "DEBUG - Customer with email " + email + " needs to exist before they can become an Instructor.");
+        }
     }
+    
+    
 
     @Transactional
     public Person updateInstructor(String name, String email, String password, String experience, int id){
@@ -72,13 +92,14 @@ public class InstructorService {
         }
     }
     @Transactional
-    public Instructor getInstructor(int id){
-        Optional<Instructor> instructor = instructorRepository.findById(id);
+    public Instructor getInstructor(String email){
+        Person person = personRepository.findPersonByEmail(email);
+        Optional<Instructor> instructor = instructorRepository.findById(person.getId());
         if (instructor.isPresent()){
             Instructor instructor1 = instructor.get();
             return instructor1;
         }else{
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Instructor with ID " + id + " does not exist.");
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Instructor with email " + email + " does not exist.");
         }
 
     }
@@ -111,24 +132,6 @@ public class InstructorService {
             resultList.add(t);
         }
         return resultList;
-    }
-
-      private void validateUser(String name, String email, String password) {
-        if (personRepository.findPersonByEmail(email) != null) {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner with email " + email + " already exists.");
-        }
-    
-        if (name.isBlank()) {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name cannot be blank.");
-        }
-    
-        if (!PasswordValidator.isValidPassword(password)) {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Password is not valid.");
-        }
-    
-        if (!EmailValidator.validate(email)) {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Email is not valid.");
-        }
     }
 
 }
