@@ -60,6 +60,7 @@ public Instructor(Customer customer, String experience) {
     this.instructorSuggestedCourseTypes = new ArrayList<>();
     this.supervisedCourses = new ArrayList<>();
 }
+
 public boolean setExperience(String aExperience) {
     boolean wasSet = false;
     experience = aExperience;

@@ -41,9 +41,10 @@ public class InstructorService {
             PersonRole personRole1 = new Instructor(customer,experience);
     
             personRepository.delete(person);
+            person.delete();
             customerRepository.delete(customer);
             personRoleRepository.delete(personRole);
-            person.delete();
+            
             
             personRoleRepository.save(personRole1);
             Person newPerson = new Person(name, email, password, personRole1);
