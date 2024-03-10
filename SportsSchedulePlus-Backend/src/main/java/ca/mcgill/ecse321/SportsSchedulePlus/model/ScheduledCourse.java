@@ -45,6 +45,17 @@ public class ScheduledCourse {
   public ScheduledCourse() {
 
   }
+
+  // Constructor to copy values from a Course
+  public ScheduledCourse(ScheduledCourse sourceCourse) {
+    this.id = sourceCourse.getId();
+    this.date = sourceCourse.getDate();
+    this.startTime = sourceCourse.getStartTime();
+    this.endTime = sourceCourse.getEndTime();
+    this.location = sourceCourse.getLocation();
+    this.courseType = sourceCourse.getCourseType();
+  }
+  
   public ScheduledCourse(int aId, Date aDate, Time aStartTime, Time aEndTime, String aLocation, CourseType aCourseType) {
     id = aId;
     date = aDate;
