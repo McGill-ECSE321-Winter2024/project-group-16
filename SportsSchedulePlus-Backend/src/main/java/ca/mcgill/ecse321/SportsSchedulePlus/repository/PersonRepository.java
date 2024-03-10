@@ -15,4 +15,6 @@ public interface PersonRepository extends CrudRepository<Person, Integer>{
 
     // Find person by email
     Person findPersonByEmail(String email);
+
+    int deleteByEmail(String email);
 }

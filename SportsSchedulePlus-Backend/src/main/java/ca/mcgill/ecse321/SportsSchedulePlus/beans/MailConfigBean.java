@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.service;
+package ca.mcgill.ecse321.SportsSchedulePlus.beans;
 
 /**
  * Class to contain the information for an email account and its mail configuration. Contains information

@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.service.CustomService;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.CustomerService;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.InstructorService;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.InstructorDTO; 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.ScheduledCourseDTO; 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
@@ -29,11 +27,6 @@ public class CustomController {
     @Autowired
     private CustomService customService;
 
-    @Autowired
-    private CustomerService customerService;
-
-    @Autowired
-    private InstructorService instructorService;
 
     @PutMapping(value = {"/customers/{customerId}/apply"})
     public void applyForInstructor(@PathVariable("customerId") int customerId) {

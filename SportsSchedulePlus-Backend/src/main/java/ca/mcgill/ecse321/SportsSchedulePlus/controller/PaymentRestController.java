@@ -30,15 +30,9 @@ public class PaymentRestController {
     
     @Autowired
     private PaymentService paymentService;
-
-
-
     private  Mailer mailer; 
-
     @Autowired
     private PersonService personService;
-
-
 
     /*
      * get all payments

@@ -30,7 +30,7 @@ public class PaymentService {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
-    private ScheduledCourseRepository ScheduledCourseRepository;
+    private ScheduledCourseRepository scheduledCourseRepository;
 
     @Transactional
     public List<Payment> getAllPayments() {
@@ -58,7 +58,7 @@ public class PaymentService {
 
     @Transactional
     public List<Payment> getPaymentsByCourse(int courseId) {
-        ScheduledCourse sc = ScheduledCourseRepository.findById(courseId);
+        ScheduledCourse sc = scheduledCourseRepository.findById(courseId);
         if (sc == null) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no scheduled course with ID " + courseId + ".");
         }
@@ -71,7 +71,7 @@ public class PaymentService {
         if (c == null) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no customer with ID " + customerId + ".");
         }
-        ScheduledCourse sc = ScheduledCourseRepository.findById(courseId);
+        ScheduledCourse sc = scheduledCourseRepository.findById(courseId);
         if (sc == null) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no scheduled course with ID " + courseId + ".");
         }
