@@ -118,17 +118,16 @@ public class PaymentService {
         if (sc == null) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no scheduled course with ID " + courseId + ".");
         }
-        List<Payment> previousPayments = getPaymentsByCustomer(customerId);
-        if (previousPayments != null) {
-            for (Payment p : previousPayments) {
-                if (p.getKey().getScheduledCourse().equals(sc)) {
-                    throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "The customer with ID " + customerId + " has already paid for the course with ID " + courseId + ".");
-                }
-            }
-        }
         Key key = new Key(c, sc);
-        Payment p = new Payment(key);
-     
+        Payment previousPayment = paymentRepository.findPaymentByKey(key);
+        if (previousPayment != null) {
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "The customer with ID " + customerId + " has already paid for the course with ID " + courseId + ".");
+        }
+        Payment p = new Payment();
+        p.setKey(key);
+        c.addCustomerPayment(p);
+        c.addCoursesRegistered(sc);
+        sc.addCoursePayment(p);
         paymentRepository.save(p);
         // Send a payment confirmation email to the user
         sendPaymentConfirmationEmail(p);

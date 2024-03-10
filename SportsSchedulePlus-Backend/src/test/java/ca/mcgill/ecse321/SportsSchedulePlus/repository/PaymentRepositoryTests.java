@@ -131,6 +131,33 @@ public class PaymentRepositoryTests {
     }
 
     /**
+     * Tests finding payments by key.
+     */
+    @Test
+    public void testFindPaymentsByKey() {
+        // Create and save a payment
+        Customer customer = new Customer();
+        customerRepository.save(customer);
+        CourseType courseType = new CourseType("New Sample Description", true, 99.99f);
+        courseTypeRepository.save(courseType);
+        ScheduledCourse course = Helper.createScheduledCourse(courseType);
+        scheduledCourseRepository.save(course);
+        Payment newPayment = Helper.createPayment(customer,course);
+        paymentRepository.save(newPayment);
+
+        // Find payments by key customer
+        Payment foundPayment = paymentRepository.findPaymentByKey(newPayment.getKey());
+        Payment foundPayment2 = paymentRepository.findPaymentByKey(new Payment.Key(customer, course));
+        // Assertions
+        assertNotNull(foundPayment);
+        assertNotNull(foundPayment2);
+        
+        // The overridden equals method in the Payment model is used here
+        assertEquals(newPayment, foundPayment);
+        assertEquals(newPayment, foundPayment2);
+    }
+
+    /**
      * Tests finding no payments for a customer with no payments.
      */
     @Test
