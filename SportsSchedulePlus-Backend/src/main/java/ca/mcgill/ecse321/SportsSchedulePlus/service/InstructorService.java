@@ -10,6 +10,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.exception.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +30,9 @@ public class InstructorService {
 
   @Autowired
   PersonRoleRepository personRoleRepository;
+
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
   @Transactional
   public Person createInstructor(String email, String experience) {
@@ -77,7 +81,7 @@ public class InstructorService {
         instructor.setExperience(experience);
         person.setName(name);
         person.setEmail(email);
-        person.setPassword(password);
+        person.setPassword(passwordEncoder.encode(password));
         personRepository.save(person);
         return person;
       } else {

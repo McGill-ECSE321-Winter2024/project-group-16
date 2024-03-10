@@ -1,5 +1,7 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.service;
 
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,9 +11,11 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PaymentRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
+import ca.mcgill.ecse321.SportsSchedulePlus.beans.MailConfigBean;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
@@ -28,9 +32,13 @@ public class PaymentService {
     @Autowired
     private PaymentRepository paymentRepository;
     @Autowired
+    private PersonRepository personRepository;
+    @Autowired
     private CustomerRepository customerRepository;
     @Autowired
     private ScheduledCourseRepository scheduledCourseRepository;
+
+    private Mailer mailer;
 
     @Transactional
     public List<Payment> getAllPayments() {
@@ -64,6 +72,41 @@ public class PaymentService {
         }
         return paymentRepository.findPaymentsByKeyScheduledCourse(sc);
     }
+      // Method to send payment confirmation email
+    private void sendPaymentConfirmationEmail(Payment payment) {
+        try {
+            String userEmail = personRepository.findById(payment.getKey().getCustomer().getId()).get().getEmail();
+            String invoiceHtml = generateInvoiceHtml(payment);
+            MailConfigBean mailSender = new MailConfigBean("imap.gmail.com", "smtp.gmail.com", "sports.schedule.plus@gmail.com", "aqlq ldup ymfh eejb");
+            mailer = new Mailer(mailSender);
+
+            // Sending the email using the custom Mailer
+            mailer.sendEmail("Payment Confirmation", "Thank you for your payment", invoiceHtml, userEmail);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+
+    // Method to generate HTML content for the invoice
+    private String generateInvoiceHtml(Payment payment) {
+        StringBuilder html = new StringBuilder();
+        String customerName = personRepository.findById(payment.getKey().getCustomer().getId()).get().getName();
+        // Build the HTML content for the invoice
+        html.append("<html>")
+            .append("<body>")
+            .append("<h2>Payment Confirmation</h2>")
+            .append("<p>Thank you for your payment. Here are the details:</p>")
+            .append("<p><strong>Confirmation Number:</strong> ").append(payment.getConfirmationNumber()).append("</p>")
+            .append("<p><strong>Customer Name:</strong> ").append(customerName).append("</p>")
+            .append("<p><strong>Course:</strong> ").append(payment.getKey().getScheduledCourse().getCourseType().getDescription()).append("</p>")
+            .append("<p><strong>Amount:</strong> $").append(new DecimalFormat("0.00").format(payment.getKey().getScheduledCourse().getCourseType().getPrice())).append("</p>")
+            .append("</body>")
+            .append("</html>");
+         
+
+        return html.toString();
+    }
 
     @Transactional
     public Payment createPayment(int customerId, int courseId) {
@@ -85,7 +128,10 @@ public class PaymentService {
         }
         Key key = new Key(c, sc);
         Payment p = new Payment(key);
+     
         paymentRepository.save(p);
+        // Send a payment confirmation email to the user
+        sendPaymentConfirmationEmail(p);
         return p;
     }
 }

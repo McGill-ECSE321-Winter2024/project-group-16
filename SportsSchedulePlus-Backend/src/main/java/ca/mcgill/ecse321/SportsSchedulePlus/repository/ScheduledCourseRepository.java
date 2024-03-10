@@ -32,5 +32,5 @@ public interface ScheduledCourseRepository extends CrudRepository<ScheduledCours
      List<ScheduledCourse> findScheduledCoursesByEndTime(Time endTime);
 
      // Find scheduled course by id
-    ScheduledCourse findById(int id);
+     ScheduledCourse findById(int id);
 }
