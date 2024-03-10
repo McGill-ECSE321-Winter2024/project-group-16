@@ -7,7 +7,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,23 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.LoginDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.SignupDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.CustomerService;
 
 @RestController
 @RequestMapping("/authentication")
 public class AuthenticationController {
+
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
-    private PersonRepository userRepository;
-    @Autowired
-    private PersonRoleRepository roleRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private CustomerService customerService;
     
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDto) {
@@ -42,22 +35,9 @@ public class AuthenticationController {
     }
     
     
-        @PostMapping("/signup")
-        public ResponseEntity<?> registerUser(@RequestBody SignupDTO signUpDto){
-           
-            // checking for email exists in a database
-            if(userRepository.findPersonByEmail(signUpDto.getEmail()) != null){
-                return new ResponseEntity<>("Email already exista!", HttpStatus.BAD_REQUEST);
-            }
-            // creating user object
-            Person user = new Person();
-            user.setName(signUpDto.getName());
-            user.setEmail(signUpDto.getEmail());
-            user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
-            PersonRole role = new Owner();
-            roleRepository.save(role);
-            user.setPersonRole(role);
-            userRepository.save(user);
-            return new ResponseEntity<>("User is registered successfully!", HttpStatus.OK);
-        }
+    @PostMapping("/signup")
+    public ResponseEntity<?> registerUser(@RequestBody SignupDTO signUpDto){
+        customerService.createCustomer(signUpDto.getName(), signUpDto.getEmail(), signUpDto.getPassword());
+        return new ResponseEntity<>("User is registered successfully!", HttpStatus.OK);
+    }
 }

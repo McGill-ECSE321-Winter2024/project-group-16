@@ -16,7 +16,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.PersonResponseDTO;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class PersonRestController {
+public class PersonController {
 
     @Autowired
     private PersonService personService;

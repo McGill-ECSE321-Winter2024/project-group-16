@@ -3,6 +3,8 @@ package ca.mcgill.ecse321.SportsSchedulePlus.service;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ca.mcgill.ecse321.SportsSchedulePlus.beans.MailConfigBean;
 import jodd.mail.Email;
 import jodd.mail.MailServer;
 import jodd.mail.RFC2822AddressParser;
@@ -58,7 +60,6 @@ public class Mailer {
         if (htmlText != null) {
             this.email.htmlMessage(htmlText);
         }
-
     }
 
     /**
@@ -72,7 +73,7 @@ public class Mailer {
             final String subject, final String textMessage, final String htmlText, String toField) throws IOException {
         if (sendBean != null) {
             if (checkEmail(sendBean.getUserEmailAddress())) {
-                LOG.info("send bean valid");
+                LOG.info("Email send bean is valid");
                 // Create am SMTP server object
                 SmtpServer smtpServer = MailServer.create()
                         .ssl(true)
@@ -89,8 +90,7 @@ public class Mailer {
                 this.setContent(subject, htmlText, textMessage);
                 try ( // A session is the object responsible for communicating with the server
                         SendMailSession session = smtpServer.createSession()) {
-                    // Like a file we open the session, send the message and close the
-                    // session
+                    // Like a file we open the session, send the message and close the session
                     session.open();
                     session.sendMail(email);
                     LOG.info("Email sent");

@@ -35,7 +35,28 @@ public class PersonService {
         return p.get();
     }
 
+    
 
+    @Transactional
+    public void deletePersonById(int id) {
+        System.out.println("Deleting person with ID: " + id);
+    
+        Optional<Person> existingPerson = personRepository.findById(id);
+    
+        if (!existingPerson.isPresent()) {
+            System.out.println("Person with ID " + id + " not found. Unable to delete.");
+            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no person with ID " + id + " to delete.");
+        }
+    
+        personRepository.deleteById(id);
+        System.out.println("Person with ID " + id + " successfully deleted.");
+    }
+
+    @Transactional
+    public Person findPersonByEmail(String email) {
+        return personRepository.findPersonByEmail(email);
+    }
+    
 
   
 }

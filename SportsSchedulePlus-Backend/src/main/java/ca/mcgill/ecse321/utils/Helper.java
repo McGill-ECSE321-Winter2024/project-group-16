@@ -7,10 +7,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.http.HttpStatus;
+
+import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 /**
  * Helper class that contains methods for list comparison useful for the override of equals in the models
  * and methods to create models for testing purposes.
@@ -79,6 +83,32 @@ public class Helper {
 		}
 		return resultList;
 	}
+  /**
+   * Helper method to validate a user
+   * @param personRepository
+   * @param name
+   * @param email
+   * @param password
+   */
+  public static void validateUser(PersonRepository personRepository,String name, String email, String password) {
+
+    if (personRepository.findPersonByEmail(email) != null) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner with email " + email + " already exists.");
+    }
+
+    if (name.isBlank()) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name cannot be blank.");
+    }
+  
+    if (!PasswordValidator.isValidPassword(password)) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Password is not valid.");
+    }
+
+    if (!EmailValidator.validate(email)) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Email is not valid.");
+    }
+
+  }
 
 
   
