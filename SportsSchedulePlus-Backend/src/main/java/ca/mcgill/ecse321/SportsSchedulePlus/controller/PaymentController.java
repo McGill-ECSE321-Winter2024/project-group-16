@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.service.MailConfigBean;
+import ca.mcgill.ecse321.SportsSchedulePlus.beans.MailConfigBean;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.Mailer;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PaymentService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PersonService;
@@ -26,7 +26,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
  */
 @CrossOrigin(origins = "*")
 @RestController
-public class PaymentRestController {
+public class PaymentController {
     
     @Autowired
     private PaymentService paymentService;
