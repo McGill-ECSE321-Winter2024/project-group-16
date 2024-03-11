@@ -12,21 +12,21 @@ import jakarta.transaction.Transactional;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CustomService {
 
     @Autowired
-    private CustomerRepository customerService;
+    private CustomerService customerService;
 
     @Autowired
-    private InstructorRepository instructorService;
+    private InstructorService instructorService;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -34,46 +34,41 @@ public class CustomService {
     @Autowired
     private ScheduledCourseRepository scheduledCourseRepository;
 
+    @Autowired
+    private PersonRepository personRepository;
+
+
     @Transactional
     public void applyForInstructor(int customerId) {
-        Optional<Customer> customer = customerService.findById(customerId);
+        Optional<Customer> customer = customerRepository.findById(customerId);
         if (!customer.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID "+ customerId + " does not exist.");
         }
         Customer c = customer.get();
         c.setHasApplied(true);
-        customerService.save(c);
+        customerRepository.save(c);
     }
 
     @Transactional
     public Instructor approveCustomer(int customerId) {
-        Optional<Customer> customer = customerService.findById(customerId);
+        Optional<Customer> customer = customerRepository.findById(customerId);
         if (!customer.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID "+ customerId + " does not exist.");
         }
-        Instructor i = new Instructor();
-        for (Payment p : customer.get().getCustomerPayments()) {
-            i.addCustomerPayment(p);
-        }
-        for (ScheduledCourse c : customer.get().getCoursesRegistered()) {
-            i.addCoursesRegistered(c);
-        }
-        int id = customer.get().getId();
-        customerRepository.delete(customer.get());
-        i.setId(id);
-        instructorService.save(i);
-        return i;
+        Person p = personRepository.findPersonByPersonRole(customer.get());
+        Person newP = instructorService.createInstructor(p.getEmail(), "");
+        return (Instructor) newP.getPersonRole();
     }
 
     @Transactional
     public void rejectCustomer(int customerId) {
-        Optional<Customer> customer = customerService.findById(customerId);
+        Optional<Customer> customer = customerRepository.findById(customerId);
         if (!customer.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID "+ customerId + " does not exist.");
         }
         Customer c = customer.get();
         c.setHasApplied(false);
-        customerService.save(c);
+        customerRepository.save(c);
     }
 
     @Transactional
