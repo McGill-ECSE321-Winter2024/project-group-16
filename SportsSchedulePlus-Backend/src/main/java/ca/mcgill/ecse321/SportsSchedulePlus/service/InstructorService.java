@@ -32,6 +32,9 @@ public class InstructorService {
   PersonRoleRepository personRoleRepository;
 
   @Autowired
+  CourseTypeService courseTypeService;
+
+  @Autowired
   private PasswordEncoder passwordEncoder;
 
   @Transactional
@@ -152,4 +155,13 @@ public class InstructorService {
     return Helper.toList(instructorRepository.findInstructorByExperience(experience));
   }
 
+  @Transactional
+  public void suggestCourseType(Instructor instructor, CourseType courseType) {
+    // Add the course type to the instructor's suggested course types
+    
+    CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getDescription(), courseType.getApprovedByOwner(),courseType.getPrice());
+    instructor.addInstructorSuggestedCourseType(courseTypeCreated);
+    // Save the instructor with the updated suggested course types
+    instructorRepository.save(instructor);
+  }
 }

@@ -69,10 +69,13 @@ public class CourseTypeService {
     @Transactional
     public Instructor getInstructorsByInstructorSuggestedCourseType(CourseType courseType) {
         if (courseType == null) {
-            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Course type cannot be null.");
+            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Course type not found.");
         }
-
-        return instructorRepository.findInstructorByInstructorSuggestedCourseTypes(courseType);
+        Instructor instructor = instructorRepository.findInstructorByInstructorSuggestedCourseTypes(courseType);
+        if(instructor == null){
+            throw new SportsScheduleException(HttpStatus.NOT_FOUND,"Instructor for course type with ID "+courseType.getId() + " not found.");
+        }
+        return instructor;
     }
 
     private void validateCourseType(String description, float price, boolean newDescription) {
@@ -95,8 +98,8 @@ public class CourseTypeService {
             throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Description must contain letters.");
         }
 
-        if (description.length() > 255) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description cannot exceed 255 characters.");
+        if (description.length() > 60) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description cannot exceed 60 characters.");
         }
     }
 
