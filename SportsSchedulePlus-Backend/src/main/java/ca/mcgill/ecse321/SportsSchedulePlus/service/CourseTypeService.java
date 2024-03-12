@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
+import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
@@ -13,6 +14,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
 import ca.mcgill.ecse321.utils.Helper;
+
 
 import java.util.List;
 
@@ -31,13 +33,14 @@ public class CourseTypeService {
 
     @Transactional
     public CourseType createCourseType(String description, boolean approvedByOwner, float price) {
+        // Validate the course before saving
+        validateCourseType(description,price,true);
         CourseType courseType = new CourseType();
+
         courseType.setDescription(description);
         courseType.setApprovedByOwner(approvedByOwner);
         courseType.setPrice(price);
 
-        // Validate the course before saving
-        validateCourseType(courseType);
 
         courseTypeRepository.save(courseType);
         return courseType;
@@ -46,17 +49,20 @@ public class CourseTypeService {
     @Transactional
     public CourseType updateCourseType(int id, String description, boolean approvedByOwner, float price) {
         CourseType courseType = getCourseType(id);
+       
+        boolean newDescription = ! courseType.getDescription().equals(description);
 
+        // Validate the updated course before saving
+
+        validateCourseType(description,price,newDescription);
         // Update the course fields
         courseType.setDescription(description);
         courseType.setApprovedByOwner(approvedByOwner);
         courseType.setPrice(price);
 
-        // Validate the updated course before saving
-        validateCourseType(courseType);
-
         // Save the updated course
-        return courseTypeRepository.save(courseType);
+        courseTypeRepository.save(courseType);
+        return courseType;
     }
 
 
@@ -69,16 +75,27 @@ public class CourseTypeService {
         return instructorRepository.findInstructorByInstructorSuggestedCourseTypes(courseType);
     }
 
-    private void validateCourseType(CourseType courseType) {
-        if (courseType.getDescription() == null || courseType.getDescription().trim().isEmpty()) {
+    private void validateCourseType(String description, float price, boolean newDescription) {
+        if (description == null || description.trim().isEmpty()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description cannot be null or empty.");
         }
 
-        if (courseType.getPrice() <= 0) {
+        if (price <= 0) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course price must be greater than zero.");
         }
 
-        if (courseType.getDescription().length() > 255) {
+        if (newDescription){
+            if (courseTypeRepository.findCourseTypeByDescription(description) != null){
+                throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description must be unique");
+            }
+        }
+
+         // Check if the description contains at least one letter
+        if (!description.matches(".*[a-zA-Z].*")) {
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Description must contain letters.");
+        }
+
+        if (description.length() > 255) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description cannot exceed 255 characters.");
         }
     }
@@ -136,7 +153,13 @@ public class CourseTypeService {
     
     @Transactional
     public List<CourseType> getByApprovedByOwner(boolean approvedByOwner) {
-        List<CourseType> courseTypes = courseTypeRepository.findByApprovedByOwnerTrue();
+        List<CourseType> courseTypes;
+        if(approvedByOwner){
+             courseTypes = courseTypeRepository.findByApprovedByOwnerTrue();
+        }
+        else{
+            courseTypes = courseTypeRepository.findByApprovedByOwnerFalse();
+        }
         if (courseTypes == null) {
             throw new SportsScheduleException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving course types by approvedByOwner: " + approvedByOwner);
         } else if (courseTypes.isEmpty()) {

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import org.springframework.http.HttpStatus;
 
@@ -94,10 +95,12 @@ public class Helper {
   public static void validateUser(PersonRepository personRepository,String name, String email, String password, boolean newEmail) {
     if(newEmail){
     if (personRepository.findPersonByEmail(email) != null) {
-      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner with email " + email + " already exists.");
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "User with email " + email + " already exists.");
     }
   }
-
+    if (! Pattern.matches("[a-zA-Z]+", name)) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST,"Name cannot contain special characters.");
+    }
     if (name.isBlank()) {
       throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name cannot be blank.");
     }

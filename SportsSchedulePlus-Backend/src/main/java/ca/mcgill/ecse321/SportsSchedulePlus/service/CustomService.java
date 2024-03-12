@@ -22,8 +22,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomService {
 
-    @Autowired
-    private CustomerService customerService;
+  
 
     @Autowired
     private InstructorService instructorService;
