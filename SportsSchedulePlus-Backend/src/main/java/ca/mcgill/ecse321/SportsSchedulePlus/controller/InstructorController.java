@@ -6,6 +6,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.service.InstructorService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PersonService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.ScheduledCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.* ;
 
@@ -23,9 +24,6 @@ public class InstructorController {
 
   @Autowired
   private PersonService personService;
-
-  @Autowired
-  private PasswordEncoder passwordEncoder;
 
   @GetMapping(value = { "/instructors"})
   public List < PersonDTO > getAllInstructors() {
@@ -57,9 +55,9 @@ public class InstructorController {
   }
 
   @DeleteMapping(value = {"/instructors/{id}"})
-  public String deleteInstructor(@PathVariable("id") int id) {
+  public ResponseEntity<String> deleteInstructor(@PathVariable("id") int id) {
     int personId = instructorService.deleteInstructor(id);
-    return ("Instructor with id " + personId + " was successfully deleted.");
+    return ResponseEntity.ok("Instructor with id " + personId + " was successfully deleted.");
   }
 
   @PostMapping(value = {"/instructors/{email}"})
@@ -70,7 +68,7 @@ public class InstructorController {
 
   @PutMapping(value = {"/instructors/{id}"})
   public PersonDTO updateInstructor(@PathVariable("id") int id, @RequestBody PersonDTO personDTO, @RequestBody InstructorDTO instructorDTO) {
-    Person person = instructorService.updateInstructor(id, personDTO.getName(), personDTO.getEmail(), passwordEncoder.encode(personDTO.getPassword()), instructorDTO.getExperience());
+    Person person = instructorService.updateInstructor(id, personDTO.getName(), personDTO.getEmail(), personDTO.getPassword(), instructorDTO.getExperience());
     return convertToDTO(person);
   }
 

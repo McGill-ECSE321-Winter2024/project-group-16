@@ -9,6 +9,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.ScheduledCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -75,12 +76,15 @@ public class ScheduledCourseController {
     }
 
     @DeleteMapping("/scheduledCourses/{id}")
-    public void deleteScheduledCourse(@PathVariable(name="id") int id) {
+    public ResponseEntity<String> deleteScheduledCourse(@PathVariable(name="id") int id) {
         service.deleteScheduledCourse(id);
+        return ResponseEntity.ok("Scheduled course with ID " + id + " has been deleted.");
     }
 
     @DeleteMapping("/scheduledCourses")
-    public void deleteAllScheduledCourses() {
+    public ResponseEntity<String> deleteAllScheduledCourses() {
         service.deleteAllScheduledCourses();
+        return ResponseEntity.ok("All scheduled courses have been deleted.");
     }
+
 }

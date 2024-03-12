@@ -34,7 +34,7 @@ public class CustomerService {
 
   @Transactional
   public Person createCustomer(String name, String email, String password) {
-    Helper.validateUser(personRepository, name, email, password);
+    Helper.validateUser(personRepository, name, email, password,true);
     PersonRole personRole = new Customer();
     personRoleRepository.save(personRole);
     Person person = new Person(name, email, passwordEncoder.encode(password), personRole);
@@ -48,7 +48,8 @@ public class CustomerService {
     if (optionalPerson.isPresent()) {
       Person person = optionalPerson.get();
       if (person.getPersonRole() instanceof Customer) {
-        Helper.validateUser(personRepository, name, email, password);
+        boolean newEmail = !person.getEmail().equals(email);
+        Helper.validateUser(personRepository, name, email, password,newEmail);
         person.setName(name);
         person.setEmail(email);
         person.setPassword(passwordEncoder.encode(password));

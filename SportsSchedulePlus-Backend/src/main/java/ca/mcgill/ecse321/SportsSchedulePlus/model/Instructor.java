@@ -57,6 +57,7 @@ public Instructor(Customer customer, String experience) {
     super.setCustomerPayments(customer.getCustomerPayments());
     // Set fields specific to the Instructor
     this.experience = experience;
+    this.setHasApplied(customer.getHasApplied());
     this.instructorSuggestedCourseTypes = new ArrayList<>();
     this.supervisedCourses = new ArrayList<>();
 }

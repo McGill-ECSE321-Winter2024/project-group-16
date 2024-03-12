@@ -8,6 +8,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.CourseTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class CourseTypeController {
 
     @GetMapping("/courseTypes")
     public CourseTypeListDTO findAllCourseTypes() {
-        List<CourseTypeResponseDTO> dtos = new ArrayList<>(); // Corrected to DTO
+        List<CourseTypeResponseDTO> dtos = new ArrayList<>();
         for (CourseType courseType : service.getAllCourseTypes()) {
             dtos.add(new CourseTypeResponseDTO(courseType));
         }
@@ -44,13 +45,15 @@ public class CourseTypeController {
     }
 
     @DeleteMapping("/courseTypes/{id}")
-    public void deleteCourseType(@PathVariable(name="id") int id) {
+    public ResponseEntity<String> deleteCourseType(@PathVariable(name="id") int id) {
         service.deleteCourseType(id);
+         return ResponseEntity.ok("Course type with ID " + id + " has been deleted.");
     }
 
     @DeleteMapping("/courseTypes")
-    public void deleteAllCourseTypes() {
+    public ResponseEntity<String> deleteAllCourseTypes() {
         service.deleteAllCourseTypes();
+        return ResponseEntity.ok("All course types have been deleted.");
     }
 
     @GetMapping("/courseTypes/price/{price}")
