@@ -89,12 +89,14 @@ public class Helper {
    * @param name
    * @param email
    * @param password
+   * @param newEmail (boolean to indicate whether the user is creating a new email or keeping the same one
    */
-  public static void validateUser(PersonRepository personRepository,String name, String email, String password) {
-
+  public static void validateUser(PersonRepository personRepository,String name, String email, String password, boolean newEmail) {
+    if(newEmail){
     if (personRepository.findPersonByEmail(email) != null) {
       throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner with email " + email + " already exists.");
     }
+  }
 
     if (name.isBlank()) {
       throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name cannot be blank.");

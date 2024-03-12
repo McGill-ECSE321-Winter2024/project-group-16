@@ -38,7 +38,7 @@ public class OwnerService {
 
   @Transactional
   public Person createOwner(String name, String email, String password) {
-    Helper.validateUser(personRepository, name, email, password);
+    Helper.validateUser(personRepository, name, email, password,true);
     PersonRole personRole = new Owner();
     personRoleRepository.save(personRole);
     Person person = new Person(name, email, password, personRole);
@@ -52,7 +52,8 @@ public class OwnerService {
     if (optionalPerson.isPresent()) {
       Person person = optionalPerson.get();
       if (person.getPersonRole() instanceof Owner) {
-        Helper.validateUser(personRepository, name, email, password);
+        boolean newEmail = !person.getEmail().equals(email);
+        Helper.validateUser(personRepository, name, email, password,newEmail);
         person.setName(name);
         person.setEmail(email);
         person.setPassword(password);

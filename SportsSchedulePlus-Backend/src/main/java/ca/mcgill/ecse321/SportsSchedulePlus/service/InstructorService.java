@@ -77,7 +77,8 @@ public class InstructorService {
       Person person = optionalPerson.get();
       if (person.getPersonRole() instanceof Instructor) {
         Instructor instructor = (Instructor) person.getPersonRole();
-        Helper.validateUser(personRepository, name, email, password);
+        boolean newEmail = !person.getEmail().equals(email);
+        Helper.validateUser(personRepository, name, email, password,newEmail);
         instructor.setExperience(experience);
         person.setName(name);
         person.setEmail(email);

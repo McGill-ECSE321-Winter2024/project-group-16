@@ -7,7 +7,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.CustomerService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.* ;
 
 import java.util.List;
@@ -34,11 +34,10 @@ public class CustomerController {
     return convertToDto(customer);
   }
 
-  //not working
   @DeleteMapping(value = {"/customers/{id}"})
-  public String deleteCustomer(@PathVariable("id") int id) {
+  public ResponseEntity<String>  deleteCustomer(@PathVariable("id") int id) {
     int personId = customerService.deleteCustomer(id);
-    return ("Customer with id " + personId + " was successfully deleted.");
+    return ResponseEntity.ok("Customer with id " + personId + " was successfully deleted.");
   }
 
   @PostMapping(value = {"/customers"})

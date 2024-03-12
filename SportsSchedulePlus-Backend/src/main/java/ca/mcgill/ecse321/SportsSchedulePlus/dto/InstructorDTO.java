@@ -7,17 +7,16 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
-public class InstructorDTO extends CustomerDTO { // Change here
+public class InstructorDTO extends CustomerDTO {
 
     private String experience;
-    private int id;
+ 
 
     public InstructorDTO() {
 
     }
 
-    public InstructorDTO(int id, String experience) {
-        super(id);
+    public InstructorDTO(String experience) {
         this.experience = experience;
     }
 
@@ -36,9 +35,6 @@ public class InstructorDTO extends CustomerDTO { // Change here
         super.setCustomerPayments(payments);
     }
 
-    public int getId() {
-        return id;
-    }
 
     public String getExperience() {
         return experience;
