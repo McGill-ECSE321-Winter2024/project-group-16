@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 @Service
 public class OwnerService {
 
@@ -24,6 +26,9 @@ public class OwnerService {
 
   @Autowired
   PersonRoleRepository personRoleRepository;
+
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
   @Transactional
   public Owner getOwner(int id) {
@@ -41,7 +46,7 @@ public class OwnerService {
     Helper.validateUser(personRepository, name, email, password,true);
     PersonRole personRole = new Owner();
     personRoleRepository.save(personRole);
-    Person person = new Person(name, email, password, personRole);
+    Person person = new Person(name, email, passwordEncoder.encode(password), personRole);
     personRepository.save(person);
     return person;
   }
@@ -56,7 +61,7 @@ public class OwnerService {
         Helper.validateUser(personRepository, name, email, password,newEmail);
         person.setName(name);
         person.setEmail(email);
-        person.setPassword(password);
+        person.setPassword(passwordEncoder.encode(password));
         personRepository.save(person);
         return person;
       } else {
