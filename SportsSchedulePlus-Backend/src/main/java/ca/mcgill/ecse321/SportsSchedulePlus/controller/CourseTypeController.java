@@ -23,7 +23,6 @@ public class CourseTypeController {
 
     @PostMapping("/courseTypes")
     public CourseTypeResponseDTO createCourseType(@RequestBody CourseTypeRequestDTO request) {
-        // Assuming you have a createCourseType method in your service
         CourseType createdCourseType = service.createCourseType(request.getDescription(),
                 request.isApprovedByOwner(), request.getPrice());
         return new CourseTypeResponseDTO(createdCourseType);
@@ -58,7 +57,7 @@ public class CourseTypeController {
 
     @GetMapping("/courseTypes/price/{price}")
     public CourseTypeListDTO getCourseTypeByPrice(@PathVariable(name = "price") float price) {
-        List<CourseTypeResponseDTO> dtos = new ArrayList<>(); // Corrected to DTO
+        List<CourseTypeResponseDTO> dtos = new ArrayList<>(); 
         List<CourseType> courseTypes = service.getCourseTypeByPrice(price);
         for (CourseType courseType : courseTypes) {
             dtos.add(new CourseTypeResponseDTO(courseType));
@@ -68,7 +67,7 @@ public class CourseTypeController {
 
     @GetMapping("/courseTypes/approvedByOwner/{isApprovedByOwner}")
     public CourseTypeListDTO getCourseTypeByApprovedByOwner(@PathVariable(name = "isApprovedByOwner") boolean approvedByOwner) {
-        List<CourseTypeResponseDTO> dtos = new ArrayList<>(); // Corrected to DTO
+        List<CourseTypeResponseDTO> dtos = new ArrayList<>(); 
         List<CourseType> courseTypes = service.getByApprovedByOwner(approvedByOwner);
         for (CourseType courseType : courseTypes) {
             dtos.add(new CourseTypeResponseDTO(courseType));
@@ -83,7 +82,7 @@ public class CourseTypeController {
     }
 
     @PutMapping("/courseTypes/approval/{id}")
-    public CourseTypeResponseDTO updateCourseTypeApproval(@PathVariable(name = "id") int id, @RequestParam(name = "approved") boolean approved) {
+    public CourseTypeResponseDTO updateCourseTypeApproval(@PathVariable(name = "id") int id, @RequestBody boolean approved) {
         CourseType updatedCourseType = service.updateCourseTypeApproval(id, approved);
         return new CourseTypeResponseDTO(updatedCourseType);
     }

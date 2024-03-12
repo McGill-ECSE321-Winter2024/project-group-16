@@ -82,7 +82,27 @@ public class InstructorController {
   
       return convertToDTO(person);
   }
-  
+
+  @PostMapping(value = {"/instructors/{email}/suggest-course"})
+  public ResponseEntity<String> suggestCourseType(@PathVariable("email") String email, @RequestBody CourseTypeRequestDTO courseTypeRequestDTO) {
+      // Get the instructor by email
+      Instructor instructor = instructorService.getInstructor(email);
+      if (instructor == null) {
+          return ResponseEntity.notFound().build();
+      }
+
+      // Create a new course type based on the request DTO
+      CourseType courseType = new CourseType(courseTypeRequestDTO.getDescription(), 
+                                              courseTypeRequestDTO.isApprovedByOwner(), 
+                                              courseTypeRequestDTO.getPrice());
+      
+      // Suggest the course type to the instructor
+      instructorService.suggestCourseType(instructor, courseType);
+
+      return ResponseEntity.ok("Course type suggested successfully.");
+  }
+
+
 
   private PersonDTO convertToDTO(Person person) {
     if (person == null) {
