@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,11 +25,22 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.DailyScheduleListResponseDTO;
  */
 @CrossOrigin(origins = "*")
 @RestController
-public class DailyScheduleRestController {
+public class DailyScheduleController {
     
     @Autowired
     private DailyScheduleService dailyScheduleService;
 
+    /*
+     * create a new default daily schedule
+     */
+    @PostMapping(value = { "/openingHours", "/openingHours/" })
+    public DailyScheduleListResponseDTO createDailySchedule() {
+        List<DailyScheduleResponseDTO> dtos = new ArrayList<>();
+        for (DailySchedule ds : dailyScheduleService.createDailySchedule()) {
+            dtos.add(new DailyScheduleResponseDTO(ds));
+        }
+        return new DailyScheduleListResponseDTO(dtos);
+    }
     /*
      * get the opening hours
      */
