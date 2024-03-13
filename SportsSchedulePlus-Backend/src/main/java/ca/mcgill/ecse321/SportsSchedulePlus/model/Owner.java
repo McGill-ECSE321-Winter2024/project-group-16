@@ -20,9 +20,9 @@ public class Owner extends PersonRole {
 
   //Owner Associations
   @OneToMany(fetch = FetchType.EAGER)
-  private final List <CourseType> approvedCourses;
+  private List <CourseType> approvedCourses;
   @OneToMany(fetch = FetchType.EAGER)
-  private final List <CourseType> ownerSuggestedCourses;
+  private List <CourseType> ownerSuggestedCourses;
   @OneToMany(fetch = FetchType.EAGER)
   private List <DailySchedule> dailySchedule;
 

@@ -19,5 +19,5 @@ public interface OwnerRepository extends CrudRepository<Owner, Integer> {
     Owner findOwnerByApprovedCourses(CourseType courseType);
 
     // Find Owner by daily schedule
-    Owner findOwnerByDailySchedule(List<DailySchedule> dailySchedule);
+    // Owner findOwnerByDailySchedule(List<DailySchedule> dailySchedule);
 }

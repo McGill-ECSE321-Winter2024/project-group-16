@@ -89,9 +89,9 @@ public class OwnerService {
     return ownerRepository.findOwnerByApprovedCourses(courseType);
   }
 
-  @Transactional
-  public Owner getOwnerByDailySchedule(List<DailySchedule> dailySchedule) {
-    return ownerRepository.findOwnerByDailySchedule(dailySchedule);
-  }
+  // @Transactional
+  // public Owner getOwnerByDailySchedule(List<DailySchedule> dailySchedule) {
+  //   return ownerRepository.findOwnerByDailySchedule(dailySchedule);
+  // }
 
 }
