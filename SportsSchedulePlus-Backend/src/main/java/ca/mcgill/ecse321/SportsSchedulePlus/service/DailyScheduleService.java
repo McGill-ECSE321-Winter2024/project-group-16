@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.service;
 import java.util.List;
 import java.sql.Time;
 import java.util.Optional;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,22 @@ public class DailyScheduleService {
     
     @Autowired
     private DailyScheduleRepository dailyScheduleRepository;
+
+    /*
+     * create a new default daily schedule
+     */
+    @Transactional
+    public List<DailySchedule> createDailySchedule() {
+        List<DailySchedule> dsList = new ArrayList<DailySchedule>();
+        for (int i = 0; i < 7; i++) {
+            DailySchedule ds = new DailySchedule();
+            ds.setOpeningTime(Time.valueOf("08:00:00"));
+            ds.setClosingTime(Time.valueOf("22:00:00"));
+            dailyScheduleRepository.save(ds);
+            dsList.add(ds);
+        }
+        return dsList;
+    }
 
     /*
      * get all the daily schedules

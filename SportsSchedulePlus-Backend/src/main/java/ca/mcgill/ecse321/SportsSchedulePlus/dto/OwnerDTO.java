@@ -12,13 +12,13 @@ public class OwnerDTO extends PersonRoleDTO {
 
     private final List<CourseTypeDTO> approvedCoursesDTO;
     private final List<CourseTypeDTO> ownerSuggestedCoursesDTO;
-    private DailyScheduleDTO dailyScheduleDTO;
+    private DailyScheduleListResponseDTO dailyScheduleListDTO;
 
-    public OwnerDTO(int Id, DailyScheduleDTO dailyScheduleDTO) {
+    public OwnerDTO(int Id, List<DailyScheduleResponseDTO> dailyScheduleDTO) {
         super(Id);
         approvedCoursesDTO = new ArrayList<>();
         ownerSuggestedCoursesDTO = new ArrayList<>();
-        this.dailyScheduleDTO = dailyScheduleDTO;
+        this.dailyScheduleListDTO = new DailyScheduleListResponseDTO(dailyScheduleDTO);
     }
 
     public OwnerDTO() {
@@ -38,16 +38,17 @@ public class OwnerDTO extends PersonRoleDTO {
         for (CourseType courseType : owner.getApprovedCourses()) {
             this.ownerSuggestedCoursesDTO.add(new CourseTypeDTO(courseType));
         }
-
         if (owner.getDailySchedule() != null) {
-            DailySchedule dailySchedule = owner.getDailySchedule();
-            int id = dailySchedule.getId();
-            Time openingTime = dailySchedule.getOpeningTime();
-            Time closingTime = dailySchedule.getClosingTime();
-            DailyScheduleDTO dailyScheduleDTO = new DailyScheduleDTO(id, openingTime, closingTime);
-            this.dailyScheduleDTO = dailyScheduleDTO;
+            List<DailyScheduleResponseDTO> aDailyScheduleDTO = new ArrayList<>();
+            for (DailySchedule dailySchedule : owner.getDailySchedule()) {
+                int id = dailySchedule.getId();
+                Time openingTime = dailySchedule.getOpeningTime();
+                Time closingTime = dailySchedule.getClosingTime();
+                aDailyScheduleDTO.add(new DailyScheduleResponseDTO(id, openingTime, closingTime));
+            }
+            this.dailyScheduleListDTO = new DailyScheduleListResponseDTO(aDailyScheduleDTO);
         } else {
-            this.dailyScheduleDTO = null;
+            this.dailyScheduleListDTO = null;
         }
     }
 
@@ -63,14 +64,14 @@ public class OwnerDTO extends PersonRoleDTO {
         return Collections.unmodifiableList(ownerSuggestedCoursesDTO);
     }
 
-    public DailyScheduleDTO getDailySchedule() {
-        return dailyScheduleDTO;
+    public DailyScheduleListResponseDTO getDailySchedule() {
+        return dailyScheduleListDTO;
     }
 
-    public boolean setDailySchedule(DailyScheduleDTO aDailyScheduleDTO) {
+    public boolean setDailySchedule(DailyScheduleListResponseDTO aDailyScheduleDTO) {
         boolean wasSet = false;
         if (aDailyScheduleDTO != null) {
-            dailyScheduleDTO = aDailyScheduleDTO;
+            dailyScheduleListDTO = aDailyScheduleDTO;
             wasSet = true;
         }
         return wasSet;

@@ -1,11 +1,17 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.time.LocalTime;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.* ;
+
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.* ;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.* ;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.OwnerService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PersonService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.* ;
+
 
 @CrossOrigin(origins = "*")
 
@@ -19,9 +25,9 @@ public class OwnerController {
   private PersonService personService;
 
 
-  @GetMapping(value = {"/owner/{id}"})
-  public PersonDTO getOwner(@PathVariable("id") int id) {
-    Owner owner = ownerService.getOwner(id);
+  @GetMapping(value = {"/owner", "/owner/"})
+  public PersonDTO getOwner() {
+    Owner owner = ownerService.getOwner();
     return convertToDTO(owner);
   }
 
@@ -40,22 +46,15 @@ public class OwnerController {
     return convertToDTO(owner);
   }
 
-  @GetMapping(value = {"/owner/daily-schedule"})
-  public PersonDTO getOwnerByDailySchedule(@RequestBody DailyScheduleDTO dailyScheduleDTO) {
-    DailySchedule dailySchedule = new DailySchedule(dailyScheduleDTO.getOpeningTime(), dailyScheduleDTO.getClosingTime());
-    Owner owner = ownerService.getOwnerByDailySchedule(dailySchedule);
-    return convertToDTO(owner);
-  }
-
-  @PostMapping(value = { "/owner"})
-  public PersonDTO createOwner(@RequestBody PersonDTO personDTO) {
-    Person person = ownerService.createOwner(personDTO.getName(), personDTO.getEmail(), personDTO.getPassword());
+  @PostMapping(value = {"/owner", "/owner/"})
+  public PersonDTO createOwner() {
+    Person person = ownerService.createOwner();
     return convertToDTO(person);
   }
 
-  @PutMapping(value = {"/owner/{id}"})
-  public PersonDTO updateOwner(@PathVariable("id") int id, @RequestBody PersonDTO personDTO) {
-    Person person = ownerService.updateOwner(id, personDTO.getName(), personDTO.getEmail(), personDTO.getPassword());
+  @PutMapping(value = {"/owner", "/owner/"})
+  public PersonDTO updateOwner(@RequestBody PersonDTO personDTO) {
+    Person person = ownerService.updateOwner(personDTO.getName(), personDTO.getPassword());
     return convertToDTO(person);
   }
 
@@ -63,7 +62,7 @@ public class OwnerController {
     if (p == null) {
       throw new IllegalArgumentException("There is no such owner!");
     }
-    Owner owner = ownerService.getOwner(p.getId());
+    Owner owner = ownerService.getOwner();
     OwnerDTO ownerDTO = new OwnerDTO(owner);
     PersonDTO personDTO = new PersonDTO(p.getName(), p.getEmail(), p.getPassword(), ownerDTO);
     return personDTO;
