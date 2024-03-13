@@ -36,7 +36,10 @@ public class CustomService {
     @Autowired
     private PersonRepository personRepository;
 
-
+    /*
+     * customer applies to become instructor
+     * changes the hasApplied attribute of the customer to true
+     */
     @Transactional
     public void applyForInstructor(int customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
@@ -48,6 +51,12 @@ public class CustomService {
         customerRepository.save(c);
     }
 
+    /*
+     * customer is approved to become instructor
+     * this creates a new instructor with the same email as the customer
+     * whilst deleting the old customer account
+     * @return the new instructor
+     */
     @Transactional
     public Instructor approveCustomer(int customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
@@ -59,6 +68,10 @@ public class CustomService {
         return (Instructor) newP.getPersonRole();
     }
 
+    /*
+     * customer is rejected to become instructor
+     * changes the hasApplied attribute of the customer to false
+     */
     @Transactional
     public void rejectCustomer(int customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
@@ -70,6 +83,9 @@ public class CustomService {
         customerRepository.save(c);
     }
 
+    /*
+     * get all scheduled courses for a week
+     */
     @Transactional
     public List<ScheduledCourse> getScheduledCoursesByWeek(Date monday, Date sunday) {
         return scheduledCourseRepository.findScheduledCoursesByDateBetween(monday, sunday);

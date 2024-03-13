@@ -19,7 +19,12 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.InstructorResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.ScheduledCourseDTO; 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
-
+/**
+ * this file contains most of the custom actions need to complete certain use cases
+ * @author Vladimir Venkov
+ * @author Jessie Kurtz
+ * @author Dania Bouhmidi
+ */
 @CrossOrigin(origins = "*")
 @RestController
 public class CustomController {
@@ -27,22 +32,33 @@ public class CustomController {
     @Autowired
     private CustomService customService;
 
-
+    /*
+     * customer applies to become instructor
+     */
     @PutMapping(value = {"/customers/{customerId}/apply"})
     public void applyForInstructor(@PathVariable("customerId") int customerId) {
         customService.applyForInstructor(customerId);
     }
 
+    /*
+     * customer is approved to become instructor
+     */
     @PutMapping(value = {"/customers/{customerId}/approve"})
     public InstructorResponseDTO approveCustomer(@PathVariable("customerId") int customerId) {
         return new InstructorResponseDTO(customService.approveCustomer(customerId));
     }
 
+    /*
+     * customer is rejected to become instructor
+     */
     @PutMapping(value = {"/customers/{customerId}/reject"})
     public void rejectCustomer(@PathVariable("customerId") int customerId) {
         customService.rejectCustomer(customerId);
     }
 
+    /*
+     * get all scheduled courses for a week
+     */
     @GetMapping(value = "/scheduledCourses/{date}")
     public List<ScheduledCourseDTO> getScheduledCoursesForWeekByDate(@PathVariable("date") String date) {
         LocalDate inputDate = LocalDate.parse(date);
