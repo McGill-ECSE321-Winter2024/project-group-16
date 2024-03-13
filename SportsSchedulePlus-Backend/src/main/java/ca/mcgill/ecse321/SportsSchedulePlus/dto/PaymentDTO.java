@@ -6,7 +6,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 
 public class PaymentDTO implements Serializable {
 
-    private CustomerDTO customer;
+    private CustomerResponseDTO customer;
     private ScheduledCourseDTO scheduledCourse;
     private int confirmationNumber;
 
@@ -14,14 +14,14 @@ public class PaymentDTO implements Serializable {
         // Default constructor
     }
 
-    public PaymentDTO(CustomerDTO customer, ScheduledCourseDTO scheduledCourse, int confirmationNumber) {
+    public PaymentDTO(CustomerResponseDTO customer, ScheduledCourseDTO scheduledCourse, int confirmationNumber) {
         this.customer = customer;
         this.scheduledCourse = scheduledCourse;
         this.confirmationNumber = confirmationNumber;
     }
       // Constructor to convert a Payment object to PaymentDto
     public PaymentDTO(Payment payment) {
-        this.customer = new CustomerDTO(payment.getKey().getCustomer());
+        this.customer = new CustomerResponseDTO(payment.getKey().getCustomer());
         // Assuming a constructor in CustomerDto that takes a Customer object
 
         this.scheduledCourse = new ScheduledCourseDTO(payment.getKey().getScheduledCourse());
@@ -33,11 +33,11 @@ public class PaymentDTO implements Serializable {
 
     // Getters and setters for each attribute
 
-    public CustomerDTO getCustomer() {
+    public CustomerResponseDTO getCustomer() {
         return customer;
     }
 
-    public void setCustomer(CustomerDTO customer) {
+    public void setCustomer(CustomerResponseDTO customer) {
         this.customer = customer;
     }
 

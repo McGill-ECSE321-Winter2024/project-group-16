@@ -248,11 +248,10 @@ public class Owner extends PersonRole {
     if (object == null || getClass() != object.getClass()) return false;
 
     Owner other = (Owner) object;
-
     return getId() == other.getId() &&
       Helper.compareListsElementWise(approvedCourses, other.approvedCourses) &&
       Helper.compareListsElementWise(ownerSuggestedCourses, other.ownerSuggestedCourses) &&
-      dailySchedule.equals(other.dailySchedule);
+      Helper.compareListsElementWise(dailySchedule, other.getDailySchedule());
   }
 
   /**

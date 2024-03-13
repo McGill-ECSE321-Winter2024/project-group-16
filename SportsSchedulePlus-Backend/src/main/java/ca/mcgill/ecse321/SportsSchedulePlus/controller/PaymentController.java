@@ -69,12 +69,10 @@ public class PaymentController {
         }
         return new PaymentListResponseDTO(dtos);
     }
-
-
-   
+    
      /*
      * create a new payment between a customer and a course,
-     * might need to /signup
+     * might need to /register
      */
     @PutMapping(value = { "/payments/{customerID}/{courseID}", "/payments/{customerID}/{courseID}/" })
     public PaymentResponseDTO createPayment(@PathVariable("customerID") int customerId, @PathVariable("courseID") int courseId) {

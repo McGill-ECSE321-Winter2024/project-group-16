@@ -14,8 +14,8 @@ public class ScheduledCourseDTO {
     private Time startTime;
     private Time endTime;
     private String location;
-    private CourseTypeDTO courseType;  // Assuming you have a CourseTypeDto class
-    private List<PaymentDTO> coursePayments;  // Assuming you have a PaymentDto class
+    private CourseTypeResponseDTO courseType;  // Assuming you have a CourseTypeDto class
+    private List<PaymentResponseDTO> coursePayments;  // Assuming you have a PaymentDto class
 
     public ScheduledCourseDTO() {
         // Default constructor
@@ -27,19 +27,19 @@ public class ScheduledCourseDTO {
         this.startTime = scheduledCourse.getStartTime();
         this.endTime = scheduledCourse.getEndTime();
         this.location = scheduledCourse.getLocation();
-        this.courseType = new CourseTypeDTO(scheduledCourse.getCourseType());
+        this.courseType = new CourseTypeResponseDTO(scheduledCourse.getCourseType());
         // Assuming a constructor in CourseTypeDto that takes a CourseType object
 
         // Assuming a similar constructor is available in PaymentDto
         for (Payment payment : scheduledCourse.getCoursePayments()) {
-        PaymentDTO paymentDto = new PaymentDTO(payment);
+        PaymentResponseDTO paymentDto = new PaymentResponseDTO(payment);
         this.coursePayments.add(paymentDto);
         }
         // Assuming a static method in PaymentDto to convert a list of Payment objects to a list of PaymentDto objects
     }
 
     public ScheduledCourseDTO(int id, Date date, Time startTime, Time endTime, String location,
-                              CourseTypeDTO courseType, List<PaymentDTO> coursePayments) {
+                              CourseTypeResponseDTO courseType, List<PaymentResponseDTO> coursePayments) {
         this.id = id;
         this.date = date;
         this.startTime = startTime;
@@ -91,19 +91,19 @@ public class ScheduledCourseDTO {
         this.location = location;
     }
 
-    public CourseTypeDTO getCourseType() {
+    public CourseTypeResponseDTO getCourseType() {
         return courseType;
     }
 
-    public void setCourseType(CourseTypeDTO courseType) {
+    public void setCourseType(CourseTypeResponseDTO courseType) {
         this.courseType = courseType;
     }
 
-    public List<PaymentDTO> getCoursePayments() {
+    public List<PaymentResponseDTO> getCoursePayments() {
         return coursePayments;
     }
 
-    public void setCoursePayments(List<PaymentDTO> coursePayments) {
+    public void setCoursePayments(List<PaymentResponseDTO> coursePayments) {
         this.coursePayments = coursePayments;
     }
 }

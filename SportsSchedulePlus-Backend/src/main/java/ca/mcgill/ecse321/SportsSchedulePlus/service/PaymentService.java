@@ -40,11 +40,17 @@ public class PaymentService {
 
     private Mailer mailer;
 
+    /*
+     * get all the payments
+     */
     @Transactional
     public List<Payment> getAllPayments() {
         return Helper.toList(paymentRepository.findAll());
     }
 
+    /*
+     * get payment by confirmation number
+     */
     @Transactional
     public Payment getPaymentByConfirmationNumber(int confirmationNumber) {
         Payment p = paymentRepository.findPaymentByConfirmationNumber(confirmationNumber);
@@ -55,6 +61,9 @@ public class PaymentService {
        
     }
 
+    /*
+     * get all payments for a customer
+     */
     @Transactional
     public List<Payment> getPaymentsByCustomer(int customerId) {
         Optional<Customer> c = customerRepository.findById(customerId);
@@ -64,6 +73,9 @@ public class PaymentService {
         return paymentRepository.findPaymentsByKeyCustomer(c.get());
     }
 
+    /*
+     * get all payments made for a course
+     */
     @Transactional
     public List<Payment> getPaymentsByCourse(int courseId) {
         ScheduledCourse sc = scheduledCourseRepository.findById(courseId);
@@ -88,7 +100,9 @@ public class PaymentService {
     }
     
 
-    // Method to generate HTML content for the invoice
+    /*
+     * Method to generate HTML content for the invoice
+     */
     private String generateInvoiceHtml(Payment payment) {
         StringBuilder html = new StringBuilder();
         String customerName = personRepository.findById(payment.getKey().getCustomer().getId()).get().getName();
@@ -108,6 +122,10 @@ public class PaymentService {
         return html.toString();
     }
 
+    /*
+     * create a new payment between a customer and a course
+     * this method registers a customer to attend a scheduled course
+     */
     @Transactional
     public Payment createPayment(int customerId, int courseId) {
         Customer c = customerRepository.findCustomerById(customerId);

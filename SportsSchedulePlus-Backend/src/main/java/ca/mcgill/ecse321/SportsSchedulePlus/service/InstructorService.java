@@ -37,6 +37,11 @@ public class InstructorService {
   @Autowired
   private PasswordEncoder passwordEncoder;
 
+  /*
+   * create a new instructor
+   * this deletes the old data related to the customer, and creates new objects for the instructor
+   * it keeps the same email, password and all the other data such as payments
+   */
   @Transactional
   public Person createInstructor(String email, String experience) {
     // Check if the person with the given email exists

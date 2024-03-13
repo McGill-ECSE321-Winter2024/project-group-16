@@ -15,14 +15,14 @@ public class PaymentResponseDTO
 
   //PaymentDTO Attributes
   private int confirmationNumber;
-  private CustomerDTO customer;
+  private CustomerResponseDTO customer;
   private ScheduledCourseDTO scheduledCourse;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public PaymentResponseDTO(int aConfirmationNumber, CustomerDTO aCustomer, ScheduledCourseDTO aScheduledCourse)
+  public PaymentResponseDTO(int aConfirmationNumber, CustomerResponseDTO aCustomer, ScheduledCourseDTO aScheduledCourse)
   {
     confirmationNumber = aConfirmationNumber;
     customer = aCustomer;
@@ -31,7 +31,7 @@ public class PaymentResponseDTO
 
   public PaymentResponseDTO(Payment aPayment) {
     confirmationNumber = aPayment.getConfirmationNumber();
-    customer = new CustomerDTO(aPayment.getKey().getCustomer());
+    customer = new CustomerResponseDTO(aPayment.getKey().getCustomer());
     scheduledCourse = new ScheduledCourseDTO(aPayment.getKey().getScheduledCourse());
   }
 
@@ -47,7 +47,7 @@ public class PaymentResponseDTO
     return wasSet;
   }
 
-  public boolean setCustomer(CustomerDTO aCustomer)
+  public boolean setCustomer(CustomerResponseDTO aCustomer)
   {
     boolean wasSet = false;
     customer = aCustomer;
@@ -68,7 +68,7 @@ public class PaymentResponseDTO
     return confirmationNumber;
   }
 
-  public CustomerDTO getCustomer()
+  public CustomerResponseDTO getCustomer()
   {
     return customer;
   }

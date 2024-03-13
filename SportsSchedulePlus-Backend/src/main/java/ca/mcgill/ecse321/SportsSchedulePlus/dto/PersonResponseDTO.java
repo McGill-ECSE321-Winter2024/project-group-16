@@ -1,125 +1,64 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.dto;
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
 
+public class PersonResponseDTO {
 
-// line 9 "model.ump"
-// line 116 "model.ump"
-public class PersonResponseDTO
-{
+    private String name;
+    private String email;
+    private String password;
+    private PersonRoleResponseDTO personRoleDto;
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+    public PersonResponseDTO(){
 
-  //PersonDTO Attributes
-  private String name;
-  private String email;
-  private String password;
-
-  //PersonDTO Associations
-  private PersonRoleResponseDTO personRoles;
-
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
-
-  public PersonResponseDTO(String aName, String aEmail, String aPassword, PersonRoleResponseDTO aPersonRoles)
-  {
-    name = aName;
-    email = aEmail;
-    password = aPassword;
-    if (!setPersonRoles(aPersonRoles))
-    {
-      throw new RuntimeException("Unable to create PersonDTO due to aPersonRoles. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
-  }
 
-  public PersonResponseDTO(Person p) {
-    name = p.getName();
-    email = p.getEmail();
-    password = p.getPassword();
-  
-    personRoles = new PersonRoleResponseDTO( p.getPersonRole()); 
-   
-    if (this.getPersonRoles() == null) {
-      throw new RuntimeException("Unable to create PersonDTO due to missing Person Role.");
+    public PersonResponseDTO(String name, String email, String password){
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
-  }
-
-  //------------------------
-  // INTERFACE
-  //------------------------
-
-  public boolean setName(String aName)
-  {
-    boolean wasSet = false;
-    name = aName;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setEmail(String aEmail)
-  {
-    boolean wasSet = false;
-    email = aEmail;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setPassword(String aPassword)
-  {
-    boolean wasSet = false;
-    password = aPassword;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public String getName()
-  {
-    return name;
-  }
-
-  public String getEmail()
-  {
-    return email;
-  }
-
-  public String getPassword()
-  {
-    return password;
-  }
-  /* Code from template association_GetOne */
-  public PersonRoleResponseDTO getPersonRoles()
-  {
-    return personRoles;
-  }
-  /* Code from template association_SetUnidirectionalOne */
-  public boolean setPersonRoles(PersonRoleResponseDTO aNewPersonRoles)
-  {
-    boolean wasSet = false;
-    if (aNewPersonRoles != null)
-    {
-      personRoles = aNewPersonRoles;
-      wasSet = true;
+    public PersonResponseDTO(String name, String email, String password, PersonRoleResponseDTO personRoleDto){
+        personRoleDto.getId();
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.personRoleDto = personRoleDto;
     }
-    return wasSet;
-  }
 
-  public void delete()
-  {
-    personRoles = null;
-  }
+    public PersonResponseDTO (Person p) {
+        name = p.getName();
+        email = p.getEmail();
+        password = p.getPassword();
+        PersonRole personRole = p.getPersonRole();
+        if (personRole != null) {
+            if (personRole instanceof Customer) {
+                personRoleDto = new CustomerResponseDTO((Customer) personRole);
+            } else if (personRole instanceof Instructor) {
+                personRoleDto = new InstructorResponseDTO((Instructor) personRole);
+            } else {
+                personRoleDto = new OwnerResponseDTO((Owner) personRole);
+            }
+        }
+    }
 
+    public String getName(){
+        return name;
+    }
 
-  public String toString()
-  {
-    return super.toString() + "["+
-            "name" + ":" + getName()+ "," +
-            "email" + ":" + getEmail()+ "," +
-            "password" + ":" + getPassword()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "personRoles = "+(getPersonRoles()!=null?Integer.toHexString(System.identityHashCode(getPersonRoles())):"null");
-  }
+    public String getEmail(){
+        return email;
+    }
+
+    public String getPassword(){
+        return password;
+    }
+
+    public PersonRoleResponseDTO getPersonRoleDto(){
+        return personRoleDto;
+    }
 }

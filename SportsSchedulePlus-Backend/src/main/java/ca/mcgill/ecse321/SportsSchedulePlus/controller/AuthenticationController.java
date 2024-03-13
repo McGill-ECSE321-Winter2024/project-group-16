@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.LoginDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.SignupDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.LoginRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.SignupRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.CustomerService;
 
 
@@ -31,7 +31,7 @@ public class AuthenticationController {
 
     
     @PostMapping("/login")
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDto) {
+    public ResponseEntity<String> authenticateUser(@RequestBody LoginRequestDTO loginDto) {
         Authentication authentication;
         try{
          authentication = authenticationManager
@@ -54,7 +54,7 @@ public class AuthenticationController {
     
     
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignupDTO signUpDto){
+    public ResponseEntity<?> registerUser(@RequestBody SignupRequestDTO signUpDto){
         customerService.createCustomer(signUpDto.getName(), signUpDto.getEmail(), signUpDto.getPassword());
         return new ResponseEntity<>("User is registered successfully!", HttpStatus.OK);
     }
