@@ -14,6 +14,8 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 
@@ -22,6 +24,14 @@ public class CourseTypeServiceTests {
 
     @Mock
     CourseTypeRepository courseTypeRepository;
+
+    @Mock
+    ScheduledCourseRepository scheduledCourseRepository;
+
+    @Mock
+
+    InstructorRepository instructorRepository;
+
 
     @InjectMocks
     CourseTypeService courseTypeService;

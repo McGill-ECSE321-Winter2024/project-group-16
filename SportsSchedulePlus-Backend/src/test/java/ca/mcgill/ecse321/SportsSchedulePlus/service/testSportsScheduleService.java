@@ -27,11 +27,27 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.*;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.PaymentRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
 
 
 @ExtendWith(MockitoExtension.class)
-public class testSportsScheduleApp {
+public class testSportsScheduleService {
 
     @Mock
     private PersonRepository personRepository;
