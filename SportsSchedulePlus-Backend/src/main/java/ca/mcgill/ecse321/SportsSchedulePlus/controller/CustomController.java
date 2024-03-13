@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.service.CustomService;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.InstructorDTO; 
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.InstructorResponseDTO; 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.ScheduledCourseDTO; 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
@@ -34,8 +34,8 @@ public class CustomController {
     }
 
     @PutMapping(value = {"/customers/{customerId}/approve"})
-    public InstructorDTO approveCustomer(@PathVariable("customerId") int customerId) {
-        return new InstructorDTO(customService.approveCustomer(customerId));
+    public InstructorResponseDTO approveCustomer(@PathVariable("customerId") int customerId) {
+        return new InstructorResponseDTO(customService.approveCustomer(customerId));
     }
 
     @PutMapping(value = {"/customers/{customerId}/reject"})

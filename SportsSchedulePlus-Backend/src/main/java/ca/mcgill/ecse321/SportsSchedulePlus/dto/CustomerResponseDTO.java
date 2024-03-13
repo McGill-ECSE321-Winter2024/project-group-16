@@ -7,23 +7,23 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerDTO extends PersonRoleDTO { 
+public class CustomerResponseDTO extends PersonRoleResponseDTO { 
 
     private boolean hasApplied;
-    private List<PaymentDTO> customerPayments;
+    private List<PaymentResponseDTO> customerPayments;
     private List<ScheduledCourseDTO> coursesRegistered;
-    public CustomerDTO() {
+    public CustomerResponseDTO() {
         customerPayments = new ArrayList<>();
         coursesRegistered = new ArrayList<>();
         hasApplied = false;
     }
 
-    public CustomerDTO(int id) {
+    public CustomerResponseDTO(int id) {
         super(id);
         hasApplied = false;
     }
 
-    public CustomerDTO(int id, List<PaymentDTO> customerPayments, List<ScheduledCourseDTO> coursesRegistered) {
+    public CustomerResponseDTO(int id, List<PaymentResponseDTO> customerPayments, List<ScheduledCourseDTO> coursesRegistered) {
         super(id);
         this.customerPayments = customerPayments;
         this.coursesRegistered = coursesRegistered;
@@ -31,12 +31,12 @@ public class CustomerDTO extends PersonRoleDTO {
     }
 
     // Constructor to convert a Customer object to CustomerDTO
-    public CustomerDTO(Customer customer) {
+    public CustomerResponseDTO(Customer customer) {
         super(customer.getId());
 
         this.customerPayments = new ArrayList<>();
         for (Payment payment : customer.getCustomerPayments()) {
-            this.customerPayments.add(new PaymentDTO(payment));
+            this.customerPayments.add(new PaymentResponseDTO(payment));
         }
 
         this.coursesRegistered = new ArrayList<>();
@@ -49,11 +49,11 @@ public class CustomerDTO extends PersonRoleDTO {
 
     // Getters and setters for each attribute
 
-    public List<PaymentDTO> getCustomerPayments() {
+    public List<PaymentResponseDTO> getCustomerPayments() {
         return customerPayments;
     }
 
-    public void setCustomerPayments(List<PaymentDTO> customerPayments) {
+    public void setCustomerPayments(List<PaymentResponseDTO> customerPayments) {
         this.customerPayments = customerPayments;
     }
 

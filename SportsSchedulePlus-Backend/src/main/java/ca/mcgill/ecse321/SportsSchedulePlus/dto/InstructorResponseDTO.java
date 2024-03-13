@@ -5,9 +5,10 @@ import java.util.ArrayList;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
-public class InstructorResponseDTO {
+public class InstructorResponseDTO extends CustomerResponseDTO {
 
     private int id;
     private String experience;
@@ -17,7 +18,16 @@ public class InstructorResponseDTO {
     public InstructorResponseDTO(Instructor instructor) {
         this.id = instructor.getId();
         this.experience = instructor.getExperience();
-
+        List<PaymentResponseDTO> payments = new ArrayList<>();
+        for (Payment p : instructor.getCustomerPayments()) {
+            payments.add(new PaymentResponseDTO(p));
+        }
+        List<ScheduledCourseDTO> courses = new ArrayList<>();
+        for (ScheduledCourse c : instructor.getCoursesRegistered()) {
+            courses.add(new ScheduledCourseDTO(c));
+        }
+        super.setCoursesRegistered(courses);
+        super.setCustomerPayments(payments);
         this.instructorSuggestedCourseTypes = new ArrayList<>();
         for (CourseType courseType : instructor.getInstructorSuggestedCourseTypes()) {
             this.instructorSuggestedCourseTypes.add(courseType.getId());

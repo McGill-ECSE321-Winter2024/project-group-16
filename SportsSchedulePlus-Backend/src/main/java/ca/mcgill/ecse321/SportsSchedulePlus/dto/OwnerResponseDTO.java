@@ -8,35 +8,35 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class OwnerDTO extends PersonRoleDTO {
+public class OwnerResponseDTO extends PersonRoleResponseDTO {
 
-    private final List<CourseTypeDTO> approvedCoursesDTO;
-    private final List<CourseTypeDTO> ownerSuggestedCoursesDTO;
+    private final List<CourseTypeResponseDTO> approvedCoursesDTO;
+    private final List<CourseTypeResponseDTO> ownerSuggestedCoursesDTO;
     private DailyScheduleListResponseDTO dailyScheduleListDTO;
 
-    public OwnerDTO(int Id, List<DailyScheduleResponseDTO> dailyScheduleDTO) {
+    public OwnerResponseDTO(int Id, List<DailyScheduleResponseDTO> dailyScheduleDTO) {
         super(Id);
         approvedCoursesDTO = new ArrayList<>();
         ownerSuggestedCoursesDTO = new ArrayList<>();
         this.dailyScheduleListDTO = new DailyScheduleListResponseDTO(dailyScheduleDTO);
     }
 
-    public OwnerDTO() {
+    public OwnerResponseDTO() {
         approvedCoursesDTO = new ArrayList<>();
         ownerSuggestedCoursesDTO = new ArrayList<>();
     }
 
-    public OwnerDTO(Owner owner) {
+    public OwnerResponseDTO(Owner owner) {
         super(owner.getId());
 
         this.approvedCoursesDTO = new ArrayList<>();
         for (CourseType courseType : owner.getApprovedCourses()) {
-            this.approvedCoursesDTO.add(new CourseTypeDTO(courseType));
+            this.approvedCoursesDTO.add(new CourseTypeResponseDTO(courseType));
         }
 
         this.ownerSuggestedCoursesDTO = new ArrayList<>();
         for (CourseType courseType : owner.getApprovedCourses()) {
-            this.ownerSuggestedCoursesDTO.add(new CourseTypeDTO(courseType));
+            this.ownerSuggestedCoursesDTO.add(new CourseTypeResponseDTO(courseType));
         }
         if (owner.getDailySchedule() != null) {
             List<DailyScheduleResponseDTO> aDailyScheduleDTO = new ArrayList<>();
@@ -52,15 +52,15 @@ public class OwnerDTO extends PersonRoleDTO {
         }
     }
 
-    public CourseTypeDTO getApprovedCourse(int index) {
+    public CourseTypeResponseDTO getApprovedCourse(int index) {
         return approvedCoursesDTO.get(index);
     }
 
-    public List<CourseTypeDTO> getApprovedCourses() {
+    public List<CourseTypeResponseDTO> getApprovedCourses() {
         return Collections.unmodifiableList(approvedCoursesDTO);
     }
 
-    public List<CourseTypeDTO> getOwnerSuggestedCourses() {
+    public List<CourseTypeResponseDTO> getOwnerSuggestedCourses() {
         return Collections.unmodifiableList(ownerSuggestedCoursesDTO);
     }
 
