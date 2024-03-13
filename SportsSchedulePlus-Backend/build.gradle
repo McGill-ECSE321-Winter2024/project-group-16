@@ -39,6 +39,7 @@ dependencies {
 }
 
 tasks.named('test') {
+<<<<<<< Updated upstream
 	useJUnitPlatform()
 	testLogging {
 		exceptionFormat "full"
@@ -49,3 +50,19 @@ tasks.named('test') {
 tasks.named('jacocoTestReport') {
     dependsOn test // tests are required to run before generating the report
 }
+=======
+    useJUnitPlatform()
+    testLogging {
+        exceptionFormat "full"
+        events "passed", "failed"
+    }
+    finalizedBy jacocoTestReport, jacocoTestCoverageVerification // Include verification task
+}
+
+// Generate coverage reports
+tasks.named('jacocoTestReport') {
+    dependsOn test
+}
+
+// Enforce coverage threshold
+>>>>>>> Stashed changes
