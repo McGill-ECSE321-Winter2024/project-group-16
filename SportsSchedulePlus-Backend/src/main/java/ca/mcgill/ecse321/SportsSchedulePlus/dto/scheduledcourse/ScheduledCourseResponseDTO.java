@@ -1,8 +1,9 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.dto;
+package ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse;
 
 import java.sql.Date;
 import java.sql.Time;
 
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
 public class ScheduledCourseResponseDTO {

@@ -1,10 +1,10 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.InstructorListDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.InstructorResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.ScheduledCourseListDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.ScheduledCourseRequestDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.ScheduledCourseResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.instructor.InstructorListDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.instructor.InstructorResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseListDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.ScheduledCourseService;

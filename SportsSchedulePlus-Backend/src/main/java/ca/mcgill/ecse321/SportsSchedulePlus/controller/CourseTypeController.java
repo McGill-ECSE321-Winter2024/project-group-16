@@ -1,9 +1,9 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.CourseTypeListDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.CourseTypeRequestDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.CourseTypeResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.InstructorResponseDTO; 
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeListDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.instructor.InstructorResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.CourseTypeService;

@@ -1,5 +1,9 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.dto;
+package ca.mcgill.ecse321.SportsSchedulePlus.dto.user.owner;
 
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.dailyschedule.DailyScheduleListResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.dailyschedule.DailyScheduleResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonRoleResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 
 

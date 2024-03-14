@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.dto;
+package ca.mcgill.ecse321.SportsSchedulePlus.dto.error;
 
 import java.util.List;
 

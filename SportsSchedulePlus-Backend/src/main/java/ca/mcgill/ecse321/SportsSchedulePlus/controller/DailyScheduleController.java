@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.DailyScheduleResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.dailyschedule.DailyScheduleResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.DailyScheduleRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.dailyschedule.DailyScheduleRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.DailyScheduleService;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.DailyScheduleListResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.dailyschedule.DailyScheduleListResponseDTO;
 
 /**
  * Rest controller for managing the opening hours of the sports center

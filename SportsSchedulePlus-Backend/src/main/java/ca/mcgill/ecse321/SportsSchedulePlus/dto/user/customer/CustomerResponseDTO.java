@@ -1,5 +1,8 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.dto;
+package ca.mcgill.ecse321.SportsSchedulePlus.dto.user.customer;
 
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.payment.PaymentResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonRoleResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
@@ -7,7 +10,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerResponseDTO extends PersonRoleResponseDTO { 
+public class CustomerResponseDTO extends PersonRoleResponseDTO {
 
     private boolean hasApplied;
     private List<PaymentResponseDTO> customerPayments;

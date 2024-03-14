@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.* ;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.instructor.InstructorResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.* ;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.InstructorService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PersonService;
@@ -27,7 +29,7 @@ public class InstructorController {
   private PersonService personService;
 
   @GetMapping(value = { "/instructors"})
-  public List < PersonResponseDTO > getAllInstructors() {
+  public List <PersonResponseDTO> getAllInstructors() {
     return instructorService.getAllInstructors().stream().map(instructor ->convertToDTO(instructor)).collect(Collectors.toList());
 
   }

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.service.CustomService;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.InstructorResponseDTO; 
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.ScheduledCourseDTO; 
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.instructor.InstructorResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
 /**

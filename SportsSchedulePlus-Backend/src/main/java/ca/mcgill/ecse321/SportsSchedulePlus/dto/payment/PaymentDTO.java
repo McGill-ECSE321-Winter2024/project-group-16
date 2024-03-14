@@ -1,7 +1,9 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.dto;
+package ca.mcgill.ecse321.SportsSchedulePlus.dto.payment;
 
 import java.io.Serializable;
 
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.customer.CustomerResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 
 public class PaymentDTO implements Serializable {

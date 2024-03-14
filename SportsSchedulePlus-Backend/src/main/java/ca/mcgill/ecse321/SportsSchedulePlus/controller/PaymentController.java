@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PaymentService;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.PaymentResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.PaymentListResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.payment.PaymentResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.payment.PaymentListResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 
 /**

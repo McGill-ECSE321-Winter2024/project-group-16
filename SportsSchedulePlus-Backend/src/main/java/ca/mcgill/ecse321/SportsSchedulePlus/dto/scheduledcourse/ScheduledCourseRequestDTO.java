@@ -1,5 +1,7 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.dto;
+package ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse;
 
+
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
 
 public class ScheduledCourseRequestDTO {
     private int id;
@@ -8,7 +10,7 @@ public class ScheduledCourseRequestDTO {
     private String endTime;
     private String location;
 
-    private CourseTypeRequestDTO courseType; 
+    private CourseTypeRequestDTO courseType;
 
     public int getId() {
         return id;

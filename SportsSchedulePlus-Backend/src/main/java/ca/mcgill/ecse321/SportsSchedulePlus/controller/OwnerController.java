@@ -1,13 +1,11 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.time.LocalTime;
-
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.owner.OwnerResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.* ;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.* ;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.* ;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.OwnerService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.PersonService;

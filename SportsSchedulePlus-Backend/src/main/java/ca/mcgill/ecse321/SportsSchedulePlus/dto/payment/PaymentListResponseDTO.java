@@ -1,4 +1,6 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.dto;
+package ca.mcgill.ecse321.SportsSchedulePlus.dto.payment;
+
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.payment.PaymentResponseDTO;
 
 import java.util.List;
 
