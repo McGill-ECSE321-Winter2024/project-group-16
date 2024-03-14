@@ -1,10 +1,11 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.service;
+package ca.mcgill.ecse321.SportsSchedulePlus.service.userservice;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
 import ca.mcgill.ecse321.utils.Helper;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.*;
 import jakarta.transaction.Transactional;

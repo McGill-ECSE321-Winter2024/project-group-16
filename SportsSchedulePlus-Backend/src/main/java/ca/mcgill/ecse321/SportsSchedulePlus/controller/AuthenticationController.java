@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.LoginRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.SignupRequestDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.CustomerService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.CustomerService;
 
 
 @RestController

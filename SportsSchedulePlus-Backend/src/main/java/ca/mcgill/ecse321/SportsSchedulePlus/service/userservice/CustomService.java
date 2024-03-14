@@ -1,10 +1,11 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.service;
+package ca.mcgill.ecse321.SportsSchedulePlus.service.userservice;
 
 
 import java.util.Optional;
 import java.util.List;
 import java.sql.Date;
 
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 

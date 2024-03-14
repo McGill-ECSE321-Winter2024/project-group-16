@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.* ;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.* ;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.OwnerService;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.PersonService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.OwnerService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.PersonService;
 
 
 @CrossOrigin(origins = "*")

@@ -7,7 +7,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseR
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.ScheduledCourseService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.ScheduledCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

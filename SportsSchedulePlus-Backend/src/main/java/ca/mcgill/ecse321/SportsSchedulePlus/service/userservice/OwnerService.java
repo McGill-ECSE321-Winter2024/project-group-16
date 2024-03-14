@@ -1,7 +1,6 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.service;
+package ca.mcgill.ecse321.SportsSchedulePlus.service.userservice;
 
 import java.util.Optional;
-import java.util.List;
 
 
 import jakarta.transaction.Transactional;
