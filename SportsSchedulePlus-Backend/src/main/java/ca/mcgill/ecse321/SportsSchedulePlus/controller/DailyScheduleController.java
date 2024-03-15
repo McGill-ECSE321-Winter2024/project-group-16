@@ -4,8 +4,7 @@ import java.util.List;
 import java.sql.Time;
 import java.util.ArrayList;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.service.DailyScheduleService;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice.DailyScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.service;
+package ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;

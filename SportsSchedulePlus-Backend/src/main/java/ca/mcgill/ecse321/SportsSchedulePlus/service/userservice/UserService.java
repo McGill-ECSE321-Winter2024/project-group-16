@@ -3,7 +3,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.service.userservice;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration.Key;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.*;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.DailyScheduleService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice.DailyScheduleService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
 import ca.mcgill.ecse321.utils.Helper;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.*;

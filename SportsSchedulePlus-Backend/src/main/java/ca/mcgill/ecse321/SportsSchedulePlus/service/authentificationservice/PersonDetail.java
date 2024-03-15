@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.service.authentification;
+package ca.mcgill.ecse321.SportsSchedulePlus.service.authentificationservice;
 
 import java.util.List;
 import java.util.ArrayList;

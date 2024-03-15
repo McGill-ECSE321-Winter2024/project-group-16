@@ -12,7 +12,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.Mailer;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.mailerservice.Mailer;
 import ca.mcgill.ecse321.utils.Helper;
 
 import org.springframework.beans.factory.annotation.Autowired;
