@@ -3,25 +3,25 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto.payment;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.customer.CustomerResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 
-public class PaymentDTO {
+public class RegistrationDTO {
 
     private CustomerResponseDTO customer;
     private ScheduledCourseDTO scheduledCourse;
     private int confirmationNumber;
 
-    public PaymentDTO() {
+    public RegistrationDTO() {
         // Default constructor
     }
 
-    public PaymentDTO(CustomerResponseDTO customer, ScheduledCourseDTO scheduledCourse, int confirmationNumber) {
+    public RegistrationDTO(CustomerResponseDTO customer, ScheduledCourseDTO scheduledCourse, int confirmationNumber) {
         this.customer = customer;
         this.scheduledCourse = scheduledCourse;
         this.confirmationNumber = confirmationNumber;
     }
       // Constructor to convert a Payment object to PaymentDto
-    public PaymentDTO(Payment payment) {
+    public RegistrationDTO(Registration payment) {
         this.customer = new CustomerResponseDTO(payment.getKey().getCustomer());
         // Assuming a constructor in CustomerDto that takes a Customer object
 

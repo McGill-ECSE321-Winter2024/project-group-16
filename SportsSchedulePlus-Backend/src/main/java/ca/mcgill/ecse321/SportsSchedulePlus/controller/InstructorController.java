@@ -70,14 +70,13 @@ public class InstructorController {
     }
 
     @PutMapping(value = {"/instructors/{id}"})
-    public PersonResponseDTO updateInstructor(@PathVariable("id") int id, @RequestBody Map<String, Map<String, String>> json) {
-        Map<String, String> personDTO = json.get("personDTO");
-        Map<String, String> instructorDTO = json.get("instructorDTO");
+    public PersonResponseDTO updateInstructor(@PathVariable("id") int id, @RequestBody Map<String, String> json) {
+       
 
-        String updatedName = personDTO.get("name");
-        String updatedEmail = personDTO.get("email");
-        String updatedPassword = personDTO.get("password");
-        String updatedExperience = instructorDTO.get("experience");
+        String updatedName = json.get("name");
+        String updatedEmail = json.get("email");
+        String updatedPassword = json.get("password");
+        String updatedExperience = json.get("experience");
 
         // Use the extracted values for the update
         Person person = instructorService.updateInstructor(id, updatedName, updatedEmail, updatedPassword, updatedExperience);

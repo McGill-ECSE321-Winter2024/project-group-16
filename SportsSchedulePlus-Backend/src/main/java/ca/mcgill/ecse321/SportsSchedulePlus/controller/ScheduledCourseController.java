@@ -30,7 +30,6 @@ public class ScheduledCourseController {
 
     @PostMapping("/scheduledCourses")
     public ScheduledCourseResponseDTO createScheduledCourse(@RequestBody ScheduledCourseRequestDTO request) {
-        // Assuming you have a createScheduledCourse method in your service
         ScheduledCourse createdScheduledCourse = scheduledCourseService.createScheduledCourse(request.getId(), request.getDate(), request.getStartTime(), request.getEndTime(), request.getLocation(), request.getCourseType().getId());
         return new ScheduledCourseResponseDTO(createdScheduledCourse);
     }

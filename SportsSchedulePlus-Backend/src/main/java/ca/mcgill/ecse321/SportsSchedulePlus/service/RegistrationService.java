@@ -10,16 +10,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.PaymentRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.beans.MailConfigBean;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment.Key;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration.Key;
 import ca.mcgill.ecse321.utils.Helper;
 
 /**
@@ -27,10 +27,10 @@ import ca.mcgill.ecse321.utils.Helper;
  * @author Vladimir Venkov
  */
 @Service
-public class PaymentService {
+public class RegistrationService {
     
     @Autowired
-    private PaymentRepository paymentRepository;
+    private RegistrationRepository registrationRepository;
     @Autowired
     private PersonRepository personRepository;
     @Autowired
@@ -41,51 +41,51 @@ public class PaymentService {
     private Mailer mailer;
 
     /*
-     * get all the payments
+     * get all the registrations
      */
     @Transactional
-    public List<Payment> getAllPayments() {
-        return Helper.toList(paymentRepository.findAll());
+    public List<Registration> getAllRegistrations() {
+        return Helper.toList(registrationRepository.findAll());
     }
 
     /*
-     * get payment by confirmation number
+     * get registration by confirmation number
      */
     @Transactional
-    public Payment getPaymentByConfirmationNumber(int confirmationNumber) {
-        Payment p = paymentRepository.findPaymentByConfirmationNumber(confirmationNumber);
-        if ( p == null) {
+    public Registration getRegistrationByConfirmationNumber(int confirmationNumber) {
+        Registration registration = registrationRepository.findRegistrationByConfirmationNumber(confirmationNumber);
+        if ( registration == null) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no payment with confirmation number " + confirmationNumber+".");
         }
-        return p;
+        return registration;
        
     }
 
     /*
-     * get all payments for a customer
+     * get all registrations for a customer
      */
     @Transactional
-    public List<Payment> getPaymentsByCustomer(int customerId) {
-        Optional<Customer> c = customerRepository.findById(customerId);
-        if (!c.isPresent()) {
+    public List<Registration> getRegistrationsByCustomer(int customerId) {
+        Optional<Customer> customer = customerRepository.findById(customerId);
+        if (!customer.isPresent()) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no customer with ID " + customerId + ".");
         }
-        return paymentRepository.findPaymentsByKeyCustomer(c.get());
+        return registrationRepository.findRegistrationsByKeyCustomer(customer.get());
     }
 
     /*
-     * get all payments made for a course
+     * get all registrations made for a course
      */
     @Transactional
-    public List<Payment> getPaymentsByCourse(int courseId) {
-        ScheduledCourse sc = scheduledCourseRepository.findById(courseId);
-        if (sc == null) {
+    public List<Registration> getRegistrationsByCourse(int courseId) {
+        ScheduledCourse scheduledCourse = scheduledCourseRepository.findById(courseId);
+        if (scheduledCourse == null) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no scheduled course with ID " + courseId + ".");
         }
-        return paymentRepository.findPaymentsByKeyScheduledCourse(sc);
+        return registrationRepository.findRegistrationsByKeyScheduledCourse(scheduledCourse);
     }
       // Method to send payment confirmation email
-    private void sendPaymentConfirmationEmail(Payment payment) {
+    private void sendPaymentConfirmationEmail(Registration payment) {
         try {
             String userEmail = personRepository.findById(payment.getKey().getCustomer().getId()).get().getEmail();
             String invoiceHtml = generateInvoiceHtml(payment);
@@ -103,7 +103,7 @@ public class PaymentService {
     /*
      * Method to generate HTML content for the invoice
      */
-    private String generateInvoiceHtml(Payment payment) {
+    private String generateInvoiceHtml(Registration payment) {
         StringBuilder html = new StringBuilder();
         String customerName = personRepository.findById(payment.getKey().getCustomer().getId()).get().getName();
         // Build the HTML content for the invoice
@@ -123,35 +123,31 @@ public class PaymentService {
     }
 
     /*
-     * create a new payment between a customer and a course
+     * create a new registration between a customer and a course
      * this method registers a customer to attend a scheduled course
      */
     @Transactional
-    public Payment createPayment(int customerId, int courseId) {
-        Customer c = customerRepository.findCustomerById(customerId);
-        if (c == null) {
+    public Registration createRegistration(int customerId, int courseId) {
+        Customer customer = customerRepository.findCustomerById(customerId);
+        if (customer == null) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no customer with ID " + customerId + ".");
         }
-        ScheduledCourse sc = scheduledCourseRepository.findById(courseId);
-        if (sc == null) {
+        ScheduledCourse sceduledCourse = scheduledCourseRepository.findById(courseId);
+        if (sceduledCourse == null) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no scheduled course with ID " + courseId + ".");
         }
-        Key key = new Key(c, sc);
-        Payment previousPayment = paymentRepository.findPaymentByKey(key);
+        Key key = new Key(customer, sceduledCourse);
+        Registration previousPayment = registrationRepository.findRegistrationByKey(key);
         if (previousPayment != null) {
             throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "The customer with ID " + customerId + " has already paid for the course with ID " + courseId + ".");
         }
-        Payment p = new Payment();
-        p.setKey(key);
-        c.addCustomerPayment(p);
-        c.addCoursesRegistered(sc);
-        sc.addCoursePayment(p);
-        paymentRepository.save(p);
+        Registration registration = new Registration();
+        registration.setKey(key);
+        registrationRepository.save(registration);
+      
+      
         // Send a payment confirmation email to the user
-
-        // Add payments to customer payments
-        // Add course to customer scheduled courses
-        sendPaymentConfirmationEmail(p);
-        return p;
+        sendPaymentConfirmationEmail(registration);
+        return registration;
     }
 }

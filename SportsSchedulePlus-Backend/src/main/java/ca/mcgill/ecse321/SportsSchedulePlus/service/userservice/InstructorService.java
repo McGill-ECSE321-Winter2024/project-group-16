@@ -1,11 +1,13 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.service.userservice;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration.Key;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
 import ca.mcgill.ecse321.utils.Helper;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.*;
@@ -37,6 +39,9 @@ public class InstructorService {
   PersonRoleRepository personRoleRepository;
 
   @Autowired
+  RegistrationRepository registrationRepository;
+
+  @Autowired
   CourseTypeService courseTypeService;
 
   @Autowired
@@ -52,7 +57,6 @@ public class InstructorService {
     // Check if the person with the given email exists
     Person existingPerson = personRepository.findPersonByEmail(email);
     if (existingPerson != null) {
-
       // Retrieve existing person details
       String name = existingPerson.getName();
       String password = existingPerson.getPassword();
@@ -62,16 +66,26 @@ public class InstructorService {
 
       // Create a new instructor role
       PersonRole newPersonRole = new Instructor(customer, experience);
-      PersonRole oldPersonRole = existingPerson.getPersonRole();
+      Customer instructor = (Customer) newPersonRole;
 
+      // Save new instructor role
+      personRoleRepository.save(newPersonRole);
+      
+      // Update payment info to be associated with the new Instructor object instead of the old Customer
+      List <Registration> customerPayments = registrationRepository.findRegistrationsByKeyCustomer(customer);
+      for (Registration oldPayment : customerPayments){
+        Key updatedKey = new Key(instructor, oldPayment.getKey().getScheduledCourse());
+        Registration newPayment = new Registration(updatedKey);
+        registrationRepository.delete(oldPayment);
+        registrationRepository.save(newPayment);
+      }
+
+      PersonRole oldPersonRole = existingPerson.getPersonRole();
       personRoleRepository.delete(oldPersonRole);
       customerRepository.delete(customer);
       personRepository.delete(existingPerson);
       personRepository.deleteByEmail(email);
       existingPerson.delete();
-
-      // Save new instructor role
-      personRoleRepository.save(newPersonRole);
 
       // Create and save new person with the instructor role
       Person newPerson = new Person(name, email, password, newPersonRole);

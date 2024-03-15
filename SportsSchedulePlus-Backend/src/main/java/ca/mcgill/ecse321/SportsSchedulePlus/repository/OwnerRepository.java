@@ -1,9 +1,6 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
-import java.util.List;
-
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
 import org.springframework.data.repository.CrudRepository;
 

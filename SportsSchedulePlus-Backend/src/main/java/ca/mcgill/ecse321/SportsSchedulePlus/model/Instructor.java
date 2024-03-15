@@ -50,11 +50,7 @@ public class Instructor extends Customer {
 }
 
 public Instructor(Customer customer, String experience) {
-    // Copy applied boolean from the customer
-    super.setHasApplied(customer.getHasApplied());
-    // Copy arrays from the customer
-    super.setCoursesRegistered(customer.getCoursesRegistered());
-    super.setCustomerPayments(customer.getCustomerPayments());
+  
     // Set fields specific to the Instructor
     this.experience = experience;
     this.setHasApplied(customer.getHasApplied());
