@@ -77,8 +77,7 @@ public class UserService {
             personRepository.save(person);
             return person;
         }
-        Person personRetrieved = personRepository.findPersonByPersonRole(getOwner());
-        return personRetrieved;
+        throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner already exists.");
     }
 
     @Transactional
