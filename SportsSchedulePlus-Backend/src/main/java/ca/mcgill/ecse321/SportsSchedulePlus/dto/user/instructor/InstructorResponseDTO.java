@@ -3,12 +3,9 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto.user.instructor;
 import java.util.List;
 import java.util.ArrayList;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.payment.PaymentResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.customer.CustomerResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
 public class InstructorResponseDTO extends CustomerResponseDTO {
@@ -21,16 +18,6 @@ public class InstructorResponseDTO extends CustomerResponseDTO {
     public InstructorResponseDTO(Instructor instructor) {
         this.id = instructor.getId();
         this.experience = instructor.getExperience();
-        List<PaymentResponseDTO> payments = new ArrayList<>();
-        for (Payment p : instructor.getCustomerPayments()) {
-            payments.add(new PaymentResponseDTO(p));
-        }
-        List<ScheduledCourseDTO> courses = new ArrayList<>();
-        for (ScheduledCourse c : instructor.getCoursesRegistered()) {
-            courses.add(new ScheduledCourseDTO(c));
-        }
-        super.setCoursesRegistered(courses);
-        super.setCustomerPayments(payments);
         this.instructorSuggestedCourseTypes = new ArrayList<>();
         for (CourseType courseType : instructor.getInstructorSuggestedCourseTypes()) {
             this.instructorSuggestedCourseTypes.add(courseType.getId());

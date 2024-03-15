@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 /**
@@ -66,9 +66,9 @@ public class Helper {
   /**
    * Helper method to create a payment with dummy data.
    */
-  public static Payment createPayment(Customer customer, ScheduledCourse scheduledCourse) {
-    Payment.Key paymentKey = new Payment.Key(customer, scheduledCourse);
-    Payment newPayment = new Payment(paymentKey);
+  public static Registration createPayment(Customer customer, ScheduledCourse scheduledCourse) {
+    Registration.Key paymentKey = new Registration.Key(customer, scheduledCourse);
+    Registration newPayment = new Registration(paymentKey);
     newPayment.setConfirmationNumber(12345);
 
     return newPayment;

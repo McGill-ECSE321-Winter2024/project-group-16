@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.utils.Helper;
 
@@ -27,7 +27,7 @@ import ca.mcgill.ecse321.utils.Helper;
 public class PaymentRepositoryTests {
 
     @Autowired
-    private PaymentRepository paymentRepository;
+    private RegistrationRepository registrationRepository;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -46,7 +46,7 @@ public class PaymentRepositoryTests {
      */
     @AfterEach
     public void clearDatabase() {
-        paymentRepository.deleteAll();
+        registrationRepository.deleteAll();
         scheduledCourseRepository.deleteAll();
         courseTypeRepository.deleteAll();
         customerRepository.deleteAll();
@@ -65,11 +65,11 @@ public class PaymentRepositoryTests {
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Payment newPayment = Helper.createPayment(customer,course);
-        paymentRepository.save(newPayment);
+        Registration newPayment = Helper.createPayment(customer,course);
+        registrationRepository.save(newPayment);
 
         // Find payments by confirmation number
-        Payment foundPayment = paymentRepository.findPaymentByConfirmationNumber(newPayment.getConfirmationNumber());
+        Registration foundPayment = registrationRepository.findRegistrationByConfirmationNumber(newPayment.getConfirmationNumber());
         
         // Assertions
         assertNotNull(foundPayment);
@@ -90,15 +90,15 @@ public class PaymentRepositoryTests {
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Payment newPayment = Helper.createPayment(customer,course);
-        paymentRepository.save(newPayment);
+        Registration newPayment = Helper.createPayment(customer,course);
+        registrationRepository.save(newPayment);
 
         // Find payments by key customer
-        List<Payment> foundPayments = paymentRepository.findPaymentsByKeyCustomer(newPayment.getKey().getCustomer());
+        List<Registration> foundPayments = registrationRepository.findRegistrationsByKeyCustomer(newPayment.getKey().getCustomer());
 
         // Assertions
         assertNotNull(foundPayments);
-        Payment foundPayment = foundPayments.get(0);
+        Registration foundPayment = foundPayments.get(0);
         
         // The overridden equals method in the Payment model is used here
         assertEquals(newPayment, foundPayment);
@@ -116,15 +116,15 @@ public class PaymentRepositoryTests {
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Payment newPayment = Helper.createPayment(customer,course);
-        paymentRepository.save(newPayment);
+        Registration newPayment = Helper.createPayment(customer,course);
+        registrationRepository.save(newPayment);
 
         // Find payments by key scheduled course
-        List<Payment> foundPayments = paymentRepository.findPaymentsByKeyScheduledCourse(newPayment.getKey().getScheduledCourse());
+        List<Registration> foundPayments = registrationRepository.findRegistrationsByKeyScheduledCourse(newPayment.getKey().getScheduledCourse());
 
         // Assertions
         assertNotNull(foundPayments);
-        Payment foundPayment = foundPayments.get(0);
+        Registration foundPayment = foundPayments.get(0);
         
         // The overridden equals method in the Payment model is used here
         assertEquals(newPayment, foundPayment);
@@ -142,12 +142,12 @@ public class PaymentRepositoryTests {
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Payment newPayment = Helper.createPayment(customer,course);
-        paymentRepository.save(newPayment);
+        Registration newPayment = Helper.createPayment(customer,course);
+        registrationRepository.save(newPayment);
 
         // Find payments by key customer
-        Payment foundPayment = paymentRepository.findPaymentByKey(newPayment.getKey());
-        Payment foundPayment2 = paymentRepository.findPaymentByKey(new Payment.Key(customer, course));
+        Registration foundPayment = registrationRepository.findRegistrationByKey(newPayment.getKey());
+        Registration foundPayment2 = registrationRepository.findRegistrationByKey(new Registration.Key(customer, course));
         // Assertions
         assertNotNull(foundPayment);
         assertNotNull(foundPayment2);
@@ -167,7 +167,7 @@ public class PaymentRepositoryTests {
         customerRepository.save(customerWithNoPayments);
 
         // Find payments for a customer with no payments
-        List<Payment> foundPayments = paymentRepository.findPaymentsByKeyCustomer(customerWithNoPayments);
+        List<Registration> foundPayments = registrationRepository.findRegistrationsByKeyCustomer(customerWithNoPayments);
 
         // Assert that the list is empty
         assertNotNull(foundPayments);
@@ -186,7 +186,7 @@ public class PaymentRepositoryTests {
         scheduledCourseRepository.save(scheduledCourseWithNoPayments);
 
         // Find payments for a scheduled course with no payments
-        List<Payment> foundPayments = paymentRepository.findPaymentsByKeyScheduledCourse(scheduledCourseWithNoPayments);
+        List<Registration> foundPayments = registrationRepository.findRegistrationsByKeyScheduledCourse(scheduledCourseWithNoPayments);
 
         // Assert that the list is empty
         assertNotNull(foundPayments);
@@ -199,7 +199,7 @@ public class PaymentRepositoryTests {
     @Test
     public void testFindPaymentsByNonExistingConfirmationNumber() {
         // Try to find payments by a non-existing confirmation number
-        Payment foundPayments = paymentRepository.findPaymentByConfirmationNumber(99999);
+        Registration foundPayments = registrationRepository.findRegistrationByConfirmationNumber(99999);
 
         // Assert that the list is empty
         assertNull(foundPayments);

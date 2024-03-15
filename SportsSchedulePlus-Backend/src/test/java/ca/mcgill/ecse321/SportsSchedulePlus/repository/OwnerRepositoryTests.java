@@ -3,7 +3,6 @@ package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.hibernate.mapping.Array;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 
 import java.sql.Time;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -51,7 +49,7 @@ public class OwnerRepositoryTests {
     @Test
     public void testFindOwnerByApprovedAndSuggestedCourses() {
         // Create Daily Schedule
-        List<DailySchedule> dsList = new ArrayList();
+        List<DailySchedule> dsList = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             DailySchedule ds = new DailySchedule();
             ds.setOpeningTime(Time.valueOf("08:00:00"));
@@ -86,7 +84,7 @@ public class OwnerRepositoryTests {
     @Test
     public void testFindOwnerByApprovedAndSuggestedCoursesNotFound(){
         // Create Daily Schedule
-        List<DailySchedule> dsList = new ArrayList();
+        List<DailySchedule> dsList = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             DailySchedule ds = new DailySchedule();
             ds.setOpeningTime(Time.valueOf("08:00:00"));

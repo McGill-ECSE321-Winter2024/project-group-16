@@ -5,10 +5,11 @@ import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.Mailer;
@@ -24,6 +25,7 @@ import java.time.LocalDate;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,10 +38,12 @@ public class ScheduledCourseService {
     private CourseTypeRepository courseTypeRepository;
     @Autowired
     private InstructorRepository instructorRepository;
-    @Autowired
-    private CustomerRepository customerRepository;
+
     @Autowired
     private PersonRepository personRepository;
+
+    @Autowired
+    private RegistrationRepository registrationRepository;
 
     private Mailer mailer;
 
@@ -102,7 +106,6 @@ public class ScheduledCourseService {
         if (existingScheduledCourse == null) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Scheduled course not found");
         }
-       
         // Parse date string
         LocalDate localDate = LocalDate.parse(date);
         // Convert LocalDate to java.sql.Date
@@ -121,8 +124,7 @@ public class ScheduledCourseService {
     
         // Validate the updated scheduled course
         validateScheduledCourse(existingScheduledCourse);
-        
-    
+
         // Save the updated scheduled course
         scheduledCourseRepository.save(existingScheduledCourse);
 
@@ -131,13 +133,19 @@ public class ScheduledCourseService {
         return existingScheduledCourse;
     }
 
-        // Method to notify users of the course update
+    // Method to notify users of the course update
     private void notifyUsersOfCourseUpdate(ScheduledCourse originalScheduledCourse, ScheduledCourse updatedScheduledCourse) {
         // Check for differences and send notifications to affected users
         if (!originalScheduledCourse.equals(updatedScheduledCourse)) {
-            List<Customer> affectedCustomers = customerRepository.findCustomerByCoursesRegistered(updatedScheduledCourse);
+            List<Registration> payments = registrationRepository.findRegistrationsByKeyScheduledCourse(originalScheduledCourse);
+            List <Customer> affectedCustomers = new ArrayList<>();
+            for (Registration payment : payments){
+                // Retrieve the affected customers
+                affectedCustomers.add(payment.getKey().getCustomer());
+            }
             for (Customer customer : affectedCustomers) {
                 try {
+                    // Send course update notification
                     sendCourseUpdateNotificationEmail(originalScheduledCourse, updatedScheduledCourse, customer);
                 } catch (IOException e) {
                     e.printStackTrace();

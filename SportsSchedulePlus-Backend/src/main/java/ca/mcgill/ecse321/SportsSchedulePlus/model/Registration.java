@@ -15,7 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Payment {
+public class Registration {
   @EmbeddedId
   private Key key;
   //------------------------
@@ -29,13 +29,13 @@ public class Payment {
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public Payment() {
+  public Registration() {
 
   }
-  public Payment(int aConfirmationNumber) {
+  public Registration(int aConfirmationNumber) {
     confirmationNumber = aConfirmationNumber;
   }
-  public Payment(Key key) {
+  public Registration(Key key) {
     this.key = key;
   }
 
@@ -77,7 +77,7 @@ public class Payment {
   @Override
   public boolean equals(Object object) {
     // Cast the compared object to Payment for detailed attribute comparison
-    Payment other = (Payment) object;
+    Registration other = (Registration) object;
 
     // Compare the keys for equality
     return this.key.equals(other.getKey());

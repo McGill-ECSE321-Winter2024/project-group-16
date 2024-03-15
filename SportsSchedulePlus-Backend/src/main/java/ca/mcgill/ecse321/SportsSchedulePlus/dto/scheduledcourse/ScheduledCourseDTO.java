@@ -2,11 +2,8 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.List;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.payment.PaymentResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
 public class ScheduledCourseDTO {
@@ -16,8 +13,7 @@ public class ScheduledCourseDTO {
     private Time startTime;
     private Time endTime;
     private String location;
-    private CourseTypeResponseDTO courseType;  // Assuming you have a CourseTypeDto class
-    private List<PaymentResponseDTO> coursePayments;  // Assuming you have a PaymentDto class
+    private CourseTypeResponseDTO courseType; 
 
     public ScheduledCourseDTO() {
         // Default constructor
@@ -30,25 +26,16 @@ public class ScheduledCourseDTO {
         this.endTime = scheduledCourse.getEndTime();
         this.location = scheduledCourse.getLocation();
         this.courseType = new CourseTypeResponseDTO(scheduledCourse.getCourseType());
-        // Assuming a constructor in CourseTypeDto that takes a CourseType object
-
-        // Assuming a similar constructor is available in PaymentDto
-        for (Payment payment : scheduledCourse.getCoursePayments()) {
-        PaymentResponseDTO paymentDto = new PaymentResponseDTO(payment);
-        this.coursePayments.add(paymentDto);
-        }
-        // Assuming a static method in PaymentDto to convert a list of Payment objects to a list of PaymentDto objects
     }
 
     public ScheduledCourseDTO(int id, Date date, Time startTime, Time endTime, String location,
-                              CourseTypeResponseDTO courseType, List<PaymentResponseDTO> coursePayments) {
+                              CourseTypeResponseDTO courseType) {
         this.id = id;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
         this.location = location;
         this.courseType = courseType;
-        this.coursePayments = coursePayments;
     }
 
     // Getters and setters for each attribute
@@ -99,13 +86,5 @@ public class ScheduledCourseDTO {
 
     public void setCourseType(CourseTypeResponseDTO courseType) {
         this.courseType = courseType;
-    }
-
-    public List<PaymentResponseDTO> getCoursePayments() {
-        return coursePayments;
-    }
-
-    public void setCoursePayments(List<PaymentResponseDTO> coursePayments) {
-        this.coursePayments = coursePayments;
     }
 }
