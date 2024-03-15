@@ -56,12 +56,29 @@ public class UserService {
         return createUser(name, email, password, personRole);
     }
 
+    /*
+     * this creates the owner if it does not exist
+     * 
+     * to check if the owner exists, we try getOwner(), which throws SportsSchedulePlusException if it doesnt exist
+     * we then catch the exception and create the owner
+     * 
+     * if it does exist, we throw a new exception
+     */
     @Transactional
     public Person createOwner() {
-        PersonRole personRole = new Owner();
-        Owner owner = getOwner();
-        owner.setDailySchedule(dailyScheduleService.createDailySchedule());
-        return createUser("owner", "owner@ssplus.com", "admin", personRole);
+        try {
+            getOwner();
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "The owner already exists in the system.");
+        } catch (SportsSchedulePlusException e) {
+            Helper.validateUser(personRepository, "owner", "sports.schedule.plus@gmail.com", "admin",true);
+            PersonRole personRole = new Owner();
+            personRoleRepository.save(personRole);
+            Owner owner = getOwner();
+            owner.setDailySchedule(dailyScheduleService.createDailySchedule());
+            Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("admin"), personRole);
+            personRepository.save(person);
+            return person;
+        }
     }
 
     @Transactional
