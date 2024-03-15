@@ -43,7 +43,7 @@ public class CourseTypeService {
         CourseType courseType = new CourseType();
 
         courseType.setDescription(description);
-        courseType.setApprovedByOwner(false);
+        courseType.setApprovedByOwner(approvedByOwner);
         courseType.setPrice(price);
 
 
@@ -179,6 +179,9 @@ public class CourseTypeService {
     @Transactional
     public CourseType updateCourseTypeApproval(int id, boolean approved) {
         CourseType courseType = getCourseType(id);
+        if (courseType.getApprovedByOwner()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course type with ID " + id + " has already been approved.");
+        }
         courseType.setApprovedByOwner(approved);
         if(approved){
             Owner owner = Helper.toList(ownerRepository.findAll()).get(0);

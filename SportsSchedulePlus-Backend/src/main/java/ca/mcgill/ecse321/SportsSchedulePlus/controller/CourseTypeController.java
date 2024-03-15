@@ -74,7 +74,7 @@ public class CourseTypeController {
         return new CourseTypeResponseDTO(updatedCourseType);
     }
 
-    @PutMapping("/courseTypes/approval/{id}")
+    @PutMapping("/courseTypes/{id}/approve")
     public CourseTypeResponseDTO updateCourseTypeApproval(@PathVariable(name = "id") int id, @RequestBody boolean approved) {
         CourseType updatedCourseType = courseTypeService.updateCourseTypeApproval(id, approved);
         return new CourseTypeResponseDTO(updatedCourseType);
