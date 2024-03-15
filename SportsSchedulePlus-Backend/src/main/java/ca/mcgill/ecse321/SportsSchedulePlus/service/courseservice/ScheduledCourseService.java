@@ -276,6 +276,11 @@ public class ScheduledCourseService {
 
     }
 
+    @Transactional
+    public List<ScheduledCourse> getScheduledCoursesByWeek(Date monday, Date sunday) {
+        return scheduledCourseRepository.findScheduledCoursesByDateBetween(monday, sunday);
+    }
+
 
 
 }

@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.instructor.InstructorListDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.instructor.InstructorResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseListDTO;
@@ -13,7 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-
+import java.sql.Date;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,5 +90,19 @@ public class ScheduledCourseController {
         service.deleteAllScheduledCourses();
         return ResponseEntity.ok("All scheduled courses have been deleted.");
     }
+
+    @GetMapping(value = "/scheduledCourses/{date}")
+    public List<ScheduledCourseDTO> getScheduledCoursesForWeekByDate(@PathVariable("date") String date) {
+        LocalDate inputDate = LocalDate.parse(date);
+        LocalDate mondayLocalDate = inputDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate sundayLocalDate = inputDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+        Date monday = java.sql.Date.valueOf(mondayLocalDate);
+        Date sunday = java.sql.Date.valueOf(sundayLocalDate);
+        List<ScheduledCourse> scheduledCourses = service.getScheduledCoursesByWeek(monday, sunday);
+        List<ScheduledCourseDTO> scheduledCourseDTOs = new ArrayList<>(); // Corrected to DTO
+        for (ScheduledCourse scheduledCourse : scheduledCourses) {
+            scheduledCourseDTOs.add(new ScheduledCourseDTO(scheduledCourse));
+        }
+        return scheduledCourseDTOs;    }
 
 }

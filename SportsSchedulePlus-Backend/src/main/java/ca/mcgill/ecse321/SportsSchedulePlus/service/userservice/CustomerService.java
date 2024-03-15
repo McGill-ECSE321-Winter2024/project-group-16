@@ -1,5 +1,7 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.service.userservice;
 
+import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
@@ -28,6 +30,9 @@ public class CustomerService {
 
   @Autowired
   PersonRoleRepository personRoleRepository;
+
+  @Autowired
+  private InstructorService instructorService;
 
   @Autowired
   private PasswordEncoder passwordEncoder;
@@ -100,6 +105,39 @@ public class CustomerService {
   @Transactional
   public List <Customer> getAllCustomers() {
     return Helper.toList(customerRepository.findAll());
+  }
+
+  @Transactional
+  public void applyForInstructor(int customerId) {
+    Optional<Customer> customer = customerRepository.findById(customerId);
+    if (!customer.isPresent()) {
+      throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID "+ customerId + " does not exist.");
+    }
+    Customer c = customer.get();
+    c.setHasApplied(true);
+    customerRepository.save(c);
+  }
+
+  @Transactional
+  public Instructor approveCustomer(int customerId) {
+    Optional<Customer> customer = customerRepository.findById(customerId);
+    if (!customer.isPresent()) {
+      throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID "+ customerId + " does not exist.");
+    }
+    Person p = personRepository.findPersonByPersonRole(customer.get());
+    Person newP = instructorService.createInstructor(p.getEmail(), "");
+    return (Instructor) newP.getPersonRole();
+  }
+
+  @Transactional
+  public void rejectCustomer(int customerId) {
+    Optional<Customer> customer = customerRepository.findById(customerId);
+    if (!customer.isPresent()) {
+      throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID "+ customerId + " does not exist.");
+    }
+    Customer c = customer.get();
+    c.setHasApplied(false);
+    customerRepository.save(c);
   }
 
 }
