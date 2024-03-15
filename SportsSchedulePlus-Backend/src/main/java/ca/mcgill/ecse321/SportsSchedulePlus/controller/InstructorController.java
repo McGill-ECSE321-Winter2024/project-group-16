@@ -5,7 +5,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.instructor.InstructorRespon
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.ScheduledCourseService;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.UserService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -57,7 +57,7 @@ public class InstructorController {
 
     @DeleteMapping(value = {"/instructors/{id}"})
     public ResponseEntity<String> deleteInstructor(@PathVariable("id") int id) {
-        int personId = userService.deleteInstructor(id);
+        int personId = userService.deleteUser(id);
         return ResponseEntity.ok("Instructor with id " + personId + " was successfully deleted.");
     }
 

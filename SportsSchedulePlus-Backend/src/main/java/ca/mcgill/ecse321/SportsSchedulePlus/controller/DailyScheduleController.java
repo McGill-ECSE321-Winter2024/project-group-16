@@ -4,7 +4,8 @@ import java.util.List;
 import java.sql.Time;
 import java.util.ArrayList;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.service.UserService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.DailyScheduleService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.dailyschedule.DailyScheduleListR
 public class DailyScheduleController {
 
     @Autowired
-    private UserService userService;
+    private DailyScheduleService dailyScheduleService;
 
     /*
      * create a new default daily schedule
@@ -37,7 +38,7 @@ public class DailyScheduleController {
     @PostMapping(value = {"/openingHours", "/openingHours/"})
     public DailyScheduleListResponseDTO createDailySchedule() {
         List<DailyScheduleResponseDTO> dtos = new ArrayList<>();
-        for (DailySchedule ds : userService.createDailySchedule()) {
+        for (DailySchedule ds : dailyScheduleService.createDailySchedule()) {
             dtos.add(new DailyScheduleResponseDTO(ds));
         }
         return new DailyScheduleListResponseDTO(dtos);
@@ -49,7 +50,7 @@ public class DailyScheduleController {
     @GetMapping(value = {"/openingHours", "/openingHours/"})
     public DailyScheduleListResponseDTO getAllDailySchedules() {
         List<DailyScheduleResponseDTO> dtos = new ArrayList<>();
-        for (DailySchedule ds : userService.getAllDailySchedules()) {
+        for (DailySchedule ds : dailyScheduleService.getAllDailySchedules()) {
             dtos.add(new DailyScheduleResponseDTO(ds));
         }
         return new DailyScheduleListResponseDTO(dtos);
@@ -60,7 +61,7 @@ public class DailyScheduleController {
      */
     @GetMapping(value = {"/openingHours/{id}", "/openingHours/{id}/"})
     public DailyScheduleResponseDTO getDailyScheduleById(@PathVariable("id") int id) {
-        return new DailyScheduleResponseDTO(userService.getDailyScheduleById(id));
+        return new DailyScheduleResponseDTO(dailyScheduleService.getDailyScheduleById(id));
     }
 
     /*
@@ -70,6 +71,6 @@ public class DailyScheduleController {
     public DailyScheduleResponseDTO updateDailySchedule(@PathVariable("id") int id, @RequestBody DailyScheduleRequestDTO request) {
         Time openingTime = Time.valueOf(request.getOpeningTime());
         Time closingTime = Time.valueOf(request.getClosingTime());
-        return new DailyScheduleResponseDTO(userService.updateDailyScheduleByID(id, openingTime, closingTime));
+        return new DailyScheduleResponseDTO(dailyScheduleService.updateDailyScheduleByID(id, openingTime, closingTime));
     }
 }

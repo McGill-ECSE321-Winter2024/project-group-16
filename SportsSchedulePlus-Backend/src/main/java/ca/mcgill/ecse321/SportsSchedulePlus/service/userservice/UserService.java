@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.service.userservice;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration.Key;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.*;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.DailyScheduleService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
 import ca.mcgill.ecse321.utils.Helper;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.*;
@@ -13,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,14 +31,14 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private CourseTypeService courseTypeService;
-    @Autowired
     private OwnerRepository ownerRepository;
-    @Autowired
-    private DailyScheduleRepository dailyScheduleRepository;
 
     @Autowired
     private RegistrationRepository registrationRepository;
+    @Autowired
+    private CourseTypeService courseTypeService;
+    @Autowired
+    private DailyScheduleService dailyScheduleService;
 
     @Transactional
     public Person createUser(String name, String email, String password, PersonRole role) {
@@ -61,7 +60,7 @@ public class UserService {
     public Person createOwner() {
         PersonRole personRole = new Owner();
         Owner owner = getOwner();
-        owner.setDailySchedule(createDailySchedule());
+        owner.setDailySchedule(dailyScheduleService.createDailySchedule());
         return createUser("owner", "owner@ssplus.com", "admin", personRole);
     }
 
@@ -79,12 +78,10 @@ public class UserService {
 
             Customer instructor = (Customer) newPersonRole;
 
-            // Save new instructor role
             personRoleRepository.save(newPersonRole);
-            
-            // Update payment info to be associated with the new Instructor object instead of the old Customer
-            List <Registration> customerPayments = registrationRepository.findRegistrationsByKeyCustomer(customer);
-            for (Registration oldPayment : customerPayments){
+
+            List<Registration> customerPayments = registrationRepository.findRegistrationsByKeyCustomer(customer);
+            for (Registration oldPayment : customerPayments) {
                 Key updatedKey = new Key(instructor, oldPayment.getKey().getScheduledCourse());
                 Registration newPayment = new Registration(updatedKey);
                 registrationRepository.delete(oldPayment);
@@ -92,7 +89,7 @@ public class UserService {
             }
 
             PersonRole oldPersonRole = existingPerson.getPersonRole();
-            
+
             personRoleRepository.delete(oldPersonRole);
             customerRepository.delete(customer);
             personRepository.delete(existingPerson);
@@ -165,96 +162,14 @@ public class UserService {
     }
 
     @Transactional
-    public int deleteCustomer(int id) {
-        Customer customer = customerRepository.findCustomerById(id);
-        if (customer == null) {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with ID" + id + " is not a Customer.");
-        } else {
-            Optional <Person> optionalPerson = personRepository.findById(id);
-            if (optionalPerson.isPresent()) {
-                Person person = optionalPerson.get();
-                if (person.getPersonRole() instanceof Customer) {
-                    int personId = person.getId();
-                    personRepository.delete(person);
-                    personRoleRepository.delete(person.getPersonRole());
-                    customerRepository.delete(customer);
-                    person.delete();
-                    return personId;
-                } else {
-                    throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with ID" + id + " is not a Customer.");
-                }
-            } else {
-                throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Customer with ID " + id + " does not exist.");
-            }
-        }
-    }
-
-    @Transactional
-    public List <Customer> getAllCustomers() {
+    public List<Customer> getAllCustomers() {
         return Helper.toList(customerRepository.findAll());
-    }
-
-    @Transactional
-    public void applyForInstructor(int customerId) {
-        Optional<Customer> customer = customerRepository.findById(customerId);
-        if (!customer.isPresent()) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID "+ customerId + " does not exist.");
-        }
-        Customer c = customer.get();
-        c.setHasApplied(true);
-        customerRepository.save(c);
-    }
-
-    @Transactional
-    public Instructor approveCustomer(int customerId) {
-        Optional<Customer> customer = customerRepository.findById(customerId);
-        if (!customer.isPresent()) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID "+ customerId + " does not exist.");
-        }
-        Person p = personRepository.findPersonByPersonRole(customer.get());
-        Person newP = createInstructor(p.getEmail(), "");
-        return (Instructor) newP.getPersonRole();
-    }
-
-    @Transactional
-    public void rejectCustomer(int customerId) {
-        Optional<Customer> customer = customerRepository.findById(customerId);
-        if (!customer.isPresent()) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID "+ customerId + " does not exist.");
-        }
-        Customer c = customer.get();
-        c.setHasApplied(false);
-        customerRepository.save(c);
-    }
-
-
-    @Transactional
-    public int deleteInstructor(int id) {
-        Optional <Instructor> optionalInstructor = instructorRepository.findById(id);
-        if (optionalInstructor.isPresent()) {
-            Instructor instructor = optionalInstructor.get();
-            Optional <Person> optionalAssociatedPerson = personRepository.findById(instructor.getId());
-
-            if (optionalAssociatedPerson.isPresent() && optionalAssociatedPerson.get().getPersonRole() instanceof Instructor) {
-                Person associatedPerson = optionalAssociatedPerson.get();
-                int personId = associatedPerson.getId();
-                personRepository.delete(associatedPerson);
-                personRoleRepository.delete(associatedPerson.getPersonRole());
-                instructorRepository.delete(instructor);
-                associatedPerson.delete();
-                return personId;
-            } else {
-                throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with ID " + id + " is not an Instructor.");
-            }
-        } else {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Instructor with ID " + id + " does not exist.");
-        }
     }
 
     @Transactional
     public Instructor getInstructor(String email) {
         Person person = personRepository.findPersonByEmail(email);
-        Optional <Instructor> optionalInstructor = instructorRepository.findById(person.getId());
+        Optional<Instructor> optionalInstructor = instructorRepository.findById(person.getId());
         if (optionalInstructor.isPresent()) {
             Instructor instructor = optionalInstructor.get();
             return instructor;
@@ -264,37 +179,8 @@ public class UserService {
     }
 
     @Transactional
-    public List <Instructor> getAllInstructors() {
+    public List<Instructor> getAllInstructors() {
         return Helper.toList(instructorRepository.findAll());
-    }
-
-    @Transactional
-    public List <Instructor> getInstructorsBySupervisedCourse(ScheduledCourse scheduledCourse) {
-        return Helper.toList(instructorRepository.findInstructorBySupervisedCourses(scheduledCourse));
-    }
-
-    @Transactional
-    public Instructor getInstructorBySuggestedCourseTypes(CourseType courseType) {
-        Instructor instructor = instructorRepository.findInstructorByInstructorSuggestedCourseTypes(courseType);
-        if (instructor == null) {
-            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "No Instructor found for the specified CourseType.");
-        }
-        return instructor;
-    }
-
-    @Transactional
-    public List <Instructor> getInstructorByExperience(String experience) {
-        return Helper.toList(instructorRepository.findInstructorByExperience(experience));
-    }
-
-    @Transactional
-    public void suggestCourseType(Instructor instructor, CourseType courseType) {
-        // Add the course type to the instructor's suggested course types
-
-        CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getDescription(), courseType.getApprovedByOwner(),courseType.getPrice());
-        instructor.addInstructorSuggestedCourseType(courseTypeCreated);
-        // Save the instructor with the updated suggested course types
-        instructorRepository.save(instructor);
     }
 
     @Transactional
@@ -308,25 +194,6 @@ public class UserService {
         }
     }
 
-
-
-
-    // Custom query methods
-    @Transactional
-    public Owner getInstructorByOwnerSuggestedCourses(CourseType courseType) {
-        return ownerRepository.findOwnerByOwnerSuggestedCourses(courseType);
-    }
-
-    @Transactional
-    public Owner getOwnerByApprovedCourses(CourseType courseType) {
-        return ownerRepository.findOwnerByApprovedCourses(courseType);
-    }
-
-    @Transactional
-    public List<Person> getAllPersons() {
-        return Helper.toList(personRepository.findAll());
-    }
-
     @Transactional
     public Person getPersonById(int id) {
         Optional<Person> p = personRepository.findById(id);
@@ -336,7 +203,43 @@ public class UserService {
         return p.get();
     }
 
+    @Transactional
+    public List<Person> getAllPersons() {
+        return Helper.toList(personRepository.findAll());
+    }
 
+    @Transactional
+    public int deleteUser(int id) {
+        Optional<Person> optionalPerson = personRepository.findById(id);
+        if (optionalPerson.isPresent()) {
+            Person person = optionalPerson.get();
+            if (person.getPersonRole() instanceof Customer || person.getPersonRole() instanceof Instructor) {
+                return deleteInstructorOrCustomer(person, id);
+            } else {
+                throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with ID " + id + " does not have a valid role.");
+            }
+        } else {
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with ID " + id + " does not exist.");
+
+        }
+    }
+
+    private int deleteInstructorOrCustomer(Person person, int id) {
+        personRepository.delete(person);
+        personRoleRepository.delete(person.getPersonRole());
+        if (person.getPersonRole() instanceof Customer) {
+            Optional<Customer> optionalCustomer = customerRepository.findById(id);
+            if (optionalCustomer.isPresent()) {
+                customerRepository.delete(optionalCustomer.get());
+            }
+        } else {
+            Optional<Instructor> optionalInstructor = instructorRepository.findById(id);
+            if (optionalInstructor.isPresent()) {
+                instructorRepository.delete(optionalInstructor.get());
+            }
+        }
+        return id;
+    }
 
     @Transactional
     public void deletePersonById(int id) {
@@ -354,63 +257,77 @@ public class UserService {
     }
 
     @Transactional
+    public void applyForInstructor(int customerId) {
+        Optional<Customer> customer = customerRepository.findById(customerId);
+        if (!customer.isPresent()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
+        }
+        Customer c = customer.get();
+        c.setHasApplied(true);
+        customerRepository.save(c);
+    }
+
+    @Transactional
+    public Instructor approveCustomer(int customerId) {
+        Optional<Customer> customer = customerRepository.findById(customerId);
+        if (!customer.isPresent()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
+        }
+        Person p = personRepository.findPersonByPersonRole(customer.get());
+        Person newP = createInstructor(p.getEmail(), "");
+        return (Instructor) newP.getPersonRole();
+    }
+
+    @Transactional
+    public void rejectCustomer(int customerId) {
+        Optional<Customer> customer = customerRepository.findById(customerId);
+        if (!customer.isPresent()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
+        }
+        Customer c = customer.get();
+        c.setHasApplied(false);
+        customerRepository.save(c);
+    }
+
+    @Transactional
+    public List<Instructor> getInstructorsBySupervisedCourse(ScheduledCourse scheduledCourse) {
+        return Helper.toList(instructorRepository.findInstructorBySupervisedCourses(scheduledCourse));
+    }
+
+    @Transactional
+    public Instructor getInstructorBySuggestedCourseTypes(CourseType courseType) {
+        Instructor instructor = instructorRepository.findInstructorByInstructorSuggestedCourseTypes(courseType);
+        if (instructor == null) {
+            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "No Instructor found for the specified CourseType.");
+        }
+        return instructor;
+    }
+
+    @Transactional
+    public List<Instructor> getInstructorByExperience(String experience) {
+        return Helper.toList(instructorRepository.findInstructorByExperience(experience));
+    }
+
+    @Transactional
+    public void suggestCourseType(Instructor instructor, CourseType courseType) {
+        CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getDescription(), courseType.getApprovedByOwner(), courseType.getPrice());
+        instructor.addInstructorSuggestedCourseType(courseTypeCreated);
+        instructorRepository.save(instructor);
+    }
+
+    @Transactional
+    public Owner getInstructorByOwnerSuggestedCourses(CourseType courseType) {
+        return ownerRepository.findOwnerByOwnerSuggestedCourses(courseType);
+    }
+
+    @Transactional
+    public Owner getOwnerByApprovedCourses(CourseType courseType) {
+        return ownerRepository.findOwnerByApprovedCourses(courseType);
+    }
+
+    @Transactional
     public Person findPersonByEmail(String email) {
         return personRepository.findPersonByEmail(email);
     }
-
-    @Transactional
-    public List<DailySchedule> createDailySchedule() {
-        List<DailySchedule> dsList = new ArrayList<DailySchedule>();
-        for (int i = 0; i < 7; i++) {
-            DailySchedule ds = new DailySchedule();
-            ds.setOpeningTime(Time.valueOf("08:00:00"));
-            ds.setClosingTime(Time.valueOf("22:00:00"));
-            dailyScheduleRepository.save(ds);
-            dsList.add(ds);
-        }
-        return dsList;
-    }
-
-    /*
-     * get all the daily schedules
-     */
-    @Transactional
-    public List<DailySchedule> getAllDailySchedules() {
-        return Helper.toList(dailyScheduleRepository.findAll());
-    }
-
-    /*
-     * get daily schedule by id
-     */
-    @Transactional
-    public DailySchedule getDailyScheduleById(int id) {
-        return dailyScheduleRepository.findById(id).get();
-    }
-
-    /*
-     * update the opening hours for a day by its id
-     */
-    @Transactional
-    public DailySchedule updateDailyScheduleByID(int id, Time openingTime, Time closingTime) {
-        Optional<DailySchedule> aOptionalDailySchedule = dailyScheduleRepository.findById(id);
-        if (!aOptionalDailySchedule.isPresent()) {
-            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no schedule with ID " + id + ".");
-        }
-        if (openingTime == null) {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Opening time must be provided.");
-        }
-        if (closingTime == null) {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Closing time must be provided.");
-        }
-        if (openingTime.after(closingTime)) {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Opening time must be before closing time.");
-        }
-        DailySchedule ds = dailyScheduleRepository.findById(id).get();
-        ds.setOpeningTime(openingTime);
-        ds.setClosingTime(closingTime);
-        dailyScheduleRepository.save(ds);
-        return ds;
-    }
-
 
 }

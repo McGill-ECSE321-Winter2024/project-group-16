@@ -1,6 +1,6 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.service.UserService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

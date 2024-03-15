@@ -3,7 +3,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 import java.util.List;
 import java.util.ArrayList;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.service.UserService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,18 +19,18 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonRe
 public class PersonController {
 
     @Autowired
-    private UserService personService;
+    private UserService userService;
 
     /*
      * get all persons (all users)
      */
     @GetMapping(value = {"/persons", "/persons/"})
     public PersonListResponseDTO getAllPersons() {
-        List<PersonResponseDTO> dtos = new ArrayList<>();
-        for (Person p : personService.getAllPersons()) {
-            dtos.add(new PersonResponseDTO(p));
+        List<PersonResponseDTO> personResponseDTOS = new ArrayList<>();
+        for (Person p : userService.getAllPersons()) {
+            personResponseDTOS.add(new PersonResponseDTO(p));
         }
-        return new PersonListResponseDTO(dtos);
+        return new PersonListResponseDTO(personResponseDTOS);
     }
 
     /*
@@ -38,7 +38,7 @@ public class PersonController {
      */
     @GetMapping(value = {"/persons/{id}", "/persons/{id}/"})
     public PersonResponseDTO getPerson(@PathVariable("id") int id) {
-        Person p = personService.getPersonById(id);
+        Person p = userService.getPersonById(id);
         return new PersonResponseDTO(p);
     }
 }
