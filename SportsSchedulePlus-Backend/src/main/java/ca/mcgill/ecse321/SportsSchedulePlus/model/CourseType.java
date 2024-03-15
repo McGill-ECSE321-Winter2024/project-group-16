@@ -5,6 +5,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 import java.util.*;
 
 import ca.mcgill.ecse321.utils.Helper;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +28,7 @@ public class CourseType {
   @Id
   @GeneratedValue
   private Integer id;
+  @Column(unique = true)
   private String description;
   private boolean approvedByOwner;
   private float price;

@@ -1,48 +1,48 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.service;
 
-import java.util.List;
-import java.sql.Time;
-import java.util.Optional;
-
+import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
+import ca.mcgill.ecse321.utils.Helper;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import jakarta.transaction.Transactional;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;
-import ca.mcgill.ecse321.utils.Helper;
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-/**
- * Service class for managing data related to the opening Hours
- * @author Vladimir Venkov
- */
 @Service
 public class DailyScheduleService {
-    
+
     @Autowired
     private DailyScheduleRepository dailyScheduleRepository;
 
-    /*
-     * get all the daily schedules
-     */
+    @Transactional
+    public List<DailySchedule> createDailySchedule() {
+        List<DailySchedule> dsList = new ArrayList<DailySchedule>();
+        for (int i = 0; i < 7; i++) {
+            DailySchedule ds = new DailySchedule();
+            ds.setOpeningTime(Time.valueOf("08:00:00"));
+            ds.setClosingTime(Time.valueOf("22:00:00"));
+            dailyScheduleRepository.save(ds);
+            dsList.add(ds);
+        }
+        return dsList;
+    }
+
     @Transactional
     public List<DailySchedule> getAllDailySchedules() {
         return Helper.toList(dailyScheduleRepository.findAll());
     }
 
-    /*
-     * get daily schedule by id
-     */
     @Transactional
     public DailySchedule getDailyScheduleById(int id) {
         return dailyScheduleRepository.findById(id).get();
     }
 
-    /*
-     * update the opening hours for a day by its id
-     */
     @Transactional
     public DailySchedule updateDailyScheduleByID(int id, Time openingTime, Time closingTime) {
         Optional<DailySchedule> aOptionalDailySchedule = dailyScheduleRepository.findById(id);

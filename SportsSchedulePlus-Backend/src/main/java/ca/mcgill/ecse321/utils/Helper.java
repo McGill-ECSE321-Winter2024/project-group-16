@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import org.springframework.http.HttpStatus;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 /**
@@ -65,9 +66,9 @@ public class Helper {
   /**
    * Helper method to create a payment with dummy data.
    */
-  public static Payment createPayment(Customer customer, ScheduledCourse scheduledCourse) {
-    Payment.Key paymentKey = new Payment.Key(customer, scheduledCourse);
-    Payment newPayment = new Payment(paymentKey);
+  public static Registration createPayment(Customer customer, ScheduledCourse scheduledCourse) {
+    Registration.Key paymentKey = new Registration.Key(customer, scheduledCourse);
+    Registration newPayment = new Registration(paymentKey);
     newPayment.setConfirmationNumber(12345);
 
     return newPayment;
@@ -89,11 +90,16 @@ public class Helper {
    * @param name
    * @param email
    * @param password
+   * @param newEmail (boolean to indicate whether the user is creating a new email or keeping the same one
    */
-  public static void validateUser(PersonRepository personRepository,String name, String email, String password) {
-
+  public static void validateUser(PersonRepository personRepository,String name, String email, String password, boolean newEmail) {
+    if(newEmail){
     if (personRepository.findPersonByEmail(email) != null) {
-      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner with email " + email + " already exists.");
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "User with email " + email + " already exists.");
+    }
+  }
+    if (!Pattern.matches("[a-zA-Z\\s]+", name)) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name cannot contain special characters.");
     }
 
     if (name.isBlank()) {

@@ -85,6 +85,30 @@ public class PersonRepositoryTests {
         assertEquals(newPerson, foundPerson);
     }
 
+    /**
+     * Test finding a person by PersonRole.
+     */
+    @Test
+    public void testFindPersonByPersonRole() {
+        // Create a PersonRole
+        PersonRole personRole = new Customer();
+        personRoleRepository.save(personRole);
+
+        // Create a new person with a specific name, email, password, and associated PersonRole
+        Person newPerson = new Person("John", "alex@example.com", "password", personRole);
+        personRepository.save(newPerson);
+        
+
+        // When finding a person by email
+        Person foundPerson = personRepository.findPersonByPersonRole(personRole);
+
+        // Then ensure the found person is not null and the email matches the expected
+        assertNotNull(foundPerson);
+        
+        // The overridden equals method in the Person model is used here
+        assertEquals(newPerson, foundPerson);
+    }
+
      /**
      * Test finding a person by a nonexistent name.
      */
