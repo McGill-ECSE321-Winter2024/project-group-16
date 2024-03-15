@@ -43,7 +43,7 @@ public class CourseTypeService {
         CourseType courseType = new CourseType();
 
         courseType.setDescription(description);
-        courseType.setApprovedByOwner(approvedByOwner);
+        courseType.setApprovedByOwner(false);
         courseType.setPrice(price);
 
 

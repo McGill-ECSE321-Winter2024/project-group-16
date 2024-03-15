@@ -66,19 +66,17 @@ public class UserService {
      */
     @Transactional
     public Person createOwner() {
-        try {
-            getOwner();
+        Owner ownerRetrieved = getOwner();
+        if (ownerRetrieved != null) {
             throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "The owner already exists in the system.");
-        } catch (SportsSchedulePlusException e) {
-            Helper.validateUser(personRepository, "owner", "sports.schedule.plus@gmail.com", "admin",true);
-            PersonRole personRole = new Owner();
-            personRoleRepository.save(personRole);
-            Owner owner = getOwner();
-            owner.setDailySchedule(dailyScheduleService.createDailySchedule());
-            Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("admin"), personRole);
-            personRepository.save(person);
-            return person;
         }
+        PersonRole personRole = new Owner();
+        personRoleRepository.save(personRole);
+        Owner owner = getOwner();
+        owner.setDailySchedule(dailyScheduleService.createDailySchedule());
+        Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("admin"), personRole);
+        personRepository.save(person);
+        return person;
     }
 
     @Transactional
