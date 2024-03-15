@@ -26,37 +26,27 @@ import java.util.List;
 public class ScheduledCourseController {
 
     @Autowired
-    private ScheduledCourseService service;
+    private ScheduledCourseService scheduledCourseService;
 
     @PostMapping("/scheduledCourses")
     public ScheduledCourseResponseDTO createScheduledCourse(@RequestBody ScheduledCourseRequestDTO request) {
         // Assuming you have a createScheduledCourse method in your service
-        ScheduledCourse createdScheduledCourse = service.createScheduledCourse(request.getId(),
-                request.getDate(), request.getStartTime(), request.getEndTime(), request.getLocation(),
-                request.getCourseType().getId());
+        ScheduledCourse createdScheduledCourse = scheduledCourseService.createScheduledCourse(request.getId(), request.getDate(), request.getStartTime(), request.getEndTime(), request.getLocation(), request.getCourseType().getId());
         return new ScheduledCourseResponseDTO(createdScheduledCourse);
     }
 
     @PutMapping("/scheduledCourses/{id}")
-    public ScheduledCourseResponseDTO updateScheduledCourse(@PathVariable(name = "id") int id,
-                                                           @RequestBody ScheduledCourseRequestDTO request) {
-        ScheduledCourse updatedScheduledCourse = service.updateScheduledCourse(
-                id,
-                request.getDate(),
-                request.getStartTime(),
-                request.getEndTime(),
-                request.getLocation(),
-                request.getCourseType().getId()
-        );
+    public ScheduledCourseResponseDTO updateScheduledCourse(@PathVariable(name = "id") int id, @RequestBody ScheduledCourseRequestDTO request) {
+        ScheduledCourse updatedScheduledCourse = scheduledCourseService.updateScheduledCourse(id, request.getDate(), request.getStartTime(), request.getEndTime(), request.getLocation(), request.getCourseType().getId());
         return new ScheduledCourseResponseDTO(updatedScheduledCourse);
     }
 
     @GetMapping("/scheduledCourses/instructors/{id}")
     public InstructorListDTO getInstructorsBySupervisedCourse(@PathVariable(name = "id") int scheduledCourseId) {
         List<InstructorResponseDTO> instructorDtos = new ArrayList<>();
-        List<Instructor> instructors = service.getInstructorsBySupervisedCourse(scheduledCourseId);
+        List<Instructor> instructors = scheduledCourseService.getInstructorsBySupervisedCourse(scheduledCourseId);
 
-        
+
         for (Instructor instructor : instructors) {
             instructorDtos.add(new InstructorResponseDTO(instructor));
         }
@@ -65,29 +55,29 @@ public class ScheduledCourseController {
     }
 
     @GetMapping("/scheduledCourses/{id}")
-    public ScheduledCourseResponseDTO findScheduledCourseById(@PathVariable(name="id") int id) {
-        ScheduledCourse scheduledCourse = service.getScheduledCourse(id);
+    public ScheduledCourseResponseDTO findScheduledCourseById(@PathVariable(name = "id") int id) {
+        ScheduledCourse scheduledCourse = scheduledCourseService.getScheduledCourse(id);
         return new ScheduledCourseResponseDTO(scheduledCourse);
     }
 
     @GetMapping("/scheduledCourses")
     public ScheduledCourseListDTO findAllScheduledCourses() {
         List<ScheduledCourseResponseDTO> dtos = new ArrayList<>();
-        for (ScheduledCourse scheduledCourse : service.getAllScheduledCourses()) {
+        for (ScheduledCourse scheduledCourse : scheduledCourseService.getAllScheduledCourses()) {
             dtos.add(new ScheduledCourseResponseDTO(scheduledCourse));
         }
         return new ScheduledCourseListDTO(dtos);
     }
 
     @DeleteMapping("/scheduledCourses/{id}")
-    public ResponseEntity<String> deleteScheduledCourse(@PathVariable(name="id") int id) {
-        service.deleteScheduledCourse(id);
+    public ResponseEntity<String> deleteScheduledCourse(@PathVariable(name = "id") int id) {
+        scheduledCourseService.deleteScheduledCourse(id);
         return ResponseEntity.ok("Scheduled course with ID " + id + " has been deleted.");
     }
 
     @DeleteMapping("/scheduledCourses")
     public ResponseEntity<String> deleteAllScheduledCourses() {
-        service.deleteAllScheduledCourses();
+        scheduledCourseService.deleteAllScheduledCourses();
         return ResponseEntity.ok("All scheduled courses have been deleted.");
     }
 
@@ -98,11 +88,12 @@ public class ScheduledCourseController {
         LocalDate sundayLocalDate = inputDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
         Date monday = java.sql.Date.valueOf(mondayLocalDate);
         Date sunday = java.sql.Date.valueOf(sundayLocalDate);
-        List<ScheduledCourse> scheduledCourses = service.getScheduledCoursesByWeek(monday, sunday);
+        List<ScheduledCourse> scheduledCourses = scheduledCourseService.getScheduledCoursesByWeek(monday, sunday);
         List<ScheduledCourseDTO> scheduledCourseDTOs = new ArrayList<>(); // Corrected to DTO
         for (ScheduledCourse scheduledCourse : scheduledCourses) {
             scheduledCourseDTOs.add(new ScheduledCourseDTO(scheduledCourse));
         }
-        return scheduledCourseDTOs;    }
+        return scheduledCourseDTOs;
+    }
 
 }

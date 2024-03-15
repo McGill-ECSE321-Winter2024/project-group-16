@@ -21,19 +21,20 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.dailyschedule.DailyScheduleListR
 
 /**
  * Rest controller for managing the opening hours of the sports center
+ *
  * @author Vladimir Venkov
  */
 @CrossOrigin(origins = "*")
 @RestController
 public class DailyScheduleController {
-    
+
     @Autowired
     private DailyScheduleService dailyScheduleService;
 
     /*
      * create a new default daily schedule
      */
-    @PostMapping(value = { "/openingHours", "/openingHours/" })
+    @PostMapping(value = {"/openingHours", "/openingHours/"})
     public DailyScheduleListResponseDTO createDailySchedule() {
         List<DailyScheduleResponseDTO> dtos = new ArrayList<>();
         for (DailySchedule ds : dailyScheduleService.createDailySchedule()) {
@@ -41,10 +42,11 @@ public class DailyScheduleController {
         }
         return new DailyScheduleListResponseDTO(dtos);
     }
+
     /*
      * get the opening hours
      */
-    @GetMapping(value = { "/openingHours", "/openingHours/" })
+    @GetMapping(value = {"/openingHours", "/openingHours/"})
     public DailyScheduleListResponseDTO getAllDailySchedules() {
         List<DailyScheduleResponseDTO> dtos = new ArrayList<>();
         for (DailySchedule ds : dailyScheduleService.getAllDailySchedules()) {
@@ -56,7 +58,7 @@ public class DailyScheduleController {
     /*
      * get the opening hours for a day in the week
      */
-    @GetMapping(value = { "/openingHours/{id}", "/openingHours/{id}/" })
+    @GetMapping(value = {"/openingHours/{id}", "/openingHours/{id}/"})
     public DailyScheduleResponseDTO getDailyScheduleById(@PathVariable("id") int id) {
         return new DailyScheduleResponseDTO(dailyScheduleService.getDailyScheduleById(id));
     }
@@ -64,7 +66,7 @@ public class DailyScheduleController {
     /*
      * update the opening hours for a day in the week
      */
-    @PutMapping(value = { "/openingHours/{id}", "/openingHours/{id}/" })
+    @PutMapping(value = {"/openingHours/{id}", "/openingHours/{id}/"})
     public DailyScheduleResponseDTO updateDailySchedule(@PathVariable("id") int id, @RequestBody DailyScheduleRequestDTO request) {
         Time openingTime = Time.valueOf(request.getOpeningTime());
         Time closingTime = Time.valueOf(request.getClosingTime());

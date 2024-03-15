@@ -27,34 +27,28 @@ public class AuthenticationController {
 
     @Autowired
     private CustomerService customerService;
-    
 
-    
+
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@RequestBody LoginRequestDTO loginDto) {
         Authentication authentication;
-        try{
-         authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                return new ResponseEntity<>("User login successfully!...", HttpStatus.OK);
-        }
-        catch (AuthenticationException e) {
-            if(e.getMessage().equals("User does not exist.")){
-            // Incorrect password
-            return new ResponseEntity<>("User with email "+ loginDto.getEmail()+" does not exist.", HttpStatus.UNAUTHORIZED);
-            }
-            else if(e.getMessage().equals("Bad credentials")){
-            // Incorrect password
-            return new ResponseEntity<>("Incorrect password, please try again.", HttpStatus.UNAUTHORIZED);
+        try {
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            return new ResponseEntity<>("User login successfully!...", HttpStatus.OK);
+        } catch (AuthenticationException e) {
+            if (e.getMessage().equals("User does not exist.")) {
+                return new ResponseEntity<>("User with email " + loginDto.getEmail() + " does not exist.", HttpStatus.UNAUTHORIZED);
+            } else if (e.getMessage().equals("Bad credentials")) {
+                return new ResponseEntity<>("Incorrect password, please try again.", HttpStatus.UNAUTHORIZED);
             }
         }
         return new ResponseEntity<>("Authentication error.", HttpStatus.UNAUTHORIZED);
     }
-    
-    
+
+
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignupRequestDTO signUpDto){
+    public ResponseEntity<?> registerUser(@RequestBody SignupRequestDTO signUpDto) {
         customerService.createCustomer(signUpDto.getName(), signUpDto.getEmail(), signUpDto.getPassword());
         return new ResponseEntity<>("User is registered successfully!", HttpStatus.OK);
     }

@@ -19,78 +19,77 @@ import java.util.List;
 public class CourseTypeController {
 
     @Autowired
-    private CourseTypeService service;
+    private CourseTypeService courseTypeService;
 
     @PostMapping("/courseTypes")
     public CourseTypeResponseDTO createCourseType(@RequestBody CourseTypeRequestDTO request) {
-        CourseType createdCourseType = service.createCourseType(request.getDescription(),
-                request.isApprovedByOwner(), request.getPrice());
+        CourseType createdCourseType = courseTypeService.createCourseType(request.getDescription(), request.isApprovedByOwner(), request.getPrice());
         return new CourseTypeResponseDTO(createdCourseType);
     }
 
     @GetMapping("/courseTypes/{id}")
-    public CourseTypeResponseDTO findCourseTypeById(@PathVariable(name="id") int id) {
-        CourseType courseType = service.getCourseType(id);
+    public CourseTypeResponseDTO findCourseTypeById(@PathVariable(name = "id") int id) {
+        CourseType courseType = courseTypeService.getCourseType(id);
         return new CourseTypeResponseDTO(courseType);
     }
 
     @GetMapping("/courseTypes")
     public CourseTypeListDTO findAllCourseTypes() {
-        List<CourseTypeResponseDTO> dtos = new ArrayList<>();
-        for (CourseType courseType : service.getAllCourseTypes()) {
-            dtos.add(new CourseTypeResponseDTO(courseType));
+        List<CourseTypeResponseDTO> courseTypeResponseDTOS = new ArrayList<>();
+        for (CourseType courseType : courseTypeService.getAllCourseTypes()) {
+            courseTypeResponseDTOS.add(new CourseTypeResponseDTO(courseType));
         }
-        return new CourseTypeListDTO(dtos);
+        return new CourseTypeListDTO(courseTypeResponseDTOS);
     }
 
     @DeleteMapping("/courseTypes/{id}")
-    public ResponseEntity<String> deleteCourseType(@PathVariable(name="id") int id) {
-        service.deleteCourseType(id);
-         return ResponseEntity.ok("Course type with ID " + id + " has been deleted.");
+    public ResponseEntity<String> deleteCourseType(@PathVariable(name = "id") int id) {
+        courseTypeService.deleteCourseType(id);
+        return ResponseEntity.ok("Course type with ID " + id + " has been deleted.");
     }
 
     @DeleteMapping("/courseTypes")
     public ResponseEntity<String> deleteAllCourseTypes() {
-        service.deleteAllCourseTypes();
+        courseTypeService.deleteAllCourseTypes();
         return ResponseEntity.ok("All course types have been deleted.");
     }
 
     @GetMapping("/courseTypes/price/{price}")
     public CourseTypeListDTO getCourseTypeByPrice(@PathVariable(name = "price") float price) {
-        List<CourseTypeResponseDTO> dtos = new ArrayList<>(); 
-        List<CourseType> courseTypes = service.getCourseTypeByPrice(price);
+        List<CourseTypeResponseDTO> courseTypeResponseDTOS = new ArrayList<>();
+        List<CourseType> courseTypes = courseTypeService.getCourseTypeByPrice(price);
         for (CourseType courseType : courseTypes) {
-            dtos.add(new CourseTypeResponseDTO(courseType));
+            courseTypeResponseDTOS.add(new CourseTypeResponseDTO(courseType));
         }
-        return new CourseTypeListDTO(dtos);
+        return new CourseTypeListDTO(courseTypeResponseDTOS);
     }
 
     @GetMapping("/courseTypes/approvedByOwner/{isApprovedByOwner}")
     public CourseTypeListDTO getCourseTypeByApprovedByOwner(@PathVariable(name = "isApprovedByOwner") boolean approvedByOwner) {
-        List<CourseTypeResponseDTO> dtos = new ArrayList<>(); 
-        List<CourseType> courseTypes = service.getByApprovedByOwner(approvedByOwner);
+        List<CourseTypeResponseDTO> courseTypeResponseDTOS = new ArrayList<>();
+        List<CourseType> courseTypes = courseTypeService.getByApprovedByOwner(approvedByOwner);
         for (CourseType courseType : courseTypes) {
-            dtos.add(new CourseTypeResponseDTO(courseType));
+            courseTypeResponseDTOS.add(new CourseTypeResponseDTO(courseType));
         }
-        return new CourseTypeListDTO(dtos);
+        return new CourseTypeListDTO(courseTypeResponseDTOS);
     }
 
     @PutMapping("/courseTypes/{id}")
     public CourseTypeResponseDTO updateCourseType(@PathVariable(name = "id") int id, @RequestBody CourseTypeRequestDTO request) {
-        CourseType updatedCourseType = service.updateCourseType(id, request.getDescription(), request.isApprovedByOwner(), request.getPrice());
+        CourseType updatedCourseType = courseTypeService.updateCourseType(id, request.getDescription(), request.isApprovedByOwner(), request.getPrice());
         return new CourseTypeResponseDTO(updatedCourseType);
     }
 
     @PutMapping("/courseTypes/approval/{id}")
     public CourseTypeResponseDTO updateCourseTypeApproval(@PathVariable(name = "id") int id, @RequestBody boolean approved) {
-        CourseType updatedCourseType = service.updateCourseTypeApproval(id, approved);
+        CourseType updatedCourseType = courseTypeService.updateCourseTypeApproval(id, approved);
         return new CourseTypeResponseDTO(updatedCourseType);
     }
 
     @GetMapping("/instructors/courseType/{id}")
     public InstructorResponseDTO getInstructorsByInstructorSuggestedCourseType(@PathVariable(name = "id") int courseTypeId) {
-        CourseType courseType = service.getCourseType(courseTypeId);
-        Instructor instructor = service.getInstructorsByInstructorSuggestedCourseType(courseType);
+        CourseType courseType = courseTypeService.getCourseType(courseTypeId);
+        Instructor instructor = courseTypeService.getInstructorsByInstructorSuggestedCourseType(courseType);
         return new InstructorResponseDTO(instructor);
     }
 }
