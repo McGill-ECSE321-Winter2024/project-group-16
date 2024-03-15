@@ -1,6 +1,7 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.service;
+package ca.mcgill.ecse321.SportsSchedulePlus.service.userservice;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration.Key;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
 import ca.mcgill.ecse321.utils.Helper;
@@ -21,21 +22,24 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
-    InstructorRepository instructorRepository;
+    private InstructorRepository instructorRepository;
     @Autowired
-    CustomerRepository customerRepository;
+    private CustomerRepository customerRepository;
     @Autowired
-    PersonRepository personRepository;
+    private PersonRepository personRepository;
     @Autowired
-    PersonRoleRepository personRoleRepository;
+    private PersonRoleRepository personRoleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    CourseTypeService courseTypeService;
+    private CourseTypeService courseTypeService;
     @Autowired
-    OwnerRepository ownerRepository;
+    private OwnerRepository ownerRepository;
     @Autowired
     private DailyScheduleRepository dailyScheduleRepository;
+
+    @Autowired
+    private RegistrationRepository registrationRepository;
 
     @Transactional
     public Person createUser(String name, String email, String password, PersonRole role) {
@@ -72,8 +76,23 @@ public class UserService {
             Customer customer = customerRepository.findCustomerById(existingPerson.getId());
 
             PersonRole newPersonRole = new Instructor(customer, experience);
-            PersonRole oldPersonRole = existingPerson.getPersonRole();
 
+            Customer instructor = (Customer) newPersonRole;
+
+            // Save new instructor role
+            personRoleRepository.save(newPersonRole);
+            
+            // Update payment info to be associated with the new Instructor object instead of the old Customer
+            List <Registration> customerPayments = registrationRepository.findRegistrationsByKeyCustomer(customer);
+            for (Registration oldPayment : customerPayments){
+                Key updatedKey = new Key(instructor, oldPayment.getKey().getScheduledCourse());
+                Registration newPayment = new Registration(updatedKey);
+                registrationRepository.delete(oldPayment);
+                registrationRepository.save(newPayment);
+            }
+
+            PersonRole oldPersonRole = existingPerson.getPersonRole();
+            
             personRoleRepository.delete(oldPersonRole);
             customerRepository.delete(customer);
             personRepository.delete(existingPerson);
