@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.service;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
 import ca.mcgill.ecse321.utils.Helper;
@@ -21,6 +22,9 @@ public class InstructorService {
 
   @Autowired
   InstructorRepository instructorRepository;
+
+  @Autowired
+  OwnerRepository ownerRepository;
 
   @Autowired
   PersonRepository personRepository;
@@ -163,5 +167,23 @@ public class InstructorService {
     instructor.addInstructorSuggestedCourseType(courseTypeCreated);
     // Save the instructor with the updated suggested course types
     instructorRepository.save(instructor);
+  }
+
+  @Transactional
+  public void suggestCourseType(PersonRole personRole, CourseType courseType) {
+    CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getDescription(), courseType.getApprovedByOwner(),courseType.getPrice());
+    // Add the course type to the instructor's suggested course types
+    if ( personRole instanceof Instructor){
+      Instructor instructor = (Instructor) personRole;
+      instructor.addInstructorSuggestedCourseType(courseTypeCreated);
+      // Save the instructor with the updated suggested course types
+      instructorRepository.save(instructor);
+    }
+    if ( personRole instanceof Owner){
+      Owner owner = (Owner) personRole;
+      owner.addOwnerSuggestedCourse(courseTypeCreated);
+      // Save the instructor with the updated suggested course types
+      ownerRepository.save(owner);
+    }
   }
 }

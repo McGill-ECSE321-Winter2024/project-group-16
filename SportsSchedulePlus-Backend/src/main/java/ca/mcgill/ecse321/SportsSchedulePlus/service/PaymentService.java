@@ -130,6 +130,9 @@ public class PaymentService {
         sc.addCoursePayment(p);
         paymentRepository.save(p);
         // Send a payment confirmation email to the user
+
+        // Add payments to customer payments
+        // Add course to customer scheduled courses
         sendPaymentConfirmationEmail(p);
         return p;
     }

@@ -9,9 +9,11 @@ import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
 import ca.mcgill.ecse321.utils.Helper;
 
@@ -29,6 +31,9 @@ public class CourseTypeService {
 
     @Autowired
     private InstructorRepository instructorRepository;
+
+    @Autowired
+    private OwnerRepository ownerRepository;
 
 
     @Transactional
@@ -175,6 +180,11 @@ public class CourseTypeService {
     public CourseType updateCourseTypeApproval(int id, boolean approved) {
         CourseType courseType = getCourseType(id);
         courseType.setApprovedByOwner(approved);
+        if(approved){
+            Owner owner = Helper.toList(ownerRepository.findAll()).get(0);
+            owner.addApprovedCourse(courseType);
+            ownerRepository.save(owner);
+        }
         // Save the updated course before returning
         courseTypeRepository.save(courseType);
         return courseType;
