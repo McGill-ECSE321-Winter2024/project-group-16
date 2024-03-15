@@ -5,6 +5,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
 import ca.mcgill.ecse321.utils.Helper;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.*;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,16 +37,56 @@ public class UserService {
     @Autowired
     private DailyScheduleRepository dailyScheduleRepository;
 
-
+    @Transactional
+    public Person createUser(String name, String email, String password, PersonRole role) {
+        if (!(role instanceof Instructor)) {
+            Helper.validateUser(personRepository, name, email, password, true);
+        }
+        personRoleRepository.save(role);
+        Person person = new Person(name, email, passwordEncoder.encode(password), role);
+        personRepository.save(person);
+        return person;
+    }
 
     @Transactional
     public Person createCustomer(String name, String email, String password) {
-        Helper.validateUser(personRepository, name, email, password,true);
         PersonRole personRole = new Customer();
-        personRoleRepository.save(personRole);
-        Person person = new Person(name, email, passwordEncoder.encode(password), personRole);
-        personRepository.save(person);
-        return person;
+        return createUser(name, email, password, personRole);
+    }
+
+    @Transactional
+    public Person createOwner() {
+        Helper.validateUser(personRepository, "owner", "sports.schedule.plus@gmail.com", "admin", true);
+        PersonRole personRole = new Owner();
+        Owner owner = getOwner();
+        owner.setDailySchedule(createDailySchedule());
+        return createUser("owner", "owner@ssplus.com", "admin", personRole);
+    }
+
+    @Transactional
+    public Person createInstructor(String email, String experience) {
+        Person existingPerson = personRepository.findPersonByEmail(email);
+        if (existingPerson != null) {
+
+            String name = existingPerson.getName();
+            String password = existingPerson.getPassword();
+
+            Customer customer = customerRepository.findCustomerById(existingPerson.getId());
+
+            PersonRole newPersonRole = new Instructor(customer, experience);
+            PersonRole oldPersonRole = existingPerson.getPersonRole();
+
+            personRoleRepository.delete(oldPersonRole);
+            customerRepository.delete(customer);
+            personRepository.delete(existingPerson);
+            personRepository.deleteByEmail(email);
+            existingPerson.delete();
+
+            return createUser(name, email, password, newPersonRole);
+
+        } else {
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Customer with email " + email + " needs to exist before they can become an Instructor.");
+        }
     }
 
     @Transactional
@@ -141,41 +182,8 @@ public class UserService {
         customerRepository.save(c);
     }
 
-    @Transactional
-    public Person createInstructor(String email, String experience) {
-        // Check if the person with the given email exists
-        Person existingPerson = personRepository.findPersonByEmail(email);
-        if (existingPerson != null) {
 
-            // Retrieve existing person details
-            String name = existingPerson.getName();
-            String password = existingPerson.getPassword();
 
-            // Find associated customer
-            Customer customer = customerRepository.findCustomerById(existingPerson.getId());
-
-            // Create a new instructor role
-            PersonRole newPersonRole = new Instructor(customer, experience);
-            PersonRole oldPersonRole = existingPerson.getPersonRole();
-
-            personRoleRepository.delete(oldPersonRole);
-            customerRepository.delete(customer);
-            personRepository.delete(existingPerson);
-            personRepository.deleteByEmail(email);
-            existingPerson.delete();
-
-            // Save new instructor role
-            personRoleRepository.save(newPersonRole);
-
-            // Create and save new person with the instructor role
-            Person newPerson = new Person(name, email, password, newPersonRole);
-            personRepository.save(newPerson);
-
-            return newPerson;
-        } else {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Customer with email " + email + " needs to exist before they can become an Instructor.");
-        }
-    }
 
     @Transactional
     public Person updateInstructor(int id, String name, String email, String password, String experience) {
@@ -280,17 +288,7 @@ public class UserService {
         }
     }
 
-    @Transactional
-    public Person createOwner() {
-        Helper.validateUser(personRepository, "owner", "sports.schedule.plus@gmail.com", "admin",true);
-        PersonRole personRole = new Owner();
-        personRoleRepository.save(personRole);
-        Owner owner = getOwner();
-        owner.setDailySchedule(createDailySchedule());
-        Person person = new Person("owner", "owner@ssplus.com", passwordEncoder.encode("admin"), personRole);
-        personRepository.save(person);
-        return person;
-    }
+
 
     @Transactional
     public Person updateOwner(String name, String password) {

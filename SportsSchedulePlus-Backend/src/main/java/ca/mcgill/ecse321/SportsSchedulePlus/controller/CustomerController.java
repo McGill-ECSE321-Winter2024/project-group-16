@@ -19,8 +19,6 @@ public class CustomerController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private PersonService personService;
 
 
     @GetMapping(value = {"/customers"})
@@ -81,7 +79,7 @@ public class CustomerController {
         if (c == null) {
             throw new IllegalArgumentException("There is no such customer!");
         }
-        Person person = personService.getPersonById(c.getId());
+        Person person = userService.getPersonById(c.getId());
         CustomerResponseDTO customerDto = new CustomerResponseDTO(c);
         return (new PersonResponseDTO(person.getName(), person.getEmail(), person.getPassword(), customerDto));
     }
