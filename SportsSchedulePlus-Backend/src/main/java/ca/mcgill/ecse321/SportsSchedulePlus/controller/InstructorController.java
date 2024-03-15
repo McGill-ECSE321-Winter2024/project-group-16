@@ -90,8 +90,8 @@ public class InstructorController {
             return ResponseEntity.notFound().build();
         }
 
-        CourseType courseType = new CourseType(courseTypeRequestDTO.getDescription(), courseTypeRequestDTO.isApprovedByOwner(), courseTypeRequestDTO.getPrice());
-        userService.suggestCourseType(instructor, courseType);
+        CourseType courseType = new CourseType(courseTypeRequestDTO.getDescription(), false, courseTypeRequestDTO.getPrice());
+        CourseType returnedCourseType = userService.suggestCourseType(instructor, courseType);
 
         return ResponseEntity.ok("Course type suggested successfully.");
     }

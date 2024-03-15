@@ -273,14 +273,18 @@ public class UserService {
     }
 
     @Transactional
-    public void applyForInstructor(int customerId) {
+    public Customer applyForInstructor(int customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
         if (!customer.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
         }
         Customer c = customer.get();
+        if (c.getHasApplied()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " has already applied to be an instructor.");
+        }
         c.setHasApplied(true);
         customerRepository.save(c);
+        return c;
     }
 
     @Transactional
@@ -295,7 +299,7 @@ public class UserService {
     }
 
     @Transactional
-    public void rejectCustomer(int customerId) {
+    public Customer rejectCustomer(int customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
         if (!customer.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
@@ -303,6 +307,7 @@ public class UserService {
         Customer c = customer.get();
         c.setHasApplied(false);
         customerRepository.save(c);
+        return c;
     }
 
     @Transactional
@@ -325,10 +330,11 @@ public class UserService {
     }
 
     @Transactional
-    public void suggestCourseType(Instructor instructor, CourseType courseType) {
+    public CourseType suggestCourseType(Instructor instructor, CourseType courseType) {
         CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getDescription(), courseType.getApprovedByOwner(), courseType.getPrice());
         instructor.addInstructorSuggestedCourseType(courseTypeCreated);
         instructorRepository.save(instructor);
+        return courseTypeCreated;
     }
 
     @Transactional

@@ -21,12 +21,6 @@ public class CourseTypeController {
     @Autowired
     private CourseTypeService courseTypeService;
 
-    @PostMapping("/courseTypes")
-    public CourseTypeResponseDTO createCourseType(@RequestBody CourseTypeRequestDTO request) {
-        CourseType createdCourseType = courseTypeService.createCourseType(request.getDescription(), request.isApprovedByOwner(), request.getPrice());
-        return new CourseTypeResponseDTO(createdCourseType);
-    }
-
     @GetMapping("/courseTypes/{id}")
     public CourseTypeResponseDTO findCourseTypeById(@PathVariable(name = "id") int id) {
         CourseType courseType = courseTypeService.getCourseType(id);
