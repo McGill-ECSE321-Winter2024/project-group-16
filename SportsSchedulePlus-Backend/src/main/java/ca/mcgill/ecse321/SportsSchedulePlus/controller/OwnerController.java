@@ -48,7 +48,7 @@ public class OwnerController {
 
     @PutMapping(value = {"/owner", "/owner/"})
     public PersonResponseDTO updateOwner(@RequestBody PersonResponseDTO personDTO) {
-        Person person = userService.updateOwner(personDTO.getName(), personDTO.getPassword());
+        Person person = userService.updateUser(-1, personDTO.getName(), "", personDTO.getPassword(), "");
         return convertToDTO(person);
     }
 

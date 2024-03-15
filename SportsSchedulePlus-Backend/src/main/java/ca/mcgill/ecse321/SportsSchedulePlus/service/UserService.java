@@ -39,9 +39,6 @@ public class UserService {
 
     @Transactional
     public Person createUser(String name, String email, String password, PersonRole role) {
-        if (!(role instanceof Instructor)) {
-            Helper.validateUser(personRepository, name, email, password, true);
-        }
         personRoleRepository.save(role);
         Person person = new Person(name, email, passwordEncoder.encode(password), role);
         personRepository.save(person);
@@ -51,12 +48,13 @@ public class UserService {
     @Transactional
     public Person createCustomer(String name, String email, String password) {
         PersonRole personRole = new Customer();
+        Helper.validateUser(personRepository, name, email, password, true);
+
         return createUser(name, email, password, personRole);
     }
 
     @Transactional
     public Person createOwner() {
-        Helper.validateUser(personRepository, "owner", "sports.schedule.plus@gmail.com", "admin", true);
         PersonRole personRole = new Owner();
         Owner owner = getOwner();
         owner.setDailySchedule(createDailySchedule());
@@ -90,25 +88,73 @@ public class UserService {
     }
 
     @Transactional
-    public Person updateCustomer(int id, String name, String email, String password) {
-        Optional <Person> optionalPerson = personRepository.findById(id);
-        if (optionalPerson.isPresent()) {
-            Person person = optionalPerson.get();
-            if (person.getPersonRole() instanceof Customer) {
-                boolean newEmail = !person.getEmail().equals(email);
-                Helper.validateUser(personRepository, name, email, password,newEmail);
-                person.setName(name);
-                person.setEmail(email);
-                person.setPassword(passwordEncoder.encode(password));
-                personRepository.save(person);
-                return person;
-            } else {
-                throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Customer with ID " + id + " does not exist.");
-            }
-        } else {
+    public Person updateUser(int id, String name, String email, String password, String experience) {
+        Optional<Person> optionalOwner = personRepository.findById(getOwner().getId());
+        Optional<Person> optionalPerson = personRepository.findById(id);
+
+        if (!optionalPerson.isPresent() && id != -1) {
             throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with ID " + id + " does not exist.");
         }
+        if (!optionalOwner.isPresent() && id == -1) {
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner does not exist.");
+        }
+
+        Person customerOrInstructor = optionalPerson.get();
+        Person owner = optionalOwner.get();
+
+        boolean isOwner = owner.getPersonRole() instanceof Owner;
+        boolean isCustomer = customerOrInstructor.getPersonRole() instanceof Customer;
+        boolean isInstructor = customerOrInstructor.getPersonRole() instanceof Instructor;
+
+        boolean newEmail = !customerOrInstructor.getEmail().equals(email);
+
+        if (isOwner) {
+            updateOwner(owner, name, password);
+            return owner;
+        } else if (isInstructor) {
+            Instructor instructor = (Instructor) customerOrInstructor.getPersonRole();
+            instructor.setExperience(experience);
+            updatePerson(customerOrInstructor, name, email, password, newEmail);
+            return customerOrInstructor;
+        } else if (isCustomer) {
+            updatePerson(customerOrInstructor, name, email, password, newEmail);
+            return customerOrInstructor;
+        }
+        throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "User instance could not be modified.");
     }
+
+    private void updatePerson(Person person, String name, String email, String password, boolean newEmail) {
+        Helper.validateUser(personRepository, name, email, password, newEmail);
+        person.setName(name);
+        person.setEmail(email);
+        person.setPassword(passwordEncoder.encode(password));
+        personRepository.save(person);
+    }
+
+    private void updateOwner(Person ownerPerson, String name, String password) {
+        updatePerson(ownerPerson, name, ownerPerson.getEmail(), password, false);
+    }
+
+//    @Transactional
+//    public Person updateCustomer(int id, String name, String email, String password) {
+//        Optional <Person> optionalPerson = personRepository.findById(id);
+//        if (optionalPerson.isPresent()) {
+//            Person person = optionalPerson.get();
+//            if (person.getPersonRole() instanceof Customer) {
+//                boolean newEmail = !person.getEmail().equals(email);
+//                Helper.validateUser(personRepository, name, email, password,newEmail);
+//                person.setName(name);
+//                person.setEmail(email);
+//                person.setPassword(passwordEncoder.encode(password));
+//                personRepository.save(person);
+//                return person;
+//            } else {
+//                throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Customer with ID " + id + " does not exist.");
+//            }
+//        } else {
+//            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with ID " + id + " does not exist.");
+//        }
+//    }
 
     @Transactional
     public Customer getCustomer(int id) {
@@ -185,28 +231,28 @@ public class UserService {
 
 
 
-    @Transactional
-    public Person updateInstructor(int id, String name, String email, String password, String experience) {
-        Optional <Person> optionalPerson = personRepository.findById(id);
-        if (optionalPerson.isPresent()) {
-            Person person = optionalPerson.get();
-            if (person.getPersonRole() instanceof Instructor) {
-                Instructor instructor = (Instructor) person.getPersonRole();
-                boolean newEmail = !person.getEmail().equals(email);
-                Helper.validateUser(personRepository, name, email, password,newEmail);
-                instructor.setExperience(experience);
-                person.setName(name);
-                person.setEmail(email);
-                person.setPassword(passwordEncoder.encode(password));
-                personRepository.save(person);
-                return person;
-            } else {
-                throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with ID " + id + " is not an instructor.");
-            }
-        } else {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with ID " + id + " does not exist.");
-        }
-    }
+//    @Transactional
+//    public Person updateInstructor(int id, String name, String email, String password, String experience) {
+//        Optional <Person> optionalPerson = personRepository.findById(id);
+//        if (optionalPerson.isPresent()) {
+//            Person person = optionalPerson.get();
+//            if (person.getPersonRole() instanceof Instructor) {
+//                Instructor instructor = (Instructor) person.getPersonRole();
+//                boolean newEmail = !person.getEmail().equals(email);
+//                Helper.validateUser(personRepository, name, email, password,newEmail);
+//                instructor.setExperience(experience);
+//                person.setName(name);
+//                person.setEmail(email);
+//                person.setPassword(passwordEncoder.encode(password));
+//                personRepository.save(person);
+//                return person;
+//            } else {
+//                throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with ID " + id + " is not an instructor.");
+//            }
+//        } else {
+//            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with ID " + id + " does not exist.");
+//        }
+//    }
 
     @Transactional
     public int deleteInstructor(int id) {
@@ -290,25 +336,25 @@ public class UserService {
 
 
 
-    @Transactional
-    public Person updateOwner(String name, String password) {
-        Owner owner = getOwner();
-        Optional<Person> optionalPerson = personRepository.findById(owner.getId());
-        if (optionalPerson.isPresent()) {
-            Person person = optionalPerson.get();
-            if (person.getPersonRole() instanceof Owner) {
-                Helper.validateUser(personRepository, name, person.getEmail(), password, false);
-                person.setName(name);
-                person.setPassword(passwordEncoder.encode(password));
-                personRepository.save(person);
-                return person;
-            } else {
-                throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "The owner does not yet exist within the system.");
-            }
-        } else {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "The owner does not yet exist within the system.");
-        }
-    }
+//    @Transactional
+//    public Person updateOwner(String name, String password) {
+//        Owner owner = getOwner();
+//        Optional<Person> optionalPerson = personRepository.findById(owner.getId());
+//        if (optionalPerson.isPresent()) {
+//            Person person = optionalPerson.get();
+//            if (person.getPersonRole() instanceof Owner) {
+//                Helper.validateUser(personRepository, name, person.getEmail(), password, false);
+//                person.setName(name);
+//                person.setPassword(passwordEncoder.encode(password));
+//                personRepository.save(person);
+//                return person;
+//            } else {
+//                throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "The owner does not yet exist within the system.");
+//            }
+//        } else {
+//            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "The owner does not yet exist within the system.");
+//        }
+//    }
 
     // Custom query methods
     @Transactional

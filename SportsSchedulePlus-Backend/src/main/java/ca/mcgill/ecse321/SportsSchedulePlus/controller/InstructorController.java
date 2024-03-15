@@ -78,7 +78,7 @@ public class InstructorController {
         String updatedExperience = instructorDTO.get("experience");
 
         // Use the extracted values for the update
-        Person person = userService.updateInstructor(id, updatedName, updatedEmail, updatedPassword, updatedExperience);
+        Person person = userService.updateUser(id, updatedName, updatedEmail, updatedPassword, updatedExperience);
 
         return convertToDTO(person);
     }

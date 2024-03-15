@@ -46,7 +46,7 @@ public class CustomerController {
 
     @PutMapping(value = {"/customers/{id}"})
     public PersonResponseDTO updateCustomer(@PathVariable("id") int id, @RequestBody PersonResponseDTO personDto) {
-        Person person = userService.updateCustomer(id, personDto.getName(), personDto.getEmail(), personDto.getPassword());
+        Person person = userService.updateUser(id, personDto.getName(), personDto.getEmail(), personDto.getPassword(), "");
         return convertToDto(person);
     }
 
