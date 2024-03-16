@@ -68,10 +68,6 @@ public class DailyScheduleController {
      */
     @PutMapping(value = {"/openingHours/{id}", "/openingHours/{id}/"})
     public DailyScheduleResponseDTO updateDailySchedule(@PathVariable("id") int id, @RequestBody DailyScheduleRequestDTO request) {
-       
-        if(request.getOpeningTime() == null ){
-            System.out.println("null !");
-        }
         Time openingTime = Time.valueOf(request.getOpeningTime());
         Time closingTime = Time.valueOf(request.getClosingTime());
         return new DailyScheduleResponseDTO(userService.updateDailyScheduleByID(id, openingTime, closingTime));
