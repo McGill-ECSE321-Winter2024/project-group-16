@@ -5,6 +5,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration.Key;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
 import ca.mcgill.ecse321.utils.Helper;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeListDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.*;
 
 import jakarta.transaction.Transactional;
@@ -475,6 +476,8 @@ public class UserService {
         dailyScheduleRepository.save(ds);
         return ds;
     }
+
+
 
 
 }
