@@ -3,11 +3,12 @@ package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.owner.OwnerResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
 
 
 @CrossOrigin(origins = "*")

@@ -4,7 +4,6 @@ import java.util.List;
 import java.sql.Time;
 import java.util.ArrayList;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.dailyschedule.DailyScheduleResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.dailyschedule.DailyScheduleRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.dailyschedule.DailyScheduleListResponseDTO;
 
@@ -68,6 +68,10 @@ public class DailyScheduleController {
      */
     @PutMapping(value = {"/openingHours/{id}", "/openingHours/{id}/"})
     public DailyScheduleResponseDTO updateDailySchedule(@PathVariable("id") int id, @RequestBody DailyScheduleRequestDTO request) {
+       
+        if(request.getOpeningTime() == null ){
+            System.out.println("null !");
+        }
         Time openingTime = Time.valueOf(request.getOpeningTime());
         Time closingTime = Time.valueOf(request.getClosingTime());
         return new DailyScheduleResponseDTO(userService.updateDailyScheduleByID(id, openingTime, closingTime));

@@ -11,7 +11,7 @@ public class DailyScheduleRequestDTO {
 
     public boolean setOpeningTime(String aOpeningTime) {
         boolean wasSet = false;
-        closingTime = aOpeningTime;
+        openingTime = aOpeningTime;
         wasSet = true;
         return wasSet;
     }

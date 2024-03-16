@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.LoginRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.SignupRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
 
 
 @RestController
