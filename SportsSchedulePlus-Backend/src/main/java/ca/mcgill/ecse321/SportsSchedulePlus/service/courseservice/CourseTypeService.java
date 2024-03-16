@@ -10,11 +10,15 @@ import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusExceptio
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
 import ca.mcgill.ecse321.utils.Helper;
 
 
@@ -35,6 +39,8 @@ public class CourseTypeService {
     @Autowired
     private OwnerRepository ownerRepository;
 
+    @Autowired
+    private PersonRepository personRepository;
 
     @Transactional
     public CourseType createCourseType(String description, boolean approvedByOwner, float price) {
@@ -120,6 +126,17 @@ public class CourseTypeService {
     @Transactional
     public List<CourseType> getAllCourseTypes() {
         return Helper.toList(courseTypeRepository.findAll());
+    }
+
+    @Transactional
+    public List<CourseType> getAllApprovedCourseTypes() {
+        List<CourseType> courseTypes = Helper.toList(courseTypeRepository.findAll());
+        for (CourseType courseType : courseTypes){
+            if(!courseType.getApprovedByOwner()){
+                courseTypes.remove(courseType);
+            }
+        }
+        return courseTypes;
     }
 
     @Transactional

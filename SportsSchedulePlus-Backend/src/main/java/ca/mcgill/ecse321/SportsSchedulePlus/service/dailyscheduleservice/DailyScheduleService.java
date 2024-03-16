@@ -4,6 +4,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusExceptio
 import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
 import ca.mcgill.ecse321.utils.Helper;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,8 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Collections;
+import java.util.Comparator;
 
 @Service
 public class DailyScheduleService {
@@ -35,7 +38,15 @@ public class DailyScheduleService {
 
     @Transactional
     public List<DailySchedule> getAllDailySchedules() {
-        return Helper.toList(dailyScheduleRepository.findAll());
+        List<DailySchedule> dailySchedules = Helper.toList(dailyScheduleRepository.findAll());
+        // Sort the list by ID
+        Collections.sort(dailySchedules, new Comparator<DailySchedule>() {
+            @Override
+            public int compare(DailySchedule schedule1, DailySchedule schedule2) {
+                return Integer.compare(schedule1.getId(), schedule2.getId());
+            }
+        });
+        return dailySchedules;
     }
 
     @Transactional

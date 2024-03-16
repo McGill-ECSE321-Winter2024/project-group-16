@@ -49,10 +49,9 @@ public class InstructorController {
         return userService.getInstructorsBySupervisedCourse(scheduledCourse).stream().map(instructor -> convertToDTO(instructor)).collect(Collectors.toList());
     }
 
-    @GetMapping(value = {"/instructors/suggested-courses"})
-    public PersonResponseDTO getInstructorsBySuggestedCourse(@RequestBody CourseTypeRequestDTO courseTypeDTO) {
-        CourseType courseType = new CourseType(courseTypeDTO.getDescription(), courseTypeDTO.isApprovedByOwner(), courseTypeDTO.getPrice());
-        return convertToDTO(userService.getInstructorBySuggestedCourseTypes(courseType));
+    @GetMapping(value = {"/instructors/suggestedCourses/{id}"})
+    public PersonResponseDTO getInstructorsBySuggestedCourse(@PathVariable("id") int courseTypeId) {
+        return convertToDTO(userService.getInstructorBySuggestedCourseType(courseTypeId));
     }
 
     @DeleteMapping(value = {"/instructors/{id}"})

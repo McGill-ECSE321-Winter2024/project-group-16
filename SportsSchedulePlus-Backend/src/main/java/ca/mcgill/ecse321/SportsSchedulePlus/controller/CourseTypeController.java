@@ -7,6 +7,8 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.instructor.InstructorRespon
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,9 @@ public class CourseTypeController {
     @Autowired
     private CourseTypeService courseTypeService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/courseTypes/{id}")
     public CourseTypeResponseDTO findCourseTypeById(@PathVariable(name = "id") int id) {
         CourseType courseType = courseTypeService.getCourseType(id);
@@ -31,6 +36,15 @@ public class CourseTypeController {
      * converts each course type to a course type response dto
      */
     @GetMapping("/courseTypes")
+    public CourseTypeListDTO findAllApprovedCourseTypes() {
+        List<CourseTypeResponseDTO> courseTypeResponseDTOS = new ArrayList<>();
+        for (CourseType courseType : courseTypeService.getAllApprovedCourseTypes()) {
+            courseTypeResponseDTOS.add(new CourseTypeResponseDTO(courseType));
+        }
+        return new CourseTypeListDTO(courseTypeResponseDTOS);
+    }
+
+    @GetMapping("/courseTypes/all")
     public CourseTypeListDTO findAllCourseTypes() {
         List<CourseTypeResponseDTO> courseTypeResponseDTOS = new ArrayList<>();
         for (CourseType courseType : courseTypeService.getAllCourseTypes()) {
@@ -84,9 +98,18 @@ public class CourseTypeController {
     }
 
     @GetMapping("/instructors/courseType/{id}")
-    public InstructorResponseDTO getInstructorsByInstructorSuggestedCourseType(@PathVariable(name = "id") int courseTypeId) {
+    public InstructorResponseDTO getInstructorByCourseTypeId(@PathVariable(name = "id") int courseTypeId) {
         CourseType courseType = courseTypeService.getCourseType(courseTypeId);
         Instructor instructor = courseTypeService.getInstructorsByInstructorSuggestedCourseType(courseType);
         return new InstructorResponseDTO(instructor);
+    }
+
+    @GetMapping("/courseTypes/person/{id}")
+    public CourseTypeListDTO getCourseTypesByPersonId(@PathVariable(name = "id") int personId) {
+        List<CourseTypeResponseDTO> courseTypeResponseDTOS = new ArrayList<>();
+        for (CourseType courseType : userService.getCourseTypesSuggestedByPersonId(personId)) {
+            courseTypeResponseDTOS.add(new CourseTypeResponseDTO(courseType));
+        }
+        return new CourseTypeListDTO(courseTypeResponseDTOS);
     }
 }

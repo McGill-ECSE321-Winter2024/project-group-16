@@ -282,6 +282,10 @@ public class UserService {
     @Transactional
     public Customer applyForInstructor(int customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
+        Optional<Instructor> instructor = instructorRepository.findById(customerId);
+        if (instructor.isPresent()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " is already an instructor.");
+        }
         if (!customer.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
         }
@@ -297,6 +301,10 @@ public class UserService {
     @Transactional
     public Instructor approveCustomer(int customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
+        Optional<Instructor> instructor = instructorRepository.findById(customerId);
+        if (instructor.isPresent()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " is already an instructor.");
+        }
         if (!customer.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
         }
@@ -323,7 +331,8 @@ public class UserService {
     }
 
     @Transactional
-    public Instructor getInstructorBySuggestedCourseTypes(CourseType courseType) {
+    public Instructor getInstructorBySuggestedCourseType(int id) {
+        CourseType courseType = courseTypeService.getCourseType(id);
         Instructor instructor = instructorRepository.findInstructorByInstructorSuggestedCourseTypes(courseType);
         if (instructor == null) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "No Instructor found for the specified CourseType.");
@@ -345,18 +354,38 @@ public class UserService {
     }
 
     @Transactional
-    public Owner getInstructorByOwnerSuggestedCourses(CourseType courseType) {
-        return ownerRepository.findOwnerByOwnerSuggestedCourses(courseType);
-    }
-
-    @Transactional
-    public Owner getOwnerByApprovedCourses(CourseType courseType) {
-        return ownerRepository.findOwnerByApprovedCourses(courseType);
-    }
-
-    @Transactional
     public Person findPersonByEmail(String email) {
         return personRepository.findPersonByEmail(email);
+    }
+
+    /**
+     * this method returns the course types suggested by the user with the given id
+     * it checks the PersonRole of the user based on the given id
+     */
+    @Transactional
+    public List<CourseType> getCourseTypesSuggestedByPersonId(int personId) {
+        // this checks if the owner exists
+        Owner owner = getOwner();
+
+        Person person = personRepository.findPersonByPersonRole(owner);
+
+        boolean isOwner = person.getPersonRole() instanceof Owner;
+        boolean isCustomer = person.getPersonRole() instanceof Customer;
+
+        if (isCustomer) {
+            // case where the person is a customer
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customers cannot have suggested courses.");
+        } else if (isOwner) {
+            // case where the person is an owner
+            List<CourseType> courseTypes = owner.getOwnerSuggestedCourses();
+            if (courseTypes.isEmpty()) {
+                throw new SportsScheduleException(HttpStatus.NOT_FOUND, "No course types found for owner.");
+            }
+            return courseTypes;
+        } else {
+            // case where the person is an instructor
+            return getInstructor(person.getEmail()).getInstructorSuggestedCourseTypes();
+        } 
     }
 
 }

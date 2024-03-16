@@ -63,8 +63,8 @@ public class CustomerController {
     }
 
     @PutMapping(value = {"/customers/{customerId}/reject"})
-    public void rejectCustomer(@PathVariable("customerId") int customerId) {
-        userService.rejectCustomer(customerId);
+    public PersonResponseDTO rejectCustomer(@PathVariable("customerId") int customerId) {
+        return convertToDto(userService.rejectCustomer(customerId));
     }
 
     private PersonResponseDTO convertToDto(Person p) {

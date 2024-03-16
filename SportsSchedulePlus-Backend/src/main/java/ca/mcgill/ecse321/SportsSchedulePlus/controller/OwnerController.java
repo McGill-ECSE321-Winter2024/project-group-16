@@ -30,21 +30,6 @@ public class OwnerController {
         return convertToDTO(owner);
     }
 
-    @GetMapping(value = {"/owner/suggested-courses"})
-    public PersonResponseDTO getOwnerByOwnerSuggestedCourses(@RequestBody CourseTypeRequestDTO courseTypeDTO) {
-        CourseType courseType = new CourseType(courseTypeDTO.getDescription(), courseTypeDTO.isApprovedByOwner(), courseTypeDTO.getPrice());
-        Owner owner = userService.getInstructorByOwnerSuggestedCourses(courseType);
-        return convertToDTO(owner);
-
-    }
-
-    @GetMapping(value = {"/owner/approved-courses"})
-    public PersonResponseDTO getOwnerByApprovedCourses(@RequestBody CourseTypeRequestDTO courseTypeDTO) {
-        CourseType courseType = new CourseType(courseTypeDTO.getDescription(), courseTypeDTO.isApprovedByOwner(), courseTypeDTO.getPrice());
-        Owner owner = userService.getOwnerByApprovedCourses(courseType);
-        return convertToDTO(owner);
-    }
-
     @PostMapping(value = {"/owner", "/owner/"})
     public PersonResponseDTO createOwner() {
         Person person = userService.createOwner();
