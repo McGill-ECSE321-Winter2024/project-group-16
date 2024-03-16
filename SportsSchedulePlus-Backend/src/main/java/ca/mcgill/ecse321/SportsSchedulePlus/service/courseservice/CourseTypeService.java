@@ -130,13 +130,7 @@ public class CourseTypeService {
 
     @Transactional
     public List<CourseType> getAllApprovedCourseTypes() {
-        List<CourseType> courseTypes = Helper.toList(courseTypeRepository.findAll());
-        for (CourseType courseType : courseTypes){
-            if(!courseType.getApprovedByOwner()){
-                courseTypes.remove(courseType);
-            }
-        }
-        return courseTypes;
+        return courseTypeRepository.findByApprovedByOwnerTrue();
     }
 
     @Transactional

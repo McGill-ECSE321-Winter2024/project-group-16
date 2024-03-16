@@ -4,9 +4,8 @@ public class CourseTypeRequestDTO {
     private int id;
     private String description;
     private boolean approvedByOwner;
-
-
     private float price;
+    
     public int getId() {
         return id;
     }

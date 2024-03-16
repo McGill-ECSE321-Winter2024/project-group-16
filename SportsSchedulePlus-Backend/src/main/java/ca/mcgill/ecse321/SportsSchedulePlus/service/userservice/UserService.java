@@ -93,7 +93,6 @@ public class UserService {
             PersonRole newPersonRole = new Instructor(customer, experience);
 
             Customer instructor = (Customer) newPersonRole;
-
             personRoleRepository.save(newPersonRole);
 
             List<Registration> customerPayments = registrationRepository.findRegistrationsByKeyCustomer(customer);
@@ -192,6 +191,9 @@ public class UserService {
     @Transactional
     public Instructor getInstructor(String email) {
         Person person = personRepository.findPersonByEmail(email);
+        if (person == null) {
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with email " + email + " does not exist.");
+        }
         Optional<Instructor> optionalInstructor = instructorRepository.findById(person.getId());
         if (optionalInstructor.isPresent()) {
             Instructor instructor = optionalInstructor.get();
@@ -367,14 +369,19 @@ public class UserService {
         // this checks if the owner exists
         Owner owner = getOwner();
 
-        Person person = personRepository.findPersonByPersonRole(owner);
+        Optional<Person> optionalPerson = personRepository.findById(personId);
+        if (!optionalPerson.isPresent()) {
+            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "No person with ID " + personId + " found.");
+        }
+
+        Person person = optionalPerson.get();
 
         boolean isOwner = person.getPersonRole() instanceof Owner;
-        boolean isCustomer = person.getPersonRole() instanceof Customer;
+        boolean isInstructor = person.getPersonRole() instanceof Instructor;
 
-        if (isCustomer) {
-            // case where the person is a customer
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customers cannot have suggested courses.");
+        if (isInstructor) {
+            // case where the person is an instructor
+            return getInstructor(person.getEmail()).getInstructorSuggestedCourseTypes();
         } else if (isOwner) {
             // case where the person is an owner
             List<CourseType> courseTypes = owner.getOwnerSuggestedCourses();
@@ -383,8 +390,8 @@ public class UserService {
             }
             return courseTypes;
         } else {
-            // case where the person is an instructor
-            return getInstructor(person.getEmail()).getInstructorSuggestedCourseTypes();
+            // case where the person is a customer
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customers cannot have suggested courses.");
         } 
     }
 
