@@ -119,38 +119,45 @@ public class UserService {
         }
     }
 
+    /**
+     * this method updates the user
+     * it checks the PersonRole of the user based on the given id
+     * @param id if id == -1, then update the owner, else update user with the given id
+     */
     @Transactional
     public Person updateUser(int id, String name, String email, String password, String experience) {
-        Optional<Person> optionalOwner = personRepository.findById(getOwner().getId());
-        Optional<Person> optionalPerson = personRepository.findById(id);
+        // this checks if the owner exists
+        Owner owner = getOwner();
 
-        if (!optionalPerson.isPresent() && id != -1) {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with ID " + id + " does not exist.");
+        Person person;
+        // this checks if the person exists
+        if (id == -1) {
+            person = personRepository.findPersonByPersonRole(owner);
+        } else {
+            person = getPersonById(id);
         }
-        if (!optionalOwner.isPresent() && id == -1) {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner does not exist.");
+        
+        boolean isOwner = person.getPersonRole() instanceof Owner;
+        boolean isCustomer = person.getPersonRole() instanceof Customer;
+        boolean isInstructor = person.getPersonRole() instanceof Instructor;
+
+        boolean newEmail = false;
+        // check if the email is different from what is already in the database
+        if (isCustomer || isInstructor) {
+            newEmail = !person.getEmail().equals(email);
         }
-
-        Person customerOrInstructor = optionalPerson.get();
-        Person owner = optionalOwner.get();
-
-        boolean isOwner = owner.getPersonRole() instanceof Owner;
-        boolean isCustomer = customerOrInstructor.getPersonRole() instanceof Customer;
-        boolean isInstructor = customerOrInstructor.getPersonRole() instanceof Instructor;
-
-        boolean newEmail = !customerOrInstructor.getEmail().equals(email);
-
+        
         if (isOwner) {
-            updateOwner(owner, name, password);
-            return owner;
+            updateOwner(person, name, password);
+            return person;
         } else if (isInstructor) {
-            Instructor instructor = (Instructor) customerOrInstructor.getPersonRole();
+            Instructor instructor = (Instructor) person.getPersonRole();
             instructor.setExperience(experience);
-            updatePerson(customerOrInstructor, name, email, password, newEmail);
-            return customerOrInstructor;
+            updatePerson(person, name, email, password, newEmail);
+            return person;
         } else if (isCustomer) {
-            updatePerson(customerOrInstructor, name, email, password, newEmail);
-            return customerOrInstructor;
+            updatePerson(person, name, email, password, newEmail);
+            return person;
         }
         throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "User instance could not be modified.");
     }
@@ -172,7 +179,7 @@ public class UserService {
     public Customer getCustomer(int id) {
         Customer customer = customerRepository.findCustomerById(id);
         if (customer == null) {
-            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "No customer with ID" + id + " found.");
+            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "No customer with ID " + id + " found.");
         }
         return customer;
     }

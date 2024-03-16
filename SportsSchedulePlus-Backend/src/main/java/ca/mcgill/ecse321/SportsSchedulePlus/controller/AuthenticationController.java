@@ -28,7 +28,10 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
-
+    /*
+     * use to login as a user
+     * takes in email and password
+     */
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@RequestBody LoginRequestDTO loginDto) {
         Authentication authentication;
@@ -46,7 +49,11 @@ public class AuthenticationController {
         return new ResponseEntity<>("Authentication error.", HttpStatus.UNAUTHORIZED);
     }
 
-
+    /*
+     * use to register a new user
+     * takes in name, email and password
+     * this always creates a customer as per design deicision in deliverable 1
+     */
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequestDTO signUpDto) {
         userService.createCustomer(signUpDto.getName(), signUpDto.getEmail(), signUpDto.getPassword());

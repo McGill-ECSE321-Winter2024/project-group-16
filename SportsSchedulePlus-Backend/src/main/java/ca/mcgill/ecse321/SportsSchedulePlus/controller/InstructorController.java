@@ -25,7 +25,7 @@ public class InstructorController {
     private ScheduledCourseService scheduledCourseService;
 
 
-
+    
     @GetMapping(value = {"/instructors"})
     public List<PersonResponseDTO> getAllInstructors() {
         return userService.getAllInstructors().stream().map(instructor -> convertToDTO(instructor)).collect(Collectors.toList());

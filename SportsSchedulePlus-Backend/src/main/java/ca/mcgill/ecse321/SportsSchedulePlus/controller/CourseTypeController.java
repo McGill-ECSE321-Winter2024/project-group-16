@@ -27,6 +27,9 @@ public class CourseTypeController {
         return new CourseTypeResponseDTO(courseType);
     }
 
+    /*
+     * converts each course type to a course type response dto
+     */
     @GetMapping("/courseTypes")
     public CourseTypeListDTO findAllCourseTypes() {
         List<CourseTypeResponseDTO> courseTypeResponseDTOS = new ArrayList<>();
