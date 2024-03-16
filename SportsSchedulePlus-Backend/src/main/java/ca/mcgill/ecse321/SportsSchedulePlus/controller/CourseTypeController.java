@@ -89,7 +89,8 @@ public class CourseTypeController {
         return new CourseTypeResponseDTO(updatedCourseType);
     }
 
-    @GetMapping("/instructors/courseType/{id}")    public InstructorResponseDTO getInstructorsByInstructorSuggestedCourseType(@PathVariable(name = "id") int courseTypeId) {
+    @GetMapping("/instructors/courseType/{id}")
+    public InstructorResponseDTO getInstructorsByInstructorSuggestedCourseType(@PathVariable(name = "id") int courseTypeId) {
         CourseType courseType = courseTypeService.getCourseType(courseTypeId);
         Instructor instructor = courseTypeService.getInstructorsByInstructorSuggestedCourseType(courseType);
         return new InstructorResponseDTO(instructor);
