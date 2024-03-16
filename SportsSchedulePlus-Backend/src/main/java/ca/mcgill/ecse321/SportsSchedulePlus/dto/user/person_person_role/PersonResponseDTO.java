@@ -11,6 +11,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
 
 public class PersonResponseDTO {
 
+    private int id;
     private String name;
     private String email;
     private String password;
@@ -20,13 +21,14 @@ public class PersonResponseDTO {
 
     }
 
-    public PersonResponseDTO(String name, String email, String password){
+    public PersonResponseDTO(int id, String name, String email, String password){
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
     }
     public PersonResponseDTO(String name, String email, String password, PersonRoleResponseDTO personRoleDto){
-        personRoleDto.getId();
+        this.id = personRoleDto.getId();
         this.name = name;
         this.email = email;
         this.password = password;
@@ -34,6 +36,7 @@ public class PersonResponseDTO {
     }
 
     public PersonResponseDTO (Person p) {
+        id = p.getId();
         name = p.getName();
         email = p.getEmail();
         password = p.getPassword();
@@ -47,6 +50,10 @@ public class PersonResponseDTO {
                 personRoleDto = new OwnerResponseDTO((Owner) personRole);
             }
         }
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName(){

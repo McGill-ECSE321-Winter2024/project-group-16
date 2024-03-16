@@ -2,7 +2,7 @@ package ca.mcgill.ecse321.utils;
 
 import java.util.regex.Pattern;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.service.Mailer;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.mailerservice.Mailer;
 
 /**
  * Email Validator

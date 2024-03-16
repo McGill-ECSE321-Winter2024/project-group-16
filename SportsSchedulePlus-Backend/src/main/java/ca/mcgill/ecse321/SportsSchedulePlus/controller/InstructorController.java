@@ -6,7 +6,6 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonRe
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.ScheduledCourseService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +25,7 @@ public class InstructorController {
     private ScheduledCourseService scheduledCourseService;
 
 
-
+    
     @GetMapping(value = {"/instructors"})
     public List<PersonResponseDTO> getAllInstructors() {
         return userService.getAllInstructors().stream().map(instructor -> convertToDTO(instructor)).collect(Collectors.toList());
@@ -50,15 +49,14 @@ public class InstructorController {
         return userService.getInstructorsBySupervisedCourse(scheduledCourse).stream().map(instructor -> convertToDTO(instructor)).collect(Collectors.toList());
     }
 
-    @GetMapping(value = {"/instructors/suggested-courses"})
-    public PersonResponseDTO getInstructorsBySuggestedCourse(@RequestBody CourseTypeRequestDTO courseTypeDTO) {
-        CourseType courseType = new CourseType(courseTypeDTO.getDescription(), courseTypeDTO.isApprovedByOwner(), courseTypeDTO.getPrice());
-        return convertToDTO(userService.getInstructorBySuggestedCourseTypes(courseType));
+    @GetMapping(value = {"/instructors/suggestedCourses/{id}"})
+    public PersonResponseDTO getInstructorsBySuggestedCourse(@PathVariable("id") int courseTypeId) {
+        return convertToDTO(userService.getInstructorBySuggestedCourseType(courseTypeId));
     }
 
     @DeleteMapping(value = {"/instructors/{id}"})
     public ResponseEntity<String> deleteInstructor(@PathVariable("id") int id) {
-        int personId = userService.deleteInstructor(id);
+        int personId = userService.deleteUser(id);
         return ResponseEntity.ok("Instructor with id " + personId + " was successfully deleted.");
     }
 
@@ -91,8 +89,8 @@ public class InstructorController {
             return ResponseEntity.notFound().build();
         }
 
-        CourseType courseType = new CourseType(courseTypeRequestDTO.getDescription(), courseTypeRequestDTO.isApprovedByOwner(), courseTypeRequestDTO.getPrice());
-        userService.suggestCourseType(instructor, courseType);
+        CourseType courseType = new CourseType(courseTypeRequestDTO.getDescription(), false, courseTypeRequestDTO.getPrice());
+        CourseType returnedCourseType = userService.suggestCourseType(instructor, courseType);
 
         return ResponseEntity.ok("Course type suggested successfully.");
     }

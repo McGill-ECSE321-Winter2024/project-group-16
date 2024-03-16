@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.service;
+package ca.mcgill.ecse321.SportsSchedulePlus.service.mailerservice;
 
 import java.io.IOException;
 import org.slf4j.Logger;

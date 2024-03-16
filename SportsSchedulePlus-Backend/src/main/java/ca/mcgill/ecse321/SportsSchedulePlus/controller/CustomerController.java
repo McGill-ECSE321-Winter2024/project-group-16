@@ -5,8 +5,13 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.instructor.InstructorRespon
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
+<<<<<<< HEAD
 import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
 
+=======
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
+>>>>>>> ce9743204eac3e8caad488038a702938bbcd333f
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +40,7 @@ public class CustomerController {
 
     @DeleteMapping(value = {"/customers/{id}"})
     public ResponseEntity<String> deleteCustomer(@PathVariable("id") int id) {
-        int personId = userService.deleteCustomer(id);
+        int personId = userService.deleteUser(id);
         return ResponseEntity.ok("Customer with id " + personId + " was successfully deleted.");
     }
 
@@ -52,18 +57,19 @@ public class CustomerController {
     }
 
     @PutMapping(value = {"/customers/{customerId}/apply"})
-    public void applyForInstructor(@PathVariable("customerId") int customerId) {
-        userService.applyForInstructor(customerId);
+    public PersonResponseDTO applyForInstructor(@PathVariable("customerId") int customerId) {
+        Customer c = userService.applyForInstructor(customerId);
+        return convertToDto(c);
     }
 
     @PutMapping(value = {"/customers/{customerId}/approve"})
-    public InstructorResponseDTO approveCustomer(@PathVariable("customerId") int customerId) {
-        return new InstructorResponseDTO(userService.approveCustomer(customerId));
+    public PersonResponseDTO approveCustomer(@PathVariable("customerId") int customerId) {
+        return convertToDto(userService.approveCustomer(customerId));
     }
 
     @PutMapping(value = {"/customers/{customerId}/reject"})
-    public void rejectCustomer(@PathVariable("customerId") int customerId) {
-        userService.rejectCustomer(customerId);
+    public PersonResponseDTO rejectCustomer(@PathVariable("customerId") int customerId) {
+        return convertToDto(userService.rejectCustomer(customerId));
     }
 
     private PersonResponseDTO convertToDto(Person p) {
@@ -83,5 +89,13 @@ public class CustomerController {
         Person person = userService.getPersonById(c.getId());
         CustomerResponseDTO customerDto = new CustomerResponseDTO(c);
         return (new PersonResponseDTO(person.getName(), person.getEmail(), person.getPassword(), customerDto));
+    }
+    private PersonResponseDTO convertToDto(Instructor i) {
+        if (i == null) {
+            throw new IllegalArgumentException("There is no such customer!");
+        }
+        Person person = userService.getPersonById(i.getId());
+        InstructorResponseDTO instructorDto = new InstructorResponseDTO(i);
+        return (new PersonResponseDTO(person.getName(), person.getEmail(), person.getPassword(), instructorDto));
     }
 }

@@ -12,7 +12,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.Mailer;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.mailerservice.Mailer;
 import ca.mcgill.ecse321.utils.Helper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class ScheduledCourseService {
 
   
     @Transactional
-    public ScheduledCourse createScheduledCourse(int id, String date, String startTime, String endTime, String location, int courseTypeId) {
+    public ScheduledCourse createScheduledCourse(String date, String startTime, String endTime, String location, int courseTypeId) {
         // Parse date string
         LocalDate localDate = LocalDate.parse(date);
         // Convert LocalDate to java.sql.Date
@@ -61,7 +61,6 @@ public class ScheduledCourseService {
 
         // Use parsed values to create ScheduledCourse
         ScheduledCourse scheduledCourse = new ScheduledCourse();
-        scheduledCourse.setId(id);
         scheduledCourse.setDate(parsedDate);
         scheduledCourse.setStartTime(parsedStartTime);
         scheduledCourse.setEndTime(parsedEndTime);

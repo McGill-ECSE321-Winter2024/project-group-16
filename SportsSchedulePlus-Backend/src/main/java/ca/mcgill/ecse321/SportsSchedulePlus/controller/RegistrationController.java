@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.service.RegistrationService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.registrationservice.RegistrationService;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.payment.RegistrationResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.payment.RegistrationListResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;

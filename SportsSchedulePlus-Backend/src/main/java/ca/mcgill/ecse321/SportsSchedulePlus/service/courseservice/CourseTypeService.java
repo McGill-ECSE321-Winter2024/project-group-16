@@ -14,6 +14,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
 import ca.mcgill.ecse321.utils.Helper;
 
@@ -34,6 +35,7 @@ public class CourseTypeService {
 
     @Autowired
     private OwnerRepository ownerRepository;
+
 
 
     @Transactional
@@ -123,6 +125,17 @@ public class CourseTypeService {
     }
 
     @Transactional
+    public List<CourseType> getAllApprovedCourseTypes() {
+        List<CourseType> courseTypes = Helper.toList(courseTypeRepository.findAll());
+        for (CourseType courseType : courseTypes){
+            if(!courseType.getApprovedByOwner()){
+                courseTypes.remove(courseType);
+            }
+        }
+        return courseTypes;
+    }
+
+    @Transactional
     public void deleteCourseType(Integer id) {
         CourseType courseType = courseTypeRepository.findCourseTypeById(id);
         if(courseType == null){
@@ -177,7 +190,7 @@ public class CourseTypeService {
     }
 
     @Transactional
-    public CourseType updateCourseTypeApproval(int id, boolean approved) {
+    public CourseType toggleCourseTypeApproval(int id, boolean approved) {
         CourseType courseType = getCourseType(id);
         courseType.setApprovedByOwner(approved);
         if(approved){
