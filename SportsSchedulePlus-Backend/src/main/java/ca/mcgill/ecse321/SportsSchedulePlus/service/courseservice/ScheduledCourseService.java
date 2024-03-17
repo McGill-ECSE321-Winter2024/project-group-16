@@ -2,16 +2,9 @@ package ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.beans.MailConfigBean;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.*;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice.DailyScheduleService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.mailerservice.Mailer;
 import ca.mcgill.ecse321.utils.Helper;
 
@@ -26,6 +19,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -45,6 +39,9 @@ public class ScheduledCourseService {
 
     @Autowired
     private RegistrationRepository registrationRepository;
+
+    @Autowired
+    private DailyScheduleService dailyScheduleService;
 
     private Mailer mailer;
 
@@ -72,6 +69,7 @@ public class ScheduledCourseService {
         scheduledCourse.setCourseType(courseTypeRepository.findById(courseTypeId).orElse(null));
 
         validateScheduledCourse(scheduledCourse);
+        validateStartAndEndTimes(scheduledCourse);
 
         scheduledCourseRepository.save(scheduledCourse);
         return scheduledCourse;
@@ -92,6 +90,20 @@ public class ScheduledCourseService {
         }
         if (scheduledCourse.getEndTime().before(scheduledCourse.getStartTime())) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "End time must be after start time.");
+        }
+
+    }
+
+    private void validateStartAndEndTimes(ScheduledCourse scheduledCourse){
+
+        Calendar calendar = Calendar.getInstance();
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        int mappedDayOfWeek = (dayOfWeek + 6) % 7;
+
+        DailySchedule dailySchedule = dailyScheduleService.getDailyScheduleById(mappedDayOfWeek);
+
+        if (scheduledCourse.getStartTime().before(dailySchedule.getOpeningTime()) || scheduledCourse.getEndTime().after(dailySchedule.getClosingTime())){
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Scheduled course must respect opening and closing hours.");
         }
 
     }
@@ -127,6 +139,7 @@ public class ScheduledCourseService {
         existingScheduledCourse.setCourseType(courseTypeRepository.findById(courseTypeId).orElse(null));
 
         validateScheduledCourse(existingScheduledCourse);
+        validateStartAndEndTimes(existingScheduledCourse);
 
         scheduledCourseRepository.save(existingScheduledCourse);
 

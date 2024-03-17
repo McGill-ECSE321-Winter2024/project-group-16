@@ -100,6 +100,7 @@ public class CourseTypeService {
         }
     }
 
+
     @Transactional
     public CourseType getCourseType(Integer id) {
         CourseType courseType = courseTypeRepository.findById(id).orElse(null);
