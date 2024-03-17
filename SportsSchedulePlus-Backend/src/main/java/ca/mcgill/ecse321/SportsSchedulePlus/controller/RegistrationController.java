@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.service.registrationservice.RegistrationService;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.payment.RegistrationResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.payment.RegistrationListResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.registration.RegistrationResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.registration.RegistrationListResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 
 /**

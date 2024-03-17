@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.dto.payment;
+package ca.mcgill.ecse321.SportsSchedulePlus.dto.registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.customer.CustomerRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
