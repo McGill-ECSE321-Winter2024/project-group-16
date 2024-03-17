@@ -16,7 +16,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
-import ca.mcgill.ecse321.utils.HelperMethods;
+import ca.mcgill.ecse321.utils.Helper;
 
 
 /**
@@ -63,9 +63,9 @@ public class PaymentRepositoryTests {
         customerRepository.save(customer);
         CourseType courseType = new CourseType("Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
-        ScheduledCourse course = HelperMethods.createScheduledCourse(courseType);
+        ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Registration newPayment = HelperMethods.createRegistration(customer,course);
+        Registration newPayment = Helper.createRegistration(customer,course);
         registrationRepository.save(newPayment);
 
         // Find payments by confirmation number
@@ -88,9 +88,9 @@ public class PaymentRepositoryTests {
         customerRepository.save(customer);
         CourseType courseType = new CourseType("New Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
-        ScheduledCourse course = HelperMethods.createScheduledCourse(courseType);
+        ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Registration newPayment = HelperMethods.createRegistration(customer,course);
+        Registration newPayment = Helper.createRegistration(customer,course);
         registrationRepository.save(newPayment);
 
         // Find payments by key customer
@@ -114,9 +114,9 @@ public class PaymentRepositoryTests {
         customerRepository.save(customer);
         CourseType courseType = new CourseType("Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
-        ScheduledCourse course = HelperMethods.createScheduledCourse(courseType);
+        ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Registration newPayment = HelperMethods.createRegistration(customer,course);
+        Registration newPayment = Helper.createRegistration(customer,course);
         registrationRepository.save(newPayment);
 
         // Find payments by key scheduled course
@@ -140,9 +140,9 @@ public class PaymentRepositoryTests {
         customerRepository.save(customer);
         CourseType courseType = new CourseType("New Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
-        ScheduledCourse course = HelperMethods.createScheduledCourse(courseType);
+        ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Registration newPayment = HelperMethods.createRegistration(customer,course);
+        Registration newPayment = Helper.createRegistration(customer,course);
         registrationRepository.save(newPayment);
 
         // Find payments by key customer
@@ -182,7 +182,7 @@ public class PaymentRepositoryTests {
         // Create and save a scheduled course without payments
         CourseType courseType = new CourseType("Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
-        ScheduledCourse scheduledCourseWithNoPayments = HelperMethods.createScheduledCourse(courseType);
+        ScheduledCourse scheduledCourseWithNoPayments = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(scheduledCourseWithNoPayments);
 
         // Find payments for a scheduled course with no payments

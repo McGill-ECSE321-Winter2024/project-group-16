@@ -4,7 +4,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.util.*;
 
-import ca.mcgill.ecse321.utils.HelperMethods;
+import ca.mcgill.ecse321.utils.Helper;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
@@ -257,8 +257,8 @@ public boolean setExperience(String aExperience) {
 
     return getId() == other.getId() &&
       (Objects.equals(experience, other.experience)) &&
-      HelperMethods.compareListsElementWise(instructorSuggestedCourseTypes, other.instructorSuggestedCourseTypes) &&
-      HelperMethods.compareListsElementWise(supervisedCourses, other.supervisedCourses);
+      Helper.compareListsElementWise(instructorSuggestedCourseTypes, other.instructorSuggestedCourseTypes) &&
+      Helper.compareListsElementWise(supervisedCourses, other.supervisedCourses);
   }
 
   /**

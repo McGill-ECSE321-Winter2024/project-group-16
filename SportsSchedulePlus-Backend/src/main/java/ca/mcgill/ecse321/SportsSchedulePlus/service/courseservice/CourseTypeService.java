@@ -194,4 +194,3 @@ public class CourseTypeService {
         return courseType;
     }
 }
-
