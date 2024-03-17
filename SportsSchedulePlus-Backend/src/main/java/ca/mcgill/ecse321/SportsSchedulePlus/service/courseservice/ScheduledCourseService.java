@@ -14,14 +14,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 
 @Service
@@ -94,7 +97,7 @@ public class ScheduledCourseService {
 
     }
 
-    private void validateStartAndEndTimes(ScheduledCourse scheduledCourse){
+    private void validateStartAndEndTimes(ScheduledCourse scheduledCourse) {
 
         Calendar calendar = Calendar.getInstance();
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
@@ -102,7 +105,7 @@ public class ScheduledCourseService {
 
         DailySchedule dailySchedule = dailyScheduleService.getDailyScheduleById(mappedDayOfWeek);
 
-        if (scheduledCourse.getStartTime().before(dailySchedule.getOpeningTime()) || scheduledCourse.getEndTime().after(dailySchedule.getClosingTime())){
+        if (scheduledCourse.getStartTime().before(dailySchedule.getOpeningTime()) || scheduledCourse.getEndTime().after(dailySchedule.getClosingTime())) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Scheduled course must respect opening and closing hours.");
         }
 
@@ -116,7 +119,7 @@ public class ScheduledCourseService {
         if (existingScheduledCourse == null) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Scheduled course not found");
         }
-        if (courseTypeRepository.findCourseTypeById(courseTypeId) == null){
+        if (courseTypeRepository.findCourseTypeById(courseTypeId) == null) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Course type not found");
         }
         LocalDate localDate = LocalDate.parse(date);
@@ -283,7 +286,16 @@ public class ScheduledCourseService {
     }
 
     @Transactional
-    public List<ScheduledCourse> getScheduledCoursesByWeek(Date monday, Date sunday) {
+    public List<ScheduledCourse> getScheduledCoursesByWeek(String date) {
+        String regex = "\\d{4}-\\d{2}-\\d{2}";
+        if (!Pattern.matches(regex, date)) {
+            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Date needs to be provided in YEAR/MONTH/DATE format");
+        }
+        LocalDate inputDate = LocalDate.parse(date);
+        LocalDate mondayLocalDate = inputDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate sundayLocalDate = inputDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+        Date monday = java.sql.Date.valueOf(mondayLocalDate);
+        Date sunday = java.sql.Date.valueOf(sundayLocalDate);
         return scheduledCourseRepository.findScheduledCoursesByDateBetween(monday, sunday);
     }
 
