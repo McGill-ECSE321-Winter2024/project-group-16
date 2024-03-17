@@ -144,7 +144,7 @@ public class CourseTypeRepositoryTests {
     }
 
     /**
-     * Helper Method to create a list of CourseTypes.
+     * HelperMethods Method to create a list of CourseTypes.
      * 
      * @return List of CourseTypes
      */

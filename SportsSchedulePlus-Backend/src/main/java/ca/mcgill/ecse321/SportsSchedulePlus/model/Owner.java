@@ -4,7 +4,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.util.*;
 
-import ca.mcgill.ecse321.utils.Helper;
+import ca.mcgill.ecse321.utils.HelperMethods;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
@@ -249,9 +249,9 @@ public class Owner extends PersonRole {
 
     Owner other = (Owner) object;
     return getId() == other.getId() &&
-      Helper.compareListsElementWise(approvedCourses, other.approvedCourses) &&
-      Helper.compareListsElementWise(ownerSuggestedCourses, other.ownerSuggestedCourses) &&
-      Helper.compareListsElementWise(dailySchedule, other.getDailySchedule());
+      HelperMethods.compareListsElementWise(approvedCourses, other.approvedCourses) &&
+      HelperMethods.compareListsElementWise(ownerSuggestedCourses, other.ownerSuggestedCourses) &&
+      HelperMethods.compareListsElementWise(dailySchedule, other.getDailySchedule());
   }
 
   /**

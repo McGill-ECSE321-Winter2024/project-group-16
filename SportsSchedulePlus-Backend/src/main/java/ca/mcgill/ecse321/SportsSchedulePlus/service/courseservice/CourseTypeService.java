@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice;
 
+import ca.mcgill.ecse321.utils.HelperMethods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,6 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
-import ca.mcgill.ecse321.utils.Helper;
 
 
 import java.util.List;
@@ -107,7 +107,7 @@ public class CourseTypeService {
 
     @Transactional
     public List<CourseType> getAllCourseTypes() {
-        return Helper.toList(courseTypeRepository.findAll());
+        return HelperMethods.toList(courseTypeRepository.findAll());
     }
 
     @Transactional
@@ -130,7 +130,7 @@ public class CourseTypeService {
 
     @Transactional
     public void deleteAllCourseTypes() {
-        List<CourseType> courseTypes = Helper.toList(courseTypeRepository.findAll());
+        List<CourseType> courseTypes = HelperMethods.toList(courseTypeRepository.findAll());
         if (courseTypes == null || courseTypes.isEmpty()) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There are no course types.");
         }
@@ -176,7 +176,7 @@ public class CourseTypeService {
             CourseType courseType = getCourseType(id);
             Boolean approvalStatus = courseType.getApprovedByOwner();
             courseType.setApprovedByOwner(!approvalStatus);
-            Owner owner = Helper.toList(ownerRepository.findAll()).get(0);
+            Owner owner = HelperMethods.toList(ownerRepository.findAll()).get(0);
             if (!approvalStatus) {
                 owner.addApprovedCourse(courseType);
             } else {

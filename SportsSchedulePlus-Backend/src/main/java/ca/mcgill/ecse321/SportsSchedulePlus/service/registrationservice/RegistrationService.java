@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.service.mailerservice.Mailer;
+import ca.mcgill.ecse321.utils.HelperMethods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,6 @@ import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusExceptio
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration.Key;
-import ca.mcgill.ecse321.utils.Helper;
 
 /**
  * Service class for managing data related to Payments
@@ -47,7 +47,7 @@ public class RegistrationService {
      */
     @Transactional
     public List<Registration> getAllRegistrations() {
-        return Helper.toList(registrationRepository.findAll());
+        return HelperMethods.toList(registrationRepository.findAll());
     }
 
     /*

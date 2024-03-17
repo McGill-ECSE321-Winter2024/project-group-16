@@ -1,12 +1,12 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
+import ca.mcgill.ecse321.utils.HelperMethods;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
-import ca.mcgill.ecse321.utils.Helper;
 
 import java.util.List;
 
@@ -75,7 +75,7 @@ public class InstructorRepositoryTests {
         // Create Scheduled Course
         CourseType courseType = new CourseType("Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
-        ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+        ScheduledCourse scheduledCourse = HelperMethods.createScheduledCourse(courseType);
         scheduledCourseRepository.save(scheduledCourse);
 
         // Add Scheduled Course to Instructor
@@ -95,7 +95,7 @@ public class InstructorRepositoryTests {
         // Create Scheduled Course
         CourseType courseType = new CourseType("Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
-        ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+        ScheduledCourse scheduledCourse = HelperMethods.createScheduledCourse(courseType);
         scheduledCourseRepository.save(scheduledCourse);
 
         // Read Instructor From Database
@@ -147,7 +147,7 @@ public class InstructorRepositoryTests {
 
 
     /**
-     * Helper method to create an instructor.
+     * HelperMethods method to create an instructor.
      */
     private Instructor createInstructor() {
         Instructor instructor = new Instructor(1, "dance, yoga, pilates");

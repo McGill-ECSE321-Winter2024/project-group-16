@@ -5,7 +5,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration.Key;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice.DailyScheduleService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
-import ca.mcgill.ecse321.utils.Helper;
+import ca.mcgill.ecse321.utils.HelperMethods;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.*;
 
 import jakarta.transaction.Transactional;
@@ -51,7 +51,7 @@ public class UserService {
     @Transactional
     public Person createCustomer(String name, String email, String password) {
         PersonRole personRole = new Customer();
-        Helper.validateUser(personRepository, name, email, password, true);
+        HelperMethods.validateUser(personRepository, name, email, password, true);
         return createUser(name, email, password, personRole);
     }
 
@@ -161,7 +161,7 @@ public class UserService {
     }
 
     private void updatePerson(Person person, String name, String email, String password, boolean newEmail) {
-        Helper.validateUser(personRepository, name, email, password, newEmail);
+        HelperMethods.validateUser(personRepository, name, email, password, newEmail);
         person.setName(name);
         person.setEmail(email);
         person.setPassword(passwordEncoder.encode(password));
@@ -184,7 +184,7 @@ public class UserService {
 
     @Transactional
     public List<Customer> getAllCustomers() {
-        return Helper.toList(customerRepository.findAll());
+        return HelperMethods.toList(customerRepository.findAll());
     }
 
     @Transactional
@@ -204,7 +204,7 @@ public class UserService {
 
     @Transactional
     public List<Instructor> getAllInstructors() {
-        return Helper.toList(instructorRepository.findAll());
+        return HelperMethods.toList(instructorRepository.findAll());
     }
 
     @Transactional
@@ -229,7 +229,7 @@ public class UserService {
 
     @Transactional
     public List<Person> getAllPersons() {
-        return Helper.toList(personRepository.findAll());
+        return HelperMethods.toList(personRepository.findAll());
     }
 
     @Transactional
@@ -322,7 +322,7 @@ public class UserService {
 
     @Transactional
     public List<Instructor> getInstructorsBySupervisedCourse(ScheduledCourse scheduledCourse) {
-        return Helper.toList(instructorRepository.findInstructorBySupervisedCourses(scheduledCourse));
+        return HelperMethods.toList(instructorRepository.findInstructorBySupervisedCourses(scheduledCourse));
     }
 
     @Transactional
@@ -337,7 +337,7 @@ public class UserService {
 
     @Transactional
     public List<Instructor> getInstructorByExperience(String experience) {
-        return Helper.toList(instructorRepository.findInstructorByExperience(experience));
+        return HelperMethods.toList(instructorRepository.findInstructorByExperience(experience));
     }
 
     @Transactional

@@ -7,6 +7,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
+import ca.mcgill.ecse321.utils.HelperMethods;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
-import ca.mcgill.ecse321.utils.Helper;
 
 /**
  * This class contains unit tests for the ScheduledCourseRepository.
@@ -46,7 +46,7 @@ public class ScheduledCourseRepositoryTests {
     // Create and save a ScheduledCourse
     CourseType courseType = new CourseType("Sample Description", true, 99.99f);
     courseTypeRepository.save(courseType);
-    ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+    ScheduledCourse scheduledCourse = HelperMethods.createScheduledCourse(courseType);
     scheduledCourseRepository.save(scheduledCourse);
     // Find ScheduledCourse by location
     List <ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCourseByLocation(scheduledCourse.getLocation());
@@ -65,7 +65,7 @@ public class ScheduledCourseRepositoryTests {
   public void testFindScheduledCoursesByDate() {
     CourseType courseType = new CourseType("Sample Description", true, 99.99f);
     courseTypeRepository.save(courseType);
-    ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+    ScheduledCourse scheduledCourse = HelperMethods.createScheduledCourse(courseType);
     scheduledCourseRepository.save(scheduledCourse);
     List <ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByDate(scheduledCourse.getDate());
 
@@ -83,7 +83,7 @@ public class ScheduledCourseRepositoryTests {
   public void testFindScheduledCoursesByDateBetween() {
     CourseType courseType = new CourseType("Sample Description", true, 99.99f);
     courseTypeRepository.save(courseType);
-    ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+    ScheduledCourse scheduledCourse = HelperMethods.createScheduledCourse(courseType);
     scheduledCourseRepository.save(scheduledCourse);
     Date previousDate = Date.valueOf(scheduledCourse.getDate().toLocalDate().minusDays(1));
     Date nextDate = Date.valueOf(scheduledCourse.getDate().toLocalDate().plusDays(1));
@@ -103,7 +103,7 @@ public class ScheduledCourseRepositoryTests {
   public void testFindScheduledCoursesByCourseType() {
     CourseType courseType = new CourseType("Sample Description", true, 99.99f);
     courseTypeRepository.save(courseType);
-    ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+    ScheduledCourse scheduledCourse = HelperMethods.createScheduledCourse(courseType);
     scheduledCourseRepository.save(scheduledCourse);
 
     List <ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByCourseType(scheduledCourse.getCourseType());
@@ -122,7 +122,7 @@ public class ScheduledCourseRepositoryTests {
   public void testFindScheduledCoursesByStartTime() {
     CourseType courseType = new CourseType("Sample Description", true, 99.99f);
     courseTypeRepository.save(courseType);
-    ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+    ScheduledCourse scheduledCourse = HelperMethods.createScheduledCourse(courseType);
     scheduledCourseRepository.save(scheduledCourse);
     List <ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByStartTime(scheduledCourse.getStartTime());
 
@@ -140,7 +140,7 @@ public class ScheduledCourseRepositoryTests {
   public void testFindScheduledCoursesByEndTime() {
     CourseType courseType = new CourseType("Sample Description", true, 99.99f);
     courseTypeRepository.save(courseType);
-    ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
+    ScheduledCourse scheduledCourse = HelperMethods.createScheduledCourse(courseType);
     scheduledCourseRepository.save(scheduledCourse);
 
     List <ScheduledCourse> foundCourses = scheduledCourseRepository.findScheduledCoursesByEndTime(scheduledCourse.getEndTime());
