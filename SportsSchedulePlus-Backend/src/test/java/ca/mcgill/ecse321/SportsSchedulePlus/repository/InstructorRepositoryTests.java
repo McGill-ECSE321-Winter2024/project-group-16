@@ -1,12 +1,12 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
+import ca.mcgill.ecse321.utils.Helper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
-import ca.mcgill.ecse321.utils.Helper;
 
 import java.util.List;
 
@@ -147,7 +147,7 @@ public class InstructorRepositoryTests {
 
 
     /**
-     * Helper method to create an instructor.
+     * HelperMethods method to create an instructor.
      */
     private Instructor createInstructor() {
         Instructor instructor = new Instructor(1, "dance, yoga, pilates");

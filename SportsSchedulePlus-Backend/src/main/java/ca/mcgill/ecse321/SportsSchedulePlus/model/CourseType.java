@@ -42,7 +42,7 @@ public class CourseType {
   //------------------------
 
   public CourseType() {
-
+    scheduledCourses = new ArrayList < ScheduledCourse > ();
   }
   public CourseType(String aDescription, boolean aApprovedByOwner, float aPrice) {
     description = aDescription;

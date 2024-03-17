@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.ErrorDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.error.ErrorDTO;
 
 @ControllerAdvice
 public class SportsScheduleExceptionHandler {

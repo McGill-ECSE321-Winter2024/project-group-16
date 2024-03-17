@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Payment;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 /**
@@ -49,7 +49,7 @@ public class Helper {
   }
 
   /**
-   * Helper method to create a ScheduledCourse with dummy data.
+   * HelperMethods method to create a ScheduledCourse with dummy data.
    */
   public static ScheduledCourse createScheduledCourse(CourseType courseType) {
 
@@ -64,18 +64,17 @@ public class Helper {
   }
 
   /**
-   * Helper method to create a payment with dummy data.
+   * HelperMethods method to create a payment with dummy data.
    */
-  public static Payment createPayment(Customer customer, ScheduledCourse scheduledCourse) {
-    Payment.Key paymentKey = new Payment.Key(customer, scheduledCourse);
-    Payment newPayment = new Payment(paymentKey);
-    newPayment.setConfirmationNumber(12345);
-
-    return newPayment;
+  public static Registration createRegistration(Customer customer, ScheduledCourse scheduledCourse) {
+    Registration.Key registrationKey = new Registration.Key(customer, scheduledCourse);
+    Registration newRegistration= new Registration(registrationKey);
+    newRegistration.setConfirmationNumber(12345);
+    return newRegistration;
   }
 
   /**
-   * Helper method to create a list from an iterable.
+   * HelperMethods method to create a list from an iterable.
    */
   public static <T> List<T> toList(Iterable<T> iterable){
 		List<T> resultList = new ArrayList<T>();
@@ -85,7 +84,7 @@ public class Helper {
 		return resultList;
 	}
   /**
-   * Helper method to validate a user
+   * HelperMethods method to validate a user
    * @param personRepository
    * @param name
    * @param email

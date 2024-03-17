@@ -4,11 +4,11 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.util.*;
 
+import ca.mcgill.ecse321.utils.Helper;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import ca.mcgill.ecse321.utils.Helper;
 
 // line 29 "model.ump"
 // line 105 "model.ump"
@@ -50,11 +50,7 @@ public class Instructor extends Customer {
 }
 
 public Instructor(Customer customer, String experience) {
-    // Copy applied boolean from the customer
-    super.setHasApplied(customer.getHasApplied());
-    // Copy arrays from the customer
-    super.setCoursesRegistered(customer.getCoursesRegistered());
-    super.setCustomerPayments(customer.getCustomerPayments());
+  
     // Set fields specific to the Instructor
     this.experience = experience;
     this.setHasApplied(customer.getHasApplied());
