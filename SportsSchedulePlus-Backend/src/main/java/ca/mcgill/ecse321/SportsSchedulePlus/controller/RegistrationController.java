@@ -32,11 +32,11 @@ public class RegistrationController {
      */
     @GetMapping(value = {"/registrations", "/registrations/"})
     public RegistrationListResponseDTO getAllPayments() {
-        List<RegistrationResponseDTO> dtos = new ArrayList<>();
+        List<RegistrationResponseDTO> registrationResponseDTOS = new ArrayList<>();
         for (Registration registration : registrationService.getAllRegistrations()) {
-            dtos.add(new RegistrationResponseDTO(registration));
+            registrationResponseDTOS.add(new RegistrationResponseDTO(registration));
         }
-        return new RegistrationListResponseDTO(dtos);
+        return new RegistrationListResponseDTO(registrationResponseDTOS);
     }
 
     /*
@@ -52,11 +52,11 @@ public class RegistrationController {
      */
     @GetMapping(value = {"/customers/{customerID}/payments", "/customers/{customerID}/registrations/"})
     public RegistrationListResponseDTO getPaymentsByCustomer(@PathVariable("customerID") int customerId) {
-        List<RegistrationResponseDTO> dtos = new ArrayList<>();
+        List<RegistrationResponseDTO> registrationResponseDTOS = new ArrayList<>();
         for (Registration registration : registrationService.getRegistrationsByCustomer(customerId)) {
-            dtos.add(new RegistrationResponseDTO(registration));
+            registrationResponseDTOS.add(new RegistrationResponseDTO(registration));
         }
-        return new RegistrationListResponseDTO(dtos);
+        return new RegistrationListResponseDTO(registrationResponseDTOS);
     }
 
     /*
@@ -64,11 +64,11 @@ public class RegistrationController {
      */
     @GetMapping(value = {"/courses/{courseID}/registrations", "/courses/{courseID}/registrations/"})
     public RegistrationListResponseDTO getPaymentsByCourse(@PathVariable("courseID") int courseId) {
-        List<RegistrationResponseDTO> dtos = new ArrayList<>();
+        List<RegistrationResponseDTO> registrationResponseDTOS = new ArrayList<>();
         for (Registration registration : registrationService.getRegistrationsByCourse(courseId)) {
-            dtos.add(new RegistrationResponseDTO(registration));
+            registrationResponseDTOS.add(new RegistrationResponseDTO(registration));
         }
-        return new RegistrationListResponseDTO(dtos);
+        return new RegistrationListResponseDTO(registrationResponseDTOS);
     }
 
     /*
