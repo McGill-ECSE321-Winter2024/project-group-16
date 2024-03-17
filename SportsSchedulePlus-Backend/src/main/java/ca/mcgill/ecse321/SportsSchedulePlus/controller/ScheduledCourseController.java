@@ -53,7 +53,7 @@ public class ScheduledCourseController {
         return new InstructorListDTO(instructorDtos);
     }
 
-    @GetMapping("/scheduledCourses/{id}")
+    @GetMapping("/scheduledCourses/course/{id}")
     public ScheduledCourseResponseDTO findScheduledCourseById(@PathVariable(name = "id") int id) {
         ScheduledCourse scheduledCourse = scheduledCourseService.getScheduledCourse(id);
         return new ScheduledCourseResponseDTO(scheduledCourse);
