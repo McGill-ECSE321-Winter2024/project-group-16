@@ -1,6 +1,6 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice;
 
-import ca.mcgill.ecse321.utils.HelperMethods;
+import ca.mcgill.ecse321.utils.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -107,7 +107,7 @@ public class CourseTypeService {
 
     @Transactional
     public List<CourseType> getAllCourseTypes() {
-        return HelperMethods.toList(courseTypeRepository.findAll());
+        return Helper.toList(courseTypeRepository.findAll());
     }
 
     @Transactional
@@ -130,7 +130,7 @@ public class CourseTypeService {
 
     @Transactional
     public void deleteAllCourseTypes() {
-        List<CourseType> courseTypes = HelperMethods.toList(courseTypeRepository.findAll());
+        List<CourseType> courseTypes = Helper.toList(courseTypeRepository.findAll());
         if (courseTypes == null || courseTypes.isEmpty()) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There are no course types.");
         }
@@ -172,23 +172,7 @@ public class CourseTypeService {
 
     @Transactional
     public CourseType toggleCourseTypeApproval(int id) {
-<<<<<<< HEAD
         CourseType courseType = courseTypeRepository.findById(id).orElse(null);
-=======
-        try {
-            CourseType courseType = getCourseType(id);
-            Boolean approvalStatus = courseType.getApprovedByOwner();
-            courseType.setApprovedByOwner(!approvalStatus);
-            Owner owner = HelperMethods.toList(ownerRepository.findAll()).get(0);
-            if (!approvalStatus) {
-                owner.addApprovedCourse(courseType);
-            } else {
-                owner.removeApprovedCourse(courseType);
-            }
-            courseTypeRepository.save(courseType);
-            ownerRepository.save(owner);
-            return courseType;
->>>>>>> 901df59f6d939978836138fec00c82ed2ea53bcf
 
         if (courseType == null){
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "No course type with specified ID exists in the system");
