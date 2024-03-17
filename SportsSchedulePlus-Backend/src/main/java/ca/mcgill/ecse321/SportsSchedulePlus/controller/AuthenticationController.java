@@ -36,10 +36,10 @@ public class AuthenticationController {
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return new ResponseEntity<>("User login successfully!...", HttpStatus.OK);
-        } catch (AuthenticationException e) {
-            if (e.getMessage().equals("User does not exist.")) {
+        } catch (AuthenticationException exception) {
+            if (exception.getMessage().equals("User does not exist.")) {
                 return new ResponseEntity<>("User with email " + loginDto.getEmail() + " does not exist.", HttpStatus.UNAUTHORIZED);
-            } else if (e.getMessage().equals("Bad credentials")) {
+            } else if (exception.getMessage().equals("Bad credentials")) {
                 return new ResponseEntity<>("Incorrect password, please try again.", HttpStatus.UNAUTHORIZED);
             }
         }

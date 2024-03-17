@@ -90,7 +90,7 @@ public class InstructorController {
         }
 
         CourseType courseType = new CourseType(courseTypeRequestDTO.getDescription(), false, courseTypeRequestDTO.getPrice());
-        CourseType returnedCourseType = userService.suggestCourseType(instructor, courseType);
+        userService.suggestCourseType(instructor, courseType);
 
         return ResponseEntity.ok("Course type suggested successfully.");
     }

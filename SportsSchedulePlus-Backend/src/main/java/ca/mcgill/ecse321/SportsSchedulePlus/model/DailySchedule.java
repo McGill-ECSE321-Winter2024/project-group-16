@@ -12,7 +12,7 @@ import jakarta.persistence.Id;
 // line 66 "model.ump"
 // line 131 "model.ump"
 @Entity
-public class DailySchedule {
+public class DailySchedule implements Comparable<DailySchedule>  {
 
   //------------------------
   // MEMBER VARIABLES
@@ -113,5 +113,14 @@ public class DailySchedule {
   public int hashCode() {
     return Objects.hash(id, openingTime, closingTime);
   }
-
+  /**
+   * Override the compareTo method
+   * @param schedule
+   * @return comparison int
+   */
+  @Override
+  public int compareTo(DailySchedule schedule) {
+      return Integer.compare(this.getId(), schedule.getId());
+  }
+  
 }

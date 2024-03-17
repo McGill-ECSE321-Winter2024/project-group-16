@@ -65,7 +65,7 @@ public class PaymentRepositoryTests {
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Registration newPayment = Helper.createPayment(customer,course);
+        Registration newPayment = Helper.createRegistration(customer,course);
         registrationRepository.save(newPayment);
 
         // Find payments by confirmation number
@@ -90,7 +90,7 @@ public class PaymentRepositoryTests {
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Registration newPayment = Helper.createPayment(customer,course);
+        Registration newPayment = Helper.createRegistration(customer,course);
         registrationRepository.save(newPayment);
 
         // Find payments by key customer
@@ -116,7 +116,7 @@ public class PaymentRepositoryTests {
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Registration newPayment = Helper.createPayment(customer,course);
+        Registration newPayment = Helper.createRegistration(customer,course);
         registrationRepository.save(newPayment);
 
         // Find payments by key scheduled course
@@ -142,19 +142,19 @@ public class PaymentRepositoryTests {
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Registration newPayment = Helper.createPayment(customer,course);
+        Registration newPayment = Helper.createRegistration(customer,course);
         registrationRepository.save(newPayment);
 
         // Find payments by key customer
-        Registration foundPayment = registrationRepository.findRegistrationByKey(newPayment.getKey());
-        Registration foundPayment2 = registrationRepository.findRegistrationByKey(new Registration.Key(customer, course));
+        Registration foundRegistration = registrationRepository.findRegistrationByKey(newPayment.getKey());
+        Registration samefoundRegistration = registrationRepository.findRegistrationByKey(new Registration.Key(customer, course));
         // Assertions
-        assertNotNull(foundPayment);
-        assertNotNull(foundPayment2);
+        assertNotNull(foundRegistration);
+        assertNotNull(samefoundRegistration);
         
         // The overridden equals method in the Payment model is used here
-        assertEquals(newPayment, foundPayment);
-        assertEquals(newPayment, foundPayment2);
+        assertEquals(newPayment, foundRegistration);
+        assertEquals(newPayment, samefoundRegistration);
     }
 
     /**

@@ -14,10 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.sql.Date;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,18 +38,15 @@ public class ScheduledCourseController {
 
     @GetMapping("/scheduledCourses/instructors/{id}")
     public InstructorListDTO getInstructorsBySupervisedCourse(@PathVariable(name = "id") int scheduledCourseId) {
-        List<InstructorResponseDTO> instructorDtos = new ArrayList<>();
+        List<InstructorResponseDTO> instructorResponseDTOS = new ArrayList<>();
         List<Instructor> instructors = scheduledCourseService.getInstructorsBySupervisedCourse(scheduledCourseId);
-
-
         for (Instructor instructor : instructors) {
-            instructorDtos.add(new InstructorResponseDTO(instructor));
+            instructorResponseDTOS.add(new InstructorResponseDTO(instructor));
         }
-
-        return new InstructorListDTO(instructorDtos);
+        return new InstructorListDTO(instructorResponseDTOS);
     }
 
-    @GetMapping("/scheduledCourses/{id}")
+    @GetMapping("/scheduledCourses/course/{id}")
     public ScheduledCourseResponseDTO findScheduledCourseById(@PathVariable(name = "id") int id) {
         ScheduledCourse scheduledCourse = scheduledCourseService.getScheduledCourse(id);
         return new ScheduledCourseResponseDTO(scheduledCourse);
@@ -61,11 +54,11 @@ public class ScheduledCourseController {
 
     @GetMapping("/scheduledCourses")
     public ScheduledCourseListDTO findAllScheduledCourses() {
-        List<ScheduledCourseResponseDTO> dtos = new ArrayList<>();
+        List<ScheduledCourseResponseDTO> scheduledCourseResponseDTOS = new ArrayList<>();
         for (ScheduledCourse scheduledCourse : scheduledCourseService.getAllScheduledCourses()) {
-            dtos.add(new ScheduledCourseResponseDTO(scheduledCourse));
+            scheduledCourseResponseDTOS.add(new ScheduledCourseResponseDTO(scheduledCourse));
         }
-        return new ScheduledCourseListDTO(dtos);
+        return new ScheduledCourseListDTO(scheduledCourseResponseDTOS);
     }
 
     @DeleteMapping("/scheduledCourses/{id}")
@@ -82,13 +75,8 @@ public class ScheduledCourseController {
 
     @GetMapping(value = "/scheduledCourses/{date}")
     public List<ScheduledCourseDTO> getScheduledCoursesForWeekByDate(@PathVariable("date") String date) {
-        LocalDate inputDate = LocalDate.parse(date);
-        LocalDate mondayLocalDate = inputDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        LocalDate sundayLocalDate = inputDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
-        Date monday = java.sql.Date.valueOf(mondayLocalDate);
-        Date sunday = java.sql.Date.valueOf(sundayLocalDate);
-        List<ScheduledCourse> scheduledCourses = scheduledCourseService.getScheduledCoursesByWeek(monday, sunday);
-        List<ScheduledCourseDTO> scheduledCourseDTOs = new ArrayList<>(); // Corrected to DTO
+        List<ScheduledCourse> scheduledCourses = scheduledCourseService.getScheduledCoursesByWeek(date);
+        List<ScheduledCourseDTO> scheduledCourseDTOs = new ArrayList<>();
         for (ScheduledCourse scheduledCourse : scheduledCourses) {
             scheduledCourseDTOs.add(new ScheduledCourseDTO(scheduledCourse));
         }

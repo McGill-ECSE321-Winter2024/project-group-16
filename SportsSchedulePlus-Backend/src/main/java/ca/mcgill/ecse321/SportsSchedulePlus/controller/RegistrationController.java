@@ -31,19 +31,19 @@ public class RegistrationController {
      * get all registrations
      */
     @GetMapping(value = {"/registrations", "/registrations/"})
-    public RegistrationListResponseDTO getAllPayments() {
-        List<RegistrationResponseDTO> dtos = new ArrayList<>();
+    public RegistrationListResponseDTO getAllRegistrations() {
+        List<RegistrationResponseDTO> registrationResponseDTOS = new ArrayList<>();
         for (Registration registration : registrationService.getAllRegistrations()) {
-            dtos.add(new RegistrationResponseDTO(registration));
+            registrationResponseDTOS.add(new RegistrationResponseDTO(registration));
         }
-        return new RegistrationListResponseDTO(dtos);
+        return new RegistrationListResponseDTO(registrationResponseDTOS);
     }
 
     /*
      * get registration by confirmation number
      */
     @GetMapping(value = {"/registrations/{confirmationNumber}", "/registrations/{confirmationNumber}/"})
-    public RegistrationResponseDTO getPaymentByConfirmationNumber(@PathVariable("confirmationNumber") int confirmationNumber) {
+    public RegistrationResponseDTO getRegistrationByConfirmationNumber(@PathVariable("confirmationNumber") int confirmationNumber) {
         return new RegistrationResponseDTO(registrationService.getRegistrationByConfirmationNumber(confirmationNumber));
     }
 
@@ -51,24 +51,24 @@ public class RegistrationController {
      * get registration by customer
      */
     @GetMapping(value = {"/customers/{customerID}/payments", "/customers/{customerID}/registrations/"})
-    public RegistrationListResponseDTO getPaymentsByCustomer(@PathVariable("customerID") int customerId) {
-        List<RegistrationResponseDTO> dtos = new ArrayList<>();
+    public RegistrationListResponseDTO getRegistrationsByCustomer(@PathVariable("customerID") int customerId) {
+        List<RegistrationResponseDTO> registrationResponseDTOS = new ArrayList<>();
         for (Registration registration : registrationService.getRegistrationsByCustomer(customerId)) {
-            dtos.add(new RegistrationResponseDTO(registration));
+            registrationResponseDTOS.add(new RegistrationResponseDTO(registration));
         }
-        return new RegistrationListResponseDTO(dtos);
+        return new RegistrationListResponseDTO(registrationResponseDTOS);
     }
 
     /*
      * get registration by scheduled course
      */
     @GetMapping(value = {"/courses/{courseID}/registrations", "/courses/{courseID}/registrations/"})
-    public RegistrationListResponseDTO getPaymentsByCourse(@PathVariable("courseID") int courseId) {
-        List<RegistrationResponseDTO> dtos = new ArrayList<>();
+    public RegistrationListResponseDTO getRegistrationsByCourse(@PathVariable("courseID") int courseId) {
+        List<RegistrationResponseDTO> registrationResponseDTOS = new ArrayList<>();
         for (Registration registration : registrationService.getRegistrationsByCourse(courseId)) {
-            dtos.add(new RegistrationResponseDTO(registration));
+            registrationResponseDTOS.add(new RegistrationResponseDTO(registration));
         }
-        return new RegistrationListResponseDTO(dtos);
+        return new RegistrationListResponseDTO(registrationResponseDTOS);
     }
 
     /*
@@ -76,7 +76,7 @@ public class RegistrationController {
      * might need to /register
      */
     @PutMapping(value = {"/registrations/{customerID}/{courseID}", "/registrations/{customerID}/{courseID}/"})
-    public RegistrationResponseDTO createPayment(@PathVariable("customerID") int customerId, @PathVariable("courseID") int courseId) {
+    public RegistrationResponseDTO createRegistration(@PathVariable("customerID") int customerId, @PathVariable("courseID") int courseId) {
         Registration newRegistration = registrationService.createRegistration(customerId, courseId);
         RegistrationResponseDTO registrationDTO = new RegistrationResponseDTO(newRegistration);
         return registrationDTO;
