@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonListResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonDTO;
 
+/*
+ * Rest Controller that handles CRUD on Person
+ */
 @CrossOrigin(origins = "*")
 @RestController
 public class PersonController {
@@ -21,24 +24,27 @@ public class PersonController {
     @Autowired
     private UserService userService;
 
-    /*
-     * get all persons (all users)
+    /**
+     * Retrieves all persons
+     * @return PersonListResponseDTO
      */
     @GetMapping(value = {"/persons", "/persons/"})
     public PersonListResponseDTO getAllPersons() {
-        List<PersonResponseDTO> personResponseDTOS = new ArrayList<>();
+        List<PersonDTO> personResponseDTOS = new ArrayList<>();
         for (Person person : userService.getAllPersons()) {
-            personResponseDTOS.add(new PersonResponseDTO(person));
+            personResponseDTOS.add(new PersonDTO(person));
         }
         return new PersonListResponseDTO(personResponseDTOS);
     }
 
-    /*
-     * get person by their person id
-     */
+   /**
+    * Retrieves a person by the path variable id
+    * @param id
+    * @return PersonDTO 
+    */
     @GetMapping(value = {"/persons/{id}", "/persons/{id}/"})
-    public PersonResponseDTO getPerson(@PathVariable("id") int id) {
+    public PersonDTO getPerson(@PathVariable("id") int id) {
         Person person = userService.getPersonById(id);
-        return new PersonResponseDTO(person);
+        return new PersonDTO(person);
     }
 }

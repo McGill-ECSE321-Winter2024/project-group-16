@@ -16,10 +16,10 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 
 @Service
 public class PersonDetail implements UserDetailsService {
-@Autowired    
-PersonRepository userRepository;
+    @Autowired    
+    PersonRepository userRepository;
 
-@Override
+    @Override
     public UserDetails loadUserByUsername(String email){
         Person user = userRepository.findPersonByEmail(email);
         if(user==null){

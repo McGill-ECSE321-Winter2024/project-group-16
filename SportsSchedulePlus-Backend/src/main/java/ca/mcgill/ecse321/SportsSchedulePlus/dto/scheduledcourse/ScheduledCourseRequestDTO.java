@@ -11,6 +11,8 @@ public class ScheduledCourseRequestDTO {
     private String location;
 
     private CourseTypeRequestDTO courseType;
+    
+    
 
     public int getId() {
         return id;

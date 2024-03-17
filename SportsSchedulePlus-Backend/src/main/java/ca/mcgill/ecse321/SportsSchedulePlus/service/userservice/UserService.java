@@ -120,20 +120,17 @@ public class UserService {
     /**
      * this method updates the user
      * it checks the PersonRole of the user based on the given id
-     * @param id if id == -1, then update the owner, else update user with the given id
+     * @param id  update user with the given id
      */
     @Transactional
     public Person updateUser(int id, String name, String email, String password, String experience) {
         // this checks if the owner exists
-        Owner owner = getOwner();
+         getOwner();
 
         Person person;
         // this checks if the person exists
-        if (id == -1) {
-            person = personRepository.findPersonByPersonRole(owner);
-        } else {
-            person = getPersonById(id);
-        }
+       
+        person = getPersonById(id);
         
         boolean isOwner = person.getPersonRole() instanceof Owner;
         boolean isCustomer = person.getPersonRole() instanceof Customer;
@@ -341,10 +338,19 @@ public class UserService {
     }
 
     @Transactional
-    public CourseType suggestCourseType(Instructor instructor, CourseType courseType) {
+    public CourseType suggestCourseType(PersonRole personRole, CourseType courseType) {
         CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getDescription(), courseType.getApprovedByOwner(), courseType.getPrice());
-        instructor.addInstructorSuggestedCourseType(courseTypeCreated);
-        instructorRepository.save(instructor);
+        if(personRole instanceof Instructor){
+            Person person = getPersonById(personRole.getId());
+            Instructor instructor = getInstructor(person.getEmail());
+            instructor.addInstructorSuggestedCourseType(courseTypeCreated);
+            instructorRepository.save(instructor);
+        }
+        if (personRole instanceof Owner){
+            Owner owner = getOwner();
+            owner.addOwnerSuggestedCourse(courseTypeCreated);
+            ownerRepository.save(owner);
+        }
         return courseTypeCreated;
     }
 

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.service.registrationservice.RegistrationService;
@@ -16,7 +16,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.payment.RegistrationListResponse
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 
 /**
- * Rest controller for managing data related to Payments in the application
+ * Rest Controller that handles CRUD on Registration
  *
  * @author Vladimir Venkov
  */
@@ -27,8 +27,9 @@ public class RegistrationController {
     @Autowired
     private RegistrationService registrationService;
 
-    /*
-     * get all registrations
+    /**
+     * Retrieves all registrations
+     * @return RegistrationListResponseDTO
      */
     @GetMapping(value = {"/registrations", "/registrations/"})
     public RegistrationListResponseDTO getAllRegistrations() {
@@ -39,16 +40,20 @@ public class RegistrationController {
         return new RegistrationListResponseDTO(registrationResponseDTOS);
     }
 
-    /*
-     * get registration by confirmation number
+    /**
+     * Retrieves a registration by its confirmation number
+     * @param confirmationNumber
+     * @return RegistrationResponseDTO
      */
     @GetMapping(value = {"/registrations/{confirmationNumber}", "/registrations/{confirmationNumber}/"})
     public RegistrationResponseDTO getRegistrationByConfirmationNumber(@PathVariable("confirmationNumber") int confirmationNumber) {
         return new RegistrationResponseDTO(registrationService.getRegistrationByConfirmationNumber(confirmationNumber));
     }
 
-    /*
-     * get registration by customer
+    /**
+     * Retrieves a customer's registrations
+     * @param customerId
+     * @return RegistrationListResponseDTO
      */
     @GetMapping(value = {"/customers/{customerID}/payments", "/customers/{customerID}/registrations/"})
     public RegistrationListResponseDTO getRegistrationsByCustomer(@PathVariable("customerID") int customerId) {
@@ -59,8 +64,10 @@ public class RegistrationController {
         return new RegistrationListResponseDTO(registrationResponseDTOS);
     }
 
-    /*
-     * get registration by scheduled course
+    /**
+     * Retrieves a course's registrations
+     * @param courseId
+     * @return RegistrationListResponseDTO
      */
     @GetMapping(value = {"/courses/{courseID}/registrations", "/courses/{courseID}/registrations/"})
     public RegistrationListResponseDTO getRegistrationsByCourse(@PathVariable("courseID") int courseId) {
@@ -70,12 +77,15 @@ public class RegistrationController {
         }
         return new RegistrationListResponseDTO(registrationResponseDTOS);
     }
-
-    /*
-     * create a new registration between a customer and a course,
-     * might need to /register
+   
+    /**
+     * Creates a new registration for a customer and course
+     * The first path variable is the customer ID, the second one is the course ID.
+     * @param customerId
+     * @param courseId
+     * @return RegistrationResponseDTO 
      */
-    @PutMapping(value = {"/registrations/{customerID}/{courseID}", "/registrations/{customerID}/{courseID}/"})
+    @PostMapping(value = {"/registrations/{customerID}/{courseID}", "/registrations/{customerID}/{courseID}/"})
     public RegistrationResponseDTO createRegistration(@PathVariable("customerID") int customerId, @PathVariable("courseID") int courseId) {
         Registration newRegistration = registrationService.createRegistration(customerId, courseId);
         RegistrationResponseDTO registrationDTO = new RegistrationResponseDTO(newRegistration);

@@ -89,7 +89,7 @@ public class ScheduledCourseService {
         }
         long durationInMillis = scheduledCourse.getEndTime().getTime()- scheduledCourse.getStartTime().getTime();
         long durationInMinutes = TimeUnit.MILLISECONDS.toMinutes(durationInMillis);
-
+        
         if (durationInMinutes < 30) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Duration must be at least 30 minutes.");
         }

@@ -17,7 +17,9 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.LoginRequestDTO
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.SignupRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
 
-
+/**
+ * Rest Controller that handles user authentication
+ */
 @RestController
 @RequestMapping("/authentication")
 public class AuthenticationController {
@@ -28,7 +30,11 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
-
+    /**
+     * Authenticates a user based on the user info in the login DTO
+     * @param loginDto
+     * @return String response entity
+     */
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@RequestBody LoginRequestDTO loginDto) {
         Authentication authentication;
@@ -46,9 +52,13 @@ public class AuthenticationController {
         return new ResponseEntity<>("Authentication error.", HttpStatus.UNAUTHORIZED);
     }
 
-
+    /**
+     * Sign ups a user using the info inside the signUpDto
+     * @param signUpDto
+     * @return String response entity
+     */
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignupRequestDTO signUpDto) {
+    public ResponseEntity<String> registerUser(@RequestBody SignupRequestDTO signUpDto) {
         userService.createCustomer(signUpDto.getName(), signUpDto.getEmail(), signUpDto.getPassword());
         return new ResponseEntity<>("User is registered successfully!", HttpStatus.OK);
     }

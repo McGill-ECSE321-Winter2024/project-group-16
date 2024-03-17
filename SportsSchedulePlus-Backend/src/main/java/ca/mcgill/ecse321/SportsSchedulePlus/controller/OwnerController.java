@@ -1,17 +1,17 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.owner.OwnerResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 
-
+/**
+ * Rest Controller that handles CRUD on Owner
+ */
 @CrossOrigin(origins = "*")
 
 @RestController
@@ -20,51 +20,56 @@ public class OwnerController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private CourseTypeService courseTypeService;
 
-
+    /**
+     * Retrieves the owner
+     * @return PersonDTO
+     */
     @GetMapping(value = {"/owner", "/owner/"})
-    public PersonResponseDTO getOwner() {
+    public PersonDTO getOwner() {
         Owner owner = userService.getOwner();
-        return convertToDTO(owner);
+        Person person = userService.getPersonById(owner.getId());
+        PersonDTO responseDTO = new PersonDTO(person,owner);
+        return responseDTO;
     }
     
+    /**
+     * Creates the owner
+     * @return PersonDTO
+     */
     @PostMapping(value = {"/owner", "/owner/"})
-    public PersonResponseDTO createOwner() {
+    public PersonDTO createOwner() {
         Person person = userService.createOwner();
-        return convertToDTO(person);
-    }
-
-    @PutMapping(value = {"/owner", "/owner/"})
-    public PersonResponseDTO updateOwner(@RequestBody PersonResponseDTO personDTO) {
-        Person person = userService.updateUser(-1, personDTO.getName(), "sports.schedule.plus@gmail.com", personDTO.getPassword(), "");
-        return convertToDTO(person);
-    }
-
-    @PostMapping("/owner/courseTypes")
-    public CourseTypeResponseDTO createCourseType(@RequestBody CourseTypeRequestDTO request) {
-        CourseType createdCourseType = courseTypeService.createCourseType(request.getDescription(), request.isApprovedByOwner(), request.getPrice());
-        return new CourseTypeResponseDTO(createdCourseType);
-    }
-
-    private PersonResponseDTO convertToDTO(Person person) {
-        if (person == null) {
-            throw new IllegalArgumentException("There is no such owner!");
-        }
         Owner owner = userService.getOwner();
-        OwnerResponseDTO ownerDTO = new OwnerResponseDTO(owner);
-        PersonResponseDTO personDTO = new PersonResponseDTO(person.getName(), person.getEmail(), person.getPassword(), ownerDTO);
-        return personDTO;
+        PersonDTO responseDTO = new PersonDTO(person,owner);
+        return responseDTO;
+    }
+    /**
+     * Updates the owner with the information in the request body
+     * @param personDTO
+     * @return PersonDTO
+     */
+    @PutMapping(value = {"/owner", "/owner/"})
+    public PersonDTO updateOwner(@RequestBody PersonDTO personDTO) {
+        Owner owner = userService.getOwner();
+        Person person = userService.updateUser(owner.getId(), personDTO.getName(), "sports.schedule.plus@gmail.com", personDTO.getPassword(), "");
+        PersonDTO responseDTO = new PersonDTO(person,owner);
+        return responseDTO;
+    }
+    
+  
+    /**
+     * Allows the owner to suggest a course type using the information in the request body
+     * @param request
+     * @return  CourseTypeResponseDTO
+     */
+    @PostMapping(value = {"/owner/suggest-course"})
+    public ResponseEntity<String> suggestCourseType(@RequestBody CourseTypeRequestDTO request) {
+        PersonRole owner = userService.getPersonById(userService.getOwner().getId()).getPersonRole();
+        CourseType courseType = new CourseType(request.getDescription(), false,request.getPrice());
+        userService.suggestCourseType(owner, courseType);
+        return ResponseEntity.ok("Course type suggested successfully.");
     }
 
-    private PersonResponseDTO convertToDTO(Owner owner) {
-        if (owner == null) {
-            throw new IllegalArgumentException("There is no such owner!");
-        }
-        OwnerResponseDTO ownerDTO = new OwnerResponseDTO(owner);
-        Person person = userService.getPersonById(owner.getId());
-        PersonResponseDTO personDTO = new PersonResponseDTO(person.getName(), person.getEmail(), person.getPassword(), ownerDTO);
-        return personDTO;
-    }
+
 }
