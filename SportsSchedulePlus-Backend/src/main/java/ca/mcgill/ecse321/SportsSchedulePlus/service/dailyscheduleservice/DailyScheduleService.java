@@ -3,7 +3,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
-import ca.mcgill.ecse321.utils.HelperMethods;
+import ca.mcgill.ecse321.utils.Helper;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class DailyScheduleService {
 
     @Transactional
     public List<DailySchedule> getAllDailySchedules() {
-        List<DailySchedule> dailySchedules = HelperMethods.toList(dailyScheduleRepository.findAll());
+        List<DailySchedule> dailySchedules = Helper.toList(dailyScheduleRepository.findAll());
         if (dailySchedules.isEmpty()) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "The opening hours have not been set.");
         }

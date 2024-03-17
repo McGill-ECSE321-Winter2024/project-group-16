@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.dto.payment;
+package ca.mcgill.ecse321.SportsSchedulePlus.dto.registration;
 
 
 import java.util.List;

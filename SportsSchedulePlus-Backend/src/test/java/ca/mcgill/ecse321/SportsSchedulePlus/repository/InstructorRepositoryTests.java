@@ -1,6 +1,6 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
-import ca.mcgill.ecse321.utils.HelperMethods;
+import ca.mcgill.ecse321.utils.Helper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -75,7 +75,7 @@ public class InstructorRepositoryTests {
         // Create Scheduled Course
         CourseType courseType = new CourseType("Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
-        ScheduledCourse scheduledCourse = HelperMethods.createScheduledCourse(courseType);
+        ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(scheduledCourse);
 
         // Add Scheduled Course to Instructor
@@ -95,7 +95,7 @@ public class InstructorRepositoryTests {
         // Create Scheduled Course
         CourseType courseType = new CourseType("Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
-        ScheduledCourse scheduledCourse = HelperMethods.createScheduledCourse(courseType);
+        ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(scheduledCourse);
 
         // Read Instructor From Database
