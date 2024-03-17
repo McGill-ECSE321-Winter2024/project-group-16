@@ -4,7 +4,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.util.*;
 
-import ca.mcgill.ecse321.utils.Helper;
+import ca.mcgill.ecse321.utils.HelperMethods;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -227,7 +227,7 @@ public class CourseType {
     if (getScheduledCourses().isEmpty() && other.getScheduledCourses().isEmpty()) return true;
 
     // If the lists do not have the same elements, they are not considered equal
-    if (!Helper.compareListsElementWise(getScheduledCourses(), other.getScheduledCourses())) return false;
+    if (!HelperMethods.compareListsElementWise(getScheduledCourses(), other.getScheduledCourses())) return false;
 
     // Compare individual attributes for equality
     return getId() == other.getId() &&

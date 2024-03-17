@@ -6,7 +6,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice.DailyScheduleService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.mailerservice.Mailer;
-import ca.mcgill.ecse321.utils.Helper;
+import ca.mcgill.ecse321.utils.HelperMethods;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -221,7 +221,7 @@ public class ScheduledCourseService {
 
     @Transactional
     public List<ScheduledCourse> getAllScheduledCourses() {
-        return Helper.toList(scheduledCourseRepository.findAll());
+        return HelperMethods.toList(scheduledCourseRepository.findAll());
     }
 
     @Transactional
@@ -260,7 +260,7 @@ public class ScheduledCourseService {
 
     @Transactional
     public void deleteAllScheduledCourses() {
-        List<ScheduledCourse> courses = Helper.toList(scheduledCourseRepository.findAll());
+        List<ScheduledCourse> courses = HelperMethods.toList(scheduledCourseRepository.findAll());
 
         if (courses == null || courses.isEmpty()) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There are no course types.");

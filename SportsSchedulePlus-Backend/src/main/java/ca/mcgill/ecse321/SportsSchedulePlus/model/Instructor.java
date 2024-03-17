@@ -4,11 +4,11 @@ package ca.mcgill.ecse321.SportsSchedulePlus.model;
 
 import java.util.*;
 
+import ca.mcgill.ecse321.utils.HelperMethods;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import ca.mcgill.ecse321.utils.Helper;
 
 // line 29 "model.ump"
 // line 105 "model.ump"
@@ -257,8 +257,8 @@ public boolean setExperience(String aExperience) {
 
     return getId() == other.getId() &&
       (Objects.equals(experience, other.experience)) &&
-      Helper.compareListsElementWise(instructorSuggestedCourseTypes, other.instructorSuggestedCourseTypes) &&
-      Helper.compareListsElementWise(supervisedCourses, other.supervisedCourses);
+      HelperMethods.compareListsElementWise(instructorSuggestedCourseTypes, other.instructorSuggestedCourseTypes) &&
+      HelperMethods.compareListsElementWise(supervisedCourses, other.supervisedCourses);
   }
 
   /**

@@ -49,7 +49,7 @@ public class Helper {
   }
 
   /**
-   * Helper method to create a ScheduledCourse with dummy data.
+   * HelperMethods method to create a ScheduledCourse with dummy data.
    */
   public static ScheduledCourse createScheduledCourse(CourseType courseType) {
 
@@ -64,7 +64,7 @@ public class Helper {
   }
 
   /**
-   * Helper method to create a payment with dummy data.
+   * HelperMethods method to create a payment with dummy data.
    */
   public static Registration createRegistration(Customer customer, ScheduledCourse scheduledCourse) {
     Registration.Key registrationKey = new Registration.Key(customer, scheduledCourse);
@@ -74,7 +74,7 @@ public class Helper {
   }
 
   /**
-   * Helper method to create a list from an iterable.
+   * HelperMethods method to create a list from an iterable.
    */
   public static <T> List<T> toList(Iterable<T> iterable){
 		List<T> resultList = new ArrayList<T>();
@@ -84,7 +84,7 @@ public class Helper {
 		return resultList;
 	}
   /**
-   * Helper method to validate a user
+   * HelperMethods method to validate a user
    * @param personRepository
    * @param name
    * @param email

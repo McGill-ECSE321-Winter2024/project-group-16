@@ -36,11 +36,11 @@ public class DailyScheduleController {
      */
     @GetMapping(value = {"/openingHours", "/openingHours/"})
     public DailyScheduleListResponseDTO getAllDailySchedules() {
-        List<DailyScheduleResponseDTO> dtos = new ArrayList<>();
+        List<DailyScheduleResponseDTO> dailyScheduleResponseDTOS = new ArrayList<>();
         for (DailySchedule dailySchedule : dailyScheduleService.getAllDailySchedules()) {
-            dtos.add(new DailyScheduleResponseDTO(dailySchedule));
+            dailyScheduleResponseDTOS.add(new DailyScheduleResponseDTO(dailySchedule));
         }
-        return new DailyScheduleListResponseDTO(dtos);
+        return new DailyScheduleListResponseDTO(dailyScheduleResponseDTOS);
     }
 
     /**
