@@ -40,12 +40,9 @@ public class ScheduledCourseController {
     public InstructorListDTO getInstructorsBySupervisedCourse(@PathVariable(name = "id") int scheduledCourseId) {
         List<InstructorResponseDTO> instructorResponseDTOS = new ArrayList<>();
         List<Instructor> instructors = scheduledCourseService.getInstructorsBySupervisedCourse(scheduledCourseId);
-
-
         for (Instructor instructor : instructors) {
             instructorResponseDTOS.add(new InstructorResponseDTO(instructor));
         }
-
         return new InstructorListDTO(instructorResponseDTOS);
     }
 

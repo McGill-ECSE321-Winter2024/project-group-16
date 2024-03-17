@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Collections;
-import java.util.Comparator;
 
 @Service
 public class DailyScheduleService {
@@ -25,27 +24,22 @@ public class DailyScheduleService {
 
     @Transactional
     public List<DailySchedule> createDailySchedule() {
-        List<DailySchedule> dsList = new ArrayList<DailySchedule>();
+        List<DailySchedule> dailyScheduleList = new ArrayList<DailySchedule>();
         for (int i = 0; i < 7; i++) {
-            DailySchedule ds = new DailySchedule();
-            ds.setOpeningTime(Time.valueOf("08:00:00"));
-            ds.setClosingTime(Time.valueOf("22:00:00"));
-            dailyScheduleRepository.save(ds);
-            dsList.add(ds);
+            DailySchedule dailySchedule = new DailySchedule();
+            dailySchedule.setOpeningTime(Time.valueOf("08:00:00"));
+            dailySchedule.setClosingTime(Time.valueOf("22:00:00"));
+            dailyScheduleRepository.save(dailySchedule);
+            dailyScheduleList.add(dailySchedule);
         }
-        return dsList;
+        return dailyScheduleList;
     }
 
     @Transactional
     public List<DailySchedule> getAllDailySchedules() {
         List<DailySchedule> dailySchedules = Helper.toList(dailyScheduleRepository.findAll());
         // Sort the list by ID
-        Collections.sort(dailySchedules, new Comparator<DailySchedule>() {
-            @Override
-            public int compare(DailySchedule schedule1, DailySchedule schedule2) {
-                return Integer.compare(schedule1.getId(), schedule2.getId());
-            }
-        });
+        Collections.sort(dailySchedules);
         return dailySchedules;
     }
 
@@ -69,10 +63,10 @@ public class DailyScheduleService {
         if (openingTime.after(closingTime)) {
             throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Opening time must be before closing time.");
         }
-        DailySchedule ds = dailyScheduleRepository.findById(id).get();
-        ds.setOpeningTime(openingTime);
-        ds.setClosingTime(closingTime);
-        dailyScheduleRepository.save(ds);
-        return ds;
+        DailySchedule dailySchedule = dailyScheduleRepository.findById(id).get();
+        dailySchedule.setOpeningTime(openingTime);
+        dailySchedule.setClosingTime(closingTime);
+        dailyScheduleRepository.save(dailySchedule);
+        return dailySchedule;
     }
 }

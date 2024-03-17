@@ -57,12 +57,6 @@ public class ScheduledCourseService {
         Time parsedStartTime = Time.valueOf(startTime);
         Time parsedEndTime = Time.valueOf(endTime);
 
-        long durationInMillis = parsedEndTime.getTime() - parsedStartTime.getTime();
-        long durationInMinutes = TimeUnit.MILLISECONDS.toMinutes(durationInMillis);
-
-        if (durationInMinutes < 30) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Duration must be at least 30 minutes.");
-        }
 
         ScheduledCourse scheduledCourse = new ScheduledCourse();
         scheduledCourse.setDate(parsedDate);
@@ -72,7 +66,6 @@ public class ScheduledCourseService {
         scheduledCourse.setCourseType(courseTypeRepository.findById(courseTypeId).orElse(null));
 
         validateScheduledCourse(scheduledCourse);
-        validateStartAndEndTimes(scheduledCourse);
 
         scheduledCourseRepository.save(scheduledCourse);
         return scheduledCourse;
@@ -94,12 +87,15 @@ public class ScheduledCourseService {
         if (scheduledCourse.getEndTime().before(scheduledCourse.getStartTime())) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "End time must be after start time.");
         }
+        long durationInMillis = scheduledCourse.getEndTime().getTime()- scheduledCourse.getStartTime().getTime();
+        long durationInMinutes = TimeUnit.MILLISECONDS.toMinutes(durationInMillis);
 
-    }
-
-    private void validateStartAndEndTimes(ScheduledCourse scheduledCourse) {
-
+        if (durationInMinutes < 30) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Duration must be at least 30 minutes.");
+        }
+        // Check for valid course hours
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(scheduledCourse.getDate());
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         int mappedDayOfWeek = (dayOfWeek + 6) % 7;
 
@@ -108,12 +104,10 @@ public class ScheduledCourseService {
         if (scheduledCourse.getStartTime().before(dailySchedule.getOpeningTime()) || scheduledCourse.getEndTime().after(dailySchedule.getClosingTime())) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Scheduled course must respect opening and closing hours.");
         }
-
     }
 
     @Transactional
-    public ScheduledCourse updateScheduledCourse(int id, String date, String startTime, String endTime,
-                                                 String location, int courseTypeId) {
+    public ScheduledCourse updateScheduledCourse(int id, String date, String startTime, String endTime, String location, int courseTypeId) {
         ScheduledCourse existingScheduledCourse = scheduledCourseRepository.findById(id);
         ScheduledCourse originalScheduledCourseCourse = new ScheduledCourse(existingScheduledCourse);
         if (existingScheduledCourse == null) {
@@ -128,13 +122,6 @@ public class ScheduledCourseService {
         Time parsedStartTime = Time.valueOf(startTime);
         Time parsedEndTime = Time.valueOf(endTime);
 
-        long durationInMillis = parsedEndTime.getTime() - parsedStartTime.getTime();
-        long durationInMinutes = TimeUnit.MILLISECONDS.toMinutes(durationInMillis);
-
-        if (durationInMinutes < 30) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Duration must be at least 30 minutes.");
-        }
-
         existingScheduledCourse.setDate(parsedDate);
         existingScheduledCourse.setStartTime(parsedStartTime);
         existingScheduledCourse.setEndTime(parsedEndTime);
@@ -142,7 +129,6 @@ public class ScheduledCourseService {
         existingScheduledCourse.setCourseType(courseTypeRepository.findById(courseTypeId).orElse(null));
 
         validateScheduledCourse(existingScheduledCourse);
-        validateStartAndEndTimes(existingScheduledCourse);
 
         scheduledCourseRepository.save(existingScheduledCourse);
 
@@ -160,8 +146,8 @@ public class ScheduledCourseService {
             for (Customer customer : affectedCustomers) {
                 try {
                     sendCourseUpdateNotificationEmail(originalScheduledCourse, updatedScheduledCourse, customer);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
                 }
             }
         }
@@ -269,7 +255,6 @@ public class ScheduledCourseService {
         if (scheduledCourse == null) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There is no scheduled course with ID " + id + ".");
         }
-
         scheduledCourseRepository.deleteById(id);
     }
 
@@ -280,7 +265,6 @@ public class ScheduledCourseService {
         if (courses == null || courses.isEmpty()) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There are no course types.");
         }
-
         scheduledCourseRepository.deleteAll();
 
     }

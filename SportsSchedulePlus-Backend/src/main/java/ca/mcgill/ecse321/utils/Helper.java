@@ -66,12 +66,11 @@ public class Helper {
   /**
    * Helper method to create a payment with dummy data.
    */
-  public static Registration createPayment(Customer customer, ScheduledCourse scheduledCourse) {
-    Registration.Key paymentKey = new Registration.Key(customer, scheduledCourse);
-    Registration newPayment = new Registration(paymentKey);
-    newPayment.setConfirmationNumber(12345);
-
-    return newPayment;
+  public static Registration createRegistration(Customer customer, ScheduledCourse scheduledCourse) {
+    Registration.Key registrationKey = new Registration.Key(customer, scheduledCourse);
+    Registration newRegistration= new Registration(registrationKey);
+    newRegistration.setConfirmationNumber(12345);
+    return newRegistration;
   }
 
   /**

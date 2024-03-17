@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.SportsSchedulePlus.service.registrationservice;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,6 +86,7 @@ public class RegistrationService {
         }
         return registrationRepository.findRegistrationsByKeyScheduledCourse(scheduledCourse);
     }
+
       // Method to send payment confirmation email
     private void sendPaymentConfirmationEmail(Registration payment) {
         try {
@@ -95,8 +97,8 @@ public class RegistrationService {
 
             // Sending the email using the custom Mailer
             mailer.sendEmail("Payment Confirmation", "Thank you for your payment", invoiceHtml, userEmail);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
     
@@ -143,6 +145,8 @@ public class RegistrationService {
             throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "The customer with ID " + customerId + " has already paid for the course with ID " + courseId + ".");
         }
         Registration registration = new Registration();
+        int confirmationNumber = generateConfirmationNumber();
+        registration.setConfirmationNumber(confirmationNumber);
         registration.setKey(key);
         registrationRepository.save(registration);
       
@@ -150,5 +154,15 @@ public class RegistrationService {
         // Send a payment confirmation email to the user
         sendPaymentConfirmationEmail(registration);
         return registration;
+    }
+    /**
+     * Generates a confirmation number for a new registration
+     * @return confirmation number
+     */
+    private int generateConfirmationNumber() {
+        // Combine current timestamp with a sequential number
+        // Incremental count from the registration repository
+        long sequentialNumber = registrationRepository.count() + 1; 
+        return Math.abs(LocalDateTime.now().hashCode() + (int)sequentialNumber);
     }
 }

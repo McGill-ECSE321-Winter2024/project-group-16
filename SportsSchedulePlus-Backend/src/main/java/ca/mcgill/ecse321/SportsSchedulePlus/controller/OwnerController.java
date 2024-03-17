@@ -29,7 +29,7 @@ public class OwnerController {
         Owner owner = userService.getOwner();
         return convertToDTO(owner);
     }
-
+    
     @PostMapping(value = {"/owner", "/owner/"})
     public PersonResponseDTO createOwner() {
         Person person = userService.createOwner();
@@ -38,7 +38,7 @@ public class OwnerController {
 
     @PutMapping(value = {"/owner", "/owner/"})
     public PersonResponseDTO updateOwner(@RequestBody PersonResponseDTO personDTO) {
-        Person person = userService.updateUser(-1, personDTO.getName(), "", personDTO.getPassword(), "");
+        Person person = userService.updateUser(-1, personDTO.getName(), "sports.schedule.plus@gmail.com", personDTO.getPassword(), "");
         return convertToDTO(person);
     }
 
@@ -48,13 +48,13 @@ public class OwnerController {
         return new CourseTypeResponseDTO(createdCourseType);
     }
 
-    private PersonResponseDTO convertToDTO(Person p) {
-        if (p == null) {
+    private PersonResponseDTO convertToDTO(Person person) {
+        if (person == null) {
             throw new IllegalArgumentException("There is no such owner!");
         }
         Owner owner = userService.getOwner();
         OwnerResponseDTO ownerDTO = new OwnerResponseDTO(owner);
-        PersonResponseDTO personDTO = new PersonResponseDTO(p.getName(), p.getEmail(), p.getPassword(), ownerDTO);
+        PersonResponseDTO personDTO = new PersonResponseDTO(person.getName(), person.getEmail(), person.getPassword(), ownerDTO);
         return personDTO;
     }
 
@@ -67,6 +67,4 @@ public class OwnerController {
         PersonResponseDTO personDTO = new PersonResponseDTO(person.getName(), person.getEmail(), person.getPassword(), ownerDTO);
         return personDTO;
     }
-
-
 }

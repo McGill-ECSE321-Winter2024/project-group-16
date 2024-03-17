@@ -14,7 +14,6 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
 import ca.mcgill.ecse321.utils.Helper;
 
@@ -37,8 +36,6 @@ public class CourseTypeService {
     @Autowired
     private OwnerRepository ownerRepository;
 
-    @Autowired
-    private PersonRepository personRepository;
 
     @Transactional
     public CourseType createCourseType(String description, boolean approvedByOwner, float price) {
@@ -49,8 +46,6 @@ public class CourseTypeService {
         courseType.setDescription(description);
         courseType.setApprovedByOwner(approvedByOwner);
         courseType.setPrice(price);
-
-
         courseTypeRepository.save(courseType);
         return courseType;
     }
@@ -194,7 +189,6 @@ public class CourseTypeService {
         } catch (Exception e) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "No course type with specified ID exists in the system");
         }
-
     }
 }
 

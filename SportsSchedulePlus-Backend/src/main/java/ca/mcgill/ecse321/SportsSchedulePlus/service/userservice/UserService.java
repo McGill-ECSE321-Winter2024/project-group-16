@@ -52,7 +52,6 @@ public class UserService {
     public Person createCustomer(String name, String email, String password) {
         PersonRole personRole = new Customer();
         Helper.validateUser(personRepository, name, email, password, true);
-
         return createUser(name, email, password, personRole);
     }
 
@@ -67,7 +66,7 @@ public class UserService {
     @Transactional
     public Person createOwner() {
         try {
-            Owner ownerRetrieved = getOwner();
+            getOwner();
         } catch (Exception e) {
             PersonRole personRole = new Owner();
             personRoleRepository.save(personRole);
@@ -221,11 +220,11 @@ public class UserService {
 
     @Transactional
     public Person getPersonById(int id) {
-        Optional<Person> p = personRepository.findById(id);
-        if (!p.isPresent()) {
+        Optional<Person> person = personRepository.findById(id);
+        if (!person.isPresent()) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no person with ID " + id + ".");
         }
-        return p.get();
+        return person.get();
     }
 
     @Transactional
@@ -268,36 +267,30 @@ public class UserService {
 
     @Transactional
     public void deletePersonById(int id) {
-        System.out.println("Deleting person with ID: " + id);
-
         Optional<Person> existingPerson = personRepository.findById(id);
-
         if (!existingPerson.isPresent()) {
-            System.out.println("Person with ID " + id + " not found. Unable to delete.");
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no person with ID " + id + " to delete.");
         }
-
         personRepository.deleteById(id);
-        System.out.println("Person with ID " + id + " successfully deleted.");
     }
 
     @Transactional
     public Customer applyForInstructor(int customerId) {
-        Optional<Customer> customer = customerRepository.findById(customerId);
+        Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
         Optional<Instructor> instructor = instructorRepository.findById(customerId);
         if (instructor.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " is already an instructor.");
         }
-        if (!customer.isPresent()) {
+        if (!optionalCustomer.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
         }
-        Customer c = customer.get();
-        if (c.getHasApplied()) {
+        Customer customer = optionalCustomer.get();
+        if (customer.getHasApplied()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " has already applied to be an instructor.");
         }
-        c.setHasApplied(true);
-        customerRepository.save(c);
-        return c;
+        customer.setHasApplied(true);
+        customerRepository.save(customer);
+        return customer;
     }
 
     @Transactional
@@ -310,21 +303,21 @@ public class UserService {
         if (!customer.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
         }
-        Person p = personRepository.findPersonByPersonRole(customer.get());
-        Person newP = createInstructor(p.getEmail(), "");
-        return (Instructor) newP.getPersonRole();
+        Person person = personRepository.findPersonByPersonRole(customer.get());
+        Person newPerson = createInstructor(person.getEmail(), "");
+        return (Instructor) newPerson.getPersonRole();
     }
 
     @Transactional
     public Customer rejectCustomer(int customerId) {
-        Optional<Customer> customer = customerRepository.findById(customerId);
-        if (!customer.isPresent()) {
+        Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
+        if (!optionalCustomer.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
         }
-        Customer c = customer.get();
-        c.setHasApplied(false);
-        customerRepository.save(c);
-        return c;
+        Customer customer = optionalCustomer.get();
+        customer.setHasApplied(false);
+        customerRepository.save(customer);
+        return customer;
     }
 
     @Transactional

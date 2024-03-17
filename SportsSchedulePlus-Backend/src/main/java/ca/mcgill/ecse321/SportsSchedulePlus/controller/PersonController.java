@@ -27,8 +27,8 @@ public class PersonController {
     @GetMapping(value = {"/persons", "/persons/"})
     public PersonListResponseDTO getAllPersons() {
         List<PersonResponseDTO> personResponseDTOS = new ArrayList<>();
-        for (Person p : userService.getAllPersons()) {
-            personResponseDTOS.add(new PersonResponseDTO(p));
+        for (Person person : userService.getAllPersons()) {
+            personResponseDTOS.add(new PersonResponseDTO(person));
         }
         return new PersonListResponseDTO(personResponseDTOS);
     }
@@ -38,7 +38,7 @@ public class PersonController {
      */
     @GetMapping(value = {"/persons/{id}", "/persons/{id}/"})
     public PersonResponseDTO getPerson(@PathVariable("id") int id) {
-        Person p = userService.getPersonById(id);
-        return new PersonResponseDTO(p);
+        Person person = userService.getPersonById(id);
+        return new PersonResponseDTO(person);
     }
 }
