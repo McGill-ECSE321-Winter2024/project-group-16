@@ -43,16 +43,16 @@ public class RegistrationService {
 
     private Mailer mailer;
 
-    /*
-     * get all the registrations
+    /**
+     * @return list of all registrations
      */
     @Transactional
     public List<Registration> getAllRegistrations() {
         return Helper.toList(registrationRepository.findAll());
     }
 
-    /*
-     * get registration by confirmation number
+    /**
+     * @return registration with the given confirmation number
      */
     @Transactional
     public Registration getRegistrationByConfirmationNumber(int confirmationNumber) {
@@ -63,8 +63,8 @@ public class RegistrationService {
         return registration;
     }
 
-    /*
-     * get all registrations for a customer
+    /**
+     * @return list of all registrations made by a customer
      */
     @Transactional
     public List<Registration> getRegistrationsByCustomer(int customerId) {
@@ -75,8 +75,8 @@ public class RegistrationService {
         return registrationRepository.findRegistrationsByKeyCustomer(customer.get());
     }
 
-    /*
-     * get all registrations made for a course
+    /**
+     * @return list of all registrations for a course
      */
     @Transactional
     public List<Registration> getRegistrationsByCourse(int courseId) {
@@ -103,8 +103,9 @@ public class RegistrationService {
     }
     
 
-    /*
-     * Method to generate HTML content for the invoice
+    /**
+     * @param payment
+     * @return 
      */
     private String generateInvoiceHtml(Registration payment) {
         StringBuilder html = new StringBuilder();
@@ -123,9 +124,10 @@ public class RegistrationService {
         return html.toString();
     }
 
-    /*
+    /**
      * create a new registration between a customer and a course
      * this method registers a customer to attend a scheduled course
+     * @return the new registration
      */
     @Transactional
     public Registration createRegistration(int customerId, int courseId) {
@@ -152,6 +154,7 @@ public class RegistrationService {
         sendPaymentConfirmationEmail(registration);
         return registration;
     }
+    
     /**
      * Generates a confirmation number for a new registration
      * @return confirmation number

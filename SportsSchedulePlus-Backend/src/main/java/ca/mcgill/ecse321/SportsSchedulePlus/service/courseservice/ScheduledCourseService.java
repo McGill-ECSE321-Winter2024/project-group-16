@@ -48,7 +48,14 @@ public class ScheduledCourseService {
 
     private Mailer mailer;
 
-
+    /**
+     * @param date
+     * @param startTime
+     * @param endTime
+     * @param location
+     * @param courseTypeId
+     * @return the new ScheduledCourse
+     */
     @Transactional
     public ScheduledCourse createScheduledCourse(String date, String startTime, String endTime, String location, int courseTypeId) {
         LocalDate localDate = LocalDate.parse(date);
@@ -57,7 +64,7 @@ public class ScheduledCourseService {
         Time parsedStartTime = Time.valueOf(startTime);
         Time parsedEndTime = Time.valueOf(endTime);
 
-
+        // create the scheduled course
         ScheduledCourse scheduledCourse = new ScheduledCourse();
         scheduledCourse.setDate(parsedDate);
         scheduledCourse.setStartTime(parsedStartTime);
@@ -71,6 +78,10 @@ public class ScheduledCourseService {
         return scheduledCourse;
     }
 
+    /**
+     * Helper method that validates the given scheduled course.
+     * @param scheduledCourse
+     */
     private void validateScheduledCourse(ScheduledCourse scheduledCourse) {
         if (scheduledCourse.getCourseType() == null) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Scheduled course must have a CourseType.");
@@ -106,6 +117,16 @@ public class ScheduledCourseService {
         }
     }
 
+    /**
+     * Information of the scheduled course to be updated is updated
+     * @param id
+     * @param date
+     * @param startTime
+     * @param endTime
+     * @param location
+     * @param courseTypeId
+     * @return the updated ScheduledCourse
+     */
     @Transactional
     public ScheduledCourse updateScheduledCourse(int id, String date, String startTime, String endTime, String location, int courseTypeId) {
         ScheduledCourse existingScheduledCourse = scheduledCourseRepository.findById(id);
@@ -122,6 +143,7 @@ public class ScheduledCourseService {
         Time parsedStartTime = Time.valueOf(startTime);
         Time parsedEndTime = Time.valueOf(endTime);
 
+        // update the scheduled course
         existingScheduledCourse.setDate(parsedDate);
         existingScheduledCourse.setStartTime(parsedStartTime);
         existingScheduledCourse.setEndTime(parsedEndTime);
@@ -136,6 +158,11 @@ public class ScheduledCourseService {
         return existingScheduledCourse;
     }
 
+    /**
+     * notifies users of the course update
+     * @param originalScheduledCourse
+     * @param updatedScheduledCourse
+     */
     private void notifyUsersOfCourseUpdate(ScheduledCourse originalScheduledCourse, ScheduledCourse updatedScheduledCourse) {
         if (!originalScheduledCourse.equals(updatedScheduledCourse)) {
             List<Registration> payments = registrationRepository.findRegistrationsByKeyScheduledCourse(originalScheduledCourse);
@@ -153,6 +180,13 @@ public class ScheduledCourseService {
         }
     }
 
+    /**
+     * Sends an email to the given customer notifying them of the update to the given course.
+     * @param originalCourse
+     * @param updatedCourse
+     * @param customer
+     * @throws IOException
+     */
     private void sendCourseUpdateNotificationEmail(ScheduledCourse originalCourse, ScheduledCourse updatedCourse, Customer customer) throws IOException {
         String courseUpdateHtml = generateCourseUpdateHtml(originalCourse, updatedCourse, customer);
         String userEmail = personRepository.findById(customer.getId()).get().getEmail();
@@ -163,6 +197,12 @@ public class ScheduledCourseService {
         mailer.sendEmail("Course Update Notification", "The course you have registered for has been updated", courseUpdateHtml, userEmail);
     }
 
+    /**
+     * @param originalCourse
+     * @param updatedCourse
+     * @param customer
+     * @return the HTML for a course update notification email in a string
+     */
     private String generateCourseUpdateHtml(ScheduledCourse originalCourse, ScheduledCourse updatedCourse, Customer customer) {
         StringBuilder html = new StringBuilder();
         String customerName = personRepository.findById(customer.getId()).get().getName();
@@ -191,6 +231,14 @@ public class ScheduledCourseService {
         return html.toString();
     }
 
+    /**
+     * Helper method to create the HTML email.
+     * Appends a table row to the given HTML string.
+     * @param html
+     * @param property
+     * @param originalValue
+     * @param updatedValue
+     */
     private void appendTableRow(StringBuilder html, String property, String originalValue, String updatedValue) {
         html.append("<tr>")
                 .append("<td>").append(property).append("</td>")
@@ -199,7 +247,10 @@ public class ScheduledCourseService {
                 .append("</tr>");
     }
 
-
+    /**
+     * @param scheduledCourseId
+     * @return the instructor who is supervising the course
+     */
     @Transactional
     public List<Instructor> getInstructorsBySupervisedCourse(int scheduledCourseId) {
         ScheduledCourse scheduledCourse = scheduledCourseRepository.findById(scheduledCourseId);
@@ -210,6 +261,10 @@ public class ScheduledCourseService {
         return instructors;
     }
 
+    /**
+     * @param id
+     * @return the scheduled course with the given ID
+     */
     @Transactional
     public ScheduledCourse getScheduledCourse(int id) {
         ScheduledCourse scheduledCourse = scheduledCourseRepository.findById(id);
@@ -219,36 +274,63 @@ public class ScheduledCourseService {
         return scheduledCourse;
     }
 
+    /**
+     * @return list of all scheduled courses
+     */
     @Transactional
     public List<ScheduledCourse> getAllScheduledCourses() {
         return Helper.toList(scheduledCourseRepository.findAll());
     }
 
+    /**
+     * @param location
+     * @return list of all scheduled courses at the given location
+     */
     @Transactional
     public List<ScheduledCourse> getScheduledCoursesByLocation(String location) {
         return scheduledCourseRepository.findScheduledCourseByLocation(location);
     }
 
+    /**
+     * @param date
+     * @return list of all scheduled courses on the given date
+     */
     @Transactional
     public List<ScheduledCourse> getScheduledCoursesByDate(Date date) {
         return scheduledCourseRepository.findScheduledCoursesByDate(date);
     }
 
+    /**
+     * @param courseType
+     * @return list of all scheduled courses of the given course type
+     */
     @Transactional
     public List<ScheduledCourse> getScheduledCoursesByCourseType(CourseType courseType) {
         return scheduledCourseRepository.findScheduledCoursesByCourseType(courseType);
     }
 
+    /**
+     * @param startTime
+     * @return list of all scheduled courses that start at the given time
+     */
     @Transactional
     public List<ScheduledCourse> getScheduledCoursesByStartTime(Time startTime) {
         return scheduledCourseRepository.findScheduledCoursesByStartTime(startTime);
     }
 
+    /**
+     * @param endTime
+     * @return list of all scheduled courses that end at the given time
+     */
     @Transactional
     public List<ScheduledCourse> getScheduledCoursesByEndTime(Time endTime) {
         return scheduledCourseRepository.findScheduledCoursesByEndTime(endTime);
     }
 
+    /**
+     * deletes a scheduled course with the given ID
+     * @param id
+     */
     @Transactional
     public void deleteScheduledCourse(int id) {
         ScheduledCourse scheduledCourse = scheduledCourseRepository.findById(id);
@@ -258,6 +340,9 @@ public class ScheduledCourseService {
         scheduledCourseRepository.deleteById(id);
     }
 
+    /**
+     * Deletes all scheduled courses in the system
+     */
     @Transactional
     public void deleteAllScheduledCourses() {
         List<ScheduledCourse> courses = Helper.toList(scheduledCourseRepository.findAll());
@@ -269,11 +354,15 @@ public class ScheduledCourseService {
 
     }
 
+    /**
+     * @param date
+     * @return list of all scheduled courses in the week of a given date
+     */
     @Transactional
     public List<ScheduledCourse> getScheduledCoursesByWeek(String date) {
         String regex = "\\d{4}-\\d{2}-\\d{2}";
         if (!Pattern.matches(regex, date)) {
-            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Date needs to be provided in YEAR/MONTH/DATE format");
+            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Date needs to be provided in yyyy/mm/dd format");
         }
         LocalDate inputDate = LocalDate.parse(date);
         LocalDate mondayLocalDate = inputDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));

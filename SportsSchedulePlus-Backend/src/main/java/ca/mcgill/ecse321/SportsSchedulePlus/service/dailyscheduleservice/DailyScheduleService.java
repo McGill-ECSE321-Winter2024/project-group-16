@@ -22,6 +22,14 @@ public class DailyScheduleService {
     @Autowired
     private DailyScheduleRepository dailyScheduleRepository;
 
+    /**
+     * Creates a new daily schedule with the default opening and closing times.
+     * This method is only called when a new owner is created, and as there can only be 1 owner,
+     * this limits the number of daily schedules to 7.
+     * 
+     * THIS METHOD SHOULD ONLY BE CALLED IN UserService.createOwner().
+     * @return the new DailySchedule
+     */
     @Transactional
     public List<DailySchedule> createDailySchedule() {
         List<DailySchedule> dailyScheduleList = new ArrayList<DailySchedule>();
@@ -35,6 +43,11 @@ public class DailyScheduleService {
         return dailyScheduleList;
     }
 
+    /**
+     * Returns a list of all daily schedules.
+     * This list is always of size 7, with each index corresponding to a day of the week.
+     * @return the list of all daily schedules
+     */
     @Transactional
     public List<DailySchedule> getAllDailySchedules() {
         List<DailySchedule> dailySchedules = Helper.toList(dailyScheduleRepository.findAll());
@@ -46,12 +59,34 @@ public class DailyScheduleService {
         return dailySchedules;
     }
 
+    /**
+     * Returns the daily schedule with the given ID.
+     * ID is the index of the day of the week.
+     * 
+     * 0: Sunday
+     * 1: Monday
+     * 2: Tuesday
+     * 3: Wednesday
+     * 4: Thursday
+     * 5: Friday
+     * 6: Saturday
+     * @return the daily schedule with the given ID
+     */
     @Transactional
     public DailySchedule getDailyScheduleById(int id) {
         List<DailySchedule> dailySchedules = getAllDailySchedules();
         return dailySchedules.get(id);
     }
 
+    /**
+     * Updates the opening and closing times of the daily schedule with the given ID.
+     * 
+     * Given information is validated.
+     * @param id
+     * @param openingTime
+     * @param closingTime
+     * @return the updated daily schedule
+     */
     @Transactional
     public DailySchedule updateDailyScheduleByID(int id, Time openingTime, Time closingTime) {
         Optional<DailySchedule> aOptionalDailySchedule = dailyScheduleRepository.findById(id);
