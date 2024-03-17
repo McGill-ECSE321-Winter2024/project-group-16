@@ -5,13 +5,8 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.instructor.InstructorRespon
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
-<<<<<<< HEAD
-import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
-
-=======
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
->>>>>>> ce9743204eac3e8caad488038a702938bbcd333f
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
