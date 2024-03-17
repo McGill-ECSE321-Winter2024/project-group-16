@@ -2,18 +2,3 @@
 
 title: My API Documentation
 description: This is the documentation for My API.
-
-# Specify the OpenAPI Specification (OAS) file to use
-spec:
-  url: /path/to/openapi-spec.yaml
-
-# Theme customization options
-theme:
-  colors:
-    primary: '#1abc9c'
-    secondary: '#3498db'
-
-# Other customization options
-options:
-  hideDownloadButton: true
-  expandResponses: 'all'
