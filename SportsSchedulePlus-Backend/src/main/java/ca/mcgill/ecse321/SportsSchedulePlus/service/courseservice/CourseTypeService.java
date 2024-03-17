@@ -172,6 +172,9 @@ public class CourseTypeService {
 
     @Transactional
     public CourseType toggleCourseTypeApproval(int id) {
+<<<<<<< HEAD
+        CourseType courseType = courseTypeRepository.findById(id).orElse(null);
+=======
         try {
             CourseType courseType = getCourseType(id);
             Boolean approvalStatus = courseType.getApprovedByOwner();
@@ -185,10 +188,26 @@ public class CourseTypeService {
             courseTypeRepository.save(courseType);
             ownerRepository.save(owner);
             return courseType;
+>>>>>>> 901df59f6d939978836138fec00c82ed2ea53bcf
 
-        } catch (Exception e) {
+        if (courseType == null){
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "No course type with specified ID exists in the system");
         }
+
+        boolean approvalStatus = courseType.getApprovedByOwner();
+        courseType.setApprovedByOwner(!approvalStatus);
+        Owner owner = Helper.toList(ownerRepository.findAll()).get(0);
+
+        if (!approvalStatus) {
+            owner.addApprovedCourse(courseType);
+        }
+        else {
+            owner.removeApprovedCourse(courseType);
+        }
+
+        courseTypeRepository.save(courseType);
+        ownerRepository.save(owner);
+        return courseType;
     }
 }
 

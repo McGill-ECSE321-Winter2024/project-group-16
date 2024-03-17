@@ -1,8 +1,8 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.instructor.InstructorResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonListResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.ScheduledCourseService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
+/**
+ * Rest Controller that handles CRUD on Instructor
+ */
 @CrossOrigin(origins = "*")
 @RestController
 public class InstructorController {
@@ -25,62 +28,119 @@ public class InstructorController {
     private ScheduledCourseService scheduledCourseService;
 
 
-    
+    /**
+     * Retrieves all instructors
+     * @return PersonListResponseDTO
+     */
     @GetMapping(value = {"/instructors"})
-    public List<PersonResponseDTO> getAllInstructors() {
-        return userService.getAllInstructors().stream().map(instructor -> convertToDTO(instructor)).collect(Collectors.toList());
-
+    public PersonListResponseDTO getAllInstructors() {
+        List<PersonDTO> instructorDTOs = new ArrayList<>();
+        for (Instructor instructor: userService.getAllInstructors()) {
+            Person person = userService.getPersonById(instructor.getId());
+            instructorDTOs.add(new PersonDTO(person));
+        }
+        return new PersonListResponseDTO(instructorDTOs);
     }
-
+    
+    /**
+     * Retrives instructors by their experience
+     * @param experience
+     * @return PersonListResponseDTO
+     */
     @GetMapping(value = {"/instructors/{experience}"})
-    public List<PersonResponseDTO> getInstructorByExperience(@PathVariable("experience") String experience) {
-        return userService.getInstructorByExperience(experience).stream().map(instructor -> convertToDTO(instructor)).collect(Collectors.toList());
+    public PersonListResponseDTO getInstructorByExperience(@PathVariable("experience") String experience) {
+        List<PersonDTO> instructorDTOs = new ArrayList<>();
+        for (Instructor instructor: userService.getInstructorByExperience(experience)) {
+            Person person = userService.getPersonById(instructor.getId());
+            instructorDTOs.add(new PersonDTO(person));
+        }
+        return new PersonListResponseDTO(instructorDTOs);
     }
-
+    
+    /**
+     * Retrieves an instructor by their email
+     * @param email
+     * @return PersonDTO 
+     */
     @GetMapping(value = {"/instructors/{email}"})
-    public PersonResponseDTO getInstructor(@PathVariable("email") String email) {
+    public PersonDTO getInstructor(@PathVariable("email") String email) {
         Instructor instructor = userService.getInstructor(email);
-        return convertToDTO(instructor);
+        Person person =  userService.getPersonById(instructor.getId());
+        return new PersonDTO(person);
     }
-
+    
+    /**
+     * Retrieves instructors by their supervised course
+     * @param scheduledCourseId
+     * @return PersonListResponseDTO
+     */
     @GetMapping(value = {"/instructors/supervised-course/{id}"})
-    public List<PersonResponseDTO> getInstructorsBySupervisedCourse(@PathVariable("id") int scheduledCourseId) {
+    public PersonListResponseDTO getInstructorsBySupervisedCourse(@PathVariable("id") int scheduledCourseId) {
         ScheduledCourse scheduledCourse = scheduledCourseService.getScheduledCourse(scheduledCourseId);
-        return userService.getInstructorsBySupervisedCourse(scheduledCourse).stream().map(instructor -> convertToDTO(instructor)).collect(Collectors.toList());
+        List<PersonDTO> instructorDTOs = new ArrayList<>();
+        for (Instructor instructor: userService.getInstructorsBySupervisedCourse(scheduledCourse)) {
+            Person person = userService.getPersonById(instructor.getId());
+            instructorDTOs.add(new PersonDTO(person));
+        }
+        return new PersonListResponseDTO(instructorDTOs);
     }
-
+    
+    /**
+     * Retrieves instructor by their suggested course type
+     * @param courseTypeId
+     * @return PersonDTO
+     */
     @GetMapping(value = {"/instructors/suggestedCourses/{id}"})
-    public PersonResponseDTO getInstructorsBySuggestedCourse(@PathVariable("id") int courseTypeId) {
-        return convertToDTO(userService.getInstructorBySuggestedCourseType(courseTypeId));
+    public PersonDTO getInstructorsBySuggestedCourse(@PathVariable("id") int courseTypeId) {
+        Instructor instructor = userService.getInstructorBySuggestedCourseType(courseTypeId);
+        Person person =  userService.getPersonById(instructor.getId());
+        return new PersonDTO(person);
     }
-
+    
+    /**
+     * Deletes the instructor with the path variable id
+     * @param id
+     * @return String response entity
+     */
     @DeleteMapping(value = {"/instructors/{id}"})
     public ResponseEntity<String> deleteInstructor(@PathVariable("id") int id) {
         int personId = userService.deleteUser(id);
         return ResponseEntity.ok("Instructor with id " + personId + " was successfully deleted.");
     }
-
+    
+    /**
+     * Creates an instructor with the path variable email
+     * @param email
+     * @param experience
+     * @return  PersonDTO
+     */
     @PostMapping(value = {"/instructors/{email}"})
-    public PersonResponseDTO createInstructor(@PathVariable("email") String email, @RequestBody String experience) {
+    public PersonDTO createInstructor(@PathVariable("email") String email, @RequestBody String experience) {
         Person person = userService.createInstructor(email, experience);
-        return convertToDTO(person);
+        return new PersonDTO(person);
     }
-
+    /**
+     * Updates the instructor with the path variable id
+     * @param id
+     * @param json
+     * @return PersonDTO 
+     */
     @PutMapping(value = {"/instructors/{id}"})
-    public PersonResponseDTO updateInstructor(@PathVariable("id") int id, @RequestBody Map<String, String> json) {
-       
-
+    public PersonDTO updateInstructor(@PathVariable("id") int id, @RequestBody Map<String, String> json) {
         String updatedName = json.get("name");
         String updatedEmail = json.get("email");
         String updatedPassword = json.get("password");
         String updatedExperience = json.get("experience");
-
         // Use the extracted values for the update
         Person person = userService.updateUser(id, updatedName, updatedEmail, updatedPassword, updatedExperience);
-
-        return convertToDTO(person);
+        return new PersonDTO(person);
     }
-
+    /**
+     * Allows an instructor to suggest a course type
+     * @param email
+     * @param courseTypeRequestDTO
+     * @return String response entity
+     */
     @PostMapping(value = {"/instructors/{email}/suggest-course"})
     public ResponseEntity<String> suggestCourseType(@PathVariable("email") String email, @RequestBody CourseTypeRequestDTO courseTypeRequestDTO) {
         // Get the instructor by email
@@ -88,31 +148,8 @@ public class InstructorController {
         if (instructor == null) {
             return ResponseEntity.notFound().build();
         }
-
         CourseType courseType = new CourseType(courseTypeRequestDTO.getDescription(), false, courseTypeRequestDTO.getPrice());
         userService.suggestCourseType(instructor, courseType);
-
         return ResponseEntity.ok("Course type suggested successfully.");
-    }
-
-
-    private PersonResponseDTO convertToDTO(Person person) {
-        if (person == null) {
-            throw new IllegalArgumentException("There is no such customer!");
-        }
-        Instructor instructor = userService.getInstructor(person.getEmail());
-        InstructorResponseDTO instructorDTO = new InstructorResponseDTO(instructor);
-        PersonResponseDTO personDTO = new PersonResponseDTO(person.getName(), person.getEmail(), person.getPassword(), instructorDTO);
-        return personDTO;
-    }
-
-    private PersonResponseDTO convertToDTO(Instructor instructor) {
-        if (instructor == null) {
-            throw new IllegalArgumentException("There is no such instructor!");
-        }
-        InstructorResponseDTO instructorDTO = new InstructorResponseDTO(instructor);
-        Person person = userService.getPersonById(instructor.getId());
-        PersonResponseDTO personDTO = new PersonResponseDTO(person.getName(), person.getEmail(), person.getPassword(), instructorDTO);
-        return personDTO;
     }
 }

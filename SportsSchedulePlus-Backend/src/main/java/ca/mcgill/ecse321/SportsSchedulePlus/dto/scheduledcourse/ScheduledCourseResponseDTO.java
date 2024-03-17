@@ -12,10 +12,10 @@ public class ScheduledCourseResponseDTO {
     private Time startTime;
     private Time endTime;
     private String location;
-    private CourseTypeResponseDTO courseType; // Assuming you have a CourseTypeResponseDto
+    private CourseTypeResponseDTO courseType; 
 
 
-      // Constructor that takes a ScheduledCourse as input
+    // Constructor that takes a ScheduledCourse as input
     public ScheduledCourseResponseDTO(ScheduledCourse scheduledCourse) {
         this.id = scheduledCourse.getId();
         this.date = scheduledCourse.getDate();
@@ -25,6 +25,7 @@ public class ScheduledCourseResponseDTO {
         
         // There's a constructor in CourseTypeResponseDto that takes a CourseType as input
         this.courseType = new CourseTypeResponseDTO(scheduledCourse.getCourseType());
+
     }
 
     public ScheduledCourseResponseDTO(int id, Date date, Time startTime, Time endTime, String location, CourseTypeResponseDTO courseType) {

@@ -3,14 +3,14 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto.user.customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonRoleResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 
-public class CustomerResponseDTO extends PersonRoleResponseDTO {
+public class CustomerRequestDTO extends PersonRoleResponseDTO {
 
     private boolean hasApplied;
-    public CustomerResponseDTO() {
+    public CustomerRequestDTO() {
         hasApplied = false;
     }
 
-    public CustomerResponseDTO(int id) {
+    public CustomerRequestDTO(int id) {
         super(id);
         hasApplied = false;
     }
@@ -18,7 +18,7 @@ public class CustomerResponseDTO extends PersonRoleResponseDTO {
 
 
     // Constructor to convert a Customer object to CustomerDTO
-    public CustomerResponseDTO(Customer customer) {
+    public CustomerRequestDTO(Customer customer) {
         super(customer.getId());
         this.hasApplied = customer.getHasApplied();
     }

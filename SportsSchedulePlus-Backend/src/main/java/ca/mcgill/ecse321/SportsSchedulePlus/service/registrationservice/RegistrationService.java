@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.service.mailerservice.Mailer;
-import ca.mcgill.ecse321.utils.HelperMethods;
+import ca.mcgill.ecse321.utils.Helper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class RegistrationService {
      */
     @Transactional
     public List<Registration> getAllRegistrations() {
-        return HelperMethods.toList(registrationRepository.findAll());
+        return Helper.toList(registrationRepository.findAll());
     }
 
     /*
@@ -56,11 +57,10 @@ public class RegistrationService {
     @Transactional
     public Registration getRegistrationByConfirmationNumber(int confirmationNumber) {
         Registration registration = registrationRepository.findRegistrationByConfirmationNumber(confirmationNumber);
-        if ( registration == null) {
+        if (registration == null) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no payment with confirmation number " + confirmationNumber+".");
         }
         return registration;
-       
     }
 
     /*
@@ -120,8 +120,6 @@ public class RegistrationService {
             .append("<p><strong>Amount:</strong> $").append(new DecimalFormat("0.00").format(payment.getKey().getScheduledCourse().getCourseType().getPrice())).append("</p>")
             .append("</body>")
             .append("</html>");
-         
-
         return html.toString();
     }
 
@@ -149,7 +147,6 @@ public class RegistrationService {
         registration.setConfirmationNumber(confirmationNumber);
         registration.setKey(key);
         registrationRepository.save(registration);
-      
       
         // Send a payment confirmation email to the user
         sendPaymentConfirmationEmail(registration);

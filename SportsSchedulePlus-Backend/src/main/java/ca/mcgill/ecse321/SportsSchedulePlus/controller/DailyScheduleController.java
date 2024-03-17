@@ -30,8 +30,9 @@ public class DailyScheduleController {
     @Autowired
     private DailyScheduleService dailyScheduleService;
 
-    /*
-     * get the opening hours
+    /**
+     * Retrieves all daily schedules
+     * @return DailyScheduleListResponseDTO
      */
     @GetMapping(value = {"/openingHours", "/openingHours/"})
     public DailyScheduleListResponseDTO getAllDailySchedules() {
@@ -42,16 +43,21 @@ public class DailyScheduleController {
         return new DailyScheduleListResponseDTO(dailyScheduleResponseDTOS);
     }
 
-    /*
-     * get the opening hours for a day in the week
+    /**
+     * Retrieves the opening hours for a day in the week
+     * @param id
+     * @return DailyScheduleResponseDTO 
      */
     @GetMapping(value = {"/openingHours/{id}", "/openingHours/{id}/"})
     public DailyScheduleResponseDTO getDailyScheduleById(@PathVariable("id") int id) {
         return new DailyScheduleResponseDTO(dailyScheduleService.getDailyScheduleById(id));
     }
 
-    /*
-     * update the opening hours for a day in the week
+    /**
+     * Updates the opening hours for a day in the week
+     * @param id
+     * @param request
+     * @return DailyScheduleResponseDTO
      */
     @PutMapping(value = {"/openingHours/{id}", "/openingHours/{id}/"})
     public DailyScheduleResponseDTO updateDailySchedule(@PathVariable("id") int id, @RequestBody DailyScheduleRequestDTO request) {

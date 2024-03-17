@@ -17,10 +17,10 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 /**
- * HelperMethods class that contains methods for list comparison useful for the override of equals in the models
+ * Helper class that contains methods for list comparison useful for the override of equals in the models
  * and methods to create models for testing purposes.
  */
-public class HelperMethods {
+public class Helper {
 
   /**
    /**

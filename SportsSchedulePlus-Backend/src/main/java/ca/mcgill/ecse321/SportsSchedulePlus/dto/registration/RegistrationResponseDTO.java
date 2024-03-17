@@ -1,16 +1,16 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.dto.payment;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.customer.CustomerResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.customer.CustomerRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 
 public class RegistrationResponseDTO
 {
 
   private int confirmationNumber;
-  private CustomerResponseDTO customer;
-  private ScheduledCourseDTO scheduledCourse;
+  private CustomerRequestDTO customer;
+  private ScheduledCourseResponseDTO scheduledCourse;
 
-  public RegistrationResponseDTO(int aConfirmationNumber, CustomerResponseDTO aCustomer, ScheduledCourseDTO aScheduledCourse)
+  public RegistrationResponseDTO(int aConfirmationNumber, CustomerRequestDTO aCustomer, ScheduledCourseResponseDTO aScheduledCourse)
   {
     confirmationNumber = aConfirmationNumber;
     customer = aCustomer;
@@ -19,8 +19,8 @@ public class RegistrationResponseDTO
 
   public RegistrationResponseDTO(Registration aPayment) {
     confirmationNumber = aPayment.getConfirmationNumber();
-    customer = new CustomerResponseDTO(aPayment.getKey().getCustomer());
-    scheduledCourse = new ScheduledCourseDTO(aPayment.getKey().getScheduledCourse());
+    customer = new CustomerRequestDTO(aPayment.getKey().getCustomer());
+    scheduledCourse = new ScheduledCourseResponseDTO(aPayment.getKey().getScheduledCourse());
   }
 
 
@@ -32,7 +32,7 @@ public class RegistrationResponseDTO
     return wasSet;
   }
 
-  public boolean setCustomer(CustomerResponseDTO aCustomer)
+  public boolean setCustomer(CustomerRequestDTO aCustomer)
   {
     boolean wasSet = false;
     customer = aCustomer;
@@ -40,7 +40,7 @@ public class RegistrationResponseDTO
     return wasSet;
   }
 
-  public boolean setScheduledCourse(ScheduledCourseDTO aScheduledCourse)
+  public boolean setScheduledCourse(ScheduledCourseResponseDTO aScheduledCourse)
   {
     boolean wasSet = false;
     scheduledCourse = aScheduledCourse;
@@ -53,12 +53,12 @@ public class RegistrationResponseDTO
     return confirmationNumber;
   }
 
-  public CustomerResponseDTO getCustomer()
+  public CustomerRequestDTO getCustomer()
   {
     return customer;
   }
 
-  public ScheduledCourseDTO getScheduledCourse()
+  public ScheduledCourseResponseDTO getScheduledCourse()
   {
     return scheduledCourse;
   }
