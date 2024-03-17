@@ -38,6 +38,9 @@ public class DailyScheduleService {
     @Transactional
     public List<DailySchedule> getAllDailySchedules() {
         List<DailySchedule> dailySchedules = HelperMethods.toList(dailyScheduleRepository.findAll());
+        if (dailySchedules.isEmpty()) {
+            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "The opening hours have not been set.");
+        }
         // Sort the list by ID
         Collections.sort(dailySchedules);
         return dailySchedules;
@@ -45,7 +48,8 @@ public class DailyScheduleService {
 
     @Transactional
     public DailySchedule getDailyScheduleById(int id) {
-        return dailyScheduleRepository.findById(id).get();
+        List<DailySchedule> dailySchedules = getAllDailySchedules();
+        return dailySchedules.get(id);
     }
 
     @Transactional
@@ -63,7 +67,7 @@ public class DailyScheduleService {
         if (openingTime.after(closingTime)) {
             throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Opening time must be before closing time.");
         }
-        DailySchedule dailySchedule = dailyScheduleRepository.findById(id).get();
+        DailySchedule dailySchedule = getDailyScheduleById(id);
         dailySchedule.setOpeningTime(openingTime);
         dailySchedule.setClosingTime(closingTime);
         dailyScheduleRepository.save(dailySchedule);
