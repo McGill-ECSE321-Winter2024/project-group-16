@@ -39,6 +39,7 @@ public class CourseTypeServiceTests {
     private static final String DESCRIPTION = "Yoga";
     private static final boolean APPROVED_BY_OWNER = true;
     private static final float PRICE = 20.0f;
+    private List<CourseType> allCourseTypesList = new ArrayList<>();
 
     @BeforeEach
     public void setMockOutput() {
@@ -53,7 +54,13 @@ public class CourseTypeServiceTests {
             return Optional.empty();
         });
 
-        lenient().when(courseTypeRepository.save(any(CourseType.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        lenient().when(courseTypeRepository.save(any(CourseType.class))).thenAnswer(invocation -> {
+            CourseType ct = invocation.getArgument(0);
+            allCourseTypesList.add(ct);
+            return ct;
+        });
+    
+        lenient().when(courseTypeRepository.findAll()).thenReturn(allCourseTypesList);
     }
 
     @Test
@@ -106,7 +113,7 @@ public class CourseTypeServiceTests {
         });
     }
 
-    // Continuing from the previous tests...
+   
 
     @Test
     public void testCreateCourseTypeWithEmptyDescription() {
@@ -169,6 +176,7 @@ public class CourseTypeServiceTests {
 
     @Test
     public void testDeleteAllCourseTypes() {
+        
     courseTypeService.deleteAllCourseTypes();
     verify(courseTypeRepository, times(1)).deleteAll();
     }
