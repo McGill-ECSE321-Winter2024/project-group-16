@@ -194,15 +194,15 @@ public class CourseTypeService {
     }
 
     /**
-     * @param approvedByOwner
+     * @param b
      * @return list of CourseType with the given approval status
      */
     @Transactional
-    public List<CourseType> getByApprovedByOwner(String approvedByOwner) {
-        if (!Objects.equals(approvedByOwner, "true") && !Objects.equals(approvedByOwner, "false")) {
+    public List<CourseType> getByApprovedByOwner(boolean b) {
+        if (!Objects.equals(b, "true") && !Objects.equals(b, "false")) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Endpoint can only contain true or false strings.");
         }
-        boolean approvedBoolean = Boolean.parseBoolean(approvedByOwner);
+        boolean approvedBoolean = Boolean.parseBoolean(b);
         List<CourseType> courseTypes;
         if (approvedBoolean) {
             courseTypes = courseTypeRepository.findByApprovedByOwnerTrue();
@@ -210,9 +210,9 @@ public class CourseTypeService {
             courseTypes = courseTypeRepository.findByApprovedByOwnerFalse();
         }
         if (courseTypes == null) {
-            throw new SportsScheduleException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving course types by approvedByOwner: " + approvedByOwner);
+            throw new SportsScheduleException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving course types by approvedByOwner: " + b);
         } else if (courseTypes.isEmpty()) {
-            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "No course types found with approvedByOwner: " + approvedByOwner);
+            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "No course types found with approvedByOwner: " + b);
         }
         return courseTypes;
     }
