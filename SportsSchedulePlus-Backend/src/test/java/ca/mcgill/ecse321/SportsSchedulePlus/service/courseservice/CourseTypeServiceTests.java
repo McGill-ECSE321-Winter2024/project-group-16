@@ -3,8 +3,10 @@ package ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -13,12 +15,14 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
@@ -61,10 +65,47 @@ public class CourseTypeServiceTests {
         });
     
         lenient().when(courseTypeRepository.findAll()).thenReturn(allCourseTypesList);
+
+        lenient().when(courseTypeRepository.findByPrice(anyFloat())).thenAnswer(invocation -> {
+            float price = invocation.getArgument(0);
+            if (price == PRICE) {
+                CourseType ct = new CourseType();
+                ct.setDescription(DESCRIPTION);
+                ct.setApprovedByOwner(APPROVED_BY_OWNER);
+                ct.setPrice(PRICE);
+                List<CourseType> result = new ArrayList<>();
+                result.add(ct);
+                return result;
+            }
+            return new ArrayList<CourseType>(); // Return an empty list if the price doesn't match
+        });
+
+        lenient().when(courseTypeRepository.findByApprovedByOwnerTrue()).thenAnswer(invocation -> {
+            CourseType ct = new CourseType();
+            ct.setDescription(DESCRIPTION);
+            ct.setApprovedByOwner(true); // This is redundant as we're mocking findByApprovedByOwnerTrue
+            ct.setPrice(PRICE);
+            List<CourseType> approvedCourseTypes = new ArrayList<>();
+            approvedCourseTypes.add(ct);
+            return approvedCourseTypes;
+        });
+        CourseType ct = new CourseType();
+        ct.setDescription("Some Description");
+        ct.setApprovedByOwner(true);
+        ct.setPrice(20.0f);
+        List<CourseType> courseTypeList = new ArrayList<>();
+        courseTypeList.add(ct);
+
+        // Mocking findAll to return a non-empty list to simulate existing course types
+        lenient().when(courseTypeRepository.findAll()).thenReturn(courseTypeList);
+    
+                
     }
 
     @Test
     public void testCreateCourseType() {
+        allCourseTypesList.clear();
+        Mockito.when(courseTypeRepository.findAll()).thenReturn(allCourseTypesList);
         assertEquals(0, courseTypeService.getAllCourseTypes().size());
 
         String description = "Pilates";
@@ -176,8 +217,9 @@ public class CourseTypeServiceTests {
 
     @Test
     public void testDeleteAllCourseTypes() {
-        
+
     courseTypeService.deleteAllCourseTypes();
+    
     verify(courseTypeRepository, times(1)).deleteAll();
     }
 
