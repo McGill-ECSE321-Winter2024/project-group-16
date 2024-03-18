@@ -17,7 +17,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
 
-
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Objects;
 
