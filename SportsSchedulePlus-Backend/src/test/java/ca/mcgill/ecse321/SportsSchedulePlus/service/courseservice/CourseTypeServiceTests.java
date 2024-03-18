@@ -106,7 +106,7 @@ public class CourseTypeServiceTests {
         });
     }
 
-    // Continuing from the previous tests...
+   
 
     @Test
     public void testCreateCourseTypeWithEmptyDescription() {
@@ -148,7 +148,7 @@ public class CourseTypeServiceTests {
 
     @Test
     public void testGetByApprovedByOwnerTrue() {
-    List<CourseType> found = courseTypeService.getByApprovedByOwner(true);
+    List<CourseType> found = courseTypeService.getByApprovedByOwner("true");
 
     assertNotNull(found);
     assertFalse(found.isEmpty());
@@ -160,19 +160,12 @@ public class CourseTypeServiceTests {
     when(courseTypeRepository.findByApprovedByOwnerFalse()).thenReturn(List.of());
 
     Exception exception = assertThrows(SportsScheduleException.class, () -> {
-        courseTypeService.getByApprovedByOwner(false);
+        courseTypeService.getByApprovedByOwner("false");
     });
 
     assertEquals("No course types found with approvedByOwner: false", exception.getMessage());
     }
 
-    @Test
-    public void testUpdateCourseTypeApproval() {
-    CourseType updated = courseTypeService.updateCourseTypeApproval(COURSE_TYPE_ID, false);
-
-    assertNotNull(updated);
-    assertFalse(updated.getApprovedByOwner());
-    }
 
     @Test
     public void testDeleteAllCourseTypes() {

@@ -54,7 +54,7 @@ public class ScheduledCourseServiceTests {
     public void testCreateScheduledCourse() {
         ScheduledCourse sc = null;
         try {
-            sc = scheduledCourseService.createScheduledCourse(SCHEDULED_COURSE_ID, "2024-04-15", "09:00:00", "11:00:00", LOCATION, COURSE_TYPE_ID);
+            sc = scheduledCourseService.createScheduledCourse("2024-04-15", "09:00:00", "11:00:00", LOCATION, COURSE_TYPE_ID);
         } catch (SportsScheduleException e) {
             fail(e.getMessage());
         }
@@ -70,7 +70,7 @@ public class ScheduledCourseServiceTests {
     @Test
     public void testCreateScheduledCourseWithInvalidTime() {
         Exception exception = assertThrows(SportsScheduleException.class, () -> {
-            scheduledCourseService.createScheduledCourse(SCHEDULED_COURSE_ID, "2024-04-15", "11:00:00", "09:00:00", LOCATION, COURSE_TYPE_ID);
+            scheduledCourseService.createScheduledCourse( "2024-04-15", "11:00:00", "09:00:00", LOCATION, COURSE_TYPE_ID);
         });
 
         String expectedMessage = "End time must be after start time.";

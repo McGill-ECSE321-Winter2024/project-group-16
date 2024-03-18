@@ -25,6 +25,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation:2.4.0'
 	implementation 'org.jodd:jodd-mail:5.0.12'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
+	implementation 'org.checkerframework:checker-qual:3.21.1'
 	
 
 	runtimeOnly 'org.postgresql:postgresql'
