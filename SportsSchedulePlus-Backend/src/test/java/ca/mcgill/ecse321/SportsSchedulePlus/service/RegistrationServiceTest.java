@@ -16,13 +16,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration.Key;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.registrationservice.RegistrationService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
+
+
 
 public class RegistrationServiceTest {
 
@@ -101,116 +106,141 @@ public class RegistrationServiceTest {
     public void getRegistrationsByCustomer() {
         //Create Customer
         int customerId = 3;
+        int customerId2 = 4;
         Customer customer = new Customer();
+        Customer customer2 = new Customer();
         customer.setId(customerId);
+        customer2.setId(customerId2);
+        
+        //Create course
+        int courseId = 5;
+        int courseId2 = 12;
+        ScheduledCourse course = new ScheduledCourse();
+        ScheduledCourse course2 = new ScheduledCourse();
+        course.setId(courseId);
+        course2.setId(courseId2);
 
-        //Create registration
-        int confirmationNumber = 4321;
-        Registration registration = new Registration(confirmationNumber);
+        //Create key and registration
+        Key key = new Key(customer, course);
+        Key key2 = new Key(customer2, course2);
+
+        int confirmationNumber = 1234;
+        int confirmationNumber2 = 4321;
+        Registration registration = new Registration();
+        Registration registration2 = new Registration();
+
+        //Set key and confirmation number, save registrations to registrationRepository
+        registration.setKey(key);
+        registration2.setKey(key2);
+        registration.setConfirmationNumber(confirmationNumber);
+        registration2.setConfirmationNumber(confirmationNumber2);
 
         registrationRepository.save(registration);
+        registrationRepository.save(registration2);
 
-        
-        //NOT SURE HOW TO SET A CUSTOMERS REGISTRATION
+        //Call getRegistrationsByCustomer
+        List<Registration> registrations = registrationService.getRegistrationsByCustomer(customerId);
 
+        //Assert not null and has correct size
+        assertNotNull(registrations);
+        assertEquals(registrations.size(), 1);
 
+        //Get registration object
+        registration = registrations.get(0);
 
+        //Assert registration not null and has correct attributes
+        assertNotNull(registration);
+        assertEquals(registration.getConfirmationNumber(), confirmationNumber);
+        assertEquals(registration.getKey(), key);
     }
 
     @Test
     public void getRegistrationsByCourseTest() {
+        //Create Customer
+        int customerId = 3;
+        int customerId2 = 4;
+        Customer customer = new Customer();
+        Customer customer2 = new Customer();
+        customer.setId(customerId);
+        customer2.setId(customerId2);
+        
+        //Create course
+        int courseId = 5;
+        int courseId2 = 12;
+        ScheduledCourse course = new ScheduledCourse();
+        ScheduledCourse course2 = new ScheduledCourse();
+        course.setId(courseId);
+        course2.setId(courseId2);
 
+        //Create key and registration
+        Key key = new Key(customer, course);
+        Key key2 = new Key(customer2, course2);
+
+        int confirmationNumber = 1234;
+        int confirmationNumber2 = 4321;
+        Registration registration = new Registration();
+        Registration registration2 = new Registration();
+
+        //Set key and confirmation number, save registrations to registrationRepository
+        registration.setKey(key);
+        registration2.setKey(key2);
+        registration.setConfirmationNumber(confirmationNumber);
+        registration2.setConfirmationNumber(confirmationNumber2);
+
+        registrationRepository.save(registration);
+        registrationRepository.save(registration2);
+
+        //Call getRegistrationsByCourse
+        List<Registration> registrations = registrationService.getRegistrationsByCourse(courseId);
+
+        //Assert not null and has correct size
+        assertNotNull(registrations);
+        assertEquals(registrations.size(), 1);
+
+        //Get registration object
+        registration = registrations.get(0);
+
+        //Assert registration not null and has correct attributes
+        assertNotNull(registration);
+        assertEquals(registration.getConfirmationNumber(), confirmationNumber);
+        assertEquals(registration.getKey(), key);
     }
 
-    @Test
-    public void sendPaymentConfirmationEmailTest() {
-
-    }
+  
 
     @Test 
     public void createRegistrationTest() {
+        //Create Customer
+        int customerId = 3;
+        int customerId2 = 4;
+        Customer customer = new Customer();
+        Customer customer2 = new Customer();
+        customer.setId(customerId);
+        customer2.setId(customerId2);
+        
+        //Create course
+        int courseId = 5;
+        int courseId2 = 12;
+        ScheduledCourse course = new ScheduledCourse();
+        ScheduledCourse course2 = new ScheduledCourse();
+        course.setId(courseId);
+        course2.setId(courseId2);
 
+        //Call createRegistration
+        Registration registration = registrationService.createRegistration(customerId, courseId);
+
+        //Create key and find registration in the registrationRepository by the key
+        Key key = new Key(customer, course);
+        Registration foundRegistration = registrationRepository.findRegistrationByKey(key);
+
+        //Assert both registrations are not null and have the correct values
+        assertNotNull(foundRegistration);
+        assertNotNull(registration);
+        assertEquals(foundRegistration.getConfirmationNumber(), registration.getConfirmationNumber());
+        assertEquals(foundRegistration, registration);
     }
 
     
-
-    // @Test
-    // public void getAllPaymentsTest() {
-    //     // Create payments.
-    //     int confirmationNumber1 = 1234;
-    //     int confirmationNumber2 = 4321;
-    //     Payment payment1 = new Payment();
-    //     Payment payment2 = new Payment();
-    //     payment1.setConfirmationNumber(confirmationNumber1);
-    //     payment2.setConfirmationNumber(confirmationNumber2);
-        
-    //     // Save Payments.
-    //     paymentRepository.save(payment1);
-    //     paymentRepository.save(payment2);
-
-    //     // Call getAllPayments() 
-    //     List<Payment> payments = paymentService.getAllPayments();
-
-    //     // Assert that payments is the correct length and get the payment objects
-    //     assertEquals(payments.size(), 2);
-    //     payment1 = payments.get(0);
-    //     payment2 = payments.get(1);
-
-    //     //Assert that payment is not null and has correct attributes.
-    //     assertNotNull(payment1);
-    //     assertNotNull(payment2);
-    //     assertEquals(confirmationNumber1, payment1.getConfirmationNumber());
-    //     assertEquals(confirmationNumber2, payment2.getConfirmationNumber());
-    // }
-
-    // @Test
-    // public void getPaymentByConfirmationNumberTest() {
-
-    //     // Create payments.
-    //     int confirmationNumber = 1234;
-    //     Payment payment = new Payment();
-    //     payment.setConfirmationNumber(confirmationNumber);
-        
-    //     // Save Payments.
-    //     paymentRepository.save(payment);
-
-    //     // Get payment by using getPaymentByConfirmationNumber()
-    //     payment = paymentService.getPaymentByConfirmationNumber(confirmationNumber);
-
-    //     // Assert that payment is not null and has correct attributes
-    //     assertNotNull(payment);
-    //     assertEquals(confirmationNumber, payment.getConfirmationNumber());
-    // }
-
-    // @Test
-    // public void getPaymentsByCustomerTest() {
-        
-    //     // Create customer
-    //     int customerId = 3;
-    //     Customer customer = new Customer();
-    //     customer.setId(customerId);
-
-    //     // Create payment
-    //     int confirmationNumber = 1234;
-    //     Payment payment = new Payment();
-    //     payment.setConfirmationNumber(confirmationNumber);
-
-    //     // Save payment and customer to repositories and add customer payment
-    //     paymentRepository.save(payment);
-    //     customer.addCustomerPayment(payment);
-    //     customerRepository.save(customer);
-
-    //     List<Payment> customerPayments = paymentService.getPaymentsByCustomer(customerId);
-
-    //     assertEquals(customerPayments.size(), 1);
-    //     payment = customerPayments.get(0);
-
-    //     // Assert not null and same payment
-    //     assertNotNull(payment);
-    //     assertEquals(payment.getConfirmationNumber(), confirmationNumber);
-
-
-    // }
 }
 
 
