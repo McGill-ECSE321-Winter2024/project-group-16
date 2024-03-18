@@ -73,7 +73,7 @@ public class PaymentRepositoryTests {
         
         // Assertions
         assertNotNull(foundPayment);
-        //Payment foundPayment = foundPayments.get(0);
+
         // The overridden equals method in the Payment model is used here
         assertEquals(newPayment, foundPayment);
     }
