@@ -43,6 +43,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice.DailyScheduleService;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 public class UserServiceTests {
     @Mock
@@ -78,6 +79,15 @@ public class UserServiceTests {
     @BeforeEach
     public void setMockOutput(){
         lenient().when(customerRepository.findCustomerById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0).equals(customerId)) {
+                Customer customer = new Customer();
+                customer.setId(customerId);
+                return customer;
+            } else {
+                return null;
+            }
+        });
+        lenient().when(personRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
             if (invocation.getArgument(0).equals(customerId)) {
                 Customer customer = new Customer();
                 customer.setId(customerId);
@@ -169,6 +179,7 @@ public class UserServiceTests {
         assertEquals(email, person.getEmail());
         assertEquals("encodedPassword", person.getPassword());
         assertEquals(role, person.getPersonRole());
+        }
     }
 
     @Test
@@ -333,7 +344,100 @@ public class UserServiceTests {
     }
 
     @Test
-    
+    public void testCreateOwner() {
+        Person person = null;
+
+        when(userService.getOwner()).thenThrow(new RuntimeException());
+        when(passwordEncoder.encode(anyString())).thenReturn("admin");
+
+        person = userService.createOwner();
+
+        verify(personRoleRepository, times(1)).save(any(Owner.class));
+        verify(personRepository, times(1)).save(any(Person.class));
+
+        assertNotNull(person);
+        assertEquals("owner", person.getName());
+        assertEquals("sports.schedule.plus@gmail.com", person.getEmail());
+        assertEquals("admin", person.getPassword());
+    }
+
+    @Test
+    public void testCreateOwnerAlreadyExists() {
+        Person person = null;
+
+        when(userService.getOwner()).thenReturn(new Owner());
+
+        try {
+            person = userService.createOwner();
+            fail();
+        } catch (Exception e) {
+            // Check that an error occurred
+            assertNotNull(person);
+            assertEquals("Owner already exists.", e.getMessage());
+        }
+
+        verify(personRoleRepository, times(0)).save(any(Owner.class));
+        verify(personRepository, times(0)).save(any(Person.class));
+    }
+
+    @Test
+    public void testCreateInstructor() {
+        String email = "instructor@email.com";
+        String experience = "5 years";
+        Person person = null;
+
+        try {
+            person = userService.createInstructor(email, experience);
+        } catch (Exception e) {
+            // Check that no error occurred
+            fail();
+        }
+
+        assertNotNull(person);
+        assertEquals(email, person.getEmail());
+    }
+
+    @Test
+    public void testCreateInstructorNonExistentEmail() {
+        String email = "invalid";
+        String experience = "5 years";
+        Person person = null;
+
+        try {
+            person = userService.createInstructor(email, experience);
+            fail();
+        } catch (Exception e) {
+            // Check that an error occurred
+            assertNull(person);
+            assertEquals("Email does not exist.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUpdateUser() {
+        Integer id = 1;
+        String name = "New Name";
+        String email = "NewEmail@test.com";
+        String password = "newPassword";
+        String experience = "5 years";
+        Person person = null;
+
+        // Mock behavior for getPersonById
+        Person existingUser = new Person("Existing Name", "email@test.com", "password", new Customer());
+        when(personRepository.findById(id)).thenReturn(java.util.Optional.of(existingUser));
+        try {
+            person = userService.updateUser(id, name, email, password, experience);
+        } catch (Exception e) {
+            // Check that no error occurred
+            fail();
+        }
+
+        assertNotNull(person);
+        assertEquals(name, person.getName());
+        assertEquals(email, person.getEmail());
+        assertEquals(password, person.getPassword());
+    }
+
 
 
 }
