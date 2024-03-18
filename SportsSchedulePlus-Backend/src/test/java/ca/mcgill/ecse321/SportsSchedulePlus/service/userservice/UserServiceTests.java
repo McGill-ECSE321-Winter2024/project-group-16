@@ -414,8 +414,8 @@ public class UserServiceTests {
     }
 
     @Test
-    public void testUpdateUser() {
-        Integer id = 1;
+    public void testUpdateUserCustomer() {
+        Integer id = customerId;
         String name = "New Name";
         String email = "NewEmail@test.com";
         String password = "newPassword";
@@ -424,7 +424,57 @@ public class UserServiceTests {
 
         // Mock behavior for getPersonById
         Person existingUser = new Person("Existing Name", "email@test.com", "password", new Customer());
-        when(personRepository.findById(id)).thenReturn(java.util.Optional.of(existingUser));
+        when(userService.getPersonById(id)).thenReturn(existingUser);
+        try {
+            person = userService.updateUser(id, name, email, password, experience);
+        } catch (Exception e) {
+            // Check that no error occurred
+            fail();
+        }
+
+        assertNotNull(person);
+        assertEquals(name, person.getName());
+        assertEquals(email, person.getEmail());
+        assertEquals(password, person.getPassword());
+    }
+
+    @Test
+    public void testUpdateUserInstructor() {
+        Integer id = instructorId;
+        String name = "New Name";
+        String email = "NewEmail@test.com";
+        String password = "newPassword";
+        String experience = "5 years";
+        Person person = null;
+
+        // Mock behavior for getPersonById
+        Person existingUser = new Person("Existing Name", "email@test.com", "password", new Instructor());
+        when(userService.getPersonById(id)).thenReturn(existingUser);
+        try {
+            person = userService.updateUser(id, name, email, password, experience);
+        } catch (Exception e) {
+            // Check that no error occurred
+            fail();
+        }
+
+        assertNotNull(person);
+        assertEquals(name, person.getName());
+        assertEquals(email, person.getEmail());
+        assertEquals(password, person.getPassword());
+    }
+
+    @Test
+    public void testUpdateUserOwner() {
+        Integer id = ownerId;
+        String name = "New Name";
+        String email = "NewEmail@test.com";
+        String password = "newPassword";
+        String experience = "5 years";
+        Person person = null;
+
+        // Mock behavior for getPersonById
+        Person existingUser = new Person("owner", "sports.schedule.plus@gmail.com", "admin", new Owner());
+        when(userService.getPersonById(id)).thenReturn(existingUser);
         try {
             person = userService.updateUser(id, name, email, password, experience);
         } catch (Exception e) {

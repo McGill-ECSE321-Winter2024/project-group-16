@@ -198,7 +198,7 @@ public class CourseTypeService {
      * @return list of CourseType with the given approval status
      */
     @Transactional
-    public List<CourseType> getByApprovedByOwner(boolean b) {
+    public List<CourseType> getByApprovedByOwner(String b) {
         if (!Objects.equals(b, "true") && !Objects.equals(b, "false")) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Endpoint can only contain true or false strings.");
         }
