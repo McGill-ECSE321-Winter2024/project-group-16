@@ -128,7 +128,7 @@ public class ScheduledCourseServiceTests {
     @Test
     public void testCreateScheduledCourseWithInvalidTime() {
         Exception exception = assertThrows(SportsScheduleException.class, () -> {
-            scheduledCourseService.createScheduledCourse( "2024-04-15", "11:00:00", "09:00:00", LOCATION, COURSE_TYPE_ID);
+            scheduledCourseService.createScheduledCourse("2024-04-15", "11:00:00", "09:00:00", LOCATION, COURSE_TYPE_ID);
         });
 
         String expectedMessage = "End time must be after start time.";
