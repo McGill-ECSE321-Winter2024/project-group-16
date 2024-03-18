@@ -107,24 +107,7 @@ public class InstructorController {
         int personId = userService.deleteUser(id);
         return ResponseEntity.ok("Instructor with id " + personId + " was successfully deleted.");
     }
-    
-    /**
-     * Creates an instructor with the path variable email
-     * @param email
-     * @param experience
-     * @return  PersonDTO
-     */
-    @PostMapping(value = {"/instructors/{email}"})
-    public PersonDTO createInstructor(@PathVariable("email") String email, @RequestBody String experience) {
-        Person person = userService.createInstructor(email, experience);
-        return new PersonDTO(person);
-    }
-    /**
-     * Updates the instructor with the path variable id
-     * @param id
-     * @param json
-     * @return PersonDTO 
-     */
+
     @PutMapping(value = {"/instructors/{id}"})
     public PersonDTO updateInstructor(@PathVariable("id") int id, @RequestBody Map<String, String> json) {
         String updatedName = json.get("name");

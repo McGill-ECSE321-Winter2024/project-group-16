@@ -36,7 +36,13 @@ public class CourseTypeService {
     @Autowired
     private OwnerRepository ownerRepository;
 
-
+    /**
+     * Creates a new course type with the given description, approval status, and price.
+     * @param description
+     * @param approvedByOwner
+     * @param price
+     * @return the new CourseType
+     */
     @Transactional
     public CourseType createCourseType(String description, boolean approvedByOwner, float price) {
         // Validate the course before saving
@@ -50,6 +56,14 @@ public class CourseTypeService {
         return courseType;
     }
 
+    /**
+     * Updates the course type with the given ID, changing its description, approval status, and price.
+     * @param id
+     * @param description
+     * @param approvedByOwner
+     * @param price
+     * @return the updated CourseType
+     */
     @Transactional
     public CourseType updateCourseType(int id, String description, boolean approvedByOwner, float price) {
         CourseType courseType = getCourseType(id);
@@ -62,7 +76,10 @@ public class CourseTypeService {
         return courseType;
     }
 
-
+    /**
+     * @param courseType
+     * @return the instructor who suggested the courseType
+     */
     @Transactional
     public Instructor getInstructorsByInstructorSuggestedCourseType(CourseType courseType) {
         if (courseType == null) {
@@ -75,6 +92,12 @@ public class CourseTypeService {
         return instructor;
     }
 
+    /**
+     * Validates the course type before saving or updating it.
+     * @param description
+     * @param price
+     * @param newDescription
+     */
     private void validateCourseType(String description, float price, boolean newDescription) {
         if (description == null || description.trim().isEmpty()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description cannot be null or empty.");
@@ -95,7 +118,10 @@ public class CourseTypeService {
         }
     }
 
-
+    /**
+     * @param id
+     * @return CourseType with the given ID
+     */
     @Transactional
     public CourseType getCourseType(Integer id) {
         CourseType courseType = courseTypeRepository.findById(id).orElse(null);
@@ -105,16 +131,26 @@ public class CourseTypeService {
         return courseType;
     }
 
+    /**
+     * @return all course types in the system
+     */
     @Transactional
     public List<CourseType> getAllCourseTypes() {
         return Helper.toList(courseTypeRepository.findAll());
     }
 
+    /**
+     * @return all course types that have been approved by the owner
+     */
     @Transactional
     public List<CourseType> getAllApprovedCourseTypes() {
         return courseTypeRepository.findByApprovedByOwnerTrue();
     }
 
+    /**
+     * deletes the course type with the given ID
+     * @param id
+     */
     @Transactional
     public void deleteCourseType(Integer id) {
         CourseType courseType = courseTypeRepository.findCourseTypeById(id);
@@ -128,6 +164,9 @@ public class CourseTypeService {
         courseTypeRepository.deleteById(id);
     }
 
+    /**
+     * Deletes all course types in the system
+     */
     @Transactional
     public void deleteAllCourseTypes() {
         List<CourseType> courseTypes = Helper.toList(courseTypeRepository.findAll());
@@ -139,6 +178,10 @@ public class CourseTypeService {
         }
     }
 
+    /**
+     * @param price
+     * @return all courseType with the given price
+     */
     @Transactional
     public List<CourseType> getCourseTypeByPrice(float price) {
         List<CourseType> courseTypes = courseTypeRepository.findByPrice(price);
@@ -150,6 +193,10 @@ public class CourseTypeService {
         return courseTypes;
     }
 
+    /**
+     * @param approvedByOwner
+     * @return list of CourseType with the given approval status
+     */
     @Transactional
     public List<CourseType> getByApprovedByOwner(String approvedByOwner) {
         if (!Objects.equals(approvedByOwner, "true") && !Objects.equals(approvedByOwner, "false")) {
@@ -170,6 +217,11 @@ public class CourseTypeService {
         return courseTypes;
     }
 
+    /**
+     * toggles the approval status of the course type with the given ID
+     * @param id
+     * @return the course type with the given ID
+     */
     @Transactional
     public CourseType toggleCourseTypeApproval(int id) {
         CourseType courseType = courseTypeRepository.findById(id).orElse(null);
@@ -194,4 +246,3 @@ public class CourseTypeService {
         return courseType;
     }
 }
-

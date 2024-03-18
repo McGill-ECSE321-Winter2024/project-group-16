@@ -40,6 +40,14 @@ public class UserService {
     @Autowired
     private DailyScheduleService dailyScheduleService;
 
+    /**
+     * This method creates a user.
+     * @param name
+     * @param email
+     * @param password
+     * @param role
+     * @return
+     */
     @Transactional
     public Person createUser(String name, String email, String password, PersonRole role) {
         personRoleRepository.save(role);
@@ -48,6 +56,16 @@ public class UserService {
         return person;
     }
 
+    /**
+     * This method creates a customer.
+     * 
+     * The information for the customer is validated through a helper method.
+     * 
+     * @param name
+     * @param email
+     * @param password
+     * @return Person account for the customer
+     */
     @Transactional
     public Person createCustomer(String name, String email, String password) {
         PersonRole personRole = new Customer();
@@ -55,13 +73,14 @@ public class UserService {
         return createUser(name, email, password, personRole);
     }
 
-    /*
+    /**
      * this creates the owner if it does not exist
      * 
      * to check if the owner exists, we try getOwner(), which throws SportsSchedulePlusException if it doesnt exist
      * we then catch the exception and create the owner
      * 
      * if it does exist, we throw a new exception
+     * @return the new Person account for the owner
      */
     @Transactional
     public Person createOwner() {
@@ -79,6 +98,16 @@ public class UserService {
         throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner already exists.");
     }
 
+    /**
+     * This method creates an instructor.
+     * 
+     * This creates an instructor account for an existing customer, when said customer is approved to become an instructor.
+     * 
+     * THIS METHOD IS ONLY CALLED IN UserService.approveCustomer().
+     * @param email
+     * @param experience
+     * @return the new Person account
+     */
     @Transactional
     public Person createInstructor(String email, String experience) {
         Person existingPerson = personRepository.findPersonByEmail(email);
@@ -120,7 +149,8 @@ public class UserService {
     /**
      * this method updates the user
      * it checks the PersonRole of the user based on the given id
-     * @param id  update user with the given id
+     * @param id if id == -1, then update the owner, else update user with the given id
+     * @return the updated user
      */
     @Transactional
     public Person updateUser(int id, String name, String email, String password, String experience) {
@@ -157,6 +187,14 @@ public class UserService {
         throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "User instance could not be modified.");
     }
 
+    /**
+     * Updates a Person
+     * @param person
+     * @param name
+     * @param email
+     * @param password
+     * @param newEmail
+     */
     private void updatePerson(Person person, String name, String email, String password, boolean newEmail) {
         Helper.validateUser(personRepository, name, email, password, newEmail);
         person.setName(name);
@@ -165,11 +203,20 @@ public class UserService {
         personRepository.save(person);
     }
 
+    /**
+     * 
+     * @param ownerPerson
+     * @param name
+     * @param password
+     */
     private void updateOwner(Person ownerPerson, String name, String password) {
         updatePerson(ownerPerson, name, ownerPerson.getEmail(), password, false);
     }
 
-
+    /**
+     * @param id
+     * @return Customer with given id
+     */
     @Transactional
     public Customer getCustomer(int id) {
         Customer customer = customerRepository.findCustomerById(id);
@@ -179,11 +226,18 @@ public class UserService {
         return customer;
     }
 
+    /**
+     * @return List of all customers
+     */
     @Transactional
     public List<Customer> getAllCustomers() {
         return Helper.toList(customerRepository.findAll());
     }
 
+    /**
+     * @param email
+     * @return Instructor with given email
+     */
     @Transactional
     public Instructor getInstructor(String email) {
         Person person = personRepository.findPersonByEmail(email);
@@ -199,11 +253,17 @@ public class UserService {
         }
     }
 
+    /**
+     * @return List of all instructors
+     */
     @Transactional
     public List<Instructor> getAllInstructors() {
         return Helper.toList(instructorRepository.findAll());
     }
 
+    /**
+     * @return The Owner of the system
+     */
     @Transactional
     public Owner getOwner() {
         Iterable<Owner> ownerList = ownerRepository.findAll();
@@ -215,6 +275,10 @@ public class UserService {
         }
     }
 
+    /**
+     * @param id
+     * @return Person with given id
+     */
     @Transactional
     public Person getPersonById(int id) {
         Optional<Person> person = personRepository.findById(id);
@@ -224,11 +288,18 @@ public class UserService {
         return person.get();
     }
 
+    /**
+     * @return List of all persons
+     */
     @Transactional
     public List<Person> getAllPersons() {
         return Helper.toList(personRepository.findAll());
     }
 
+    /**
+     * @param id
+     * @return the id of the deleted user
+     */
     @Transactional
     public int deleteUser(int id) {
         Optional<Person> optionalPerson = personRepository.findById(id);
@@ -245,6 +316,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Helper Method to delete an instructor or customer
+     * @param person
+     * @param id
+     * @return the id of the deleted user
+     */
     private int deleteInstructorOrCustomer(Person person, int id) {
         personRepository.delete(person);
         personRoleRepository.delete(person.getPersonRole());
@@ -262,15 +339,10 @@ public class UserService {
         return id;
     }
 
-    @Transactional
-    public void deletePersonById(int id) {
-        Optional<Person> existingPerson = personRepository.findById(id);
-        if (!existingPerson.isPresent()) {
-            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no person with ID " + id + " to delete.");
-        }
-        personRepository.deleteById(id);
-    }
-
+    /**
+     * @param customerId
+     * @return returns the customer with the given id, changes the hasApplied attribute to true
+     */
     @Transactional
     public Customer applyForInstructor(int customerId) {
         Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
@@ -290,6 +362,10 @@ public class UserService {
         return customer;
     }
 
+    /**
+     * @param customerId
+     * @return returns a new Instructor account for a customer if he has applied.
+     */
     @Transactional
     public Instructor approveCustomer(int customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
@@ -305,6 +381,10 @@ public class UserService {
         return (Instructor) newPerson.getPersonRole();
     }
 
+    /**
+     * @param customerId
+     * @return returns the customer with the given id, changes the hasApplied attribute to false
+     */
     @Transactional
     public Customer rejectCustomer(int customerId) {
         Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
@@ -317,11 +397,19 @@ public class UserService {
         return customer;
     }
 
+    /**
+     * @param scheduledCourse
+     * @return returns the instructor that gives a Scheduled Course
+     */
     @Transactional
     public List<Instructor> getInstructorsBySupervisedCourse(ScheduledCourse scheduledCourse) {
         return Helper.toList(instructorRepository.findInstructorBySupervisedCourses(scheduledCourse));
     }
 
+    /**
+     * @param id
+     * @return returns the instructor that suggested a CourseType with the given id
+     */
     @Transactional
     public Instructor getInstructorBySuggestedCourseType(int id) {
         CourseType courseType = courseTypeService.getCourseType(id);
@@ -332,11 +420,20 @@ public class UserService {
         return instructor;
     }
 
+    /**
+     * @param experience
+     * @return returns the instructor with the given experience
+     */
     @Transactional
     public List<Instructor> getInstructorByExperience(String experience) {
         return Helper.toList(instructorRepository.findInstructorByExperience(experience));
     }
 
+    /**
+     * @param instructor
+     * @param courseType
+     * @return returns a new CourseType with the given information, suggested by the given instructor
+     */
     @Transactional
     public CourseType suggestCourseType(PersonRole personRole, CourseType courseType) {
         CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getDescription(), courseType.getApprovedByOwner(), courseType.getPrice());
@@ -354,14 +451,18 @@ public class UserService {
         return courseTypeCreated;
     }
 
+    /**
+     * @param email
+     * @return returns the person with the given email
+     */
     @Transactional
     public Person findPersonByEmail(String email) {
         return personRepository.findPersonByEmail(email);
     }
 
     /**
-     * this method returns the course types suggested by the user with the given id
-     * it checks the PersonRole of the user based on the given id
+     * @param personId
+     * @return returns the CourseTypes suggested by the person with the given id
      */
     @Transactional
     public List<CourseType> getCourseTypesSuggestedByPersonId(int personId) {
