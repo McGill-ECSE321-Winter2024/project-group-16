@@ -724,12 +724,189 @@ public class UserServiceTest {
         verify(personRepository, times(1)).save(any(Person.class));
     }
     
+    @Test
+    public void testGetCourseTypesSuggestedByPersonId() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String instructorExperience = "12 days";
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aId = 5;
+        int aOwnerId = 5;
+        List <DailySchedule> aDailySchedule;
 
+        Owner owner = new Owner(aOwnerId, null);
+        Instructor instructor = new Instructor(aId, instructorExperience);
+        Person person = new Person(aName, aEmail, aPassword, instructor);
+        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
 
+        instructor.addInstructorSuggestedCourseType(courseType);
+        personRepository.save(person);
+
+        List<CourseType> courseTypes = null;
+
+        try {
+            courseTypes = userService.getCourseTypesSuggestedByPersonId(aId);
+
+        } catch (Exception e) {
+            fail();
+        }
+
+        assertNotNull(courseTypes);
+        courseType = courseTypes.get(0);
+
+        assertNotNull(courseType);
+        assertEquals(aCourseDescription, courseType.getDescription());
+        assertEquals(isApprovedCourse, courseType.getApprovedByOwner());
+        assertEquals(coursePrice, courseType.getPrice());
+        assertEquals(courseType, courseType);
+
+        verify(personRoleRepository, times(0)).save(any(Instructor.class));
+        verify(personRepository, times(1)).save(any(Person.class));
+        
+
+    }
 
     @Test
-    public void getCourseTypesSuggestedByPersonId() {
+    public void testGetCourseTypesSuggestedByPersonIdPersonNotPresent() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String instructorExperience = "12 days";
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aId = 5;
+        int aOwnerId = 5;
+        List <DailySchedule> aDailySchedule;
 
+        Owner owner = new Owner(aOwnerId, null);
+        Instructor instructor = new Instructor(aId, instructorExperience);
+        Person person = new Person(aName, aEmail, aPassword, instructor);
+        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+
+        instructor.addInstructorSuggestedCourseType(courseType);
+
+        List<CourseType> courseTypes = null;
+
+        try {
+            courseTypes = userService.getCourseTypesSuggestedByPersonId(aId);
+            fail();
+
+        } catch (Exception e) {
+            assertNull(courseTypes);
+            assertEquals("No person with ID " + aId + " found.", e.getMessage());
+        }
+
+    }
+    
+    @Test
+    public void testGetCourseTypesSuggestedByPersonIdOwner() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aOwnerId = 5;
+        List <DailySchedule> aDailySchedule = null;
+
+        Owner owner = new Owner(aOwnerId, aDailySchedule);
+        Person person = new Person(aName, aEmail, aPassword, owner);
+        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+
+        owner.addOwnerSuggestedCourse(courseType);
+        personRepository.save(person);
+
+        List<CourseType> courseTypes = null;
+
+        try {
+            courseTypes = userService.getCourseTypesSuggestedByPersonId(aOwnerId);
+
+        } catch (Exception e) {
+            fail();
+        }
+
+        assertNotNull(courseTypes);
+        courseType = courseTypes.get(0);
+
+        assertNotNull(courseType);
+        assertEquals(aCourseDescription, courseType.getDescription());
+        assertEquals(isApprovedCourse, courseType.getApprovedByOwner());
+        assertEquals(coursePrice, courseType.getPrice());
+        assertEquals(courseType, courseType);
+
+        verify(personRoleRepository, times(0)).save(any(Owner.class));
+        verify(personRepository, times(1)).save(any(Person.class));
+   
+
+    }
+
+    @Test
+    public void testGetCourseTypesSuggestedByPersonIdOwnerNoCourseTypes() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aOwnerId = 5;
+        List <DailySchedule> aDailySchedule = null;
+
+        Owner owner = new Owner(aOwnerId, aDailySchedule);
+        Person person = new Person(aName, aEmail, aPassword, owner);
+        
+        personRepository.save(person);
+
+        List<CourseType> courseTypes = null;
+
+        try {
+            courseTypes = userService.getCourseTypesSuggestedByPersonId(aOwnerId);
+            fail();
+        } catch (Exception e) {
+            assertNull(courseTypes);
+            assertEquals("No course types found for owner.", e.getMessage());
+            
+        }
+
+        verify(personRoleRepository, times(0)).save(any(Owner.class));
+        verify(personRepository, times(1)).save(any(Person.class));
+   
+
+    }
+
+    @Test
+    public void testGetCourseTypesSuggestedByPersonIdNotOwnerOrInstructor() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aOwnerId = 5;
+        List <DailySchedule> aDailySchedule = null;
+
+        Customer customer = new Customer(aOwnerId);
+        Person person = new Person(aName, aEmail, aPassword, customer);
+        
+        personRepository.save(person);
+
+        List<CourseType> courseTypes = null;
+
+        try {
+            courseTypes = userService.getCourseTypesSuggestedByPersonId(aOwnerId);
+            fail();
+        } catch (Exception e) {
+            assertNull(courseTypes);
+            assertEquals("Customers cannot have suggested courses.", e.getMessage());
+            
+        }
+
+        verify(personRoleRepository, times(0)).save(any(Owner.class));
+        verify(personRepository, times(1)).save(any(Person.class));
+   
 
     }
 
