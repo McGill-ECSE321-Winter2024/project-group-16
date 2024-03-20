@@ -41,14 +41,11 @@ public class Mailer {
      * parameter will not be set.
      *
      * @param subject
-     * @param attachments (can be null)
-     * @param embeddedAttachments (can be null)
      * @param htmlText (can be null)
      * @param textMessage
      * @throws IOException
      */
-    private void setContent(String subject,
-            String htmlText, String textMessage) throws IOException {
+    private void setContent(String subject, String htmlText, String textMessage) throws IOException {
         if (subject == null) {
             subject = "";
         }
@@ -69,8 +66,7 @@ public class Mailer {
      * @param toField
 
      */
-    public Email sendEmail(
-            final String subject, final String textMessage, final String htmlText, String toField) throws IOException {
+    public Email sendEmail(final String subject, final String textMessage, final String htmlText, String toField) throws IOException {
         if (sendBean != null) {
             if (checkEmail(sendBean.getUserEmailAddress())) {
                 LOG.info("Email send bean is valid");
@@ -83,8 +79,10 @@ public class Mailer {
 
                 this.email = Email.create().from(sendBean.getUserEmailAddress());
                 if (checkEmail(toField)) {
-
                     this.email.to(toField);
+                }
+                else{
+                    throw new IllegalArgumentException("This email does not exist.");
                 }
 
                 this.setContent(subject, htmlText, textMessage);
