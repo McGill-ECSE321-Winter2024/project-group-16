@@ -67,11 +67,12 @@ public class UserServiceTests {
     private RegistrationRepository registrationRepository;
     @InjectMocks
     private CourseTypeService courseTypeService;
-    @InjectMocks
+    @Mock
     private DailyScheduleService dailyScheduleService;
 
     @InjectMocks
     private UserService userService;
+   
 
     private static final Integer customerId = 1;
     private static final Integer instructorId = 2;
@@ -362,7 +363,7 @@ public class UserServiceTests {
             assertEquals("The owner does not yet exist within the system.", e.getMessage());
         }
         when(passwordEncoder.encode(anyString())).thenReturn("admin");
-
+    
         person = userService.createOwner();
 
         verify(personRoleRepository, times(1)).save(any(Owner.class));
