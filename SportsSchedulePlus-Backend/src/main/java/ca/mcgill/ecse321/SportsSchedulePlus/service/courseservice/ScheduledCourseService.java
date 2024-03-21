@@ -129,11 +129,8 @@ public class ScheduledCourseService {
      */
     @Transactional
     public ScheduledCourse updateScheduledCourse(int id, String date, String startTime, String endTime, String location, int courseTypeId) {
-        ScheduledCourse existingScheduledCourse = scheduledCourseRepository.findById(id);
+        ScheduledCourse existingScheduledCourse = getScheduledCourse(id);
         ScheduledCourse originalScheduledCourseCourse = new ScheduledCourse(existingScheduledCourse);
-        if (existingScheduledCourse == null) {
-            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Scheduled course not found");
-        }
         if (courseTypeRepository.findCourseTypeById(courseTypeId) == null) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Course type not found");
         }
@@ -253,10 +250,7 @@ public class ScheduledCourseService {
      */
     @Transactional
     public List<Instructor> getInstructorsBySupervisedCourse(int scheduledCourseId) {
-        ScheduledCourse scheduledCourse = scheduledCourseRepository.findById(scheduledCourseId);
-        if (scheduledCourse == null) {
-            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Scheduled course not found with ID: " + scheduledCourseId);
-        }
+        ScheduledCourse scheduledCourse = getScheduledCourse(scheduledCourseId);
         List<Instructor> instructors = instructorRepository.findInstructorBySupervisedCourses(scheduledCourse);
         return instructors;
     }
@@ -333,10 +327,7 @@ public class ScheduledCourseService {
      */
     @Transactional
     public void deleteScheduledCourse(int id) {
-        ScheduledCourse scheduledCourse = scheduledCourseRepository.findById(id);
-        if (scheduledCourse == null) {
-            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There is no scheduled course with ID " + id + ".");
-        }
+        ScheduledCourse scheduledCourse = getScheduledCourse(id);
         scheduledCourseRepository.deleteById(id);
     }
 

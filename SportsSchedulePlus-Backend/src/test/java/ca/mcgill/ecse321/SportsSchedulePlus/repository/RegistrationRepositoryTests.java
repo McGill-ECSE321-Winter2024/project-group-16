@@ -20,11 +20,11 @@ import ca.mcgill.ecse321.utils.Helper;
 
 
 /**
- * This class contains unit tests for the PaymentRepository.
- * The overridden equals method in the Payment model is used for assertions.
+ * This class contains unit tests for the RegistrationRepository.
+ * The overridden equals method in the Registration model is used for assertions.
  */
 @SpringBootTest
-public class PaymentRepositoryTests {
+public class RegistrationRepositoryTests {
 
     @Autowired
     private RegistrationRepository registrationRepository;
@@ -40,6 +40,9 @@ public class PaymentRepositoryTests {
 
     @Autowired
     private PersonRoleRepository personRoleRepository;
+    
+    @Autowired
+    private PersonRoleRepository personRepository;
 
     /**
      * Clears the database after each test.
@@ -51,6 +54,7 @@ public class PaymentRepositoryTests {
         courseTypeRepository.deleteAll();
         customerRepository.deleteAll();
         personRoleRepository.deleteAll();
+        personRepository.deleteAll();
     }
 
     /**
@@ -73,7 +77,7 @@ public class PaymentRepositoryTests {
         
         // Assertions
         assertNotNull(foundPayment);
-        //Payment foundPayment = foundPayments.get(0);
+
         // The overridden equals method in the Payment model is used here
         assertEquals(newPayment, foundPayment);
     }

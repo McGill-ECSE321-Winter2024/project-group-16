@@ -30,6 +30,8 @@ public class OwnerRepositoryTests {
     private DailyScheduleRepository dailyScheduleRepository;
     @Autowired
     private ScheduledCourseRepository scheduledCourseRepository;
+    @Autowired
+    private PersonRoleRepository personRoleRepository;
 
     /**
      * Clean up the database after each test.
@@ -37,6 +39,7 @@ public class OwnerRepositoryTests {
     @AfterEach
     public void clearDatabase() {
         ownerRepository.deleteAll();
+        personRoleRepository.deleteAll();
         personRepository.deleteAll();
         scheduledCourseRepository.deleteAll();
         courseTypeRepository.deleteAll();
@@ -111,58 +114,5 @@ public class OwnerRepositoryTests {
 
     }
 
-    /**
-     * Test finding owner by daily schedule.
-     */
-    // @Test
-    // public void testFindOwnerByDailySchedule() {
-    //     // Create Daily Schedule
-    //     List<DailySchedule> dsList = new ArrayList();
-    //     for (int i = 0; i < 7; i++) {
-    //         DailySchedule ds = new DailySchedule();
-    //         ds.setOpeningTime(Time.valueOf("08:00:00"));
-    //         ds.setClosingTime(Time.valueOf("22:00:00"));
-    //         dailyScheduleRepository.save(ds);
-    //         dsList.add(ds);
-    //     }
-
-    //     // Create Owner Using Daily Schedule
-    //     Owner owner = new Owner(1, dsList);
-    //     ownerRepository.save(owner);
-
-    //     // Read Owner From Database
-    //     Owner foundOwner = ownerRepository.findOwnerByDailySchedule(dsList);
-
-    //     // Assertions
-    //     assertEquals(foundOwner, owner); // Uses the overriden equals in the Owner model
-    // }
-
-    /**
-     * Test finding owner by a daily schedule that does not have owners associated with it
-     */
-    // @Test
-    // public void testFindOwnerByDailyScheduleNotFound(){
-
-    //     // Create Daily Schedule
-    //     List<DailySchedule> dsList = new ArrayList();
-    //     for (int i = 0; i < 7; i++) {
-    //         DailySchedule ds = new DailySchedule();
-    //         ds.setOpeningTime(Time.valueOf("08:00:00"));
-    //         ds.setClosingTime(Time.valueOf("22:00:00"));
-    //         dailyScheduleRepository.save(ds);
-    //         dsList.add(ds);
-    //     }
-
-    //     // Create and Save Owner Without Schedule
-    //     Owner owner = new Owner();
-    //     ownerRepository.save(owner);
-
-    //     // Read Owner From Database
-    //     Owner foundOwner = ownerRepository.findOwnerByDailySchedule(dsList);
-
-    //     // Assertions
-    //     assertNull(foundOwner);
-
-    // }
-
+    
 }

@@ -18,7 +18,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.authentification.SignupRequestDT
 import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
 
 /**
- * Rest Controller that handles user authentication
+ * Rest Controller that handles us authentication
  */
 @RestController
 @RequestMapping("/authentication")
