@@ -1,24 +1,20 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.service.userservice;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.sql.Date;
-import java.sql.Time;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-
-import org.checkerframework.checker.units.qual.t;
-import org.hibernate.mapping.Any;
+import java.util.Collections;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,14 +26,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
+import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
@@ -46,14 +43,15 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice.DailyScheduleService;
 import jakarta.persistence.criteria.CriteriaBuilder.In;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
     @Mock
     private InstructorRepository instructorRepository;
-    
     @Mock
     private CustomerRepository customerRepository;
-
     @Mock
     private PersonRepository personRepository;
     @Mock
@@ -65,6 +63,8 @@ public class UserServiceTests {
 
     @Mock
     private RegistrationRepository registrationRepository;
+    @Mock
+    private DailyScheduleRepository dailyScheduleRepository;
     @InjectMocks
     private CourseTypeService courseTypeService;
     @InjectMocks
@@ -73,48 +73,70 @@ public class UserServiceTests {
     @InjectMocks
     private UserService userService;
 
-    private static final Integer customerId = 1;
-    private static final Integer instructorId = 2;
+    // Existant user
+    private static final Integer customerIdHasApplied = 1;
+    //private static final Integer customerIdHasNotApplied = 2;
     private static final Integer ownerId = -1;
-    private static final String email = "example@email.com";
-    private static final String password = "password";
-    private static final String name = "name";
+    private static final String email = "user@email.com";
+    private static final String password = "Password#1";
+    private static final String name = "Joe Smith";
 
+    // New user
+    private static final String testEmail = "example@email.com";
+
+    // Owner
+    private static final String ownerEmail = "sports.schedule.plus@gmail.com";
+    private static final String ownerPassword = "admin";
+    private static final String ownerName = "owner";
+   
     @BeforeEach
     public void setMockOutput(){
         MockitoAnnotations.openMocks(this);
-        lenient().when(customerRepository.findCustomerById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(customerId)) {
+        /*lenient().when(customerRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
                 Customer customer = new Customer();
-                customer.setId(customerId);
-                return customer;
-            } else {
-                return null;
-            }
-        });
-        lenient().when(personRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(customerId)) {
-                Customer customer = new Customer();
-                customer.setId(customerId);
-                return customer;
-            } else {
-                return null;
-            }
-        });
-        lenient().when(personRepository.findPersonByEmail(anyString())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(email)) {
-                Person person = new Person();
-                person.setEmail(email);
-                return person;
+                customer.setId(customerIdHasApplied);
+                customer.setHasApplied(true);
+                return Optional.of(customer);
             } else {
                 return null;
             }
         });
         lenient().when(instructorRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(instructorId)) {
-                Instructor instructor = new Instructor();
-                instructor.setId(instructorId);
-                return instructor;
+            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
+                return Optional.empty();
+            } else {
+                return null;
+            }
+        });
+        lenient().when(personRepository.findPersonByPersonRole(any(PersonRole.class))).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0) instanceof Customer) {
+                Customer personRole = invocation.getArgument(0);
+                Person person = new Person(name, email, password, personRole);
+                return person;
+            } else {
+                return null;
+            }
+        });
+        /*lenient().when(personRepository.findPersonByEmail(anyString())).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0).equals(email)) {
+                Person person = new Person();
+                person.setEmail(invocation.getArgument(0));
+                person.setName(name);
+                person.setPassword(password);
+                person.setPersonRole(new Customer());
+                person.getPersonRole().setId(customerIdHasApplied);
+                return person;
+            } else {
+                return null;
+            }
+        });
+        lenient().when(personRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
+                Customer customer = new Customer();
+                customer.setId(customerIdHasApplied);
+                Person person = new Person(name, email, password, customer);
+                return person;
             } else {
                 return null;
             }
@@ -128,170 +150,36 @@ public class UserServiceTests {
                 return null;
             }
         });
-        lenient().when(personRepository.findPersonByPersonRole(any(PersonRole.class))).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0) instanceof Customer) {
-                Customer customer = invocation.getArgument(0);
-                return customer;
-            } else if (invocation.getArgument(0) instanceof Instructor) {
-                Instructor instructor = (Instructor) invocation.getArgument(0);
-                return instructor;
-            } else if (invocation.getArgument(0) instanceof Owner) {
-                Owner owner = (Owner) invocation.getArgument(0);
-                return owner;
+        lenient().when(registrationRepository.findRegistrationsByKeyCustomer(any(Customer.class))).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
+                Customer customer = new Customer();
+                customer.setId(customerIdHasApplied);
+                Registration registration = new Registration();
+                registration.setConfirmationNumber(0);
+                registration.setKey(new Registration.Key(customer, new ScheduledCourse()));
+                return Collections.singletonList(registration);
             } else {
-                return null;
+                return Collections.emptyList();
             }
-        });
-        lenient().when(instructorRepository.findInstructorByInstructorSuggestedCourseTypes(any(CourseType.class))).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0) instanceof CourseType) {
-                CourseType courseType = invocation.getArgument(0);
-                Instructor instructor = new Instructor();
-
-                return instructor;
-            } else {
-                return null;
-            }
-        });
+        });*/
+        lenient().when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         // Whenever anything is saved, just return the parameter object
         Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> invocation.getArgument(0);
-        when(personRepository.save(any(Person.class))).thenAnswer(returnParameterAsAnswer);
-        when(instructorRepository.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
-        when(customerRepository.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
-        when(ownerRepository.save(any(Owner.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(personRepository.save(any(Person.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(instructorRepository.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(customerRepository.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(ownerRepository.save(any(Owner.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(personRoleRepository.save(any(PersonRole.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(registrationRepository.save(any(Registration.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(dailyScheduleRepository.save(any(DailySchedule.class))).thenAnswer(returnParameterAsAnswer);
     }
-
-    /*@Test
-    public void testCreateUser() {
-        String name = "Test Name";
-        String email = "test@example.com";
-        String password = "password";
-        PersonRole role = new Customer();
-        Person person = null;
-
-        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
-
-       try {
-        person = userService.createUser(name, email, password, role);
-       } catch (Exception e) {
-            // Check that no error occurred
-            fail();
-        }
-
-        verify(personRoleRepository, times(1)).save(role);
-        verify(personRepository, times(1)).save(any(Person.class));
-
-        assertNotNull(person);
-        assertEquals(name, person.getName());
-        assertEquals(email, person.getEmail());
-        assertEquals("encodedPassword", person.getPassword());
-        assertEquals(role, person.getPersonRole());
-
-    }
-
-    @Test
-    public void testCreateUserNullName() {
-        String name = null;
-        String email = "test@example.com";
-        String password = "password";
-        PersonRole role = new Customer();
-        Person person = null;
-        String error="";
-
-        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
-
-        try {
-            person = userService.createUser(name, email, password, role);
-        } catch (Exception e) {
-            // Check that an error occurred
-            error = e.getMessage();
-        }
-
-        assertNull(person);
-        assertEquals("Name cannot be empty.", error);
-        verify(personRoleRepository, times(0)).save(role);
-        verify(personRepository, times(0)).save(any(Person.class));
-    }
-
-    @Test
-    public void testCreateUserNullEmail() {
-        String name = "Test Name";
-        String email = null;
-        String password = "password";
-        PersonRole role = new Customer();
-        Person person = null;
-
-        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
-
-        try {
-            person = userService.createUser(name, email, password, role);
-            fail();
-        } catch (Exception e) {
-            // Check that an error occurred
-            assertNull(person);
-            assertEquals("Email cannot be empty.", e.getMessage());
-        }
-
-        verify(personRoleRepository, times(0)).save(role);
-        verify(personRepository, times(0)).save(any(Person.class));
-    }
-
-    @Test
-    public void testCreateUserNullPassword() {
-        String name = "Test Name";
-        String email = "test@example.com";
-        String password = null;
-        PersonRole role = new Customer();
-        Person person = null;
-
-        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
-
-        try {
-            person = userService.createUser(name, email, password, role);
-            fail();
-        } catch (Exception e) {
-            // Check that an error occurred
-            assertNull(person);
-            assertEquals("Password cannot be empty.", e.getMessage());
-        }
-
-        verify(personRoleRepository, times(0)).save(role);
-        verify(personRepository, times(0)).save(any(Person.class));
-    }
-
-    @Test
-    public void testCreateUserNullRole() {
-        String name = "Test Name";
-        String email = "test@example.com";
-        String password = "password";
-        PersonRole role = null;
-        Person person = null;
-
-        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
-
-        try {
-            person = userService.createUser(name, email, password, role);
-            fail();
-        } catch (Exception e) {
-            // Check that an error occurred
-            assertNull(person);
-            assertEquals("Role cannot be empty.", e.getMessage());
-        }
-
-        verify(personRoleRepository, times(0)).save(role);
-        verify(personRepository, times(0)).save(any(Person.class));
-    }*/
 
     @Test
     public void testCreateCustomer() {
-        String name = "TestName";
-        String email = "customer@example.com";
-        String password = "Password#1";
         Person person = null;
 
-        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
-
         try {
-            person = userService.createCustomer(name, email, password);
+            person = userService.createCustomer(name, testEmail, password);
         } catch (Exception e) {
             // Check that no error occurred
             fail();
@@ -302,26 +190,22 @@ public class UserServiceTests {
 
         assertNotNull(person);
         assertEquals(name, person.getName());
-        assertEquals(email, person.getEmail());
+        assertEquals(testEmail, person.getEmail());
         assertEquals("encodedPassword", person.getPassword());
     }
 
     @Test
-    public void testCreateCustomerInvalidName() {
-        String name = "";
-        String email = "customer@example.com";
-        String password = "Password#1";
+    public void testCreateCustomerBlankName() {
+        String testName = "";
         Person person = null;
 
-        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
-
         try {
-            person = userService.createCustomer(name, email, password);
+            person = userService.createCustomer(testName, testEmail, password);
             fail();
         } catch (Exception e) {
             // Check that an error occurred
             assertNull(person);
-            assertEquals("Name cannot contain special characters.", e.getMessage());
+            assertEquals("Name cannot be blank.", e.getMessage());
         }
 
         verify(personRoleRepository, times(0)).save(any(Customer.class));
@@ -330,12 +214,8 @@ public class UserServiceTests {
 
     @Test
     public void testCreateCustomerInvalidlEmail() {
-        String name = "TestName";
         String email = "invalid";
-        String password = "Password#1";
         Person person = null;
-
-        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
 
         try {
             person = userService.createCustomer(name, email, password);
@@ -350,28 +230,45 @@ public class UserServiceTests {
         verify(personRepository, times(0)).save(any(Person.class));
     }
 
+    @Test
+    public void testCreateCustomerInvalidlPassword() {
+        String InvalidPassword = "invalid";
+        Person person = null;
+
+        try {
+            person = userService.createCustomer(name, testEmail, InvalidPassword);
+            fail();
+        } catch (Exception e) {
+            // Check that an error occurred
+            assertNull(person);
+            assertEquals("Password is not valid.", e.getMessage());
+        }
+
+        verify(personRoleRepository, times(0)).save(any(Customer.class));
+        verify(personRepository, times(0)).save(any(Person.class));
+    }
+
     // to fix
     @Test
     public void testCreateOwner() {
         Person person = null;
-        Owner owner = new Owner();
+
+        when(ownerRepository.findAll()).thenReturn(Collections.emptyList());
 
         try {
-            when(userService.getOwner()).thenReturn(owner);
-        } catch (Exception e) {
-            assertEquals("The owner does not yet exist within the system.", e.getMessage());
+            person = userService.createOwner();
+        } catch (SportsScheduleException e) {
+            // If owner already exists, it will throw an exception and test fails
+           fail();
         }
-        when(passwordEncoder.encode(anyString())).thenReturn("admin");
-
-        person = userService.createOwner();
 
         verify(personRoleRepository, times(1)).save(any(Owner.class));
         verify(personRepository, times(1)).save(any(Person.class));
 
         assertNotNull(person);
-        assertEquals("owner", person.getName());
-        assertEquals("sports.schedule.plus@gmail.com", person.getEmail());
-        assertEquals("admin", person.getPassword());
+        assertEquals(ownerName, person.getName());
+        assertEquals(ownerEmail, person.getEmail());
+        assertEquals(ownerPassword, person.getPassword());
     }
 
     // to fix
@@ -396,17 +293,173 @@ public class UserServiceTests {
 
     @Test
     public void testCreateInstructor() {
-        String email = "instructor@email.com";
-        String experience = "5 years";
-        Person person = null;
+        Person person = new Person();
+        person.setName(name);
+        person.setPassword(password);
+        person.setEmail(email);
 
-        PersonRole role = new Customer();
-        ((Customer) role).setHasApplied(true);
-        Person customer = new Person("instructor", email, "Password#1", role);
-        when(personRepository.findPersonByEmail(email)).thenReturn(customer);
+        Customer customer = new Customer();
+        customer.setId(customerIdHasApplied);
+        person.setPersonRole(customer);
+
+        Person newInstructor = null;
+
+        lenient().when(personRepository.findPersonByEmail(email)).thenReturn(person);
+        lenient().when(customerRepository.findById(person.getId())).thenReturn(Optional.of(customer));
 
         try {
-            person = userService.createInstructor(email, experience);
+            newInstructor = userService.createInstructor(email, "");
+        } catch (Exception e) {
+            // Check that no error occurred
+            fail();
+        }
+
+        assertNotNull(newInstructor);
+        assertEquals(person.getEmail(), newInstructor.getEmail());
+        assertEquals(person.getName(), newInstructor.getName());
+        assertEquals("encodedPassword", newInstructor.getPassword());
+        assertEquals(Instructor.class, newInstructor.getPersonRole().getClass());
+        assertEquals(person.getId(), newInstructor.getId());
+    }
+
+    @Test
+    public void testCreateInstructor_nonExistentCustomer() {
+        String email = "invalid";
+        String experience = "5 years";
+
+        Person newInstructor = null;
+
+        lenient().when(personRepository.findPersonByEmail(email)).thenReturn(null);
+
+        try {
+            newInstructor = userService.createInstructor(email, experience);
+            fail();
+        } catch (Exception e) {
+            // Check that an error occurred
+            assertNull(newInstructor);
+            assertEquals("Customer with email " + email + " needs to exist before they can become an Instructor.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testApproveCustomer() {
+        Customer customer = new Customer();
+        customer.setId(customerIdHasApplied);
+        customer.setHasApplied(true);
+
+        lenient().when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
+        lenient().when(instructorRepository.findById(customer.getId())).thenReturn(Optional.empty());
+
+        Person person = new Person();
+        person.setName(name);
+        person.setEmail(email);
+        person.setPassword(password);
+        person.setPersonRole(customer);
+
+        lenient().when(personRepository.findPersonByPersonRole(customer)).thenReturn(person);
+
+        Instructor newInstructor = new Instructor();
+        newInstructor.setId(customerIdHasApplied);
+        Person instructorPerson = new Person();
+        instructorPerson.setName(name);
+        instructorPerson.setEmail(email);
+        instructorPerson.setPassword(password);
+        instructorPerson.setPersonRole(newInstructor);
+
+        lenient().when(personRepository.findPersonByEmail(email)).thenReturn(person);
+        lenient().when(customerRepository.findById(person.getId())).thenReturn(Optional.of(customer));
+        lenient().when(userService.createInstructor(person.getEmail(), "")).thenReturn(instructorPerson);
+
+        Instructor result = null;
+        try {
+            result = userService.approveCustomer(customer.getId());
+        } catch (Exception e) {
+            // Check that no error occurred
+            fail();
+        }
+
+        assertNotNull(result);
+        assertTrue(result instanceof Instructor);
+        //assertEquals(customerIdHasApplied, result.getId());
+    }
+
+    @Test
+    public void testApproveCustomerNonExistent() {
+        Integer invalidId = 999;
+        lenient().when(customerRepository.findById(invalidId)).thenReturn(Optional.empty());
+        lenient().when(instructorRepository.findById(invalidId)).thenReturn(Optional.empty());
+
+        Instructor result = null;
+        try {
+            result = userService.approveCustomer(invalidId);
+            fail();
+        } catch (Exception e) {
+            assertNull(result);
+            assertEquals("Customer with ID " + invalidId + " does not exist.", e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void testApproveCustomerHasNotApplied() {
+        Customer customer = new Customer();
+        customer.setId(customerIdHasApplied);
+        customer.setHasApplied(false);
+
+        lenient().when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
+        lenient().when(instructorRepository.findById(customer.getId())).thenReturn(Optional.empty());
+
+        Instructor result = null;
+        try {
+            result = userService.approveCustomer(customer.getId());
+            fail();
+        } catch (Exception e) {
+            assertNull(result);
+            assertEquals("Customer with ID " + customerIdHasApplied + " has not applied to be an instructor.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testApproveCustomerAlreadyInstructor() {
+        Customer customer = new Customer();
+        customer.setId(customerIdHasApplied);
+        customer.setHasApplied(true);
+
+        Instructor instructor = new Instructor();
+        instructor.setId(customerIdHasApplied);
+
+        lenient().when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
+        lenient().when(instructorRepository.findById(customer.getId())).thenReturn(Optional.of(instructor));
+
+        Instructor result = null;
+        try {
+            result = userService.approveCustomer(customer.getId());
+            fail();
+        } catch (Exception e) {
+            assertNull(result);
+            assertEquals("Customer with ID " + customerIdHasApplied + " is already an instructor.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUpdateUserOwner() {
+        Integer id = ownerId;
+        String newName = "John Titor";
+        String newEmail = "John.Titor@example.com";
+        String newPassword = "newPassword#2";
+        String newExperience = "5 years";
+        Person person = null;
+
+        // Mock behavior for getPersonById
+        Owner role = new Owner();
+        role.setId(id);
+        role.setDailySchedule(dailyScheduleService.createDailySchedule());
+        Person owner = new Person(name, email, password, role);
+        lenient().when(personRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
+        //lenient().when(userService.getPersonById(owner.getId())).thenReturn(owner);
+
+        try {
+            person = userService.updateUser(id, newName, newEmail, newPassword, newExperience);
         } catch (Exception e) {
             // Check that no error occurred
             e.printStackTrace();
@@ -414,53 +467,15 @@ public class UserServiceTests {
         }
 
         assertNotNull(person);
-        assertEquals(email, person.getEmail());
-    }
-
-    @Test
-    public void testCreateInstructorNonExistentEmail() {
-        String email = "invalid";
-        String experience = "5 years";
-        Person person = null;
-
-        try {
-            person = userService.createInstructor(email, experience);
-            fail();
-        } catch (Exception e) {
-            // Check that an error occurred
-            assertNull(person);
-            assertEquals("Email does not exist.", e.getMessage());
-        }
-    }
-
-    @Test
-    public void testUpdateUserCustomer() {
-        Integer id = customerId;
-        String name = "New Name";
-        String email = "NewEmail@test.com";
-        String password = "newPassword";
-        String experience = "5 years";
-        Person person = null;
-
-        // Mock behavior for getPersonById
-        Person existingUser = new Person("Existing Name", "email@test.com", "password", new Customer());
-        when(userService.getPersonById(id)).thenReturn(existingUser);
-        try {
-            person = userService.updateUser(id, name, email, password, experience);
-        } catch (Exception e) {
-            // Check that no error occurred
-            fail();
-        }
-
-        assertNotNull(person);
-        assertEquals(name, person.getName());
-        assertEquals(email, person.getEmail());
-        assertEquals(password, person.getPassword());
+        assertEquals(newName, person.getName());
+        assertEquals(newEmail, person.getEmail());
+        assertEquals("EncodedPassword", person.getPassword());
+        assertEquals(ownerId, person.getId());
     }
 
     @Test
     public void testUpdateUserInstructor() {
-        Integer id = instructorId;
+        Integer id = customerIdHasApplied;
         String name = "New Name";
         String email = "NewEmail@test.com";
         String password = "newPassword";
@@ -482,32 +497,6 @@ public class UserServiceTests {
         assertEquals(email, person.getEmail());
         assertEquals(password, person.getPassword());
     }
-
-    @Test
-    public void testUpdateUserOwner() {
-        Integer id = ownerId;
-        String name = "New Name";
-        String email = "NewEmail@test.com";
-        String password = "newPassword";
-        String experience = "5 years";
-        Person person = null;
-
-        // Mock behavior for getPersonById
-        Person existingUser = new Person("owner", "sports.schedule.plus@gmail.com", "admin", new Owner());
-        when(userService.getPersonById(id)).thenReturn(existingUser);
-        try {
-            person = userService.updateUser(id, name, email, password, experience);
-        } catch (Exception e) {
-            // Check that no error occurred
-            fail();
-        }
-
-        assertNotNull(person);
-        assertEquals(name, person.getName());
-        assertEquals(email, person.getEmail());
-        assertEquals(password, person.getPassword());
-    }
-
 
 
 }
