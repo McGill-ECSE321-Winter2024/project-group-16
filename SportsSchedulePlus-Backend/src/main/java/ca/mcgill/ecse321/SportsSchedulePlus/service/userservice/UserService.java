@@ -84,13 +84,12 @@ public class UserService {
      */
     @Transactional
     public Person createOwner() {
-        try {
-            getOwner();
-        } catch (Exception e) {
+        if (Helper.toList(ownerRepository.findAll()).isEmpty()){
             PersonRole personRole = new Owner();
             personRoleRepository.save(personRole);
-            Owner owner = getOwner();
+            Owner owner = new Owner();
             owner.setDailySchedule(dailyScheduleService.createDailySchedule());
+            ownerRepository.save(owner);
             Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("admin"), personRole);
             personRepository.save(person);
             return person;
