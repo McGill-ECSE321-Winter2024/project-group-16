@@ -18,6 +18,10 @@ public class CustomerRepositoryTests {
 
     @Autowired
     CustomerRepository customerRepository;
+    @Autowired
+    private PersonRoleRepository personRoleRepository;
+    @Autowired
+    private PersonRepository personRepository;
 
 
     /**
@@ -26,6 +30,8 @@ public class CustomerRepositoryTests {
     @AfterEach
     public void clearDatabase() {
         customerRepository.deleteAll();
+        personRoleRepository.deleteAll();
+        personRepository.deleteAll();
     }
     
     /**

@@ -25,6 +25,10 @@ public class InstructorRepositoryTests {
     private ScheduledCourseRepository scheduledCourseRepository;
     @Autowired
     private CourseTypeRepository courseTypeRepository;
+    @Autowired
+    private PersonRoleRepository personRoleRepository;
+    @Autowired
+    private PersonRepository personRepository;
 
     /**
      * Clean up the database after each test.
@@ -32,6 +36,8 @@ public class InstructorRepositoryTests {
     @AfterEach
     public void clearDatabase() {
         instructorRepository.deleteAll();
+        personRoleRepository.deleteAll();
+        personRepository.deleteAll();
         scheduledCourseRepository.deleteAll();
         courseTypeRepository.deleteAll();
     }

@@ -30,6 +30,8 @@ public class OwnerRepositoryTests {
     private DailyScheduleRepository dailyScheduleRepository;
     @Autowired
     private ScheduledCourseRepository scheduledCourseRepository;
+    @Autowired
+    private PersonRoleRepository personRoleRepository;
 
     /**
      * Clean up the database after each test.
@@ -37,6 +39,7 @@ public class OwnerRepositoryTests {
     @AfterEach
     public void clearDatabase() {
         ownerRepository.deleteAll();
+        personRoleRepository.deleteAll();
         personRepository.deleteAll();
         scheduledCourseRepository.deleteAll();
         courseTypeRepository.deleteAll();
