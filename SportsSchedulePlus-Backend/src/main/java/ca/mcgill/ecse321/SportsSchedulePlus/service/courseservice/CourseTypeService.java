@@ -153,7 +153,7 @@ public class CourseTypeService {
      */
     @Transactional
     public void deleteCourseType(Integer id) {
-        CourseType courseType = courseTypeRepository.findCourseTypeById(id);
+        CourseType courseType = courseTypeRepository.findById(id).orElse(null);
         if (courseType == null) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There is no course type with ID " + id + ".");
         }

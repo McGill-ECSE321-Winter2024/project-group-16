@@ -52,17 +52,17 @@ public class OwnerRepositoryTests {
     @Test
     public void testFindOwnerByApprovedAndSuggestedCourses() {
         // Create Daily Schedule
-        List<DailySchedule> dsList = new ArrayList<>();
+        List<DailySchedule> dailyScheduleList = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
-            DailySchedule ds = new DailySchedule();
-            ds.setOpeningTime(Time.valueOf("08:00:00"));
-            ds.setClosingTime(Time.valueOf("22:00:00"));
-            dailyScheduleRepository.save(ds);
-            dsList.add(ds);
+            DailySchedule dailySchedule = new DailySchedule();
+            dailySchedule.setOpeningTime(Time.valueOf("08:00:00"));
+            dailySchedule.setClosingTime(Time.valueOf("22:00:00"));
+            dailyScheduleRepository.save(dailySchedule);
+            dailyScheduleList.add(dailySchedule);
         }
 
         // Create Owner Using Daily Schedule
-        Owner owner = new Owner(1, dsList);
+        Owner owner = new Owner(1, dailyScheduleList);
 
         // Create Course Type
         CourseType courseType = new CourseType("Yoga", true, 15.99F);
@@ -87,17 +87,18 @@ public class OwnerRepositoryTests {
     @Test
     public void testFindOwnerByApprovedAndSuggestedCoursesNotFound(){
         // Create Daily Schedule
-        List<DailySchedule> dsList = new ArrayList<>();
+        List<DailySchedule> dailyScheduleList = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
-            DailySchedule ds = new DailySchedule();
-            ds.setOpeningTime(Time.valueOf("08:00:00"));
-            ds.setClosingTime(Time.valueOf("22:00:00"));
-            dailyScheduleRepository.save(ds);
-            dsList.add(ds);
+            DailySchedule dailySchedule = new DailySchedule();
+            dailySchedule.setOpeningTime(Time.valueOf("08:00:00"));
+            dailySchedule.setClosingTime(Time.valueOf("22:00:00"));
+            dailyScheduleRepository.save(dailySchedule);
+            dailyScheduleList.add(dailySchedule);
         }
 
+
         // Create Owner Using Daily Schedule
-        Owner owner = new Owner(1, dsList);
+        Owner owner = new Owner(1, dailyScheduleList);
         ownerRepository.save(owner);
 
         // Create Course Type
