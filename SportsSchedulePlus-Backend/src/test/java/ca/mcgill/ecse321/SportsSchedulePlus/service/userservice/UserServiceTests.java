@@ -15,6 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,6 +46,8 @@ import ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice.DailySc
 import jakarta.persistence.criteria.CriteriaBuilder.In;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
+import java.util.ArrayList;
+import java.sql.Time;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
@@ -67,7 +70,7 @@ public class UserServiceTests {
     private DailyScheduleRepository dailyScheduleRepository;
     @InjectMocks
     private CourseTypeService courseTypeService;
-    @InjectMocks
+    @Mock
     private DailyScheduleService dailyScheduleService;
 
     @InjectMocks
@@ -88,7 +91,13 @@ public class UserServiceTests {
     private static final String ownerEmail = "sports.schedule.plus@gmail.com";
     private static final String ownerPassword = "admin";
     private static final String ownerName = "owner";
-   
+
+    // Update user info
+    private static final String newName = "John Titor";
+    private static final String newEmail = "John.Titor@example.com";
+    private static final String newPassword = "newPassword#2";
+    private static final String newExperience = "5 years";
+
     @BeforeEach
     public void setMockOutput(){
         MockitoAnnotations.openMocks(this);
@@ -253,13 +262,13 @@ public class UserServiceTests {
     public void testCreateOwner() {
         Person person = null;
 
-        when(ownerRepository.findAll()).thenReturn(Collections.emptyList());
+        when(ownerRepository.findAll()).thenReturn(new ArrayList<>());
 
         try {
             person = userService.createOwner();
         } catch (SportsScheduleException e) {
             // If owner already exists, it will throw an exception and test fails
-           fail();
+            fail();
         }
 
         verify(personRoleRepository, times(1)).save(any(Owner.class));
@@ -268,22 +277,24 @@ public class UserServiceTests {
         assertNotNull(person);
         assertEquals(ownerName, person.getName());
         assertEquals(ownerEmail, person.getEmail());
-        assertEquals(ownerPassword, person.getPassword());
+        assertEquals("encodedPassword", person.getPassword());
     }
 
     // to fix
     @Test
     public void testCreateOwnerAlreadyExists() {
         Person person = null;
+        ArrayList<Owner> owners = new ArrayList<>();
+        owners.add(new Owner());
 
-        when(userService.getOwner()).thenReturn(new Owner());
+        when(ownerRepository.findAll()).thenReturn(owners);
 
         try {
             person = userService.createOwner();
             fail();
         } catch (Exception e) {
             // Check that an error occurred
-            assertNotNull(person);
+            assertNull(person);
             assertEquals("Owner already exists.", e.getMessage());
         }
 
@@ -443,23 +454,57 @@ public class UserServiceTests {
 
     @Test
     public void testUpdateUserOwner() {
-        Integer id = ownerId;
-        String newName = "John Titor";
-        String newEmail = "John.Titor@example.com";
-        String newPassword = "newPassword#2";
-        String newExperience = "5 years";
         Person person = null;
 
-        // Mock behavior for getPersonById
+        // Mock Behavior for setting Owner
         Owner role = new Owner();
-        role.setId(id);
+        role.setId(ownerId);
         role.setDailySchedule(dailyScheduleService.createDailySchedule());
-        Person owner = new Person(name, email, password, role);
+        Person owner = new Person(ownerName, ownerEmail, ownerPassword, role);
+        ArrayList<Owner> owners = new ArrayList<>();
+        owners.add(role);
+        lenient().when(ownerRepository.findAll()).thenReturn(owners);
+
+        // Mock Behavior for finding Owner
         lenient().when(personRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
-        //lenient().when(userService.getPersonById(owner.getId())).thenReturn(owner);
 
         try {
-            person = userService.updateUser(id, newName, newEmail, newPassword, newExperience);
+            person = userService.updateUser(ownerId, newName, newEmail, newPassword, newExperience);
+        } catch (Exception e) {
+            // Check that no error occurred
+            e.printStackTrace();
+            fail();
+        }
+
+        assertNotNull(person);
+        assertEquals(newName, person.getName());
+        assertEquals(ownerEmail, person.getEmail());
+        assertEquals("encodedPassword", person.getPassword());
+        assertEquals(ownerId, person.getId());
+    }
+
+    @Test
+    public void testUpdateUserInstructor() {
+        Person person = null;
+
+        // Mock behavior for setting Owner
+        Owner role = new Owner();
+        role.setId(ownerId);
+        role.setDailySchedule(dailyScheduleService.createDailySchedule());
+        Person owner = new Person(ownerName, ownerEmail, ownerPassword, role);
+        ArrayList<Owner> owners = new ArrayList<>();
+        owners.add(role);
+        lenient().when(ownerRepository.findAll()).thenReturn(owners);
+
+        // Mock Behavior for finding Instructor
+        Instructor instructorRole = new Instructor();
+        instructorRole.setId(customerIdHasApplied);
+        instructorRole.setExperience("");
+        Person instructor = new Person(name, email, password, instructorRole);
+        lenient().when(personRepository.findById(instructor.getId())).thenReturn(Optional.of(instructor));
+
+        try {
+            person = userService.updateUser(customerIdHasApplied, newName, newEmail, newPassword, newExperience);
         } catch (Exception e) {
             // Check that no error occurred
             e.printStackTrace();
@@ -469,33 +514,73 @@ public class UserServiceTests {
         assertNotNull(person);
         assertEquals(newName, person.getName());
         assertEquals(newEmail, person.getEmail());
-        assertEquals("EncodedPassword", person.getPassword());
-        assertEquals(ownerId, person.getId());
+        assertEquals("encodedPassword", person.getPassword());
+        assertEquals(customerIdHasApplied, person.getId());
+        assertEquals(newExperience, ((Instructor) person.getPersonRole()).getExperience());
     }
 
     @Test
-    public void testUpdateUserInstructor() {
-        Integer id = customerIdHasApplied;
-        String name = "New Name";
-        String email = "NewEmail@test.com";
-        String password = "newPassword";
-        String experience = "5 years";
+    public void testUpdateUserCustomer() {
         Person person = null;
 
-        // Mock behavior for getPersonById
-        Person existingUser = new Person("Existing Name", "email@test.com", "password", new Instructor());
-        when(userService.getPersonById(id)).thenReturn(existingUser);
+        // Mock behavior for setting Owner
+        Owner role = new Owner();
+        role.setId(ownerId);
+        role.setDailySchedule(dailyScheduleService.createDailySchedule());
+        Person owner = new Person(ownerName, ownerEmail, ownerPassword, role);
+        ArrayList<Owner> owners = new ArrayList<>();
+        owners.add(role);
+        lenient().when(ownerRepository.findAll()).thenReturn(owners);
+
+        // Mock Behavior for finding Instructor
+        Customer customerRole = new Customer();
+        customerRole.setId(customerIdHasApplied);
+        Person customer = new Person(name, email, password, customerRole);
+        lenient().when(personRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
+
         try {
-            person = userService.updateUser(id, name, email, password, experience);
+            person = userService.updateUser(customerIdHasApplied, newName, newEmail, newPassword, newExperience);
         } catch (Exception e) {
             // Check that no error occurred
+            e.printStackTrace();
             fail();
         }
 
         assertNotNull(person);
-        assertEquals(name, person.getName());
-        assertEquals(email, person.getEmail());
-        assertEquals(password, person.getPassword());
+        assertEquals(newName, person.getName());
+        assertEquals(newEmail, person.getEmail());
+        assertEquals("encodedPassword", person.getPassword());
+        assertEquals(customerIdHasApplied, person.getId());
+    }
+
+    @Test
+    public void testUpdateUserInvalid() {
+        Person person = null;
+        String invalidEmail = "invalid";
+
+        // Mock behavior for setting Owner
+        Owner role = new Owner();
+        role.setId(ownerId);
+        role.setDailySchedule(dailyScheduleService.createDailySchedule());
+        Person owner = new Person(ownerName, ownerEmail, ownerPassword, role);
+        ArrayList<Owner> owners = new ArrayList<>();
+        owners.add(role);
+        lenient().when(ownerRepository.findAll()).thenReturn(owners);
+
+        // Mock Behavior for finding Instructor
+        Customer customerRole = new Customer();
+        customerRole.setId(customerIdHasApplied);
+        Person customer = new Person(name, email, password, customerRole);
+        lenient().when(personRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
+
+        try {
+            person = userService.updateUser(customerIdHasApplied, newName, invalidEmail, newPassword, newExperience);
+            fail();
+        } catch (Exception e) {
+            // Check that user wasn't updated
+            assertNull(person);
+            assertEquals("Email is not valid.", e.getMessage());
+        }
     }
 
 
