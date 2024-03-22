@@ -1,4 +1,4 @@
-package ca;
+package ca.mcgill.ecse321.SportsSchedulePlus;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -49,7 +49,7 @@ public class ScheduledCourseIntegrationTests {
         newScheduledCourse.setStartTime(java.sql.Time.valueOf("09:00:00"));
         newScheduledCourse.setEndTime(java.sql.Time.valueOf("11:00:00"));
 
-        CourseTypeDto courseType = new CourseTypeDto();
+        CourseTypeRequestDTO courseType = new CourseTypeRequestDTO();
         courseType.setId(courseTypeId);
         newScheduledCourse.setCourseType(courseType);
 
@@ -96,12 +96,12 @@ public class ScheduledCourseIntegrationTests {
 
     
     private int createCourseType(String description, boolean approvedByOwner, float price) {
-        CourseTypeDto courseType = new CourseTypeDto();
+        CourseTypeRequestDTO courseType = new CourseTypeRequestDTO();
         courseType.setDescription(description);
         courseType.setApprovedByOwner(approvedByOwner);
         courseType.setPrice(price);
 
-        ResponseEntity<CourseTypeDto> courseTypeResponse = restTemplate.postForEntity("/coursetypes", courseType, CourseTypeDto.class);
+        ResponseEntity<CourseTypeRequestDTO> courseTypeResponse = restTemplate.postForEntity("/coursetypes", courseType, CourseTypeRequestDTO.class);
         return courseTypeResponse.getBody().getId();
     }
 
@@ -115,7 +115,7 @@ public class ScheduledCourseIntegrationTests {
         newScheduledCourse.setStartTime(java.sql.Time.valueOf(startTime));
         newScheduledCourse.setEndTime(java.sql.Time.valueOf(endTime));
 
-        CourseTypeDto courseType = new CourseTypeDto();
+        CourseTypeRequestDTO courseType = new CourseTypeRequestDTO();
         courseType.setId(courseTypeId); // Set the created CourseType's ID
         newScheduledCourse.setCourseType(courseType);
 
@@ -132,7 +132,7 @@ public class ScheduledCourseIntegrationTests {
     private Date date;
     private Time startTime;
     private Time endTime;
-    private CourseTypeDto courseType;
+    private CourseTypeRequestDTO courseType;
 
    
     public ScheduledCourseDto() {}
@@ -178,11 +178,11 @@ public class ScheduledCourseIntegrationTests {
         this.endTime = endTime;
     }
 
-    public CourseTypeDto getCourseType() {
+    public CourseTypeRequestDTO getCourseType() {
         return courseType;
     }
 
-    public void setCourseType(CourseTypeDto courseType) {
+    public void setCourseType(CourseTypeRequestDTO courseType) {
         this.courseType = courseType;
     }
 }
