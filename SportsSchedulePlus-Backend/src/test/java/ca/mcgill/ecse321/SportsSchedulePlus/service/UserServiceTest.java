@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
@@ -43,6 +44,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
@@ -73,6 +75,8 @@ public class UserServiceTest {
     private CourseTypeService courseTypeService;
     @Mock
     private DailyScheduleService dailyScheduleService;
+    @Mock
+    private DailyScheduleRepository dailyScheduleRepository;
 
     @InjectMocks
     private UserService userService;
@@ -86,38 +90,52 @@ public class UserServiceTest {
 
     @BeforeEach
     public void setMockOutput(){
-        lenient().when(customerRepository.findCustomerById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(customerId)) {
+         MockitoAnnotations.openMocks(this);
+        /*lenient().when(customerRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
                 Customer customer = new Customer();
-                customer.setId(customerId);
-                return customer;
-            } else {
-                return null;
-            }
-        });
-        lenient().when(personRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(customerId)) {
-                Customer customer = new Customer();
-                customer.setId(customerId);
-                return customer;
-            } else {
-                return null;
-            }
-        });
-        lenient().when(personRepository.findPersonByEmail(anyString())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(email)) {
-                Person person = new Person();
-                person.setEmail(email);
-                return person;
+                customer.setId(customerIdHasApplied);
+                customer.setHasApplied(true);
+                return Optional.of(customer);
             } else {
                 return null;
             }
         });
         lenient().when(instructorRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(instructorId)) {
-                Instructor instructor = new Instructor();
-                instructor.setId(instructorId);
-                return instructor;
+            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
+                return Optional.empty();
+            } else {
+                return null;
+            }
+        });
+        lenient().when(personRepository.findPersonByPersonRole(any(PersonRole.class))).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0) instanceof Customer) {
+                Customer personRole = invocation.getArgument(0);
+                Person person = new Person(name, email, password, personRole);
+                return person;
+            } else {
+                return null;
+            }
+        });
+        /*lenient().when(personRepository.findPersonByEmail(anyString())).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0).equals(email)) {
+                Person person = new Person();
+                person.setEmail(invocation.getArgument(0));
+                person.setName(name);
+                person.setPassword(password);
+                person.setPersonRole(new Customer());
+                person.getPersonRole().setId(customerIdHasApplied);
+                return person;
+            } else {
+                return null;
+            }
+        });
+        lenient().when(personRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
+                Customer customer = new Customer();
+                customer.setId(customerIdHasApplied);
+                Person person = new Person(name, email, password, customer);
+                return person;
             } else {
                 return null;
             }
@@ -131,36 +149,28 @@ public class UserServiceTest {
                 return null;
             }
         });
-        lenient().when(personRepository.findPersonByPersonRole(any(PersonRole.class))).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0) instanceof Customer) {
-                Customer customer = invocation.getArgument(0);
-                return customer;
-            } else if (invocation.getArgument(0) instanceof Instructor) {
-                Instructor instructor = (Instructor) invocation.getArgument(0);
-                return instructor;
-            } else if (invocation.getArgument(0) instanceof Owner) {
-                Owner owner = (Owner) invocation.getArgument(0);
-                return owner;
+        lenient().when(registrationRepository.findRegistrationsByKeyCustomer(any(Customer.class))).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
+                Customer customer = new Customer();
+                customer.setId(customerIdHasApplied);
+                Registration registration = new Registration();
+                registration.setConfirmationNumber(0);
+                registration.setKey(new Registration.Key(customer, new ScheduledCourse()));
+                return Collections.singletonList(registration);
             } else {
-                return null;
+                return Collections.emptyList();
             }
-        });
-        lenient().when(instructorRepository.findInstructorByInstructorSuggestedCourseTypes(any(CourseType.class))).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0) instanceof CourseType) {
-                CourseType courseType = invocation.getArgument(0);
-                Instructor instructor = new Instructor();
-
-                return instructor;
-            } else {
-                return null;
-            }
-        });
+        });*/
+        lenient().when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         // Whenever anything is saved, just return the parameter object
         Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> invocation.getArgument(0);
-        when(personRepository.save(any(Person.class))).thenAnswer(returnParameterAsAnswer);
-        when(instructorRepository.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
-        when(customerRepository.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
-        when(ownerRepository.save(any(Owner.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(personRepository.save(any(Person.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(instructorRepository.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(customerRepository.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(ownerRepository.save(any(Owner.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(personRoleRepository.save(any(PersonRole.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(registrationRepository.save(any(Registration.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(dailyScheduleRepository.save(any(DailySchedule.class))).thenAnswer(returnParameterAsAnswer);
     }
 
     @Test
