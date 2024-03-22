@@ -1,80 +1,120 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.CustomerDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.PersonDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonListResponseDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.CustomerService;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.PersonService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.* ;
-
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "*")@RestController
+
+/**
+ * Rest Controller that handles CRUD on Customer
+ */
+@CrossOrigin(origins = "*")
+@RestController
 public class CustomerController {
 
-  @Autowired
-  private CustomerService customerService;
-  @Autowired
-  private PersonService personService;
+    @Autowired
+    private UserService userService;
 
-
-
-  @GetMapping(value = { "/customers"})
-  public List < PersonDTO > getAllCustomers() {
-    return customerService.getAllCustomers().stream().map(customer ->convertToDto(customer)).collect(Collectors.toList());
-  }
-
-  @GetMapping(value = {"/customers/{id}"})
-  public PersonDTO getCustomer(@PathVariable("id") int id) {
-    Customer customer = customerService.getCustomer(id);
-    return convertToDto(customer);
-  }
-
-  //not working
-  @DeleteMapping(value = {"/customers/{id}"})
-  public String deleteCustomer(@PathVariable("id") int id) {
-    int personId = customerService.deleteCustomer(id);
-    return ("Customer with id " + personId + " was successfully deleted.");
-  }
-
-  @PostMapping(value = {"/customers"})
-  public PersonDTO createCustomer(@RequestBody PersonDTO personDto) {
-    Person person = customerService.createCustomer(personDto.getName(), personDto.getEmail(), personDto.getPassword());
-    return convertToDto(person);
-  }
-
-  @PutMapping(value = {"/customers/{id}"})
-  public PersonDTO updateCustomer(@PathVariable("id") int id, @RequestBody PersonDTO personDto) {
-    Person person = customerService.updateCustomer(id, personDto.getName(), personDto.getEmail(), personDto.getPassword());
-    return convertToDto(person);
-  }
-
-  private PersonDTO convertToDto(Person p) {
-    if (p == null) {
-      throw new IllegalArgumentException("There is no such customer!");
+    /**
+     * Retrieves all customers
+     * @return PersonListResponseDTO
+     */
+    @GetMapping(value = {"/customers"})
+    public PersonListResponseDTO getAllCustomers() {
+        List<PersonDTO> customerDTOs = new ArrayList<>();
+        for (Customer customer : userService.getAllCustomers()) {
+            Person person = userService.getPersonById(customer.getId());
+            customerDTOs.add(new PersonDTO(person));
+        }
+        return new PersonListResponseDTO(customerDTOs);
     }
-    int cId = p.getId();
-    Customer c = customerService.getCustomer(cId);
-    CustomerDTO customerDto = new CustomerDTO(c);
-    PersonDTO personDto = new PersonDTO(p.getName(), p.getEmail(), p.getPassword(), customerDto);
-    return personDto;
-  }
-
-  private PersonDTO convertToDto(Customer c) {
-    if (c == null) {
-      throw new IllegalArgumentException("There is no such customer!");
+    /**
+     * Retrieves the customer by the path variable id
+     * @param id
+     * @return PersonDTO
+     */
+    @GetMapping(value = {"/customers/{id}"})
+    public PersonDTO getCustomer(@PathVariable("id") int id) {
+        Person person = userService.getPersonById(id);
+        return new PersonDTO(person);
     }
-    Person person = personService.getPersonById(c.getId());
-    CustomerDTO customerDto = new CustomerDTO(c);
-    PersonDTO personDto = new PersonDTO(person.getName(), person.getEmail(), person.getPassword(), customerDto);
-    return personDto;
-
-  }
-
-
+    
+    /**
+     * Deletes the customer by the path variable id
+     * @param id
+     * @return String response entity
+     */
+    @DeleteMapping(value = {"/customers/{id}"})
+    public ResponseEntity<String> deleteCustomer(@PathVariable("id") int id) {
+        int personId = userService.deleteUser(id);
+        return ResponseEntity.ok("Customer with id " + personId + " was successfully deleted.");
+    } 
+    
+    /**
+     * Creates a customer with the information in the request body
+     * @param personDto
+     * @return PersonDTO
+     */
+    @PostMapping(value = {"/customers"})
+    public PersonDTO createCustomer(@RequestBody PersonDTO personDto) {
+        Person person = userService.createCustomer(personDto.getName(), personDto.getEmail(), personDto.getPassword());
+        return new PersonDTO(person);
+    }
+    
+    /**
+     * Updates the customer with the path variable id with the request body information
+     * @param id
+     * @param personDto
+     * @return PersonDTO 
+     */
+    @PutMapping(value = {"/customers/{id}"})
+    public PersonDTO updateCustomer(@PathVariable("id") int id, @RequestBody PersonDTO personDto) {
+        Person person = userService.updateUser(id, personDto.getName(), personDto.getEmail(), personDto.getPassword(), "");
+        return new PersonDTO(person);
+    }
+    
+    /**
+     * Allows the customer to apply to become an instructor
+     * @param customerId
+     * @return PersonDTO
+     */
+    @PutMapping(value = {"/customers/{customerId}/apply"})
+    public PersonDTO applyForInstructor(@PathVariable("customerId") int customerId) {
+        userService.applyForInstructor(customerId);
+        Person person = userService.getPersonById(customerId);
+        return new PersonDTO(person);
+    }
+    
+    /**
+     * Approves a customer to become an instructor
+     * @param customerId
+     * @return PersonDTO
+     */
+    @PutMapping(value = {"/customers/{customerId}/approve"})
+    public PersonDTO approveCustomer(@PathVariable("customerId") int customerId) {
+        userService.approveCustomer(customerId);
+        Person person = userService.getPersonById(customerId);
+        return new PersonDTO(person);
+    }
+    
+    /**
+     * Rejects a customer's request to become an instructor
+     * @param customerId
+     * @return PersonDTO
+     */
+    @PutMapping(value = {"/customers/{customerId}/reject"})
+    public PersonDTO rejectCustomer(@PathVariable("customerId") int customerId) {
+        userService.rejectCustomer(customerId);
+        Person person = userService.getPersonById(customerId);
+        return new PersonDTO(person);
+    }
 
 }

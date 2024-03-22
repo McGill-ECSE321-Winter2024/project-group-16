@@ -77,7 +77,7 @@ public class CourseTypeRepositoryTests {
      * Negative result of searching course types by description.
      */
     @Test
-    public void testFindByApprovedByOwnerTrueNegative() {
+    public void testFindByApprovedByOwnerFalse() {
         // Create CourseType not approved by the owner
         CourseType notApprovedCourseType = new CourseType("Pilates", false, 28.0f);
         courseTypeRepository.save(notApprovedCourseType);
@@ -108,6 +108,41 @@ public class CourseTypeRepositoryTests {
         for (CourseType courseType : courseTypesLessThanMax) {
             assertTrue(courseType.getPrice() < maxPrice);
         }
+    }
+
+    /**
+     * Test to find all course types with a certain price
+     */
+    @Test
+    public void testFindByPrice() {
+        List<CourseType> courseTypes = new ArrayList<>();
+        CourseType newCourseType = new CourseType("Cardio", true, 27.0f);
+        courseTypes.add(newCourseType);
+        for (CourseType courseType : courseTypes) {
+            courseTypeRepository.save(courseType);
+        }
+
+        List<CourseType> foundCourseTypes = courseTypeRepository.findByPrice(newCourseType.getPrice());
+
+        // Asserts
+        assertNotNull(courseTypes);
+        assertEquals(1, foundCourseTypes.size());
+        assertEquals(newCourseType.getPrice(), courseTypes.get(0).getPrice());
+        
+    }
+
+    /**
+     * Negative test to find all course types with a certain price
+     */
+    @Test
+    public void testFindByPriceNegative() {
+     
+        float coursePrice = 2700.0f;
+        List<CourseType> foundCourseTypes = courseTypeRepository.findByPrice(coursePrice);
+
+        // Asserts
+        assertNotNull(foundCourseTypes);
+        assertEquals(0, foundCourseTypes.size());     
     }
 
     /**
@@ -144,7 +179,7 @@ public class CourseTypeRepositoryTests {
     }
 
     /**
-     * Helper Method to create a list of CourseTypes.
+     * Helper method to create a list of CourseTypes.
      * 
      * @return List of CourseTypes
      */

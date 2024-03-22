@@ -8,7 +8,6 @@ import ca.mcgill.ecse321.utils.Helper;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 
 // line 19 "model.ump"
 // line 88 "model.ump"
@@ -21,11 +20,11 @@ public class Owner extends PersonRole {
 
   //Owner Associations
   @OneToMany(fetch = FetchType.EAGER)
-  private final List <CourseType> approvedCourses;
+  private List <CourseType> approvedCourses;
   @OneToMany(fetch = FetchType.EAGER)
-  private final List <CourseType> ownerSuggestedCourses;
-  @OneToOne
-  private DailySchedule dailySchedule;
+  private List <CourseType> ownerSuggestedCourses;
+  @OneToMany(fetch = FetchType.EAGER)
+  private List <DailySchedule> dailySchedule;
 
   //------------------------
   // CONSTRUCTOR
@@ -35,7 +34,7 @@ public class Owner extends PersonRole {
     approvedCourses = new ArrayList <CourseType> ();
     ownerSuggestedCourses = new ArrayList <CourseType> ();
   }
-  public Owner(int aId, DailySchedule aDailySchedule) {
+  public Owner(int aId, List <DailySchedule> aDailySchedule) {
     super(aId);
     approvedCourses = new ArrayList <CourseType> ();
     ownerSuggestedCourses = new ArrayList <CourseType> ();
@@ -98,7 +97,7 @@ public class Owner extends PersonRole {
     return index;
   }
   /* Code from template association_GetOne */
-  public DailySchedule getDailySchedule() {
+  public List<DailySchedule> getDailySchedule() {
     return dailySchedule;
   }
   /* Code from template association_MinimumNumberOfMethod */
@@ -216,9 +215,9 @@ public class Owner extends PersonRole {
     return wasAdded;
   }
   /* Code from template association_SetUnidirectionalOne */
-  public boolean setDailySchedule(DailySchedule aNewDailySchedule) {
+  public boolean setDailySchedule(List<DailySchedule> aNewDailySchedule) {
     boolean wasSet = false;
-    if (aNewDailySchedule != null) {
+    if (aNewDailySchedule != null && aNewDailySchedule.size() == 7) {
       dailySchedule = aNewDailySchedule;
       wasSet = true;
     }
@@ -249,11 +248,10 @@ public class Owner extends PersonRole {
     if (object == null || getClass() != object.getClass()) return false;
 
     Owner other = (Owner) object;
-
     return getId() == other.getId() &&
       Helper.compareListsElementWise(approvedCourses, other.approvedCourses) &&
       Helper.compareListsElementWise(ownerSuggestedCourses, other.ownerSuggestedCourses) &&
-      dailySchedule.equals(other.dailySchedule);
+      Helper.compareListsElementWise(dailySchedule, other.getDailySchedule());
   }
 
   /**

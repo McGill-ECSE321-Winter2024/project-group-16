@@ -1,12 +1,12 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
+import ca.mcgill.ecse321.utils.Helper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
-import ca.mcgill.ecse321.utils.Helper;
 
 import java.util.List;
 
@@ -25,6 +25,10 @@ public class InstructorRepositoryTests {
     private ScheduledCourseRepository scheduledCourseRepository;
     @Autowired
     private CourseTypeRepository courseTypeRepository;
+    @Autowired
+    private PersonRoleRepository personRoleRepository;
+    @Autowired
+    private PersonRepository personRepository;
 
     /**
      * Clean up the database after each test.
@@ -32,6 +36,8 @@ public class InstructorRepositoryTests {
     @AfterEach
     public void clearDatabase() {
         instructorRepository.deleteAll();
+        personRoleRepository.deleteAll();
+        personRepository.deleteAll();
         scheduledCourseRepository.deleteAll();
         courseTypeRepository.deleteAll();
     }
@@ -68,7 +74,7 @@ public class InstructorRepositoryTests {
      * Test finding instructors by supervised course.
      */
     @Test
-    public void testFindInstructorByScheduledCourse() {
+    public void testFindInstructorBySupervisedCourse() {
         // Create Instructor
         Instructor instructor = createInstructor();
 
@@ -103,7 +109,6 @@ public class InstructorRepositoryTests {
 
         // Assertions
         assertTrue(foundInstructors.isEmpty());
-
     }
 
     /**

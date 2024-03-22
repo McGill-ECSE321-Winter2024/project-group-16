@@ -25,9 +25,6 @@ public interface CourseTypeRepository extends CrudRepository<CourseType, Integer
     // Find CourseType that is not approved by the owner
     List<CourseType> findByApprovedByOwnerFalse();
 
-    
-    // Find CourseType by id
-    CourseType findCourseTypeById(int id);
 
     
 }
