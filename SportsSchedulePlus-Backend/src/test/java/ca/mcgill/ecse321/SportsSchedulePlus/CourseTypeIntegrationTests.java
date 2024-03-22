@@ -1,4 +1,4 @@
-package ca;
+package ca.mcgill.ecse321.SportsSchedulePlus;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -40,22 +40,22 @@ public class CourseTypeIntegrationTests {
 	// Test creating and fetching a CourseType
     @Test
     public void testCreateAndGetCourseType() {
-        CourseTypeDto newCourseType = new CourseTypeDto();
+        CourseTypeRequestDTO newCourseType = new CourseTypeRequestDTO();
         newCourseType.setDescription("Yoga");
         newCourseType.setApprovedByOwner(true);
         newCourseType.setPrice(20.0f);
 
         // Create CourseType
-        ResponseEntity<CourseTypeDto> createResponse = client.postForEntity("/coursetypes", newCourseType, CourseTypeDto.class);
+        ResponseEntity<CourseTypeRequestDTO> createResponse = client.postForEntity("/coursetypes", newCourseType, CourseTypeRequestDTO.class);
         assertEquals(HttpStatus.CREATED, createResponse.getStatusCode());
-        CourseTypeDto createdCourseType = createResponse.getBody();
+        CourseTypeRequestDTO createdCourseType = createResponse.getBody();
         assertNotNull(createdCourseType);
         assertNotNull(createdCourseType.getId());
 
         // Get CourseType
-        ResponseEntity<CourseTypeDto> getResponse = client.getForEntity("/coursetypes/" + createdCourseType.getId(), CourseTypeDto.class);
+        ResponseEntity<CourseTypeRequestDTO> getResponse = client.getForEntity("/coursetypes" + createdCourseType.getId(), CourseTypeRequestDTO.class);
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
-        CourseTypeDto retrievedCourseType = getResponse.getBody();
+        CourseTypeRequestDTO retrievedCourseType = getResponse.getBody();
         assertNotNull(retrievedCourseType);
         assertEquals("Yoga", retrievedCourseType.getDescription());
     }
@@ -66,16 +66,16 @@ public class CourseTypeIntegrationTests {
         // Assume this creates a CourseType and returns its ID
         int id = createCourseType("Yoga", true, 20.0f);
 
-        CourseTypeDto updatedCourseType = new CourseTypeDto();
+        CourseTypeRequestDTO updatedCourseType = new CourseTypeRequestDTO();
         updatedCourseType.setDescription("Advanced Yoga");
         updatedCourseType.setApprovedByOwner(false);
         updatedCourseType.setPrice(25.0f);
 
-        client.put("/coursetypes/" + id, updatedCourseType);
+        client.put("/coursetypes" + id, updatedCourseType);
 
-        ResponseEntity<CourseTypeDto> response = client.getForEntity("/coursetypes/" + id, CourseTypeDto.class);
+        ResponseEntity<CourseTypeRequestDTO> response = client.getForEntity("/coursetypes" + id, CourseTypeRequestDTO.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        CourseTypeDto courseType = response.getBody();
+        CourseTypeRequestDTO courseType = response.getBody();
         assertNotNull(courseType);
         assertEquals("Advanced Yoga", courseType.getDescription());
     }
@@ -83,7 +83,7 @@ public class CourseTypeIntegrationTests {
     // Test creating a CourseType with invalid data
     @Test
     public void testCreateInvalidCourseType() {
-        CourseTypeDto newCourseType = new CourseTypeDto();
+        CourseTypeRequestDTO newCourseType = new CourseTypeRequestDTO();
         newCourseType.setDescription(""); // Invalid description
         newCourseType.setApprovedByOwner(true);
         newCourseType.setPrice(-10.0f); // Invalid price
@@ -95,31 +95,27 @@ public class CourseTypeIntegrationTests {
     // Test fetching a non-existing CourseType
     @Test
     public void testGetNonExistingCourseType() {
-        ResponseEntity<String> response = client.getForEntity("/coursetypes/" + Integer.MAX_VALUE, String.class);
+        ResponseEntity<String> response = client.getForEntity("/coursetypes" + Integer.MAX_VALUE, String.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     // Helper method to create a CourseType for use in tests
     private int createCourseType(String description, boolean approvedByOwner, float price) {
-        CourseTypeDto newCourseType = new CourseTypeDto();
+        CourseTypeRequestDTO newCourseType = new CourseTypeRequestDTO();
         newCourseType.setDescription(description);
         newCourseType.setApprovedByOwner(approvedByOwner);
         newCourseType.setPrice(price);
-        ResponseEntity<CourseTypeDto> response = client.postForEntity("/coursetypes", newCourseType, CourseTypeDto.class);
+        ResponseEntity<CourseTypeRequestDTO> response = client.postForEntity("/coursetypes", newCourseType, CourseTypeRequestDTO.class);
         return response.getBody().getId();
     }
 }
 
-class CourseTypeDto {
+class CourseTypeRequestDTO {
     private int id;
     private String description;
     private boolean approvedByOwner;
     private float price;
-
-    // Default constructor for JSON deserialization
-    public CourseTypeDto() {}
-
-    // Getters and setters for all fields
+    
     public int getId() {
         return id;
     }
@@ -127,7 +123,7 @@ class CourseTypeDto {
     public void setId(int id) {
         this.id = id;
     }
-
+   
     public String getDescription() {
         return description;
     }
