@@ -92,6 +92,10 @@ public class CourseType {
     return id;
   }
 
+  public void setId(int id) {
+    this.id = id;
+  }
+
   /* Code from template attribute_IsBoolean */
   public boolean isApprovedByOwner() {
     return approvedByOwner;

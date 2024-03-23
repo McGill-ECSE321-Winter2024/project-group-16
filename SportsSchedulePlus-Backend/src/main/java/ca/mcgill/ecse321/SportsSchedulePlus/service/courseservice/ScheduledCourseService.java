@@ -65,6 +65,7 @@ public class ScheduledCourseService {
         Time parsedEndTime = Time.valueOf(endTime);
 
         // create the scheduled course
+        
         ScheduledCourse scheduledCourse = new ScheduledCourse();
         scheduledCourse.setDate(parsedDate);
         scheduledCourse.setStartTime(parsedStartTime);

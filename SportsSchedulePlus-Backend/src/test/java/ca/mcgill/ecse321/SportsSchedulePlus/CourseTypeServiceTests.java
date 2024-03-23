@@ -1,12 +1,9 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice;
+package ca.mcgill.ecse321.SportsSchedulePlus;
 
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyFloat;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -15,8 +12,6 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Arrays;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -99,7 +94,6 @@ public class CourseTypeServiceTests {
         // Mocking findAll to return a non-empty list to simulate existing course types
         lenient().when(courseTypeRepository.findAll()).thenReturn(courseTypeList);
     
-                
     }
 
     @Test
@@ -217,21 +211,19 @@ public class CourseTypeServiceTests {
 
     @Test
     public void testDeleteAllCourseTypes() {
-
     courseTypeService.deleteAllCourseTypes();
-    
+
     verify(courseTypeRepository, times(1)).deleteAll();
     }
 
     @Test
     public void testDeleteCourseTypeNotFound() {
-    when(courseTypeRepository.findCourseTypeById(anyInt())).thenReturn(null);
-
+    int courseTypeID = 900;
     Exception exception = assertThrows(SportsScheduleException.class, () -> {
-        courseTypeService.deleteCourseType(COURSE_TYPE_ID);
+        courseTypeService.deleteCourseType(900);
     });
 
-    assertEquals("There is no course type with ID " + COURSE_TYPE_ID + ".", exception.getMessage());
+    assertEquals("There is no course type with ID " + courseTypeID + ".", exception.getMessage());
     }
 
     

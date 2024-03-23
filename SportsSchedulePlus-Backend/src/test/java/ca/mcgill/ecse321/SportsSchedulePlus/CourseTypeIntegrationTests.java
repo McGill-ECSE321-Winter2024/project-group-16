@@ -46,14 +46,14 @@ public class CourseTypeIntegrationTests {
         newCourseType.setPrice(20.0f);
 
         // Create CourseType
-        ResponseEntity<CourseTypeRequestDTO> createResponse = client.postForEntity("/coursetypes", newCourseType, CourseTypeRequestDTO.class);
-        assertEquals(HttpStatus.CREATED, createResponse.getStatusCode());
+        ResponseEntity<CourseTypeRequestDTO> createResponse = client.postForEntity("/courseTypes", newCourseType, CourseTypeRequestDTO.class);
+        assertEquals(HttpStatus.OK, createResponse.getStatusCode());
         CourseTypeRequestDTO createdCourseType = createResponse.getBody();
         assertNotNull(createdCourseType);
         assertNotNull(createdCourseType.getId());
 
         // Get CourseType
-        ResponseEntity<CourseTypeRequestDTO> getResponse = client.getForEntity("/coursetypes" + createdCourseType.getId(), CourseTypeRequestDTO.class);
+        ResponseEntity<CourseTypeRequestDTO> getResponse = client.getForEntity("/courseTypes/" + createdCourseType.getId(), CourseTypeRequestDTO.class);
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         CourseTypeRequestDTO retrievedCourseType = getResponse.getBody();
         assertNotNull(retrievedCourseType);
@@ -71,9 +71,9 @@ public class CourseTypeIntegrationTests {
         updatedCourseType.setApprovedByOwner(false);
         updatedCourseType.setPrice(25.0f);
 
-        client.put("/coursetypes" + id, updatedCourseType);
+        client.put("/courseTypes/" + id, updatedCourseType);
 
-        ResponseEntity<CourseTypeRequestDTO> response = client.getForEntity("/coursetypes" + id, CourseTypeRequestDTO.class);
+        ResponseEntity<CourseTypeRequestDTO> response = client.getForEntity("/courseTypes/" + id, CourseTypeRequestDTO.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         CourseTypeRequestDTO courseType = response.getBody();
         assertNotNull(courseType);
@@ -88,7 +88,7 @@ public class CourseTypeIntegrationTests {
         newCourseType.setApprovedByOwner(true);
         newCourseType.setPrice(-10.0f); // Invalid price
 
-        ResponseEntity<String> response = client.postForEntity("/coursetypes", newCourseType, String.class);
+        ResponseEntity<String> response = client.postForEntity("/courseTypes", newCourseType, String.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
@@ -105,7 +105,7 @@ public class CourseTypeIntegrationTests {
         newCourseType.setDescription(description);
         newCourseType.setApprovedByOwner(approvedByOwner);
         newCourseType.setPrice(price);
-        ResponseEntity<CourseTypeRequestDTO> response = client.postForEntity("/coursetypes", newCourseType, CourseTypeRequestDTO.class);
+        ResponseEntity<CourseTypeRequestDTO> response = client.postForEntity("/courseTypes", newCourseType, CourseTypeRequestDTO.class);
         return response.getBody().getId();
     }
 }
