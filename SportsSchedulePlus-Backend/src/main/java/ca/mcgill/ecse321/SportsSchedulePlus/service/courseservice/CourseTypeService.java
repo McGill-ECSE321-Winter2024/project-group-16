@@ -20,6 +20,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class CourseTypeService {
@@ -153,15 +154,16 @@ public class CourseTypeService {
      */
     @Transactional
     public void deleteCourseType(Integer id) {
-        CourseType courseType = courseTypeRepository.findById(id).orElse(null);
-        if (courseType == null) {
+        Optional<CourseType> optionalCourseType = courseTypeRepository.findById(id);
+        System.out.println("There is a course type with ID " + id + ".");
+         if (!optionalCourseType.isPresent() ) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There is no course type with ID " + id + ".");
-        }
-        List<ScheduledCourse> courses = scheduledCourseRepository.findScheduledCoursesByCourseType(courseType);
-        for (ScheduledCourse course : courses) {
+        } 
+        //List<ScheduledCourse> courses = scheduledCourseRepository.findScheduledCoursesByCourseType(optionalCourseType.get());
+        /*for (ScheduledCourse course : courses) {
             scheduledCourseRepository.delete(course);
         }
-        courseTypeRepository.deleteById(id);
+        courseTypeRepository.deleteById(id);*/
     }
 
     /**
@@ -173,9 +175,7 @@ public class CourseTypeService {
         if (courseTypes == null || courseTypes.isEmpty()) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There are no course types.");
         }
-        for (CourseType courseType : courseTypes) {
-            deleteCourseType(courseType.getId());
-        }
+        courseTypeRepository.deleteAll();
     }
 
     /**

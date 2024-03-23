@@ -1,4 +1,6 @@
-package ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice;
+package ca.mcgill.ecse321.SportsSchedulePlus;
+
+
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -23,6 +25,8 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
+import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.ScheduledCourseService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice.DailyScheduleService;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 
