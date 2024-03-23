@@ -34,6 +34,7 @@ public class ScheduledCourseService {
     private ScheduledCourseRepository scheduledCourseRepository;
     @Autowired
     private CourseTypeRepository courseTypeRepository;
+
     @Autowired
     private InstructorRepository instructorRepository;
 
@@ -45,6 +46,7 @@ public class ScheduledCourseService {
 
     @Autowired
     private DailyScheduleService dailyScheduleService;
+
 
     private Mailer mailer;
 
@@ -65,6 +67,7 @@ public class ScheduledCourseService {
         Time parsedEndTime = Time.valueOf(endTime);
 
         // create the scheduled course
+
         ScheduledCourse scheduledCourse = new ScheduledCourse();
         scheduledCourse.setDate(parsedDate);
         scheduledCourse.setStartTime(parsedStartTime);
@@ -129,9 +132,11 @@ public class ScheduledCourseService {
      */
     @Transactional
     public ScheduledCourse updateScheduledCourse(int id, String date, String startTime, String endTime, String location, int courseTypeId) {
+        System.out.println("update COURSE  type");
         ScheduledCourse existingScheduledCourse = getScheduledCourse(id);
         ScheduledCourse originalScheduledCourseCourse = new ScheduledCourse(existingScheduledCourse);
-        if (courseTypeRepository.findCourseTypeById(courseTypeId) == null) {
+
+        if (!courseTypeRepository.findById(courseTypeId).isPresent()) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Course type not found");
         }
         LocalDate localDate = LocalDate.parse(date);
@@ -145,8 +150,9 @@ public class ScheduledCourseService {
         existingScheduledCourse.setStartTime(parsedStartTime);
         existingScheduledCourse.setEndTime(parsedEndTime);
         existingScheduledCourse.setLocation(location);
+        System.out.println("update course type");
         existingScheduledCourse.setCourseType(courseTypeRepository.findById(courseTypeId).orElse(null));
-
+        System.out.println("updated course type");
         validateScheduledCourse(existingScheduledCourse);
 
         scheduledCourseRepository.save(existingScheduledCourse);
@@ -156,16 +162,16 @@ public class ScheduledCourseService {
     }
 
     /**
-     * notifies users of the course update
+     * Notifies users of a course update by email
      * @param originalScheduledCourse
      * @param updatedScheduledCourse
      */
     private void notifyUsersOfCourseUpdate(ScheduledCourse originalScheduledCourse, ScheduledCourse updatedScheduledCourse) {
         if (!originalScheduledCourse.equals(updatedScheduledCourse)) {
-            List<Registration> payments = registrationRepository.findRegistrationsByKeyScheduledCourse(originalScheduledCourse);
+            List<Registration> registrations = registrationRepository.findRegistrationsByKeyScheduledCourse(originalScheduledCourse);
             List<Customer> affectedCustomers = new ArrayList<>();
-            for (Registration payment : payments) {
-                affectedCustomers.add(payment.getKey().getCustomer());
+            for (Registration registration : registrations) {
+                affectedCustomers.add(registration.getKey().getCustomer());
             }
             for (Customer customer : affectedCustomers) {
                 try {
@@ -195,6 +201,7 @@ public class ScheduledCourseService {
     }
 
     /**
+     * Generates the html for the course update notification email
      * @param originalCourse
      * @param updatedCourse
      * @param customer
@@ -245,6 +252,7 @@ public class ScheduledCourseService {
     }
 
     /**
+     * Retrieves instructors that supervise a course with scheduledCourseId
      * @param scheduledCourseId
      * @return the instructor who is supervising the course
      */
@@ -256,12 +264,13 @@ public class ScheduledCourseService {
     }
 
     /**
+     * Retrieves the scheduled course with the given ID
      * @param id
      * @return the scheduled course with the given ID
      */
     @Transactional
     public ScheduledCourse getScheduledCourse(int id) {
-        ScheduledCourse scheduledCourse = scheduledCourseRepository.findById(id);
+        ScheduledCourse scheduledCourse = scheduledCourseRepository.findById(id).orElse(null);
         if (scheduledCourse == null) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There is no scheduled course with ID " + id + ".");
         }
@@ -269,6 +278,7 @@ public class ScheduledCourseService {
     }
 
     /**
+     * Retrieves the list of all scheduled courses
      * @return list of all scheduled courses
      */
     @Transactional
@@ -277,6 +287,7 @@ public class ScheduledCourseService {
     }
 
     /**
+     * Retrieves the list of all scheduled courses at the given location
      * @param location
      * @return list of all scheduled courses at the given location
      */
@@ -286,6 +297,7 @@ public class ScheduledCourseService {
     }
 
     /**
+     * Retrieves the list of all scheduled courses on the given date
      * @param date
      * @return list of all scheduled courses on the given date
      */
@@ -295,6 +307,7 @@ public class ScheduledCourseService {
     }
 
     /**
+     * Retrieves the list of all scheduled courses of the given course type
      * @param courseType
      * @return list of all scheduled courses of the given course type
      */
@@ -304,6 +317,7 @@ public class ScheduledCourseService {
     }
 
     /**
+     * Retrieves the list of all scheduled courses that start at the given time
      * @param startTime
      * @return list of all scheduled courses that start at the given time
      */
@@ -313,6 +327,7 @@ public class ScheduledCourseService {
     }
 
     /**
+     * Retrieves the list of all scheduled courses that end at the given time
      * @param endTime
      * @return list of all scheduled courses that end at the given time
      */
@@ -322,12 +337,12 @@ public class ScheduledCourseService {
     }
 
     /**
-     * deletes a scheduled course with the given ID
+     * Deletes a scheduled course with the given ID
      * @param id
      */
     @Transactional
     public void deleteScheduledCourse(int id) {
-        ScheduledCourse scheduledCourse = getScheduledCourse(id);
+        getScheduledCourse(id);
         scheduledCourseRepository.deleteById(id);
     }
 
@@ -338,14 +353,15 @@ public class ScheduledCourseService {
     public void deleteAllScheduledCourses() {
         List<ScheduledCourse> courses = Helper.toList(scheduledCourseRepository.findAll());
 
-        if (courses == null || courses.isEmpty()) {
-            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There are no course types.");
+        if (courses != null && courses.isEmpty()) {
+            scheduledCourseRepository.deleteAll();
         }
-        scheduledCourseRepository.deleteAll();
+       // scheduledCourseRepository.deleteAll();
 
     }
 
     /**
+     * Retrieves all scheduled courses in the week of a given date
      * @param date
      * @return list of all scheduled courses in the week of a given date
      */

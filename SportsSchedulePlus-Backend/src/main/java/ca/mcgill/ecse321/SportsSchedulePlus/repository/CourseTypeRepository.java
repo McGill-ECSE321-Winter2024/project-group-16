@@ -1,8 +1,10 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.lang.Nullable;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 /**
@@ -25,9 +27,7 @@ public interface CourseTypeRepository extends CrudRepository<CourseType, Integer
     // Find CourseType that is not approved by the owner
     List<CourseType> findByApprovedByOwnerFalse();
 
-    
-    // Find CourseType by id
-    CourseType findCourseTypeById(int id);
+
 
     
 }

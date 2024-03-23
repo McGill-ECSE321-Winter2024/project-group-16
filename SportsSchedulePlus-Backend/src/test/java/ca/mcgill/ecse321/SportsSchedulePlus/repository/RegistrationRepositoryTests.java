@@ -58,155 +58,155 @@ public class RegistrationRepositoryTests {
     }
 
     /**
-     * Tests finding payments by confirmation number.
+     * Tests finding registrations by confirmation number.
      */
     @Test
-    public void testFindPaymentsByConfirmationNumber() {
-        // Create and save a payment
+    public void testFindRegistrationsByConfirmationNumber() {
+        // Create and save a registration
         Customer customer = new Customer();
         customerRepository.save(customer);
         CourseType courseType = new CourseType("Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Registration newPayment = Helper.createRegistration(customer,course);
-        registrationRepository.save(newPayment);
+        Registration newRegistration = Helper.createRegistration(customer,course);
+        registrationRepository.save(newRegistration);
 
-        // Find payments by confirmation number
-        Registration foundPayment = registrationRepository.findRegistrationByConfirmationNumber(newPayment.getConfirmationNumber());
+        // Find registrations by confirmation number
+        Registration foundRegistration = registrationRepository.findRegistrationByConfirmationNumber(newRegistration.getConfirmationNumber());
         
         // Assertions
-        assertNotNull(foundPayment);
+        assertNotNull(foundRegistration);
 
         // The overridden equals method in the Payment model is used here
-        assertEquals(newPayment, foundPayment);
+        assertEquals(newRegistration, foundRegistration);
     }
 
     /**
-     * Tests finding payments by key customer.
+     * Tests finding registrations by key customer.
      */
     @Test
-    public void testFindPaymentsByKeyCustomer() {
-        // Create and save a payment
+    public void testFindRegistrationsByKeyCustomer() {
+        // Create and save a registration
         Customer customer = new Customer();
         customerRepository.save(customer);
         CourseType courseType = new CourseType("New Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Registration newPayment = Helper.createRegistration(customer,course);
-        registrationRepository.save(newPayment);
+        Registration newRegistration = Helper.createRegistration(customer,course);
+        registrationRepository.save(newRegistration);
 
-        // Find payments by key customer
-        List<Registration> foundPayments = registrationRepository.findRegistrationsByKeyCustomer(newPayment.getKey().getCustomer());
+        // Find registrations by key customer
+        List<Registration> foundRegistrations = registrationRepository.findRegistrationsByKeyCustomer(newRegistration.getKey().getCustomer());
 
         // Assertions
-        assertNotNull(foundPayments);
-        Registration foundPayment = foundPayments.get(0);
+        assertNotNull(foundRegistrations);
+        Registration foundRegistration = foundRegistrations.get(0);
         
-        // The overridden equals method in the Payment model is used here
-        assertEquals(newPayment, foundPayment);
+        // The overridden equals method in the Registration model is used here
+        assertEquals(newRegistration, foundRegistration);
     }
 
     /**
-     * Tests finding payments by key scheduled course.
+     * Tests finding registrations by key scheduled course.
      */
     @Test
-    public void testFindPaymentsByKeyScheduledCourse() {
-        // Create and save a payment
+    public void testFindRegistrationsByKeyScheduledCourse() {
+        // Create and save a registration
         Customer customer = new Customer();
         customerRepository.save(customer);
         CourseType courseType = new CourseType("Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Registration newPayment = Helper.createRegistration(customer,course);
-        registrationRepository.save(newPayment);
+        Registration newRegistration = Helper.createRegistration(customer,course);
+        registrationRepository.save(newRegistration);
 
-        // Find payments by key scheduled course
-        List<Registration> foundPayments = registrationRepository.findRegistrationsByKeyScheduledCourse(newPayment.getKey().getScheduledCourse());
+        // Find registrations by key scheduled course
+        List<Registration> foundRegistrations= registrationRepository.findRegistrationsByKeyScheduledCourse(newRegistration.getKey().getScheduledCourse());
 
         // Assertions
-        assertNotNull(foundPayments);
-        Registration foundPayment = foundPayments.get(0);
+        assertNotNull(foundRegistrations);
+        Registration foundRegistration = foundRegistrations.get(0);
         
-        // The overridden equals method in the Payment model is used here
-        assertEquals(newPayment, foundPayment);
+        // The overridden equals method in the Registration model is used here
+        assertEquals(newRegistration, foundRegistration);
     }
 
     /**
-     * Tests finding payments by key.
+     * Tests finding registrations by key.
      */
     @Test
-    public void testFindPaymentsByKey() {
-        // Create and save a payment
+    public void testFindRegistrationsByKey() {
+        // Create and save a registration
         Customer customer = new Customer();
         customerRepository.save(customer);
         CourseType courseType = new CourseType("New Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
-        Registration newPayment = Helper.createRegistration(customer,course);
-        registrationRepository.save(newPayment);
+        Registration newRegistration = Helper.createRegistration(customer,course);
+        registrationRepository.save(newRegistration);
 
-        // Find payments by key customer
-        Registration foundRegistration = registrationRepository.findRegistrationByKey(newPayment.getKey());
+        // Find registration by key customer
+        Registration foundRegistration = registrationRepository.findRegistrationByKey(newRegistration.getKey());
         Registration samefoundRegistration = registrationRepository.findRegistrationByKey(new Registration.Key(customer, course));
         // Assertions
         assertNotNull(foundRegistration);
         assertNotNull(samefoundRegistration);
         
-        // The overridden equals method in the Payment model is used here
-        assertEquals(newPayment, foundRegistration);
-        assertEquals(newPayment, samefoundRegistration);
+        // The overridden equals method in the Registration model is used here
+        assertEquals(newRegistration, foundRegistration);
+        assertEquals(newRegistration, samefoundRegistration);
     }
 
     /**
-     * Tests finding no payments for a customer with no payments.
+     * Tests finding no registrations for a customer with no registrations.
      */
     @Test
-    public void testFindNoPaymentsForCustomerWithNoPayments() {
-        // Create and save a customer without payments
+    public void testFindNoRegistrationsForCustomerWithNoPayments() {
+        // Create and save a customer without registrations
         Customer customerWithNoPayments = new Customer();
         customerRepository.save(customerWithNoPayments);
 
-        // Find payments for a customer with no payments
-        List<Registration> foundPayments = registrationRepository.findRegistrationsByKeyCustomer(customerWithNoPayments);
+        // Find registrations for a customer with no registrations
+        List<Registration> foundRegistrations = registrationRepository.findRegistrationsByKeyCustomer(customerWithNoPayments);
 
         // Assert that the list is empty
-        assertNotNull(foundPayments);
-        assertTrue(foundPayments.isEmpty());
+        assertNotNull(foundRegistrations);
+        assertTrue(foundRegistrations.isEmpty());
     }
 
     /**
-     * Tests finding no payments for a scheduled course with no payments.
+     * Tests finding no registrations for a scheduled course with no registrations.
      */
     @Test
-    public void testFindNoPaymentsForScheduledCourseWithNoPayments() {
-        // Create and save a scheduled course without payments
+    public void testFindNoRegistrationsForScheduledCourseWithNoPayments() {
+        // Create and save a scheduled course without registrations
         CourseType courseType = new CourseType("Sample Description", true, 99.99f);
         courseTypeRepository.save(courseType);
-        ScheduledCourse scheduledCourseWithNoPayments = Helper.createScheduledCourse(courseType);
-        scheduledCourseRepository.save(scheduledCourseWithNoPayments);
+        ScheduledCourse scheduledCourseWithNoRegistrations = Helper.createScheduledCourse(courseType);
+        scheduledCourseRepository.save(scheduledCourseWithNoRegistrations);
 
-        // Find payments for a scheduled course with no payments
-        List<Registration> foundPayments = registrationRepository.findRegistrationsByKeyScheduledCourse(scheduledCourseWithNoPayments);
+        // Find registrations for a scheduled course with no registrations
+        List<Registration> foundRegistrations =  registrationRepository.findRegistrationsByKeyScheduledCourse(scheduledCourseWithNoRegistrations);
 
         // Assert that the list is empty
-        assertNotNull(foundPayments);
-        assertTrue(foundPayments.isEmpty());
+        assertNotNull(foundRegistrations);
+        assertTrue(foundRegistrations.isEmpty());
     }
 
     /**
-     * Tests finding payments by non-existing confirmation number.
+     * Tests finding registrations by non-existing confirmation number.
      */
     @Test
-    public void testFindPaymentsByNonExistingConfirmationNumber() {
-        // Try to find payments by a non-existing confirmation number
-        Registration foundPayments = registrationRepository.findRegistrationByConfirmationNumber(99999);
+    public void testFindRegistrationssByNonExistingConfirmationNumber() {
+        // Try to find registrations by a non-existing confirmation number
+        Registration foundRegistration = registrationRepository.findRegistrationByConfirmationNumber(99999);
 
-        // Assert that the list is empty
-        assertNull(foundPayments);
+        // Assert that the found registration is empty
+        assertNull(foundRegistration);
     }
 
   

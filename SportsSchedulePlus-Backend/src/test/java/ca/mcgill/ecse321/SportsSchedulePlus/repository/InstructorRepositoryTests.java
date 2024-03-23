@@ -74,7 +74,7 @@ public class InstructorRepositoryTests {
      * Test finding instructors by supervised course.
      */
     @Test
-    public void testFindInstructorByScheduledCourse() {
+    public void testFindInstructorBySupervisedCourse() {
         // Create Instructor
         Instructor instructor = createInstructor();
 
@@ -152,7 +152,7 @@ public class InstructorRepositoryTests {
 
 
     /**
-     * HelperMethods method to create an instructor.
+     * Helper method to create an instructor.
      */
     private Instructor createInstructor() {
         Instructor instructor = new Instructor(1, "dance, yoga, pilates");
