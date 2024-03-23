@@ -98,6 +98,8 @@ public class UserServiceTests {
     private static final String newPassword = "newPassword#2";
     private static final String newExperience = "5 years";
 
+    private boolean ownerExists = false;
+
     @BeforeEach
     public void setMockOutput(){
         MockitoAnnotations.openMocks(this);
@@ -283,6 +285,7 @@ public class UserServiceTests {
     // to fix
     @Test
     public void testCreateOwnerAlreadyExists() {
+        ownerExists = true;
         Person person = null;
         ArrayList<Owner> owners = new ArrayList<>();
         owners.add(new Owner());
