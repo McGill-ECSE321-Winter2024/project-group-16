@@ -28,8 +28,6 @@ public class CourseTypeService {
     @Autowired
     private CourseTypeRepository courseTypeRepository;
 
-    @Autowired
-    private ScheduledCourseRepository scheduledCourseRepository;
 
     @Autowired
     private InstructorRepository instructorRepository;
@@ -49,7 +47,6 @@ public class CourseTypeService {
         // Validate the course before saving
         validateCourseType(description, price, true);
         CourseType courseType = new CourseType();
-
         courseType.setDescription(description);
         courseType.setApprovedByOwner(approvedByOwner);
         courseType.setPrice(price);
