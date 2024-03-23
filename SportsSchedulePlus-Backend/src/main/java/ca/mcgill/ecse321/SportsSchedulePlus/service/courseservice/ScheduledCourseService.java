@@ -34,6 +34,7 @@ public class ScheduledCourseService {
     private ScheduledCourseRepository scheduledCourseRepository;
     @Autowired
     private CourseTypeRepository courseTypeRepository;
+
     @Autowired
     private InstructorRepository instructorRepository;
 
@@ -45,6 +46,7 @@ public class ScheduledCourseService {
 
     @Autowired
     private DailyScheduleService dailyScheduleService;
+
 
     private Mailer mailer;
 
@@ -65,7 +67,7 @@ public class ScheduledCourseService {
         Time parsedEndTime = Time.valueOf(endTime);
 
         // create the scheduled course
-        
+
         ScheduledCourse scheduledCourse = new ScheduledCourse();
         scheduledCourse.setDate(parsedDate);
         scheduledCourse.setStartTime(parsedStartTime);
@@ -130,6 +132,7 @@ public class ScheduledCourseService {
      */
     @Transactional
     public ScheduledCourse updateScheduledCourse(int id, String date, String startTime, String endTime, String location, int courseTypeId) {
+        System.out.println("update COURSE  type");
         ScheduledCourse existingScheduledCourse = getScheduledCourse(id);
         ScheduledCourse originalScheduledCourseCourse = new ScheduledCourse(existingScheduledCourse);
 
@@ -147,8 +150,9 @@ public class ScheduledCourseService {
         existingScheduledCourse.setStartTime(parsedStartTime);
         existingScheduledCourse.setEndTime(parsedEndTime);
         existingScheduledCourse.setLocation(location);
+        System.out.println("update course type");
         existingScheduledCourse.setCourseType(courseTypeRepository.findById(courseTypeId).orElse(null));
-
+        System.out.println("updated course type");
         validateScheduledCourse(existingScheduledCourse);
 
         scheduledCourseRepository.save(existingScheduledCourse);
@@ -349,10 +353,10 @@ public class ScheduledCourseService {
     public void deleteAllScheduledCourses() {
         List<ScheduledCourse> courses = Helper.toList(scheduledCourseRepository.findAll());
 
-        if (courses == null || courses.isEmpty()) {
-            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There are no course types.");
+        if (courses != null && courses.isEmpty()) {
+            scheduledCourseRepository.deleteAll();
         }
-        scheduledCourseRepository.deleteAll();
+       // scheduledCourseRepository.deleteAll();
 
     }
 

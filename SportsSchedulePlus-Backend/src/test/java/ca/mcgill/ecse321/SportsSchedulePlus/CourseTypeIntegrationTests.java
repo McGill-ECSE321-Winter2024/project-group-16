@@ -1,9 +1,7 @@
 package ca.mcgill.ecse321.SportsSchedulePlus;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import java.sql.Date;
-import java.sql.Time;
+
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +13,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 
 
@@ -33,8 +32,6 @@ public class CourseTypeIntegrationTests {
 	@AfterEach
 	public void clearDatabase() {
 		courseTypeRepo.deleteAll();
-        
-
 	}
 
 	// Test creating and fetching a CourseType
@@ -95,7 +92,7 @@ public class CourseTypeIntegrationTests {
     // Test fetching a non-existing CourseType
     @Test
     public void testGetNonExistingCourseType() {
-        ResponseEntity<String> response = client.getForEntity("/coursetypes" + Integer.MAX_VALUE, String.class);
+        ResponseEntity<String> response = client.getForEntity("/courseTypes" + Integer.MAX_VALUE, String.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
@@ -110,41 +107,4 @@ public class CourseTypeIntegrationTests {
     }
 }
 
-class CourseTypeRequestDTO {
-    private int id;
-    private String description;
-    private boolean approvedByOwner;
-    private float price;
-    
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-   
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean isApprovedByOwner() {
-        return approvedByOwner;
-    }
-
-    public void setApprovedByOwner(boolean approvedByOwner) {
-        this.approvedByOwner = approvedByOwner;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-}

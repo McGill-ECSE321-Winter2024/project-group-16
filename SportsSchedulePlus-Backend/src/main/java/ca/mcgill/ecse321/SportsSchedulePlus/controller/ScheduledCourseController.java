@@ -44,7 +44,9 @@ public class ScheduledCourseController {
      */
     @PutMapping("/scheduledCourses/{id}")
     public ScheduledCourseResponseDTO updateScheduledCourse(@PathVariable(name = "id") int id, @RequestBody ScheduledCourseRequestDTO request) {
+        System.out.println("UPDATE");
         ScheduledCourse updatedScheduledCourse = scheduledCourseService.updateScheduledCourse(id, request.getDate(), request.getStartTime(), request.getEndTime(), request.getLocation(), request.getCourseType().getId());
+        System.out.println("UPDATED");
         return new ScheduledCourseResponseDTO(updatedScheduledCourse);
     }
     
