@@ -465,7 +465,11 @@ public class UserService {
      */
     @Transactional
     public Person findPersonByEmail(String email) {
-        return personRepository.findPersonByEmail(email);
+        Person person = personRepository.findPersonByEmail(email);
+        if (person == null) {
+            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "No person with email " + email + " found.");
+        }
+        return person;
     }
 
     /**
