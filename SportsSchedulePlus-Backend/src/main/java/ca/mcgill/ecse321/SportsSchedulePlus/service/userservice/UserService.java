@@ -333,13 +333,13 @@ public class UserService {
             if (optionalCustomer.isPresent()) {
                 customerRepository.delete(optionalCustomer.get());
             }
-        } else  if (person.getPersonRole() instanceof Instructor){
+        }   if (person.getPersonRole() instanceof Instructor){
             Optional<Instructor> optionalInstructor = instructorRepository.findById(id);
             if (optionalInstructor.isPresent()) {
                 instructorRepository.delete(optionalInstructor.get());
             }
         }
-        else if (person.getPersonRole() instanceof Owner){
+         if (person.getPersonRole() instanceof Owner){
             ownerRepository.delete(getOwner());
             dailyScheduleRepository.deleteAll();
         }

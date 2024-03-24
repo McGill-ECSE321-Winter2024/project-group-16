@@ -5,6 +5,10 @@ import java.util.List;
 
 public class RegistrationListResponseDTO {
     
+
+    public RegistrationListResponseDTO(){
+        
+    }
     private List<RegistrationResponseDTO> registrations;
     
     public RegistrationListResponseDTO(List<RegistrationResponseDTO> registrations) {

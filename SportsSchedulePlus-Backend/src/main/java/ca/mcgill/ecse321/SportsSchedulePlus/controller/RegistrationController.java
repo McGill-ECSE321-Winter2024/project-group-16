@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -87,9 +90,27 @@ public class RegistrationController {
      */
     @PostMapping(value = {"/registrations/{customerID}/{courseID}", "/registrations/{customerID}/{courseID}/"})
     public RegistrationResponseDTO createRegistration(@PathVariable("customerID") int customerId, @PathVariable("courseID") int courseId) {
+        System.out.println("CALLED CREATE");
         Registration newRegistration = registrationService.createRegistration(customerId, courseId);
+        System.out.println("CREATED");
         RegistrationResponseDTO registrationDTO = new RegistrationResponseDTO(newRegistration);
         return registrationDTO;
     }
+
+     /**
+     * Deletes a registration by its confirmation number
+     * @param confirmationNumber
+     * @return ResponseEntity<String> indicating the result of the deletion operation
+     */
+    @DeleteMapping(value = {"/registrations/{confirmationNumber}", "/registrations/{confirmationNumber}/"})
+    public ResponseEntity<String> deleteRegistrationByConfirmationNumber(@PathVariable("confirmationNumber") int confirmationNumber) {
+        boolean deleted = registrationService.delete(confirmationNumber);
+        if (deleted) {
+            return ResponseEntity.ok("Registration with confirmation number " + confirmationNumber + " deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete registration with confirmation number " + confirmationNumber + ".");
+        }
+    }
+
 
 }

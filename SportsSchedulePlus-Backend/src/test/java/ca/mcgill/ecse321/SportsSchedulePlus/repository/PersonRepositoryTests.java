@@ -72,12 +72,12 @@ public class PersonRepositoryTests {
         personRoleRepository.save(personRole);
 
         // Create a new person with a specific name, email, password, and associated PersonRole
-        Person newPerson = new Person("John", "john@example.com", "password", personRole);
+        Person newPerson = new Person("John", "johnny@example.com", "password", personRole);
         personRepository.save(newPerson);
         
 
         // When finding a person by email
-        Person foundPerson = personRepository.findPersonByEmail("john@example.com");
+        Person foundPerson = personRepository.findPersonByEmail("johnny@example.com");
 
         // Then ensure the found person is not null and the email matches the expected
         assertNotNull(foundPerson);
