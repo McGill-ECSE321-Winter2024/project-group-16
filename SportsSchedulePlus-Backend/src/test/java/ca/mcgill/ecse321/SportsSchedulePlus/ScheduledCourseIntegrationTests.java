@@ -57,9 +57,7 @@ public class ScheduledCourseIntegrationTests {
      * Clean up the database after each test.
      */
     @AfterEach
-    @BeforeEach
     public void clearDatabase() {
-       
         scheduledCourseRepository.deleteAll();
         courseTypeRepository.deleteAll();
         personRepository.deleteAll();
@@ -68,12 +66,16 @@ public class ScheduledCourseIntegrationTests {
         dailyScheduleRepository.deleteAll();
     }
 
-
-    @Test
-    public void testCreateAndGetScheduledCourse() {
+    @BeforeEach
+    public void setup(){
         if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
             userService.createOwner();
         }
+    }
+
+
+    @Test
+    public void testCreateAndGetScheduledCourse() {
         int courseId =  Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
 
         ResponseEntity < ScheduledCourseRequestDTO > getResponse = restTemplate
@@ -85,15 +87,10 @@ public class ScheduledCourseIntegrationTests {
 
     @Test
     public void testUpdateScheduledCourse() {
-        if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-            userService.createOwner();
-        }
-
         ResponseEntity < CourseTypeRequestDTO > courseTypeResponse = restTemplate.postForEntity("/courseTypes",
             Helper.createCourseTypeRequest("Description", false, 12f), CourseTypeRequestDTO.class);
 
         int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Downtown Gym", "2024-04-15", "09:00:00", "11:00:00");
-
 
         ScheduledCourse scheduledCourse = scheduledCourseRepository.findById(courseId).orElse(null);
         assertNotNull(scheduledCourse);
@@ -120,6 +117,28 @@ public class ScheduledCourseIntegrationTests {
     }
 
     @Test
+    public void testUpdateScheduledCourseWithInvalidInputs() {
+    
+        restTemplate.postForEntity("/courseTypes",
+            Helper.createCourseTypeRequest("Description", false, 12f), CourseTypeRequestDTO.class);
+
+        int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Downtown Gym", "2024-04-15", "09:00:00", "11:00:00");
+
+        // Attempt to update the scheduled course with invalid inputs
+        ScheduledCourseRequestDTO updateInfo = new ScheduledCourseRequestDTO();
+        updateInfo.setId(courseId); // Set the ID of the existing scheduled course
+        
+        restTemplate.put("/scheduledCourses/" + courseId, updateInfo);
+
+        // Asserting that the scheduled course remains unchanged
+        ScheduledCourse updatedScheduledCourse = scheduledCourseRepository.findById(courseId).orElse(null);
+        assertNotNull(updatedScheduledCourse); // Ensure the scheduled course still exists
+
+        // Check that the scheduled course's location has not changed
+        assertEquals("Downtown Gym", updatedScheduledCourse.getLocation());
+    }
+
+    @Test
     public void testDeleteScheduledCourse() {
         int scheduledCourseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Downtown Gym", "2024-04-15", "09:00:00", "11:00:00");
 
@@ -127,6 +146,16 @@ public class ScheduledCourseIntegrationTests {
 
         ResponseEntity < String > response = restTemplate.getForEntity("/scheduledCourses/" + scheduledCourseId,
             String.class);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testDeleteNonExistingScheduledCourse() {
+        // Attempt to delete a scheduled course that doesn't exist
+        restTemplate.delete("/scheduledCourses/12345");
+
+        // Verify that the response indicates the scheduled course was not found
+        ResponseEntity<String> response = restTemplate.getForEntity("/scheduledCourses/12345", String.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
