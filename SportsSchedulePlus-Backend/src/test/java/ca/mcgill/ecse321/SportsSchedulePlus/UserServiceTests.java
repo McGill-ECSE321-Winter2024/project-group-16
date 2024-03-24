@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Optional;
 import java.util.List;
 
@@ -774,7 +774,6 @@ public class UserServiceTests {
 
     @Test
     public void getInstructorsBySupervisedCourseTest() {
-        int aScheduledCourseId = 2;
         Date aDate = new Date(2345);
         Time aStartTime = new Time(2222);
         Time aEndTime = new Time(2230);
@@ -788,12 +787,20 @@ public class UserServiceTests {
         String aEmail = "Jerry@joe.com";
         String aPassword = "1234";
         int aId = 2;
+        String aLocation = "location";
 
 
         Instructor instructor = new Instructor(aId, instructorExperience);
         Person person = new Person(aName, aEmail, aPassword, instructor);
         CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
-        ScheduledCourse scheduledCourse = new ScheduledCourse(aScheduledCourseId, aDate, aStartTime, aEndTime, email, courseType);
+        ScheduledCourse scheduledCourse = new ScheduledCourse();
+        scheduledCourse.setDate(aDate);
+        scheduledCourse.setStartTime(aStartTime);
+        scheduledCourse.setEndTime(aEndTime);
+        scheduledCourse.setLocation(aLocation); 
+        scheduledCourse.setCourseType(courseType);
+
+
 
         personRepository.save(person);
         instructor.addSupervisedCourse(scheduledCourse);

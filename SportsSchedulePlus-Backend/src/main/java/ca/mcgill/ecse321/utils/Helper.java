@@ -98,18 +98,19 @@ public class Helper {
    */
   public static void validateUser(PersonRepository personRepository,String name, String email, String password, boolean newEmail) {
     if(newEmail){
-    if (personRepository.findPersonByEmail(email) != null) {
-      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "User with email " + email + " already exists.");
-    }
-  }
-    if (!Pattern.matches("[a-zA-Z\\s]+", name)) {
-      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name cannot contain special characters.");
+      if (personRepository.findPersonByEmail(email) != null) {
+        throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "User with email " + email + " already exists.");
+      }
     }
 
     if (name.isBlank()) {
       throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name cannot be blank.");
     }
-  
+
+    if (!Pattern.matches("[a-zA-Z\\s]+", name)) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name cannot contain special characters.");
+    }
+
     if (!PasswordValidator.isValidPassword(password)) {
       throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Password is not valid.");
     }
