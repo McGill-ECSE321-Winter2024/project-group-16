@@ -327,6 +327,7 @@ public class UserService {
      * @return the id of the deleted user
      */
     private int deleteUser(Person person, int id) {
+        System.out.println("delete user !!");
         personRepository.delete(person);
         personRoleRepository.delete(person.getPersonRole());
         if (person.getPersonRole() instanceof Customer) {
@@ -344,6 +345,7 @@ public class UserService {
             ownerRepository.delete(getOwner());
             dailyScheduleRepository.deleteAll();
         }
+
         person.delete();
         return id;
     }
@@ -379,11 +381,15 @@ public class UserService {
     public Instructor approveCustomer(int customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
         Optional<Instructor> instructor = instructorRepository.findById(customerId);
+        
         if (instructor.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " is already an instructor.");
         }
         if (!customer.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
+        }
+        if (!customer.get().getHasApplied()){
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " has not applied to be an instructor.");
         }
         Person person = personRepository.findPersonByPersonRole(customer.get());
         Person newPerson = createInstructor(person.getEmail(), "");
@@ -454,6 +460,7 @@ public class UserService {
             instructor.addInstructorSuggestedCourseType(courseTypeCreated);
             instructorRepository.save(instructor);
         }
+
         if (personRole instanceof Owner){
             Owner owner = getOwner();
             owner.addOwnerSuggestedCourse(courseTypeCreated);

@@ -13,15 +13,10 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.registration.RegistrationListResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.registration.RegistrationResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.customer.CustomerRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;

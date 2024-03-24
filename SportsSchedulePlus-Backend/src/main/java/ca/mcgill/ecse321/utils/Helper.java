@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -18,7 +17,6 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseR
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
@@ -99,19 +97,17 @@ public class Helper {
    */
   public static void validateUser(PersonRepository personRepository,String name, String email, String password, boolean newEmail) {
     if(newEmail){
-      if (personRepository.findPersonByEmail(email) != null) {
-        throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "User with email " + email + " already exists.");
-      }
+    if (personRepository.findPersonByEmail(email) != null) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "User with email " + email + " already exists.");
     }
-
+  }
     if (name.isBlank()) {
       throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name cannot be blank.");
     }
-
     if (!Pattern.matches("[a-zA-Z\\s]+", name)) {
       throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name cannot contain special characters.");
     }
-
+  
     if (!PasswordValidator.isValidPassword(password)) {
       throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Password is not valid.");
     }
@@ -175,27 +171,6 @@ public class Helper {
     return scheduledCourseResponse.getBody().getId();
   }
 
-  /**
-   * Helper method to validate a course type
-   * @param courseType
-   */
-  public static void validateCourseType(CourseType courseType) {
-    if (courseType == null) {
-      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Course type cannot be null.");
-    }
-    if (courseType.getDescription().isBlank()) {
-      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Description cannot be blank.");
-    }
 
-    if (courseType.getPrice() < 0) {
-      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Price cannot be negative.");
-    }
-  }
-
-  public static void validatePersonRole(PersonRole personRole) {
-    if (personRole == null) {
-      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person role cannot be null.");
-    }
-  }
   
 }

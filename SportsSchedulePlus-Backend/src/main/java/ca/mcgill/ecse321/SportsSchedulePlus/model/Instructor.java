@@ -32,7 +32,8 @@ public class Instructor extends Customer {
   // CONSTRUCTOR
   //------------------------
   public Instructor() {
-
+    instructorSuggestedCourseTypes = new ArrayList <CourseType> ();
+    supervisedCourses = new ArrayList <ScheduledCourse> ();
   }
   public Instructor(int aId, String aExperience) {
     super(aId);
@@ -47,6 +48,8 @@ public class Instructor extends Customer {
 
   public Instructor(String experience) {
   this.experience = experience;
+  this.instructorSuggestedCourseTypes = new ArrayList <CourseType> ();
+  this.supervisedCourses = new ArrayList <ScheduledCourse> ();
 }
 
 public Instructor(Customer customer, String experience) {
