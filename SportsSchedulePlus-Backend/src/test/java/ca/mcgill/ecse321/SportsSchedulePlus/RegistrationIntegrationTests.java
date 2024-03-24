@@ -62,7 +62,6 @@ public class RegistrationIntegrationTests {
   @Autowired
   private DailyScheduleRepository dailyScheduleRepository;
 
-  @BeforeEach
   @AfterEach
   public void clearDatabase() {
     registrationRepository.deleteAll();
@@ -76,6 +75,13 @@ public class RegistrationIntegrationTests {
     customerRepository.deleteAll();
     dailyScheduleRepository.deleteAll();
 
+  }
+
+  @BeforeEach
+  public void setup(){
+    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
+      userService.createOwner();
+    }
   }
 
   private PersonDTO postCustomer(String name, String email, String password) {
@@ -93,10 +99,6 @@ public class RegistrationIntegrationTests {
   
   @Test
   public void testCreateAndGetRegistration() {
-
-    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-      userService.createOwner();
-    }
     int customerId = postCustomer("Test", "xhzwwww@gmail.com", "123abvwwQ!!").getId();
     int courseId = Helper.createScheduledCourse( restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
     // Create Registration
@@ -119,10 +121,6 @@ public class RegistrationIntegrationTests {
 
   @Test
   public void testCreateRegistrationCustomerNotFound() {
-
-    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-      userService.createOwner();
-    }
     int customerId = -1;
     int courseId = Helper.createScheduledCourse( restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
     // Create Registration
@@ -133,10 +131,6 @@ public class RegistrationIntegrationTests {
 
   @Test
   public void testCreateRegistrationCourseNotFound() {
-
-    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-      userService.createOwner();
-    }
     int customerId = postCustomer("Test", "xhzwwww@gmail.com", "123abvwwQ!!").getId();
     int courseId = -11111;
     // Create Registration
@@ -147,10 +141,6 @@ public class RegistrationIntegrationTests {
 
   @Test
   public void testCreateRegistrationCourseAndCustomerNotFound() {
-
-    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-      userService.createOwner();
-    }
     int customerId = -11111;
     int courseId = -11111;
     // Create Registration
@@ -162,10 +152,6 @@ public class RegistrationIntegrationTests {
 
   @Test
   public void testGetRegistrationsByCustomer() {
-
-    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-      userService.createOwner();
-    }
     int customerId = postCustomer("Test", "xhzwwwabcdw@gmail.com", "123abvwwQ!!").getId();
     int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
     // Create Registration
@@ -177,16 +163,11 @@ public class RegistrationIntegrationTests {
     assertEquals(HttpStatus.OK, getResponse.getStatusCode());
     RegistrationListResponseDTO registrations = getResponse.getBody();
     assertNotNull(registrations);
-
     assertEquals(registrations.getRegistrations().get(0).getCustomer().getId(),customerId);
   }
 
   @Test
   public void testGetRegistrationsByCustomerNotFound() {
-
-    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-      userService.createOwner();
-    }
     int customerId = -1111;
     int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
     // Create Registration
@@ -200,10 +181,6 @@ public class RegistrationIntegrationTests {
 
   @Test
   public void testGetRegistrationsByCourse() {
-
-    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-      userService.createOwner();
-    }
     int customerId = postCustomer("Test", "xhzw222wwabcdw@gmail.com", "123abvwwQ!!").getId();
     int newCustomerId = postCustomer("Test", "abcdwe2wwabcdw@gmail.com", "123abvwwQ!!").getId();
     int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
@@ -225,9 +202,6 @@ public class RegistrationIntegrationTests {
 
   @Test
   public void testGetRegistrationsByCourseNotFound() {
-    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-      userService.createOwner();
-    }
     int customerId = postCustomer("Test", "xhzw222wwabcdw@gmail.com", "123abvwwQ!!").getId();
     int newCustomerId = postCustomer("Test", "abcdwe2wwabcdw@gmail.com", "123abvwwQ!!").getId();
     int courseId = -1111;
@@ -246,9 +220,6 @@ public class RegistrationIntegrationTests {
   public void testDeleteRegistration() {
     int courseId = 1;
     int customerId = 0;
-    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-      userService.createOwner();
-    }
     customerId = postCustomer("Test", "abcdedw@gmail.com", "123abvwwQ!!").getId();
     courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
 
