@@ -1,19 +1,24 @@
-package ca.mcgill.ecse321.SportsSchedulePlus;
+package ca.mcgill.ecse321.SportsSchedulePlus.service.userservice;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+
+import javax.swing.text.html.Option;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,16 +29,16 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
@@ -43,7 +48,12 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice.DailyScheduleService;
-import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
+import java.util.ArrayList;
+import java.sql.Date;
+import java.sql.Time;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
@@ -66,6 +76,7 @@ public class UserServiceTests {
     private DailyScheduleRepository dailyScheduleRepository;
     @InjectMocks
     private CourseTypeService courseTypeService;
+    
     @Mock
     private DailyScheduleService dailyScheduleService;
 
@@ -97,76 +108,7 @@ public class UserServiceTests {
     @BeforeEach
     public void setMockOutput(){
         MockitoAnnotations.openMocks(this);
-        /*lenient().when(customerRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
-                Customer customer = new Customer();
-                customer.setId(customerIdHasApplied);
-                customer.setHasApplied(true);
-                return Optional.of(customer);
-            } else {
-                return null;
-            }
-        });
-        lenient().when(instructorRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
-                return Optional.empty();
-            } else {
-                return null;
-            }
-        });
-        lenient().when(personRepository.findPersonByPersonRole(any(PersonRole.class))).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0) instanceof Customer) {
-                Customer personRole = invocation.getArgument(0);
-                Person person = new Person(name, email, password, personRole);
-                return person;
-            } else {
-                return null;
-            }
-        });
-        /*lenient().when(personRepository.findPersonByEmail(anyString())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(email)) {
-                Person person = new Person();
-                person.setEmail(invocation.getArgument(0));
-                person.setName(name);
-                person.setPassword(password);
-                person.setPersonRole(new Customer());
-                person.getPersonRole().setId(customerIdHasApplied);
-                return person;
-            } else {
-                return null;
-            }
-        });
-        lenient().when(personRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
-                Customer customer = new Customer();
-                customer.setId(customerIdHasApplied);
-                Person person = new Person(name, email, password, customer);
-                return person;
-            } else {
-                return null;
-            }
-        });
-        lenient().when(ownerRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(ownerId)) {
-                Owner owner = new Owner();
-                owner.setId(ownerId);
-                return owner;
-            } else {
-                return null;
-            }
-        });
-        lenient().when(registrationRepository.findRegistrationsByKeyCustomer(any(Customer.class))).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
-                Customer customer = new Customer();
-                customer.setId(customerIdHasApplied);
-                Registration registration = new Registration();
-                registration.setConfirmationNumber(0);
-                registration.setKey(new Registration.Key(customer, new ScheduledCourse()));
-                return Collections.singletonList(registration);
-            } else {
-                return Collections.emptyList();
-            }
-        });*/
+        
         lenient().when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         // Whenever anything is saved, just return the parameter object
         Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> invocation.getArgument(0);
@@ -177,7 +119,10 @@ public class UserServiceTests {
         lenient().when(personRoleRepository.save(any(PersonRole.class))).thenAnswer(returnParameterAsAnswer);
         lenient().when(registrationRepository.save(any(Registration.class))).thenAnswer(returnParameterAsAnswer);
         lenient().when(dailyScheduleRepository.save(any(DailySchedule.class))).thenAnswer(returnParameterAsAnswer);
+        // MockitoAnnotations.openMocks(this);
     }
+
+
 
     @Test
     public void testCreateCustomer() {
@@ -210,7 +155,7 @@ public class UserServiceTests {
         } catch (Exception e) {
             // Check that an error occurred
             assertNull(person);
-            assertEquals("Name cannot be blank.", e.getMessage());
+            assertEquals("Name cannot contain special characters.", e.getMessage());
         }
 
         verify(personRoleRepository, times(0)).save(any(Customer.class));
@@ -579,5 +524,761 @@ public class UserServiceTests {
         }
     }
 
+    @Test
+    public void testApplyForInstructor() {
+        int aId = 2;
+        String email = "joe@joe.com";
+        
+        Customer customer = new Customer(aId);
+        Person person = new Person("name", email, "password", customer);
+        personRepository.save(person);
+        customer.setHasApplied(false);
+        customerRepository.save(customer);
+
+        lenient().when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
+        lenient().when(instructorRepository.findById(customer.getId())).thenReturn(Optional.empty());
+
+        try {
+            customer = userService.applyForInstructor(aId);
+        } catch (Exception e) {
+            //Ensure no error occured
+            fail();
+        }
+        assertTrue(customer.getHasApplied());
+
+    }
+
+    @Test
+    public void testApplyForInstructorIsInstructor() {
+        int customerId = 2;
+        String aExperience = "2 years";
+        
+        Instructor instructor = new Instructor(customerId, aExperience);
+        Person person = new Person("name", email, "password", instructor);
+        personRepository.save(person);
+        instructorRepository.save(instructor);
+
+        Customer customer = null;
+
+
+        try {
+            customer = userService.applyForInstructor(customerId);
+            fail();
+        } catch (Exception e) {
+            assertNull(customer);
+            assertEquals("Customer with ID " + customerId + " does not exist.", e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void testApplyForInstructorNullCustomer() {
+        int customerId = 2;
+
+        Customer customer = null;
+
+        try {
+            customer = userService.applyForInstructor(customerId);
+            fail();
+        } catch (Exception e) {
+            assertNull(customer);
+            assertEquals("Customer with ID " + customerId + " does not exist.", e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void testApplyForInstructorAlreadyApplied() {
+        int aId = 2;
+        String email = "joe@joe.com";
+        
+        Customer customer = new Customer(aId);
+        Person person = new Person("name", email, "password", customer);
+        personRepository.save(person);
+        customer.setHasApplied(true);
+        customerRepository.save(customer);
+
+        Customer newCustomer = null;
+
+        try {
+            newCustomer = userService.applyForInstructor(aId);
+            fail();
+        } catch (Exception e) {
+            assertNull(newCustomer);
+            assertEquals("Customer with ID " + aId + " does not exist.", e.getMessage());
+        }
+
+    }
+
+    // @Test
+    // public void testApproveCustomer() {
+    //     int aId = 2;
+    //     String email = "joe@joe.com";
+        
+    //     Customer customer = new Customer(aId);
+    //     Person person = new Person("name", email, "password", customer);
+    //     personRepository.save(person);
+    //     customer.setHasApplied(true);
+    //     customerRepository.save(customer);
+    //     Instructor instructor = null;
+
+    //     try {
+    //         instructor = userService.approveCustomer(aId);
+    //     } catch (Exception e) {
+    //         //Ensure no error occurs 
+    //         fail();
+    //     }
+
+    //     assertNotNull(instructor);
+    //     assertEquals(aId, instructor.getId());
+
+    // }
+
+    @Test
+    public void testApproveCustomerIsInstructor() {
+        int aId = 2;
+        String aExperience = "2 years";
+        
+        Instructor instructor = new Instructor(aId, aExperience);
+        Person person = new Person("name", email, "password", instructor);
+        personRepository.save(person);
+        instructor.setHasApplied(true);
+        instructorRepository.save(instructor);
+
+        Instructor newInstructor = null;
+
+        try {
+            newInstructor = userService.approveCustomer(aId);
+            fail();
+        } catch (Exception e) {
+            assertNull(newInstructor);
+            assertEquals("Customer with ID " + aId + " does not exist.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testApproveCustomerNullPerson() {
+        int aId = 2;
+        Person person = null;
+
+        Instructor newInstructor = null;
+
+        try {
+            newInstructor = userService.approveCustomer(aId);
+            fail();
+        } catch (Exception e) {
+            assertNull(newInstructor);
+            assertNull(person);
+            assertEquals("Customer with ID " + aId + " does not exist.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testRejectCustomer() {
+        int aId = 2;
+        Customer customer = new Customer(aId);
+        customer.setHasApplied(true);
+        customerRepository.save(customer);
+
+        lenient().when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
+
+        try {
+            customer = userService.rejectCustomer(aId);
+        } catch (Exception e) {
+            //Ensure no error occurs 
+            fail();
+        }
+
+        assertNotNull(customer);
+        assertEquals(aId, customer.getId());
+        assertFalse(customer.getHasApplied());
+
+
+    }
+
+    @Test
+    public void testRejectCustomerNullCustomer() {
+        int aId = 2;
+        Customer customer = null;
+
+        try {
+            customer = userService.rejectCustomer(aId);
+            fail();
+        } catch (Exception e) {
+            assertNull(customer);
+            assertEquals("Customer with ID " + aId + " does not exist.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void getInstructorsBySupervisedCourseTest() {
+        int aScheduledCourseId = 2;
+        Date aDate = new Date(2345);
+        Time aStartTime = new Time(2222);
+        Time aEndTime = new Time(2230);
+        String email = "joe@joe.com";
+
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String instructorExperience = "12 days";
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aId = 2;
+
+
+        Instructor instructor = new Instructor(aId, instructorExperience);
+        Person person = new Person(aName, aEmail, aPassword, instructor);
+        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+        ScheduledCourse scheduledCourse = new ScheduledCourse(aScheduledCourseId, aDate, aStartTime, aEndTime, email, courseType);
+
+        personRepository.save(person);
+        instructor.addSupervisedCourse(scheduledCourse);
+        instructorRepository.save(instructor);
+        List<Instructor> mockInstructors = new ArrayList<>();
+        mockInstructors.add(instructor);
+        List<Instructor> instructors = null;
+
+        lenient().when(instructorRepository.findInstructorBySupervisedCourses(any(ScheduledCourse.class))).thenReturn(mockInstructors);
+      
+       
+        try {
+            instructors = userService.getInstructorsBySupervisedCourse(scheduledCourse);
+
+        } catch (Exception e) {
+            //Ensure no error occurs
+            fail();
+        }      
+        assertNotNull(instructors);  
+        instructor = instructors.get(0);
+
+        assertNotNull(instructor);
+        assertEquals(instructorExperience, instructor.getExperience());
+        assertEquals(aId, instructor.getId());
+    }
+
+    @Test
+    public void getInstructorBySuggestedCourseTypeTest() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String instructorExperience = "12 days";
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aId = 5;
+        int aCourseId = 2;
+
+        Instructor instructor = new Instructor(aId, instructorExperience);
+        Person person = new Person(aName, aEmail, aPassword, instructor);
+        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+        instructorRepository.save(instructor);
+
+        instructor.addInstructorSuggestedCourseType(courseType);
+        courseType.setId(aCourseId);
+
+
+        // when(courseTypeService.getCourseType(aCourseId)).thenReturn(courseType);
+
+        // lenient().when(instructorRepository.findInstructorByInstructorSuggestedCourseTypes(any(CourseType.class))).thenReturn(instructor);
+
+
+        try {
+            instructor = userService.getInstructorBySuggestedCourseType(aCourseId);
+
+        } catch (Exception e) {
+            fail();
+
+        }
+
+        assertNotNull(instructor);
+        assertEquals(instructorExperience, instructor.getExperience());
+        assertEquals(aId, instructor.getId());
+
+
+        verify(instructorRepository, times(1)).save(any(Instructor.class));
+        verify(personRepository, times(1)).save(any(Person.class));
+
+    }
+
+    @Test
+    public void getInstructorBySuggestedCourseTypeTestNullInstructor() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+
+        Instructor instructor = null;
+
+        try {
+            CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+            int courseTypeId = courseType.getId();
+            instructor = userService.getInstructorBySuggestedCourseType(courseTypeId);
+            fail();
+
+        } catch (Exception e) {
+            assertNull(instructor);
+            assertEquals("No Instructor found for the specific CourseType", e.getMessage());
+
+        }
+    }
+
+    @Test
+    public void testGetInstructorByExperience() {
+        String email = "email@dog.com";
+        String experience = "2 years";
+        int aId = 2;
+        Instructor instructor = new Instructor(aId, experience);
+        Person person = new Person(email, email, email, instructor);
+
+        instructorRepository.save(instructor);
+        personRepository.save(person);
+        Instructor foundInstructor = null;
+
+        List<Instructor> mockInstructors = new ArrayList<>();
+        mockInstructors.add(instructor);
+        List<Instructor> instructors = null;
+
+        lenient().when(instructorRepository.findInstructorBySupervisedCourses(any(ScheduledCourse.class))).thenReturn(mockInstructors);
+      
+
+        try {
+            instructors = userService.getInstructorByExperience(experience);
+        } catch (Exception e) {
+            fail();
+        }
+        assertNotNull(instructors);
+
+        foundInstructor = instructors.get(0);
+        assertNotNull(foundInstructor);
+        assertEquals(experience, foundInstructor.getExperience());
+        assertEquals(aId, foundInstructor.getId());
+
+        verify(instructorRepository, times(1)).save(any(Instructor.class));
+        verify(personRepository, times(1)).save(any(Person.class));
+    
+
+    }
+
+    @Test
+    public void testGetInstructorByExperienceNullExperience() {
+        String email = "email@dog.com";
+        String experience = null;
+        int aId = 2;
+        Instructor instructor = new Instructor(aId, experience);
+        Person person = new Person(email, email, email, instructor);
+
+        instructorRepository.save(instructor);
+        personRepository.save(person);
+        List<Instructor> instructors = null;
+        Instructor foundInstructor = null;
+
+        try {
+            instructors = userService.getInstructorByExperience(experience);
+            fail();
+        } catch (Exception e) {
+            assertNull(instructors);
+            assertEquals("Instructor experience is empty", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testSuggestCourseTypeInstructor() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String instructorExperience = "12 days";
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aId = 5;
+
+        Instructor instructor = new Instructor(aId, instructorExperience);
+        Person person = new Person(aName, aEmail, aPassword, instructor);
+        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+        CourseType courseTypeCreated = null;
+        try {
+            courseTypeCreated = userService.suggestCourseType(instructor, courseType);
+        } catch (Exception e) {
+            //Ensure no error ocured
+            fail();
+        }
+        assertNotNull(courseTypeCreated);
+        assertEquals(aCourseDescription, courseTypeCreated.getDescription());
+        assertEquals(isApprovedCourse, courseTypeCreated.getApprovedByOwner());
+        assertEquals(coursePrice, courseTypeCreated.getPrice());
+        assertEquals(courseType, courseTypeCreated);
+        assertNotNull(instructor.getInstructorSuggestedCourseTypes());
+        assertEquals(courseType, instructor.getInstructorSuggestedCourseType(0));
+
+        verify(instructorRepository, times(1)).save(any(Instructor.class));
+        verify(personRepository, times(0)).save(any(Person.class));
+    }
+
+    @Test
+    public void testSuggestCourseTypeOwner() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aId = 5;
+        List <DailySchedule> aDailySchedule;
+
+        Owner owner = new Owner();
+        Person person = new Person(aName, aEmail, aPassword, owner);
+        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+        CourseType courseTypeCreated = null;
+
+        try {
+            courseTypeCreated = userService.suggestCourseType(owner, courseType);
+        } catch (Exception e) {
+            //Ensure no error ocured
+            fail();
+        }
+        assertNotNull(courseTypeCreated);
+        assertEquals(aCourseDescription, courseTypeCreated.getDescription());
+        assertEquals(isApprovedCourse, courseTypeCreated.getApprovedByOwner());
+        assertEquals(coursePrice, courseTypeCreated.getPrice());
+        assertEquals(courseType, courseTypeCreated);
+        assertNotNull(owner.getOwnerSuggestedCourses());
+        assertEquals(courseType, owner.getOwnerSuggestedCourse(0));
+
+        verify(ownerRepository, times(1)).save(any(Owner.class));
+        verify(personRepository, times(0)).save(any(Person.class));
+    }
+
+    @Test
+    public void testSuggestCourseTypeNoPerson() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String aPassword = "1234";
+        int aId = 5;
+
+        Instructor instructor = new Instructor(aId, aPassword);
+        Person person = null;
+        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+        CourseType courseTypeCreated = null;
+
+        try {
+            courseTypeCreated = userService.suggestCourseType(instructor, courseType);
+            fail();
+        } catch (Exception e) {
+            assertNull(person);
+            assertNull(courseTypeCreated);
+            assertEquals("Instructor is not associated with any Person object.", e.getMessage());
+        }
+       
+        verify(instructorRepository, times(0)).save(any(Instructor.class));
+        verify(personRepository, times(0)).save(any(Person.class));
+    }
+
+    @Test
+    public void testSuggestCourseTypeNullPersonRole() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String instructorExperience = "12 days";
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aId = 5;
+
+        Instructor instructor = null;
+        Person person = new Person();
+
+        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+        CourseType courseTypeCreated = null;
+
+        try {
+            courseTypeCreated = userService.suggestCourseType(instructor, courseType);
+            fail();
+        } catch (Exception e) {
+            assertNull(courseTypeCreated);
+            assertEquals("Some sort of error message", e.getMessage());
+            
+        }
+       
+    }
+
+    @Test
+    public void testSuggestCourseTypeNullCourseType() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String instructorExperience = "12 days";
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aId = 5;
+
+        Instructor instructor = new Instructor(aId, instructorExperience);
+        Person person = new Person(aName, aEmail, aPassword, instructor);
+        CourseType courseType = null;
+        CourseType courseTypeCreated = null;
+        try {
+            courseTypeCreated = userService.suggestCourseType(instructor, courseType);
+            fail();
+        } catch (Exception e) {
+            assertNull(courseType);
+            assertNull(courseTypeCreated);
+            assertEquals("Cannot suggest a null course", e.getMessage());
+        }
+        
+        verify(instructorRepository, times(0)).save(any(Instructor.class));
+        verify(personRepository, times(0)).save(any(Person.class));
+    }
+
+    @Test
+    public void testFindPersonByEmail() {
+        String aEmail = "email@gmail.com";
+        PersonRole customer = new Customer();
+        Person person = new Person(name, aEmail, password, customer);
+        personRepository.save(person);
+        Person foundPerson = null;
+
+        lenient().when(personRepository.findPersonByEmail(aEmail)).thenReturn(person);
+
+        try {
+            foundPerson = userService.findPersonByEmail(aEmail);
+        } catch (Exception e) {
+            //Ensure no error occured
+            fail();
+        }
+        assertNotNull(foundPerson);
+        assertEquals(aEmail, foundPerson.getEmail());
+        assertEquals(person, foundPerson);
+        
+        verify(personRoleRepository, times(0)).save(any(Owner.class));
+        verify(personRepository, times(1)).save(any(Person.class));
+        
+    }
+
+    @Test
+    public void testFindPersonByEmailNullPerson() {
+        String aEmail = "email@gmail.com";
+        Person person = null;
+        Person foundPerson = null;
+
+        lenient().when(personRepository.findPersonByEmail(aEmail)).thenReturn(person);
+
+        try {
+            foundPerson = userService.findPersonByEmail(aEmail);
+            fail();
+        } catch (Exception e) {
+            assertNull(person);
+            assertNull(foundPerson);
+            assertEquals("User with email " + aEmail + "does not exist.", e.getMessage());
+        }
+
+        verify(personRoleRepository, times(0)).save(any(Owner.class));
+        verify(personRepository, times(0)).save(any(Person.class));
+    }
+
+    @Test
+    public void testFindPersonByEmailNullEmail() {
+        String aEmail = "";
+        Person foundPerson = null;
+
+        try {
+            foundPerson = userService.findPersonByEmail(aEmail);
+            fail();
+        } catch (Exception e) {
+            assertNull(foundPerson);
+            assertEquals("Email " + email + "does not exist for any user.", e.getMessage());
+        }
+
+        verify(personRoleRepository, times(0)).save(any(Owner.class));
+        verify(personRepository, times(1)).save(any(Person.class));
+    }
+    
+    @Test
+    public void testGetCourseTypesSuggestedByPersonId() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String instructorExperience = "12 days";
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aId = 5;
+        int aOwnerId = 5;
+        List <DailySchedule> aDailySchedule;
+
+        Owner owner = new Owner();
+        Instructor instructor = new Instructor(aId, instructorExperience);
+        Person person = new Person(aName, aEmail, aPassword, instructor);
+        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+
+        instructor.addInstructorSuggestedCourseType(courseType);
+        personRepository.save(person);
+
+        List<CourseType> courseTypes = null;
+
+        try {
+            courseTypes = userService.getCourseTypesSuggestedByPersonId(aId);
+
+        } catch (Exception e) {
+            fail();
+        }
+
+        assertNotNull(courseTypes);
+        courseType = courseTypes.get(0);
+
+        assertNotNull(courseType);
+        assertEquals(aCourseDescription, courseType.getDescription());
+        assertEquals(isApprovedCourse, courseType.getApprovedByOwner());
+        assertEquals(coursePrice, courseType.getPrice());
+        assertEquals(courseType, courseType);
+
+        verify(personRoleRepository, times(0)).save(any(Instructor.class));
+        verify(personRepository, times(1)).save(any(Person.class));
+        
+
+    }
+
+    @Test
+    public void testGetCourseTypesSuggestedByPersonIdPersonNotPresent() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String instructorExperience = "12 days";
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aId = 5;
+        int aOwnerId = 5;
+        List <DailySchedule> aDailySchedule;
+
+        Owner owner = new Owner();
+        Instructor instructor = new Instructor(aId, instructorExperience);
+        Person person = new Person(aName, aEmail, aPassword, instructor);
+        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+
+        instructor.addInstructorSuggestedCourseType(courseType);
+
+        List<CourseType> courseTypes = null;
+
+        try {
+            courseTypes = userService.getCourseTypesSuggestedByPersonId(aId);
+            fail();
+
+        } catch (Exception e) {
+            assertNull(courseTypes);
+            assertEquals("The owner does not yet exist within the system.", e.getMessage());
+        }
+
+    }
+    
+    @Test
+    public void testGetCourseTypesSuggestedByPersonIdOwner() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aOwnerId = 5;
+        List <DailySchedule> aDailySchedule = null;
+
+        Owner owner = new Owner();
+        Person person = new Person(aName, aEmail, aPassword, owner);
+        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+
+        owner.addOwnerSuggestedCourse(courseType);
+        personRepository.save(person);
+
+        List<CourseType> courseTypes = null;
+
+        try {
+            courseTypes = userService.getCourseTypesSuggestedByPersonId(aOwnerId);
+
+        } catch (Exception e) {
+            fail();
+        }
+
+        assertNotNull(courseTypes);
+        courseType = courseTypes.get(0);
+
+        assertNotNull(courseType);
+        assertEquals(aCourseDescription, courseType.getDescription());
+        assertEquals(isApprovedCourse, courseType.getApprovedByOwner());
+        assertEquals(coursePrice, courseType.getPrice());
+        assertEquals(courseType, courseType);
+
+        verify(personRoleRepository, times(0)).save(any(Owner.class));
+        verify(personRepository, times(1)).save(any(Person.class));
+   
+
+    }
+
+    @Test
+    public void testGetCourseTypesSuggestedByPersonIdOwnerNoCourseTypes() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aOwnerId = 5;
+        
+        Owner owner = new Owner();
+        Person person = new Person(aName, aEmail, aPassword, owner);
+        
+        personRepository.save(person);
+
+        List<CourseType> courseTypes = null;
+
+        try {
+            courseTypes = userService.getCourseTypesSuggestedByPersonId(aOwnerId);
+            fail();
+        } catch (Exception e) {
+            assertNull(courseTypes);
+            assertEquals("The owner does not yet exist within the system.", e.getMessage());
+            
+        }
+
+        verify(personRoleRepository, times(0)).save(any(Owner.class));
+        verify(personRepository, times(1)).save(any(Person.class));
+   
+
+    }
+
+    @Test
+    public void testGetCourseTypesSuggestedByPersonIdNotOwnerOrInstructor() {
+        String aCourseDescription = "a course";
+        boolean isApprovedCourse = true;
+        float coursePrice = 2;
+        String aName = "Jerry";
+        String aEmail = "Jerry@joe.com";
+        String aPassword = "1234";
+        int aOwnerId = 5;
+        List <DailySchedule> aDailySchedule = null;
+
+        Customer customer = new Customer(aOwnerId);
+        Person person = new Person(aName, aEmail, aPassword, customer);
+        
+        personRepository.save(person);
+
+        List<CourseType> courseTypes = null;
+
+        try {
+            courseTypes = userService.getCourseTypesSuggestedByPersonId(aOwnerId);
+            fail();
+        } catch (Exception e) {
+            assertNull(courseTypes);
+            assertEquals("The owner does not yet exist within the system.", e.getMessage());
+            
+        }
+
+        verify(personRoleRepository, times(0)).save(any(Owner.class));
+        verify(personRepository, times(1)).save(any(Person.class));
+   
+
+    }
+
 
 }
+
