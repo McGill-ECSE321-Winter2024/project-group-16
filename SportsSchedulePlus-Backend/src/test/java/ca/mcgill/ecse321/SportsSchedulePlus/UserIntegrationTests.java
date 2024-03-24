@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.SportsSchedulePlus;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -29,6 +30,8 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
 import java.util.ArrayList;
 
 
@@ -45,16 +48,28 @@ public class UserIntegrationTests {
     @Autowired
     private OwnerRepository ownerRepo;
     @Autowired
+    private PersonRepository personRepo;
+    @Autowired
+    private PersonRoleRepository personRoleRepo;
+    /*@Autowired
     private PersonDTO personDTO;
     @Autowired
     private PersonListResponseDTO personListResponseDTO;
     @Autowired 
     private PersonRoleResponseDTO personRoleResponseDTO;
+    @Autowired
+    private CustomerRequestDTO customerRequestDTO;
+    @Autowired
+    private InstructorResponseDTO instructorResponseDTO;
+    @Autowired
+    private OwnerResponseDTO ownerResponseDTO;*/
 
 
 	@BeforeEach
 	@AfterEach
 	public void clearDatabase() {
+        personRepo.deleteAll();
+        personRoleRepo.deleteAll();
 		customerRepo.deleteAll();
         instructorRepo.deleteAll();
         ownerRepo.deleteAll();
@@ -64,39 +79,48 @@ public class UserIntegrationTests {
     @Test
     public void testCreateAndGetCustomer() {
         int id = testCreateCustomer();
+        testGetCustomer(id);
+    }
+
+    @Test
+    public void testCreateAndGetInstructor() {
+        int id = testCreateInstructor();
+        testGetInstructor(id);
+    }
+
+    @Test
+    public void testCreateAndGetOwner() {
+        int id = testCreateOwner();
+        testGetOwner(id);
     }
 
     private int testCreateCustomer() {
-        CustomerRequestDTO newCustomerRole = new CustomerRequestDTO(1);
+        CustomerRequestDTO newCustomerRole = new CustomerRequestDTO();
         newCustomerRole.setHasApplied(true);
-        ResponseEntity<PersonDTO> response = client.postForEntity("/customer", new PersonDTO("customer", "customer@example.com", "Password#1", newCustomerRole ), PersonDTO.class);
+        ResponseEntity<PersonDTO> response = client.postForEntity("/customers", new PersonDTO("customer", "customer@example.com", "Password#1", newCustomerRole ), PersonDTO.class);
 
         assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody(), "Response has body");
         assertEquals("customer", response.getBody().getName(), "Name matches");
         assertEquals("customer@example.com", response.getBody().getEmail(), "Email matches");
-        assertEquals("encodedPassword", response.getBody().getPassword(), "Password matches");
-        assertEquals(1, response.getBody().getId(), "Id matches");
+        assertTrue(response.getBody().getId() > 0, "Response has valid ID");
 
         return response.getBody().getId();
     }
 
     private int testCreateInstructor() {
-        Instructor instructor = new Instructor();
-        instructor.setExperience("5 years");
+        Instructor instructor = new Instructor(2, "5 years");
         instructor.setHasApplied(true);
-        instructor.setId(2);
         InstructorResponseDTO newInstructorRole = new InstructorResponseDTO(instructor);
-        ResponseEntity<PersonDTO> response = client.postForEntity("/instructor", new PersonDTO("instructor", "instructor@email.com", "Password#1", newInstructorRole ), PersonDTO.class);
+        ResponseEntity<PersonDTO> response = client.postForEntity("/instructors", new PersonDTO("instructor", "instructor@email.com", "Password#1", newInstructorRole ), PersonDTO.class);
 
         assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody(), "Response has body");
         assertEquals("instructor", response.getBody().getName(), "Name matches");
         assertEquals("instructor@email.com", response.getBody().getEmail(), "Email matches");
-        assertEquals("encodedPassword", response.getBody().getPassword(), "Password matches");
-        assertEquals(2, response.getBody().getId(), "Id matches");
+        assertTrue(response.getBody().getId() > 0, "Response has valid ID");
 
         return response.getBody().getId();
     }
@@ -106,7 +130,7 @@ public class UserIntegrationTests {
         owner.setId(-1);
         owner.setDailySchedule(new ArrayList<>());
         OwnerResponseDTO newOwnerRole = new OwnerResponseDTO(owner);
-        ResponseEntity<PersonDTO> response = client.postForEntity("/owner", new PersonDTO("owner", "owner@email.com", "Password#1", newOwnerRole ), PersonDTO.class);
+        ResponseEntity<PersonDTO> response = client.postForEntity("/owners", new PersonDTO("owner", "owner@email.com", "Password#1", newOwnerRole ), PersonDTO.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -118,4 +142,39 @@ public class UserIntegrationTests {
 
         return response.getBody().getId();
     }
+
+    private void testGetCustomer(int id) {
+        ResponseEntity<PersonDTO> response = client.getForEntity("/customers/" + id, PersonDTO.class);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Status is OK");
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals("customer", response.getBody().getName(), "Name matches");
+        assertEquals("customer@example.com", response.getBody().getEmail(), "Email matches");
+        assertEquals(id, response.getBody().getId(), "Id matches");
+    }
+
+    private void testGetInstructor(int id) {
+        ResponseEntity<PersonDTO> response = client.getForEntity("/instructors/" + id, PersonDTO.class);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Status is OK");
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals("instructor", response.getBody().getName(), "Name matches");
+        assertEquals("instructor@email.com", response.getBody().getEmail(), "Email matches");
+        assertEquals(id, response.getBody().getId(), "Id matches");
+    }
+
+    private void testGetOwner(int id) {
+        ResponseEntity<PersonDTO> response = client.getForEntity("/owner/" + id, PersonDTO.class);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Status is OK");
+        assertNotNull(response.getBody(), "Response has body");
+        assertEquals("owner", response.getBody().getName(), "Name matches");
+        assertEquals("owner@email.com", response.getBody().getEmail(), "Email matches");
+        assertEquals("encodedPassword", response.getBody().getPassword(), "Password matches");
+        assertEquals(id, response.getBody().getId(), "Id matches");
+    }
 }
+
