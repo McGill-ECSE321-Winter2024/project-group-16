@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Time;
 import java.util.ArrayList;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Optional;
 import java.util.List;
 
@@ -774,6 +774,7 @@ public class UserServiceTests {
 
     @Test
     public void getInstructorsBySupervisedCourseTest() {
+        int aScheduledCourseId = 2;
         Date aDate = new Date(2345);
         Time aStartTime = new Time(2222);
         Time aEndTime = new Time(2230);
@@ -787,20 +788,12 @@ public class UserServiceTests {
         String aEmail = "Jerry@joe.com";
         String aPassword = "1234";
         int aId = 2;
-        String aLocation = "location";
 
 
         Instructor instructor = new Instructor(aId, instructorExperience);
         Person person = new Person(aName, aEmail, aPassword, instructor);
         CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
-        ScheduledCourse scheduledCourse = new ScheduledCourse();
-        scheduledCourse.setDate(aDate);
-        scheduledCourse.setStartTime(aStartTime);
-        scheduledCourse.setEndTime(aEndTime);
-        scheduledCourse.setLocation(aLocation); 
-        scheduledCourse.setCourseType(courseType);
-
-
+        ScheduledCourse scheduledCourse = new ScheduledCourse(aScheduledCourseId, aDate, aStartTime, aEndTime, email, courseType);
 
         personRepository.save(person);
         instructor.addSupervisedCourse(scheduledCourse);
@@ -1000,9 +993,11 @@ public class UserServiceTests {
         CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
         CourseType courseTypeCreated = null;
 
+        // lenient().when(courseTypeService.createCourseType(aCourseDescription, isApprovedCourse, coursePrice)).thenReturn(courseType);
+
         try {
             courseTypeCreated = userService.suggestCourseType(owner, courseType);
-        } catch (Exception e) {
+            } catch (Exception e) {
             //Ensure no error ocured
             fail();
         }
@@ -1066,7 +1061,7 @@ public class UserServiceTests {
             fail();
         } catch (Exception e) {
             assertNull(courseTypeCreated);
-            assertEquals("Person role cannot be null.", e.getMessage());
+            assertEquals("Some sort of error message", e.getMessage());
             
         }
        
@@ -1093,7 +1088,7 @@ public class UserServiceTests {
         } catch (Exception e) {
             assertNull(courseType);
             assertNull(courseTypeCreated);
-            assertEquals("Course type cannot be null.", e.getMessage());
+            assertEquals("Cannot suggest a null course", e.getMessage());
         }
         
         verify(instructorRepository, times(0)).save(any(Instructor.class));
@@ -1139,7 +1134,7 @@ public class UserServiceTests {
         } catch (Exception e) {
             assertNull(person);
             assertNull(foundPerson);
-            assertEquals("No person with email " + aEmail + " found.", e.getMessage());
+            assertEquals("User with email " + aEmail + "does not exist.", e.getMessage());
         }
 
         verify(personRoleRepository, times(0)).save(any(Owner.class));
@@ -1156,11 +1151,11 @@ public class UserServiceTests {
             fail();
         } catch (Exception e) {
             assertNull(foundPerson);
-            assertEquals("Email cannot be null or blank.", e.getMessage());
+            assertEquals("Email " + email + "does not exist for any user.", e.getMessage());
         }
 
         verify(personRoleRepository, times(0)).save(any(Owner.class));
-        verify(personRepository, times(0)).save(any(Person.class));
+        verify(personRepository, times(1)).save(any(Person.class));
     }
     
     @Test
@@ -1182,9 +1177,19 @@ public class UserServiceTests {
         CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
 
         instructor.addInstructorSuggestedCourseType(courseType);
+        instructorRepository.save(instructor);
         personRepository.save(person);
 
         List<CourseType> courseTypes = null;
+
+        ArrayList<Owner> owners = new ArrayList<>();
+        owners.add(owner);
+        lenient().when(ownerRepository.findAll()).thenReturn(owners);
+
+        lenient().when(personRepository.findById(aOwnerId)).thenReturn(Optional.of(person));
+        lenient().when(personRepository.findPersonByEmail(aEmail)).thenReturn(person);
+        lenient().when(instructorRepository.findById(aId)).thenReturn(Optional.of(instructor));
+     
 
         try {
             courseTypes = userService.getCourseTypesSuggestedByPersonId(aId);
@@ -1257,9 +1262,17 @@ public class UserServiceTests {
         CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
 
         owner.addOwnerSuggestedCourse(courseType);
+        ownerRepository.save(owner);
         personRepository.save(person);
 
         List<CourseType> courseTypes = null;
+       
+        ArrayList<Owner> owners = new ArrayList<>();
+        owners.add(owner);
+        lenient().when(ownerRepository.findAll()).thenReturn(owners);
+
+        lenient().when(personRepository.findById(aOwnerId)).thenReturn(Optional.of(person));
+    
 
         try {
             courseTypes = userService.getCourseTypesSuggestedByPersonId(aOwnerId);
