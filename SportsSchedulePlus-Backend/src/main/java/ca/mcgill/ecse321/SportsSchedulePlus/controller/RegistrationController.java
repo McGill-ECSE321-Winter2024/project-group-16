@@ -58,7 +58,7 @@ public class RegistrationController {
      * @param customerId
      * @return RegistrationListResponseDTO
      */
-    @GetMapping(value = {"/customers/{customerID}/payments", "/customers/{customerID}/registrations/"})
+    @GetMapping(value = {"/customers/{customerID}/registrations", "/customers/{customerID}/registrations/"})
     public RegistrationListResponseDTO getRegistrationsByCustomer(@PathVariable("customerID") int customerId) {
         List<RegistrationResponseDTO> registrationResponseDTOS = new ArrayList<>();
         for (Registration registration : registrationService.getRegistrationsByCustomer(customerId)) {
@@ -90,9 +90,7 @@ public class RegistrationController {
      */
     @PostMapping(value = {"/registrations/{customerID}/{courseID}", "/registrations/{customerID}/{courseID}/"})
     public RegistrationResponseDTO createRegistration(@PathVariable("customerID") int customerId, @PathVariable("courseID") int courseId) {
-        System.out.println("CALLED CREATE");
         Registration newRegistration = registrationService.createRegistration(customerId, courseId);
-        System.out.println("CREATED");
         RegistrationResponseDTO registrationDTO = new RegistrationResponseDTO(newRegistration);
         return registrationDTO;
     }

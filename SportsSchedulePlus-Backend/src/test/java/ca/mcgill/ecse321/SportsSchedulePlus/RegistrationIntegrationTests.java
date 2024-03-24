@@ -19,6 +19,8 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.registration.RegistrationRespons
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.customer.CustomerRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
@@ -158,10 +160,13 @@ public class RegistrationIntegrationTests {
       "/registrations/" + customerId + "/" + courseId, null, RegistrationResponseDTO.class);
     // Get Registrations by Customer
     ResponseEntity < RegistrationListResponseDTO > getResponse = restTemplate
-      .getForEntity("/customers/" + customerId + "/payments", RegistrationListResponseDTO.class);
+      .getForEntity("/customers/" + customerId + "/registrations", RegistrationListResponseDTO.class);
     assertEquals(HttpStatus.OK, getResponse.getStatusCode());
     RegistrationListResponseDTO registrations = getResponse.getBody();
     assertNotNull(registrations);
+
+    assertEquals(registrations.getRegistrations().get(0).getCustomer().getId(),customerId);
+   
   }
 
   @Test
@@ -171,10 +176,13 @@ public class RegistrationIntegrationTests {
       userService.createOwner();
     }
     int customerId = postCustomer("Test", "xhzw222wwabcdw@gmail.com", "123abvwwQ!!").getId();
+    int newCustomerId = postCustomer("Test", "abcdwe2wwabcdw@gmail.com", "123abvwwQ!!").getId();
     int courseId = createScheduledCourse("Some location", "2024-04-15", "09:00:00", "10:00:00");
 
     // Create Registration
     restTemplate.postForEntity("/registrations/" + customerId + "/" + courseId, null, RegistrationResponseDTO.class);
+
+    restTemplate.postForEntity("/registrations/" + newCustomerId + "/" + courseId, null, RegistrationResponseDTO.class);
 
     // Get Registrations by Course
     ResponseEntity < RegistrationListResponseDTO > getResponse = restTemplate
@@ -182,6 +190,8 @@ public class RegistrationIntegrationTests {
     assertEquals(HttpStatus.OK, getResponse.getStatusCode());
     RegistrationListResponseDTO registrations = getResponse.getBody();
     assertNotNull(registrations);
+    assertEquals(registrations.getRegistrations().get(0).getScheduledCourse().getId(),courseId);
+    assertEquals(registrations.getRegistrations().get(1).getScheduledCourse().getId(),courseId);
 
   }
 

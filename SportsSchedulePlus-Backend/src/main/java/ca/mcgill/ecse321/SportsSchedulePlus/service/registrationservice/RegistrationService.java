@@ -112,8 +112,6 @@ public class RegistrationService {
      */
     private void sendPaymentConfirmationEmail(Registration payment) {
         try {
-            System.out.println("Person customer "+ payment.getKey().getCustomer() );
-            System.out.println("Person repo "+ personRepository.findAll());
             String userEmail = personRepository.findById(payment.getKey().getCustomer().getId()).get().getEmail();
             String invoiceHtml = generateInvoiceHtml(payment);
             MailConfigBean mailSender = new MailConfigBean("imap.gmail.com", "smtp.gmail.com", "sports.schedule.plus@gmail.com", "aqlq ldup ymfh eejb");

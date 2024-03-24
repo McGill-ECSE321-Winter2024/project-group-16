@@ -149,7 +149,6 @@ public class CourseTypeService {
     @Transactional
     public void deleteCourseType(Integer id) {
         Optional<CourseType> optionalCourseType = courseTypeRepository.findById(id);
-        System.out.println("There is a course type with ID " + id + ".");
          if (!optionalCourseType.isPresent() ) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There is no course type with ID " + id + ".");
         } 
