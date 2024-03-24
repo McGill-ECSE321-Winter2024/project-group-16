@@ -63,6 +63,23 @@ public class RegistrationServiceTests {
   }
 
   @Test
+  public void testDeleteExistingRegistration() {
+      // Arrange
+      int confirmationNumber = 12345;
+      Registration registration = new Registration();
+      registration.setConfirmationNumber(confirmationNumber);
+
+      when(registrationRepository.findRegistrationByConfirmationNumber(confirmationNumber)).thenReturn(registration);
+
+      // Act
+      boolean result = registrationService.delete(confirmationNumber);
+
+      // Assert
+      assertTrue(result);
+      verify(registrationRepository, times(1)).delete(registration);
+  }
+  
+  @Test
   public void testGetRegistrationByConfirmationNumber() {
     // Mocking the behavior of RegistrationRepository to return a registration
     int confirmationNumber = 123;
