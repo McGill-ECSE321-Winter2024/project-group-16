@@ -8,8 +8,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
@@ -113,6 +118,59 @@ public class Helper {
       throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Email is not valid.");
     }
 
+  }
+
+  /**
+   * Helper method to create course type request
+   * @param description
+   * @param approvedByOwner
+   * @param price
+   * @return
+   */
+  public static CourseTypeRequestDTO createCourseTypeRequest(String description, boolean approvedByOwner, float price) {
+    CourseTypeRequestDTO courseTypeRequest = new CourseTypeRequestDTO();
+    courseTypeRequest.setDescription(description);
+    courseTypeRequest.setApprovedByOwner(approvedByOwner);
+    courseTypeRequest.setPrice(price);
+    return courseTypeRequest;
+  }
+  /**
+   * Helper method to create a course request
+   * @param location
+   * @param date
+   * @param startTime
+   * @param endTime
+   * @param courseType
+   * @return ScheduledCourseRequestDTO
+   */
+  private static ScheduledCourseRequestDTO createCourseRequest (String location, String date, String startTime, String endTime, CourseTypeRequestDTO courseType){
+    ScheduledCourseRequestDTO scheduledCourseRequest = new ScheduledCourseRequestDTO();
+    scheduledCourseRequest.setLocation(location);
+    scheduledCourseRequest.setDate(date);
+    scheduledCourseRequest.setStartTime(startTime);
+    scheduledCourseRequest.setEndTime(endTime);
+    scheduledCourseRequest.setCourseType(courseType);
+    return scheduledCourseRequest;
+  }
+  /**
+   * Helper method to create a scheduled course with REST
+   * @param restTemplate
+   * @param location
+   * @param date
+   * @param startTime
+   * @param endTime
+   * @return int
+   */
+  public static int createScheduledCourse(RestTemplate restTemplate,String location, String date, String startTime, String endTime) {
+    ResponseEntity < CourseTypeRequestDTO > courseTypeResponse = restTemplate.postForEntity("/courseTypes",
+    createCourseTypeRequest("Yoga", true, 20.0f), CourseTypeRequestDTO.class);
+
+    ScheduledCourseRequestDTO courseRequest = createCourseRequest(location,date,startTime,endTime,courseTypeResponse.getBody());
+
+    ResponseEntity < ScheduledCourseRequestDTO > scheduledCourseResponse = restTemplate.postForEntity(
+      "/scheduledCourses", courseRequest, ScheduledCourseRequestDTO.class);
+
+    return scheduledCourseResponse.getBody().getId();
   }
 
 
