@@ -18,8 +18,7 @@ public class Person {
   // STATIC VARIABLES
   //------------------------
 
-  private static final Map <String, Person> personsByEmail = new HashMap <String, Person> ();
-
+ 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -73,15 +72,10 @@ public class Person {
     if (anOldEmail != null && anOldEmail.equals(aEmail)) {
       return true;
     }
-    if (hasWithEmail(aEmail)) {
-      return wasSet;
-    }
+    
     email = aEmail;
     wasSet = true;
-    if (anOldEmail != null) {
-      personsByEmail.remove(anOldEmail);
-    }
-    personsByEmail.put(aEmail, this);
+    
     return wasSet;
   }
 
@@ -99,14 +93,7 @@ public class Person {
   public String getEmail() {
     return email;
   }
-  /* Code from template attribute_GetUnique */
-  public static Person getWithEmail(String aEmail) {
-    return personsByEmail.get(aEmail);
-  }
-  /* Code from template attribute_HasUnique */
-  public static boolean hasWithEmail(String aEmail) {
-    return getWithEmail(aEmail) != null;
-  }
+  
 
   public int getId(){
     return id;
@@ -130,7 +117,6 @@ public class Person {
   }
 
   public void delete() {
-    personsByEmail.remove(getEmail());
     personRole = null;
   }
 
