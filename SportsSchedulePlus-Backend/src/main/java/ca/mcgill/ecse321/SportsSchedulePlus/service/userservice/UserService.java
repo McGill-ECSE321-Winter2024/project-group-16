@@ -102,6 +102,7 @@ public class UserService {
             personRepository.save(person);
             return person;
         }
+
         throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner already exists.");
     }
 
@@ -123,14 +124,14 @@ public class UserService {
             String name = existingPerson.getName();
             String password = existingPerson.getPassword();
 
-            Customer customer = customerRepository.findCustomerById(existingPerson.getId());
+            Optional<Customer> customer = customerRepository.findById(existingPerson.getId());
 
-            PersonRole newPersonRole = new Instructor(customer, experience);
+            PersonRole newPersonRole = new Instructor(customer.get(), experience);
 
             Customer instructor = (Customer) newPersonRole;
             personRoleRepository.save(newPersonRole);
 
-            List<Registration> customerPayments = registrationRepository.findRegistrationsByKeyCustomer(customer);
+            List<Registration> customerPayments = registrationRepository.findRegistrationsByKeyCustomer(customer.get());
             for (Registration oldPayment : customerPayments) {
                 Key updatedKey = new Key(instructor, oldPayment.getKey().getScheduledCourse());
                 Registration newPayment = new Registration(updatedKey);
@@ -141,7 +142,7 @@ public class UserService {
             PersonRole oldPersonRole = existingPerson.getPersonRole();
 
             personRoleRepository.delete(oldPersonRole);
-            customerRepository.delete(customer);
+            customerRepository.delete(customer.get());
             personRepository.delete(existingPerson);
             personRepository.deleteByEmail(email);
             existingPerson.delete();
@@ -385,16 +386,17 @@ public class UserService {
     public Instructor approveCustomer(int customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
         Optional<Instructor> instructor = instructorRepository.findById(customerId);
-        
-        if (instructor.isPresent()) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " is already an instructor.");
-        }
+
         if (!customer.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
         }
-        if (!customer.get().getHasApplied()){
+        if (!customer.get().getHasApplied()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " has not applied to be an instructor.");
         }
+        if (instructor.isPresent()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " is already an instructor.");
+        }
+
         Person person = personRepository.findPersonByPersonRole(customer.get());
         Person newPerson = createInstructor(person.getEmail(), "");
         return (Instructor) newPerson.getPersonRole();
