@@ -27,7 +27,7 @@ public class CourseType {
   //CourseType Attributes
   @Id
   @GeneratedValue
-  private Integer id;
+  private int id;
   @Column(unique = true)
   private String description;
   private boolean approvedByOwner;
@@ -90,6 +90,10 @@ public class CourseType {
 
   public int getId() {
     return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
   }
 
   /* Code from template attribute_IsBoolean */

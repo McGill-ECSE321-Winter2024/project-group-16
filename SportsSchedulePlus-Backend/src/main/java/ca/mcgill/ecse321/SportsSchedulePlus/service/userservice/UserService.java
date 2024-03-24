@@ -40,6 +40,9 @@ public class UserService {
     @Autowired
     private DailyScheduleService dailyScheduleService;
 
+    @Autowired
+    private DailyScheduleRepository dailyScheduleRepository;
+
     /**
      * This method creates a user.
      * @param name
@@ -304,9 +307,10 @@ public class UserService {
         Optional<Person> optionalPerson = personRepository.findById(id);
         if (optionalPerson.isPresent()) {
             Person person = optionalPerson.get();
-            if (person.getPersonRole() instanceof Customer || person.getPersonRole() instanceof Instructor) {
-                return deleteInstructorOrCustomer(person, id);
-            } else {
+            if (person.getPersonRole() instanceof Customer || person.getPersonRole() instanceof Instructor || person.getPersonRole() instanceof Owner)  {
+                return deleteUser(person, id);
+            }
+             else {
                 throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with ID " + id + " does not have a valid role.");
             }
         } else {
@@ -321,7 +325,7 @@ public class UserService {
      * @param id
      * @return the id of the deleted user
      */
-    private int deleteInstructorOrCustomer(Person person, int id) {
+    private int deleteUser(Person person, int id) {
         personRepository.delete(person);
         personRoleRepository.delete(person.getPersonRole());
         if (person.getPersonRole() instanceof Customer) {
@@ -329,12 +333,17 @@ public class UserService {
             if (optionalCustomer.isPresent()) {
                 customerRepository.delete(optionalCustomer.get());
             }
-        } else {
+        }   if (person.getPersonRole() instanceof Instructor){
             Optional<Instructor> optionalInstructor = instructorRepository.findById(id);
             if (optionalInstructor.isPresent()) {
                 instructorRepository.delete(optionalInstructor.get());
             }
         }
+         if (person.getPersonRole() instanceof Owner){
+            ownerRepository.delete(getOwner());
+            dailyScheduleRepository.deleteAll();
+        }
+        person.delete();
         return id;
     }
 

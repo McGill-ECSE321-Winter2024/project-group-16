@@ -1,6 +1,9 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice;
 
-import ca.mcgill.ecse321.utils.Helper;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,15 +14,10 @@ import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusExceptio
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
-
-
-import java.util.List;
-import java.util.Objects;
+import ca.mcgill.ecse321.utils.Helper;
 
 @Service
 public class CourseTypeService {
@@ -27,8 +25,6 @@ public class CourseTypeService {
     @Autowired
     private CourseTypeRepository courseTypeRepository;
 
-    @Autowired
-    private ScheduledCourseRepository scheduledCourseRepository;
 
     @Autowired
     private InstructorRepository instructorRepository;
@@ -48,7 +44,6 @@ public class CourseTypeService {
         // Validate the course before saving
         validateCourseType(description, price, true);
         CourseType courseType = new CourseType();
-
         courseType.setDescription(description);
         courseType.setApprovedByOwner(approvedByOwner);
         courseType.setPrice(price);
@@ -153,15 +148,15 @@ public class CourseTypeService {
      */
     @Transactional
     public void deleteCourseType(Integer id) {
-        CourseType courseType = courseTypeRepository.findById(id).orElse(null);
-        if (courseType == null) {
+        Optional<CourseType> optionalCourseType = courseTypeRepository.findById(id);
+         if (!optionalCourseType.isPresent() ) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There is no course type with ID " + id + ".");
-        }
-        List<ScheduledCourse> courses = scheduledCourseRepository.findScheduledCoursesByCourseType(courseType);
-        for (ScheduledCourse course : courses) {
+        } 
+        //List<ScheduledCourse> courses = scheduledCourseRepository.findScheduledCoursesByCourseType(optionalCourseType.get());
+        /*for (ScheduledCourse course : courses) {
             scheduledCourseRepository.delete(course);
         }
-        courseTypeRepository.deleteById(id);
+        courseTypeRepository.deleteById(id);*/
     }
 
     /**
@@ -173,9 +168,7 @@ public class CourseTypeService {
         if (courseTypes == null || courseTypes.isEmpty()) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There are no course types.");
         }
-        for (CourseType courseType : courseTypes) {
-            deleteCourseType(courseType.getId());
-        }
+        courseTypeRepository.deleteAll();
     }
 
     /**

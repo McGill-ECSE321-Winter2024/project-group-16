@@ -1,6 +1,6 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role;
 
-public abstract class PersonRoleResponseDTO {
+public  class PersonRoleResponseDTO {
 
     private int id;
 

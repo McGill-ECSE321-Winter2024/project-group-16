@@ -34,6 +34,7 @@ public class ScheduledCourseService {
     private ScheduledCourseRepository scheduledCourseRepository;
     @Autowired
     private CourseTypeRepository courseTypeRepository;
+
     @Autowired
     private InstructorRepository instructorRepository;
 
@@ -45,6 +46,7 @@ public class ScheduledCourseService {
 
     @Autowired
     private DailyScheduleService dailyScheduleService;
+
 
     private Mailer mailer;
 
@@ -65,6 +67,7 @@ public class ScheduledCourseService {
         Time parsedEndTime = Time.valueOf(endTime);
 
         // create the scheduled course
+
         ScheduledCourse scheduledCourse = new ScheduledCourse();
         scheduledCourse.setDate(parsedDate);
         scheduledCourse.setStartTime(parsedStartTime);
@@ -147,7 +150,6 @@ public class ScheduledCourseService {
         existingScheduledCourse.setEndTime(parsedEndTime);
         existingScheduledCourse.setLocation(location);
         existingScheduledCourse.setCourseType(courseTypeRepository.findById(courseTypeId).orElse(null));
-
         validateScheduledCourse(existingScheduledCourse);
 
         scheduledCourseRepository.save(existingScheduledCourse);
@@ -348,10 +350,10 @@ public class ScheduledCourseService {
     public void deleteAllScheduledCourses() {
         List<ScheduledCourse> courses = Helper.toList(scheduledCourseRepository.findAll());
 
-        if (courses == null || courses.isEmpty()) {
-            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There are no course types.");
+        if (courses != null && courses.isEmpty()) {
+            scheduledCourseRepository.deleteAll();
         }
-        scheduledCourseRepository.deleteAll();
+       // scheduledCourseRepository.deleteAll();
 
     }
 
