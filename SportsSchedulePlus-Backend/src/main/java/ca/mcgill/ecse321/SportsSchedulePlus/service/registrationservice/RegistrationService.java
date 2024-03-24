@@ -52,6 +52,21 @@ public class RegistrationService {
         return Helper.toList(registrationRepository.findAll());
     }
 
+     /**
+     * Deletes a registration by its confirmation number
+     * @param confirmationNumber The confirmation number of the registration to be deleted
+     * @return true if the registration is successfully deleted, false otherwise
+     */
+    @Transactional
+    public boolean delete(int confirmationNumber) {
+        Registration registration = registrationRepository.findRegistrationByConfirmationNumber(confirmationNumber);
+        if (registration == null) {
+            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no registration with confirmation number " + confirmationNumber + ".");
+        }
+        registrationRepository.delete(registration);
+        return true;
+    }
+
     /**
      * Returns a registration given its confirmation number
      * @return registration with the given confirmation number
@@ -140,13 +155,14 @@ public class RegistrationService {
     @Transactional
     public Registration createRegistration(int customerId, int courseId) {
         Customer customer = customerRepository.findCustomerById(customerId);
-        if (customer == null) {
-            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no customer with ID " + customerId + ".");
-        }
         ScheduledCourse scheduledCourse = scheduledCourseRepository.findById(courseId).orElse(null);
         if (scheduledCourse == null) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no scheduled course with ID " + courseId + ".");
         }
+        if (customer == null) {
+            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no customer with ID " + customerId + ".");
+        }
+      
         Key key = new Key(customer, scheduledCourse);
         Registration previousPayment = registrationRepository.findRegistrationByKey(key);
         if (previousPayment != null) {
@@ -157,9 +173,9 @@ public class RegistrationService {
         registration.setConfirmationNumber(confirmationNumber);
         registration.setKey(key);
         registrationRepository.save(registration);
-      
         // Send a registration confirmation email to the user
         sendPaymentConfirmationEmail(registration);
+       
         return registration;
     }
     

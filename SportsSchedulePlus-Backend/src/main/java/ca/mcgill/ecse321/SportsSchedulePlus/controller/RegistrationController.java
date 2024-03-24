@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,7 +58,7 @@ public class RegistrationController {
      * @param customerId
      * @return RegistrationListResponseDTO
      */
-    @GetMapping(value = {"/customers/{customerID}/payments", "/customers/{customerID}/registrations/"})
+    @GetMapping(value = {"/customers/{customerID}/registrations", "/customers/{customerID}/registrations/"})
     public RegistrationListResponseDTO getRegistrationsByCustomer(@PathVariable("customerID") int customerId) {
         List<RegistrationResponseDTO> registrationResponseDTOS = new ArrayList<>();
         for (Registration registration : registrationService.getRegistrationsByCustomer(customerId)) {
@@ -91,5 +94,21 @@ public class RegistrationController {
         RegistrationResponseDTO registrationDTO = new RegistrationResponseDTO(newRegistration);
         return registrationDTO;
     }
+
+     /**
+     * Deletes a registration by its confirmation number
+     * @param confirmationNumber
+     * @return ResponseEntity<String> indicating the result of the deletion operation
+     */
+    @DeleteMapping(value = {"/registrations/{confirmationNumber}", "/registrations/{confirmationNumber}/"})
+    public ResponseEntity<String> deleteRegistrationByConfirmationNumber(@PathVariable("confirmationNumber") int confirmationNumber) {
+        boolean deleted = registrationService.delete(confirmationNumber);
+        if (deleted) {
+            return ResponseEntity.ok("Registration with confirmation number " + confirmationNumber + " deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to delete registration with confirmation number " + confirmationNumber + ".");
+        }
+    }
+
 
 }
