@@ -1066,7 +1066,7 @@ public class UserServiceTests {
             fail();
         } catch (Exception e) {
             assertNull(courseTypeCreated);
-            assertEquals("Some sort of error message", e.getMessage());
+            assertEquals("Person role cannot be null.", e.getMessage());
             
         }
        
@@ -1093,7 +1093,7 @@ public class UserServiceTests {
         } catch (Exception e) {
             assertNull(courseType);
             assertNull(courseTypeCreated);
-            assertEquals("Cannot suggest a null course", e.getMessage());
+            assertEquals("Course type cannot be null.", e.getMessage());
         }
         
         verify(instructorRepository, times(0)).save(any(Instructor.class));
@@ -1139,7 +1139,7 @@ public class UserServiceTests {
         } catch (Exception e) {
             assertNull(person);
             assertNull(foundPerson);
-            assertEquals("User with email " + aEmail + "does not exist.", e.getMessage());
+            assertEquals("No person with email " + aEmail + " found.", e.getMessage());
         }
 
         verify(personRoleRepository, times(0)).save(any(Owner.class));

@@ -18,6 +18,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseR
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
@@ -174,6 +175,27 @@ public class Helper {
     return scheduledCourseResponse.getBody().getId();
   }
 
+  /**
+   * Helper method to validate a course type
+   * @param courseType
+   */
+  public static void validateCourseType(CourseType courseType) {
+    if (courseType == null) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Course type cannot be null.");
+    }
+    if (courseType.getDescription().isBlank()) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Description cannot be blank.");
+    }
 
+    if (courseType.getPrice() < 0) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Price cannot be negative.");
+    }
+  }
+
+  public static void validatePersonRole(PersonRole personRole) {
+    if (personRole == null) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person role cannot be null.");
+    }
+  }
   
 }
