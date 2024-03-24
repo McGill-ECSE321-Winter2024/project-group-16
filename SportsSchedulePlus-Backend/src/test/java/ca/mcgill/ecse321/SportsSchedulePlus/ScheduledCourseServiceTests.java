@@ -166,9 +166,9 @@ public class ScheduledCourseServiceTests {
     when(courseTypeRepository.findById(5)).thenReturn(Optional.of(tCourseType));
 
     Exception exception = assertThrows(SportsScheduleException.class, () -> {
-      ScheduledCourse sc = null;
 
-      sc = scheduledCourseService.createScheduledCourse("2024-04-15", "09:00:00", "08:00:00", LOCATION, 5);
+
+      ScheduledCourse scheduledCourse = scheduledCourseService.createScheduledCourse("2024-04-15", "09:00:00", "08:00:00", LOCATION, 5);
 
     });
 
@@ -224,7 +224,6 @@ public class ScheduledCourseServiceTests {
     // Additional setup for testScheduledCourse as needed
 
     // Correctly mock the findById method to return an Optional of testScheduledCourse
-    // when(scheduledCourseRepository.findById(SCHEDULED_COURSE_ID)).thenReturn(Optional.of(testScheduledCourse));
 
     // Execution: Attempt to retrieve the ScheduledCourse by ID
     ScheduledCourse found = scheduledCourseService.getScheduledCourse(SCHEDULED_COURSE_ID);
