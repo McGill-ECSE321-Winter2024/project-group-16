@@ -5,6 +5,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration.Key;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice.DailyScheduleService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
+import ca.mcgill.ecse321.utils.EmailValidator;
 import ca.mcgill.ecse321.utils.Helper;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.*;
 
@@ -467,6 +468,12 @@ public class UserService {
      */
     @Transactional
     public Person findPersonByEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Email cannot be null or blank.");
+        }
+        if (!EmailValidator.validate(email)) {
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Email is not valid.");
+        }
         Person person = personRepository.findPersonByEmail(email);
         if (person == null) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "No person with email " + email + " found.");

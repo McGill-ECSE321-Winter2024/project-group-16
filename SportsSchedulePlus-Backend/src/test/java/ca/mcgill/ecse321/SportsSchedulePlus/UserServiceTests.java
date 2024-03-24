@@ -1156,11 +1156,11 @@ public class UserServiceTests {
             fail();
         } catch (Exception e) {
             assertNull(foundPerson);
-            assertEquals("Email " + email + "does not exist for any user.", e.getMessage());
+            assertEquals("Email cannot be null or blank.", e.getMessage());
         }
 
         verify(personRoleRepository, times(0)).save(any(Owner.class));
-        verify(personRepository, times(1)).save(any(Person.class));
+        verify(personRepository, times(0)).save(any(Person.class));
     }
     
     @Test
