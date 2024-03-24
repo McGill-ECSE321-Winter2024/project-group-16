@@ -166,9 +166,7 @@ public class ScheduledCourseServiceTests {
     when(courseTypeRepository.findById(5)).thenReturn(Optional.of(tCourseType));
 
     Exception exception = assertThrows(SportsScheduleException.class, () -> {
-
-
-      ScheduledCourse scheduledCourse = scheduledCourseService.createScheduledCourse("2024-04-15", "09:00:00", "08:00:00", LOCATION, 5);
+      scheduledCourseService.createScheduledCourse("2024-04-15", "09:00:00", "08:00:00", LOCATION, 5);
 
     });
 

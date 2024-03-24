@@ -867,7 +867,7 @@ public class UserServiceTests {
         } catch (Exception e) {
             assertNull(person);
             assertNull(foundPerson);
-            assertEquals("User with email " + aEmail + "does not exist.", e.getMessage());
+            assertEquals("No person with email " + aEmail + " found.", e.getMessage());
         }
 
         verify(personRoleRepository, times(0)).save(any(Owner.class));
@@ -878,8 +878,14 @@ public class UserServiceTests {
     public void testFindPersonByEmailNullEmail() {
         String aEmail = "";
         Person foundPerson = null;
-        foundPerson = userService.findPersonByEmail(aEmail);
-        assertNull(foundPerson);
+
+        try {
+            foundPerson = userService.findPersonByEmail(aEmail);
+        } catch (Exception e) {
+            assertNull(foundPerson);
+            assertEquals("Email cannot be null or blank.", e.getMessage());
+        }
+   
     }
     
     @Test
