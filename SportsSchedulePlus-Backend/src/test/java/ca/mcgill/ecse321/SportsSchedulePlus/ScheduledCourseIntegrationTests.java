@@ -17,7 +17,10 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
 import ca.mcgill.ecse321.utils.Helper;
@@ -37,6 +40,16 @@ public class ScheduledCourseIntegrationTests {
     private OwnerRepository ownerRepository;
 
     @Autowired
+    private PersonRepository personRepository;
+
+    @Autowired
+    private PersonRoleRepository personRoleRepository;
+
+     @Autowired
+     private DailyScheduleRepository dailyScheduleRepository;
+
+
+    @Autowired
     private UserService userService;
 
 
@@ -46,16 +59,13 @@ public class ScheduledCourseIntegrationTests {
     @AfterEach
     @BeforeEach
     public void clearDatabase() {
-        try {
-            userService.deleteUser(userService.getOwner().getId());
-        } 
-        catch (Exception e) {
-          //
-        }
+       
         scheduledCourseRepository.deleteAll();
         courseTypeRepository.deleteAll();
-        ownerRepository.deleteAll();
-       
+        personRepository.deleteAll();
+        personRoleRepository.deleteAll();
+        ownerRepository.deleteAll(); 
+        dailyScheduleRepository.deleteAll();
     }
 
 
@@ -64,7 +74,7 @@ public class ScheduledCourseIntegrationTests {
         if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
             userService.createOwner();
         }
-        int courseId = createScheduledCourse("Some location", "2024-04-15", "09:00:00", "10:00:00");
+        int courseId =  Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
 
         ResponseEntity < ScheduledCourseRequestDTO > getResponse = restTemplate
             .getForEntity("/scheduledCourses/course/" + courseId, ScheduledCourseRequestDTO.class);
@@ -80,9 +90,9 @@ public class ScheduledCourseIntegrationTests {
         }
 
         ResponseEntity < CourseTypeRequestDTO > courseTypeResponse = restTemplate.postForEntity("/courseTypes",
-            createCourseTypeRequest("Description", false, 12f), CourseTypeRequestDTO.class);
+            Helper.createCourseTypeRequest("Description", false, 12f), CourseTypeRequestDTO.class);
 
-        int courseId = createScheduledCourse("Downtown Gym", "2024-04-15", "09:00:00", "11:00:00");
+        int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Downtown Gym", "2024-04-15", "09:00:00", "11:00:00");
 
 
         ScheduledCourse scheduledCourse = scheduledCourseRepository.findById(courseId).orElse(null);
@@ -111,7 +121,7 @@ public class ScheduledCourseIntegrationTests {
 
     @Test
     public void testDeleteScheduledCourse() {
-        int scheduledCourseId = createScheduledCourse("Downtown Gym", "2024-04-15", "09:00:00", "11:00:00");
+        int scheduledCourseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Downtown Gym", "2024-04-15", "09:00:00", "11:00:00");
 
         restTemplate.delete("/scheduledCourses/" + scheduledCourseId);
 
@@ -120,28 +130,4 @@ public class ScheduledCourseIntegrationTests {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
-    private int createScheduledCourse(String location, String date, String startTime, String endTime) {
-        ResponseEntity < CourseTypeRequestDTO > courseTypeResponse = restTemplate.postForEntity("/courseTypes",
-            createCourseTypeRequest("Yoga", true, 20.0f), CourseTypeRequestDTO.class);
-
-        ScheduledCourseRequestDTO scheduledCourseRequest = new ScheduledCourseRequestDTO();
-        scheduledCourseRequest.setLocation(location);
-        scheduledCourseRequest.setDate(date);
-        scheduledCourseRequest.setStartTime(startTime);
-        scheduledCourseRequest.setEndTime(endTime);
-        scheduledCourseRequest.setCourseType(courseTypeResponse.getBody());
-
-        ResponseEntity < ScheduledCourseRequestDTO > scheduledCourseResponse = restTemplate.postForEntity(
-            "/scheduledCourses", scheduledCourseRequest, ScheduledCourseRequestDTO.class);
-
-        return scheduledCourseResponse.getBody().getId();
-    }
-
-    private CourseTypeRequestDTO createCourseTypeRequest(String description, boolean approvedByOwner, float price) {
-        CourseTypeRequestDTO courseTypeRequest = new CourseTypeRequestDTO();
-        courseTypeRequest.setDescription(description);
-        courseTypeRequest.setApprovedByOwner(approvedByOwner);
-        courseTypeRequest.setPrice(price);
-        return courseTypeRequest;
-    }
 }

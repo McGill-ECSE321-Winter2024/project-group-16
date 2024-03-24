@@ -20,9 +20,11 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseR
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.customer.CustomerRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
@@ -62,32 +64,23 @@ public class RegistrationIntegrationTests {
   @Autowired
   private RegistrationRepository registrationRepository;
 
+  @Autowired
+  private DailyScheduleRepository dailyScheduleRepository;
+
   @BeforeEach
   @AfterEach
   public void clearDatabase() {
-    try {
-        userService.deleteUser(userService.getOwner().getId());
-    } 
-    catch (Exception e) {
-      //
-    }
-
     registrationRepository.deleteAll();
     scheduledCourseRepository.deleteAll();
     courseTypeRepository.deleteAll();
+   
     personRepository.deleteAll();
     ownerRepository.deleteAll();
+
     personRoleRepository.deleteAll();
     customerRepository.deleteAll();
-   
-  }
+    dailyScheduleRepository.deleteAll();
 
-  private CourseTypeRequestDTO createCourseTypeRequest(String description, boolean approvedByOwner, float price) {
-    CourseTypeRequestDTO courseTypeRequest = new CourseTypeRequestDTO();
-    courseTypeRequest.setDescription(description);
-    courseTypeRequest.setApprovedByOwner(approvedByOwner);
-    courseTypeRequest.setPrice(price);
-    return courseTypeRequest;
   }
 
   private PersonDTO postCustomer(String name, String email, String password) {
@@ -105,22 +98,7 @@ public class RegistrationIntegrationTests {
     return createdCustomer;
   }
 
-  private int createScheduledCourse(String location, String date, String startTime, String endTime) {
-    ResponseEntity < CourseTypeRequestDTO > courseTypeResponse = restTemplate.postForEntity("/courseTypes",
-      createCourseTypeRequest("Yoga", true, 20.0f), CourseTypeRequestDTO.class);
-
-    ScheduledCourseRequestDTO scheduledCourseRequest = new ScheduledCourseRequestDTO();
-    scheduledCourseRequest.setLocation(location);
-    scheduledCourseRequest.setDate(date);
-    scheduledCourseRequest.setStartTime(startTime);
-    scheduledCourseRequest.setEndTime(endTime);
-    scheduledCourseRequest.setCourseType(courseTypeResponse.getBody());
-
-    ResponseEntity < ScheduledCourseRequestDTO > scheduledCourseResponse = restTemplate.postForEntity(
-      "/scheduledCourses", scheduledCourseRequest, ScheduledCourseRequestDTO.class);
-
-    return scheduledCourseResponse.getBody().getId();
-  }
+  
   @Test
   public void testCreateAndGetRegistration() {
 
@@ -128,7 +106,7 @@ public class RegistrationIntegrationTests {
       userService.createOwner();
     }
     int customerId = postCustomer("Test", "xhzwwww@gmail.com", "123abvwwQ!!").getId();
-    int courseId = createScheduledCourse("Some location", "2024-04-15", "09:00:00", "10:00:00");
+    int courseId = Helper.createScheduledCourse( restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
     // Create Registration
     ResponseEntity < RegistrationResponseDTO > createResponse = restTemplate.postForEntity(
       "/registrations/" + customerId + "/" + courseId, null, RegistrationResponseDTO.class);
@@ -154,7 +132,7 @@ public class RegistrationIntegrationTests {
       userService.createOwner();
     }
     int customerId = postCustomer("Test", "xhzwwwabcdw@gmail.com", "123abvwwQ!!").getId();
-    int courseId = createScheduledCourse("Some location", "2024-04-15", "09:00:00", "10:00:00");
+    int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
     // Create Registration
     restTemplate.postForEntity(
       "/registrations/" + customerId + "/" + courseId, null, RegistrationResponseDTO.class);
@@ -177,7 +155,7 @@ public class RegistrationIntegrationTests {
     }
     int customerId = postCustomer("Test", "xhzw222wwabcdw@gmail.com", "123abvwwQ!!").getId();
     int newCustomerId = postCustomer("Test", "abcdwe2wwabcdw@gmail.com", "123abvwwQ!!").getId();
-    int courseId = createScheduledCourse("Some location", "2024-04-15", "09:00:00", "10:00:00");
+    int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
 
     // Create Registration
     restTemplate.postForEntity("/registrations/" + customerId + "/" + courseId, null, RegistrationResponseDTO.class);
@@ -203,7 +181,7 @@ public class RegistrationIntegrationTests {
       userService.createOwner();
     }
     customerId = postCustomer("Test", "abcdedw@gmail.com", "123abvwwQ!!").getId();
-    courseId = createScheduledCourse("Some location", "2024-04-15", "09:00:00", "10:00:00");
+    courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
 
     // Create Registration
     ResponseEntity < RegistrationResponseDTO > createResponse = restTemplate.postForEntity(
