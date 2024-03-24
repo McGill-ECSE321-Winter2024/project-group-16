@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +34,9 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private OwnerRepository ownerRepository;
+
+    @Autowired
+    private CourseTypeRepository courseTypeRepository;
 
     @Autowired
     private RegistrationRepository registrationRepository;
@@ -451,7 +455,7 @@ public class UserService {
      */
     @Transactional
     public CourseType suggestCourseType(PersonRole personRole, CourseType courseType) {
-        Helper.validateCourseType(courseType);
+        Helper.validateCourseType(courseTypeRepository,courseType.getDescription(), courseType.getPrice(), true);
         Helper.validatePersonRole(personRole);
         CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getDescription(), courseType.getApprovedByOwner(), courseType.getPrice());
         if(personRole instanceof Instructor){
