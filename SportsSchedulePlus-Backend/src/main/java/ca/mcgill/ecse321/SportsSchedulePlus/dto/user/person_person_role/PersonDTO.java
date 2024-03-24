@@ -37,11 +37,11 @@ public class PersonDTO {
         this.password = password;
     }
     public PersonDTO(String name, String email, String password, PersonRoleResponseDTO personRoleDto){
-        this.id = personRoleDto.getId();
         this.name = name;
         this.email = email;
         this.password = password;
         this.personRoleDto = personRoleDto;
+        this.id = personRoleDto.getId();
     }
 
     public PersonDTO (Person person) {

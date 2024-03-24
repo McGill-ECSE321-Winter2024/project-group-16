@@ -1,6 +1,9 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice;
 
-import ca.mcgill.ecse321.utils.Helper;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,16 +14,10 @@ import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusExceptio
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
-
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import ca.mcgill.ecse321.utils.Helper;
 
 @Service
 public class CourseTypeService {
@@ -152,7 +149,6 @@ public class CourseTypeService {
     @Transactional
     public void deleteCourseType(Integer id) {
         Optional<CourseType> optionalCourseType = courseTypeRepository.findById(id);
-        System.out.println("There is a course type with ID " + id + ".");
          if (!optionalCourseType.isPresent() ) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There is no course type with ID " + id + ".");
         } 

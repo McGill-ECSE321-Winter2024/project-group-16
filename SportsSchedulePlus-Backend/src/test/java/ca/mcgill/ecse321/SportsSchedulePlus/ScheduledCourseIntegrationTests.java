@@ -46,11 +46,16 @@ public class ScheduledCourseIntegrationTests {
     @AfterEach
     @BeforeEach
     public void clearDatabase() {
+        try {
+            userService.deleteUser(userService.getOwner().getId());
+        } 
+        catch (Exception e) {
+          //
+        }
         scheduledCourseRepository.deleteAll();
         courseTypeRepository.deleteAll();
-        if (!Helper.toList(ownerRepository.findAll()).isEmpty()) {
-            userService.deleteUser(userService.getOwner().getId());
-        }
+        ownerRepository.deleteAll();
+       
     }
 
 
