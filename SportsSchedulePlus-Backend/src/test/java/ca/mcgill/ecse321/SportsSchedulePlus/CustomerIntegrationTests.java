@@ -5,15 +5,11 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.customer.CustomerRequestDTO
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonListResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
-import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
 import ca.mcgill.ecse321.utils.Helper;
 
@@ -21,11 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -59,6 +52,9 @@ public class CustomerIntegrationTests {
   @Autowired
   private UserService userService;
 
+  @Autowired
+  private TestRestTemplate restTemplate;
+
   @AfterEach
   public void clearDatabase() {
     personRepository.deleteAll();
@@ -67,17 +63,13 @@ public class CustomerIntegrationTests {
     instructorRepository.deleteAll();
   }
 
-   @BeforeEach
-    public void setup(){
-        if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-            userService.createOwner();
-        }
-    }
+  @BeforeEach
+  public void setup(){
+    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
+        userService.createOwner();
+    } 
+  }
 
-
-
-    @Autowired
-    private TestRestTemplate restTemplate;
 
   private PersonDTO postCustomer(String name, String email, String password) {
     CustomerRequestDTO role = new CustomerRequestDTO();
@@ -93,7 +85,6 @@ public class CustomerIntegrationTests {
   public void testGetAllCustomers() {
       postCustomer("Test customer", "testemail@gmail.com", "tstpwdQWE123!!");
       ResponseEntity<PersonListResponseDTO> responseEntity = restTemplate.getForEntity("/customers", PersonListResponseDTO.class);
-
       assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
       assertNotNull(responseEntity.getBody());
   }
@@ -108,10 +99,8 @@ public class CustomerIntegrationTests {
 
   @Test
   public void testDeleteCustomer() {
-    
       PersonDTO customer = postCustomer("Test customer", "testemail@gmail.com", "tstpwdQWE123!!");
       restTemplate.delete("/customers/" + customer.getId());
-
       // Verify deletion by attempting to retrieve the customer
       ResponseEntity<PersonDTO> responseEntity = restTemplate.getForEntity("/customers/" + customer.getId(), PersonDTO.class);
       assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());

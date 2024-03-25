@@ -37,7 +37,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
 public class ScheduledCourseServiceTests {
 
   @Mock
-  private ScheduledCourseRepository scheduledCourseRepository;
+  private ScheduledCourseRepository scheduledCourseheduledCourseRepository;
 
   @Mock
   private CourseTypeRepository courseTypeRepository;
@@ -46,7 +46,7 @@ public class ScheduledCourseServiceTests {
   private DailyScheduleService dailyScheduleService; // Mock the DailyScheduleService
 
   @InjectMocks
-  private ScheduledCourseService scheduledCourseService;
+  private ScheduledCourseService scheduledCourseheduledCourseService;
 
   @Mock
   private RegistrationRepository registrationRepository;
@@ -70,7 +70,7 @@ public class ScheduledCourseServiceTests {
 
   @AfterEach
   public void tearDown() {
-    Mockito.reset(scheduledCourseRepository);
+    Mockito.reset(scheduledCourseheduledCourseRepository);
   }
 
   @BeforeEach
@@ -94,31 +94,30 @@ public class ScheduledCourseServiceTests {
     lenient().when(courseTypeRepository.save(any(CourseType.class))).thenAnswer(returnParameterAsAnswer);
 
     // Mock the behavior for courseTypeRepository.findById
-    // lenient().when(courseTypeRepository.findById(anyInt())).thenReturn(Optional.of(original));
-
-    // Mock the behavior for scheduledCourseRepository.save
+  
+    // Mock the behavior for scheduledCourseheduledCourseRepository.save
     // This ensures that any ScheduledCourse saved is returned as is, simulating persistence
-    lenient().when(scheduledCourseRepository.save(any(ScheduledCourse.class)))
+    lenient().when(scheduledCourseheduledCourseRepository.save(any(ScheduledCourse.class)))
       .thenAnswer(invocation -> {
-        ScheduledCourse sc = invocation.getArgument(0);
-        if (sc.getId() <= 0) sc.setId(SCHEDULED_COURSE_ID); // Simulate ID assignment on save
-        return sc;
+        ScheduledCourse scheduledCourse = invocation.getArgument(0);
+        if (scheduledCourse.getId() <= 0) scheduledCourse.setId(SCHEDULED_COURSE_ID); // Simulate ID assignment on save
+        return scheduledCourse;
       });
 
-    // Mock the behavior for scheduledCourseRepository.findById
+    // Mock the behavior for scheduledCourseheduledCourseRepository.findById
     // You may need to adjust this to return a specific ScheduledCourse for certain ID values
-    lenient().when(scheduledCourseRepository.findById(anyInt()))
+    lenient().when(scheduledCourseheduledCourseRepository.findById(anyInt()))
       .thenAnswer(invocation -> {
         Integer id = invocation.getArgument(0);
         if (id.equals(SCHEDULED_COURSE_ID)) {
-          ScheduledCourse sc = new ScheduledCourse();
-          sc.setId(SCHEDULED_COURSE_ID);
-          sc.setDate(DATE);
-          sc.setStartTime(START_TIME);
-          sc.setEndTime(END_TIME);
-          sc.setLocation(LOCATION);
-          sc.setCourseType(COURSE_TYPE);
-          return Optional.of(sc);
+          ScheduledCourse scheduledCourse = new ScheduledCourse();
+          scheduledCourse.setId(SCHEDULED_COURSE_ID);
+          scheduledCourse.setDate(DATE);
+          scheduledCourse.setStartTime(START_TIME);
+          scheduledCourse.setEndTime(END_TIME);
+          scheduledCourse.setLocation(LOCATION);
+          scheduledCourse.setCourseType(COURSE_TYPE);
+          return Optional.of(scheduledCourse);
         }
         return Optional.empty();
       });
@@ -140,22 +139,22 @@ public class ScheduledCourseServiceTests {
     CourseType tCourseType = new CourseType();
     tCourseType.setId(5);
     when(courseTypeRepository.findById(5)).thenReturn(Optional.of(tCourseType));
-    ScheduledCourse sc = null;
+    ScheduledCourse scheduledCourse = null;
     try {
-      sc = scheduledCourseService.createScheduledCourse("2024-04-15", "09:00:00", "11:00:00", LOCATION, 5);
+      scheduledCourse = scheduledCourseheduledCourseService.createScheduledCourse("2024-04-15", "09:00:00", "11:00:00", LOCATION, 5);
     } catch (SportsScheduleException e) {
       fail(e.getMessage());
     }
     verify(courseTypeRepository).findById(5);
 
-    assertNotNull(sc);
-    assertEquals(DATE, sc.getDate());
-    assertEquals(START_TIME, sc.getStartTime());
-    assertEquals(END_TIME, sc.getEndTime());
-    assertEquals(LOCATION, sc.getLocation());
-    assertEquals(COURSE_TYPE, sc.getCourseType());
-    assertNotNull(sc.getCourseType(), "CourseType should not be null.");
-    assertEquals(5, sc.getCourseType().getId(), "CourseType ID does not match the expected value.");
+    assertNotNull(scheduledCourse);
+    assertEquals(DATE, scheduledCourse.getDate());
+    assertEquals(START_TIME, scheduledCourse.getStartTime());
+    assertEquals(END_TIME, scheduledCourse.getEndTime());
+    assertEquals(LOCATION, scheduledCourse.getLocation());
+    assertEquals(COURSE_TYPE, scheduledCourse.getCourseType());
+    assertNotNull(scheduledCourse.getCourseType(), "CourseType should not be null.");
+    assertEquals(5, scheduledCourse.getCourseType().getId(), "CourseType ID does not match the expected value.");
   }
 
   @Test
@@ -166,7 +165,7 @@ public class ScheduledCourseServiceTests {
     when(courseTypeRepository.findById(5)).thenReturn(Optional.of(tCourseType));
 
     Exception exception = assertThrows(SportsScheduleException.class, () -> {
-      scheduledCourseService.createScheduledCourse("2024-04-15", "09:00:00", "08:00:00", LOCATION, 5);
+      scheduledCourseheduledCourseService.createScheduledCourse("2024-04-15", "09:00:00", "08:00:00", LOCATION, 5);
 
     });
 
@@ -193,13 +192,13 @@ public class ScheduledCourseServiceTests {
     original.setCourseType(COURSE_TYPE);
 
     // Mock the repository call to return an Optional of the original ScheduledCourse
-    when(scheduledCourseRepository.findById(SCHEDULED_COURSE_ID)).thenReturn(Optional.of(original));
+    when(scheduledCourseheduledCourseRepository.findById(SCHEDULED_COURSE_ID)).thenReturn(Optional.of(original));
 
-    // Call the method under test with new values for the scheduled course
-    ScheduledCourse updated = scheduledCourseService.updateScheduledCourse(SCHEDULED_COURSE_ID, "2024-05-15", "10:00:00", "12:00:00", "Uptown Gym", COURSE_TYPE_ID);
+    // Call the method under test with new values for the scheduledCourseheduled course
+    ScheduledCourse updated = scheduledCourseheduledCourseService.updateScheduledCourse(SCHEDULED_COURSE_ID, "2024-05-15", "10:00:00", "12:00:00", "Uptown Gym", COURSE_TYPE_ID);
 
     // Assertions to verify the updated ScheduledCourse properties
-    assertNotNull(updated, "The updated scheduled course should not be null.");
+    assertNotNull(updated, "The updated scheduledCourseheduled course should not be null.");
     assertEquals(Date.valueOf("2024-05-15"), updated.getDate(), "The date did not update correctly.");
     assertEquals(Time.valueOf("10:00:00"), updated.getStartTime(), "The start time did not update correctly.");
     assertEquals(Time.valueOf("12:00:00"), updated.getEndTime(), "The end time did not update correctly.");
@@ -209,9 +208,9 @@ public class ScheduledCourseServiceTests {
 
   @Test
   public void testDeleteScheduledCourse() {
-    doNothing().when(scheduledCourseRepository).deleteById(anyInt());
-    assertDoesNotThrow(() -> scheduledCourseService.deleteScheduledCourse(SCHEDULED_COURSE_ID));
-    verify(scheduledCourseRepository, times(1)).deleteById(eq(SCHEDULED_COURSE_ID));
+    doNothing().when(scheduledCourseheduledCourseRepository).deleteById(anyInt());
+    assertDoesNotThrow(() -> scheduledCourseheduledCourseService.deleteScheduledCourse(SCHEDULED_COURSE_ID));
+    verify(scheduledCourseheduledCourseRepository, times(1)).deleteById(eq(SCHEDULED_COURSE_ID));
   }
 
   @Test
@@ -224,7 +223,7 @@ public class ScheduledCourseServiceTests {
     // Correctly mock the findById method to return an Optional of testScheduledCourse
 
     // Execution: Attempt to retrieve the ScheduledCourse by ID
-    ScheduledCourse found = scheduledCourseService.getScheduledCourse(SCHEDULED_COURSE_ID);
+    ScheduledCourse found = scheduledCourseheduledCourseService.getScheduledCourse(SCHEDULED_COURSE_ID);
 
     // Assertions: Check that the retrieved ScheduledCourse is not null and has the expected ID
     assertNotNull(found, "The retrieved ScheduledCourse should not be null.");
@@ -233,10 +232,10 @@ public class ScheduledCourseServiceTests {
 
   @Test
   public void testGetScheduledCourseNotFound() {
-    when(scheduledCourseRepository.findById(anyInt())).thenReturn(Optional.empty());
+    when(scheduledCourseheduledCourseRepository.findById(anyInt())).thenReturn(Optional.empty());
 
     Exception exception = assertThrows(SportsScheduleException.class, () -> {
-      scheduledCourseService.getScheduledCourse(999); // Assuming 999 does not exist
+      scheduledCourseheduledCourseService.getScheduledCourse(999); // Assuming 999 does not exist
     });
 
     assertEquals("There is no scheduled course with ID 999.", exception.getMessage());
@@ -244,25 +243,25 @@ public class ScheduledCourseServiceTests {
 
   @Test
   public void testGetAllScheduledCourses() {
-    List < ScheduledCourse > scheduledCourses = new ArrayList < > ();
-    scheduledCourses.add(new ScheduledCourse());
-    when(scheduledCourseRepository.findAll()).thenReturn(scheduledCourses);
+    List < ScheduledCourse > scheduledCourseheduledCourses = new ArrayList < > ();
+    scheduledCourseheduledCourses.add(new ScheduledCourse());
+    when(scheduledCourseheduledCourseRepository.findAll()).thenReturn(scheduledCourseheduledCourses);
 
-    List < ScheduledCourse > found = scheduledCourseService.getAllScheduledCourses();
+    List < ScheduledCourse > found = scheduledCourseheduledCourseService.getAllScheduledCourses();
 
     assertFalse(found.isEmpty());
-    assertEquals(scheduledCourses.size(), found.size());
+    assertEquals(scheduledCourseheduledCourses.size(), found.size());
   }
 
   @Test
   public void testGetScheduledCoursesByLocation() {
-    List < ScheduledCourse > scheduledCourses = new ArrayList < > ();
-    ScheduledCourse sc = new ScheduledCourse();
-    sc.setLocation(LOCATION);
-    scheduledCourses.add(sc);
-    when(scheduledCourseRepository.findScheduledCourseByLocation(LOCATION)).thenReturn(scheduledCourses);
+    List < ScheduledCourse > scheduledCourseheduledCourses = new ArrayList < > ();
+    ScheduledCourse scheduledCourse = new ScheduledCourse();
+    scheduledCourse.setLocation(LOCATION);
+    scheduledCourseheduledCourses.add(scheduledCourse);
+    when(scheduledCourseheduledCourseRepository.findScheduledCourseByLocation(LOCATION)).thenReturn(scheduledCourseheduledCourses);
 
-    List < ScheduledCourse > found = scheduledCourseService.getScheduledCoursesByLocation(LOCATION);
+    List < ScheduledCourse > found = scheduledCourseheduledCourseService.getScheduledCoursesByLocation(LOCATION);
 
     assertFalse(found.isEmpty());
     assertEquals(LOCATION, found.get(0).getLocation());
@@ -270,13 +269,13 @@ public class ScheduledCourseServiceTests {
 
   @Test
   public void testGetScheduledCoursesByDate() {
-    List < ScheduledCourse > scheduledCourses = new ArrayList < > ();
-    ScheduledCourse sc = new ScheduledCourse();
-    sc.setDate(DATE);
-    scheduledCourses.add(sc);
-    when(scheduledCourseRepository.findScheduledCoursesByDate(DATE)).thenReturn(scheduledCourses);
+    List < ScheduledCourse > scheduledCourseheduledCourses = new ArrayList < > ();
+    ScheduledCourse scheduledCourse = new ScheduledCourse();
+    scheduledCourse.setDate(DATE);
+    scheduledCourseheduledCourses.add(scheduledCourse);
+    when(scheduledCourseheduledCourseRepository.findScheduledCoursesByDate(DATE)).thenReturn(scheduledCourseheduledCourses);
 
-    List < ScheduledCourse > found = scheduledCourseService.getScheduledCoursesByDate(DATE);
+    List < ScheduledCourse > found = scheduledCourseheduledCourseService.getScheduledCoursesByDate(DATE);
 
     assertFalse(found.isEmpty());
     assertEquals(DATE, found.get(0).getDate());
@@ -284,25 +283,25 @@ public class ScheduledCourseServiceTests {
 
   @Test
   public void testDeleteAllScheduledCourses() {
-    // Mock the behavior for scheduledCourseRepository.deleteAll
-    doNothing().when(scheduledCourseRepository).deleteAll();
+    // Mock the behavior for scheduledCourseheduledCourseRepository.deleteAll
+    doNothing().when(scheduledCourseheduledCourseRepository).deleteAll();
 
     // Call the method under test
-    scheduledCourseService.deleteAllScheduledCourses();
+    scheduledCourseheduledCourseService.deleteAllScheduledCourses();
 
-    // Verify that scheduledCourseRepository.deleteAll was called exactly once
-    verify(scheduledCourseRepository, times(1)).deleteAll();
+    // Verify that scheduledCourseheduledCourseRepository.deleteAll was called exactly once
+    verify(scheduledCourseheduledCourseRepository, times(1)).deleteAll();
   }
 
   @Test
   public void testGetScheduledCoursesByStartTime() {
-    List < ScheduledCourse > scheduledCourses = new ArrayList < > ();
-    ScheduledCourse sc = new ScheduledCourse();
-    sc.setStartTime(START_TIME);
-    scheduledCourses.add(sc);
-    when(scheduledCourseRepository.findScheduledCoursesByStartTime(START_TIME)).thenReturn(scheduledCourses);
+    List < ScheduledCourse > scheduledCourseheduledCourses = new ArrayList < > ();
+    ScheduledCourse scheduledCourse = new ScheduledCourse();
+    scheduledCourse.setStartTime(START_TIME);
+    scheduledCourseheduledCourses.add(scheduledCourse);
+    when(scheduledCourseheduledCourseRepository.findScheduledCoursesByStartTime(START_TIME)).thenReturn(scheduledCourseheduledCourses);
 
-    List < ScheduledCourse > found = scheduledCourseService.getScheduledCoursesByStartTime(START_TIME);
+    List < ScheduledCourse > found = scheduledCourseheduledCourseService.getScheduledCoursesByStartTime(START_TIME);
 
     assertFalse(found.isEmpty());
     assertEquals(START_TIME, found.get(0).getStartTime());
@@ -310,13 +309,13 @@ public class ScheduledCourseServiceTests {
 
   @Test
   public void testGetScheduledCoursesByEndTime() {
-    List < ScheduledCourse > scheduledCourses = new ArrayList < > ();
-    ScheduledCourse sc = new ScheduledCourse();
-    sc.setEndTime(END_TIME);
-    scheduledCourses.add(sc);
-    when(scheduledCourseRepository.findScheduledCoursesByEndTime(END_TIME)).thenReturn(scheduledCourses);
+    List < ScheduledCourse > scheduledCourseheduledCourses = new ArrayList < > ();
+    ScheduledCourse scheduledCourse = new ScheduledCourse();
+    scheduledCourse.setEndTime(END_TIME);
+    scheduledCourseheduledCourses.add(scheduledCourse);
+    when(scheduledCourseheduledCourseRepository.findScheduledCoursesByEndTime(END_TIME)).thenReturn(scheduledCourseheduledCourses);
 
-    List < ScheduledCourse > found = scheduledCourseService.getScheduledCoursesByEndTime(END_TIME);
+    List < ScheduledCourse > found = scheduledCourseheduledCourseService.getScheduledCoursesByEndTime(END_TIME);
 
     assertFalse(found.isEmpty());
     assertEquals(END_TIME, found.get(0).getEndTime());
