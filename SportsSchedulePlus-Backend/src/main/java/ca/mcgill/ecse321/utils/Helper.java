@@ -100,6 +100,7 @@ public class Helper {
    */
   public static void validateUser(PersonRepository personRepository,String name, String email, String password, boolean newEmail) {
     if(newEmail){
+
       if (personRepository.findPersonByEmail(email) != null) {
         throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "User with email " + email + " already exists.");
       }
