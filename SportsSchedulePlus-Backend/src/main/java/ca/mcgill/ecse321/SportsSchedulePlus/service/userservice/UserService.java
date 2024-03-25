@@ -92,7 +92,10 @@ public class UserService {
      */
     @Transactional
     public Person createOwner() {
-        if (Helper.toList(ownerRepository.findAll()).isEmpty()){
+        if (!Helper.toList(ownerRepository.findAll()).isEmpty()){
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner already exists.");
+        }
+        else{
             PersonRole personRole = new Owner();
             personRoleRepository.save(personRole);
             Owner owner = new Owner();
@@ -101,9 +104,9 @@ public class UserService {
             Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("admin"), personRole);
             personRepository.save(person);
             return person;
-        }
+        }    
 
-        throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner already exists.");
+    
     }
 
     /**
@@ -120,33 +123,29 @@ public class UserService {
     public Person createInstructor(String email, String experience) {
         Person existingPerson = personRepository.findPersonByEmail(email);
         if (existingPerson != null) {
-
             String name = existingPerson.getName();
             String password = existingPerson.getPassword();
 
-            Optional<Customer> customer = customerRepository.findById(existingPerson.getId());
+            Customer customer = customerRepository.findCustomerById(existingPerson.getId());
 
-            PersonRole newPersonRole = new Instructor(customer.get(), experience);
+            PersonRole newPersonRole = new Instructor(customer, experience);
 
             Customer instructor = (Customer) newPersonRole;
             personRoleRepository.save(newPersonRole);
-
-            List<Registration> customerPayments = registrationRepository.findRegistrationsByKeyCustomer(customer.get());
+            List<Registration> customerPayments = registrationRepository.findRegistrationsByKeyCustomer(customer);
             for (Registration oldPayment : customerPayments) {
                 Key updatedKey = new Key(instructor, oldPayment.getKey().getScheduledCourse());
                 Registration newPayment = new Registration(updatedKey);
                 registrationRepository.delete(oldPayment);
                 registrationRepository.save(newPayment);
             }
-
             PersonRole oldPersonRole = existingPerson.getPersonRole();
 
             personRoleRepository.delete(oldPersonRole);
-            customerRepository.delete(customer.get());
+            customerRepository.delete(customer);
             personRepository.delete(existingPerson);
             personRepository.deleteByEmail(email);
             existingPerson.delete();
-
             return createUser(name, email, password, newPersonRole);
 
         } else {
@@ -164,7 +163,6 @@ public class UserService {
     public Person updateUser(int id, String name, String email, String password, String experience) {
         // this checks if the owner exists
          getOwner();
-
         Person person;
         // this checks if the person exists
        
@@ -248,7 +246,9 @@ public class UserService {
      */
     @Transactional
     public Instructor getInstructor(String email) {
+   
         Person person = personRepository.findPersonByEmail(email);
+   
         if (person == null) {
             throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person with email " + email + " does not exist.");
         }
@@ -332,7 +332,6 @@ public class UserService {
      * @return the id of the deleted user
      */
     private int deleteUser(Person person, int id) {
-        System.out.println("delete user !!");
         personRepository.delete(person);
         personRoleRepository.delete(person.getPersonRole());
         if (person.getPersonRole() instanceof Customer) {
@@ -386,18 +385,18 @@ public class UserService {
     public Instructor approveCustomer(int customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
         Optional<Instructor> instructor = instructorRepository.findById(customerId);
-
-        if (!customer.isPresent()) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
-        }
-        if (!customer.get().getHasApplied()) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " has not applied to be an instructor.");
-        }
+        
         if (instructor.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " is already an instructor.");
         }
-
+        if (!customer.isPresent()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
+        }
+        if (!customer.get().getHasApplied()){
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " has not applied to be an instructor.");
+        }
         Person person = personRepository.findPersonByPersonRole(customer.get());
+
         Person newPerson = createInstructor(person.getEmail(), "");
         return (Instructor) newPerson.getPersonRole();
     }
