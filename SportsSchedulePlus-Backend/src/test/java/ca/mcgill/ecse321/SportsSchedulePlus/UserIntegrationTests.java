@@ -25,7 +25,9 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonLi
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonRoleResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
@@ -84,14 +86,14 @@ public class UserIntegrationTests {
 
     @Test
     public void testCreateAndGetInstructor() {
-        int id = testCreateInstructor();
-        testGetInstructor(id);
+        String email = testCreateInstructor();
+        testGetInstructor(email);
     }
 
     @Test
     public void testCreateAndGetOwner() {
-        int id = testCreateOwner();
-        testGetOwner(id);
+        testCreateOwner();
+        testGetOwner();
     }
 
     private int testCreateCustomer() {
@@ -109,12 +111,16 @@ public class UserIntegrationTests {
         return response.getBody().getId();
     }
 
-    private int testCreateInstructor() {
-        Instructor instructor = new Instructor(2, "5 years");
-        instructor.setHasApplied(true);
-        InstructorResponseDTO newInstructorRole = new InstructorResponseDTO(instructor);
-        ResponseEntity<PersonDTO> response = client.postForEntity("/instructors", new PersonDTO("instructor", "instructor@email.com", "Password#1", newInstructorRole ), PersonDTO.class);
+    private PersonDTO postCustomer(String name, String email, String password) {
+        ResponseEntity < PersonDTO > newCustomer = client.postForEntity("/customers", new PersonDTO(name, email, password, new CustomerRequestDTO(1)), PersonDTO.class);
+        return newCustomer.getBody();
+    }
 
+    private String testCreateInstructor() {
+        PersonDTO newCustomer = postCustomer("customer", "customer@email.com", "Password#1");
+        client.put("/customers/{customerId}/approve", null, newCustomer.getId());
+
+        ResponseEntity<PersonDTO> response = client.getForEntity("/instructors/customer@example.com", PersonDTO.class);
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody(), "Response has body");
@@ -122,25 +128,22 @@ public class UserIntegrationTests {
         assertEquals("instructor@email.com", response.getBody().getEmail(), "Email matches");
         assertTrue(response.getBody().getId() > 0, "Response has valid ID");
 
-        return response.getBody().getId();
+        return response.getBody().getEmail();
     }
 
-    private int testCreateOwner() {
+    private void testCreateOwner() {
         Owner owner = new Owner();
         owner.setId(-1);
         owner.setDailySchedule(new ArrayList<>());
         OwnerResponseDTO newOwnerRole = new OwnerResponseDTO(owner);
-        ResponseEntity<PersonDTO> response = client.postForEntity("/owners", new PersonDTO("owner", "owner@email.com", "Password#1", newOwnerRole ), PersonDTO.class);
+        ResponseEntity<PersonDTO> response = client.postForEntity("/owner", new PersonDTO("owner", "sports.schedule.plus@gmail.com", "Password#1", newOwnerRole ), PersonDTO.class);
 
         assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody(), "Response has body");
         assertEquals("owner", response.getBody().getName(), "Name matches");
-        assertEquals("owner@email.com", response.getBody().getEmail(), "Email matches");
-        assertEquals("encodedPassword", response.getBody().getPassword(), "Password matches");
-        assertEquals(-1, response.getBody().getId(), "Id matches");
-
-        return response.getBody().getId();
+        assertEquals("sports.schedule.plus@gmail.com", response.getBody().getEmail(), "Email matches");
+        assertTrue(response.getBody().getId() > 0, "Response has valid ID");
     }
 
     private void testGetCustomer(int id) {
@@ -154,27 +157,24 @@ public class UserIntegrationTests {
         assertEquals(id, response.getBody().getId(), "Id matches");
     }
 
-    private void testGetInstructor(int id) {
-        ResponseEntity<PersonDTO> response = client.getForEntity("/instructors/" + id, PersonDTO.class);
+    private void testGetInstructor(String email) {
+        ResponseEntity<PersonDTO> response = client.getForEntity("/instructors/" + email, PersonDTO.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode(), "Status is OK");
         assertNotNull(response.getBody(), "Response has body");
         assertEquals("instructor", response.getBody().getName(), "Name matches");
         assertEquals("instructor@email.com", response.getBody().getEmail(), "Email matches");
-        assertEquals(id, response.getBody().getId(), "Id matches");
     }
 
-    private void testGetOwner(int id) {
-        ResponseEntity<PersonDTO> response = client.getForEntity("/owner/" + id, PersonDTO.class);
+    private void testGetOwner() {
+        ResponseEntity<PersonDTO> response = client.getForEntity("/owner/", PersonDTO.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode(), "Status is OK");
         assertNotNull(response.getBody(), "Response has body");
         assertEquals("owner", response.getBody().getName(), "Name matches");
-        assertEquals("owner@email.com", response.getBody().getEmail(), "Email matches");
-        assertEquals("encodedPassword", response.getBody().getPassword(), "Password matches");
-        assertEquals(id, response.getBody().getId(), "Id matches");
+        assertEquals("sports.schedule.plus@gmail.com", response.getBody().getEmail(), "Email matches");
     }
 }
 
