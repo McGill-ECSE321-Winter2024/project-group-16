@@ -13,15 +13,10 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.registration.RegistrationListResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.registration.RegistrationResponseDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.customer.CustomerRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonDTO;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
-import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
@@ -67,7 +62,6 @@ public class RegistrationIntegrationTests {
   @Autowired
   private DailyScheduleRepository dailyScheduleRepository;
 
-  @BeforeEach
   @AfterEach
   public void clearDatabase() {
     registrationRepository.deleteAll();
@@ -83,16 +77,20 @@ public class RegistrationIntegrationTests {
 
   }
 
+  @BeforeEach
+  public void setup(){
+    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
+      userService.createOwner();
+    }
+  }
+
   private PersonDTO postCustomer(String name, String email, String password) {
-
     CustomerRequestDTO role = new CustomerRequestDTO();
-
     PersonDTO personDto = new PersonDTO(name, email, password, role);
 
     // Send a POST request to the /customers endpoint
 
     ResponseEntity < PersonDTO > responseEntity = restTemplate.postForEntity("/customers", personDto, PersonDTO.class);
-
     PersonDTO createdCustomer = responseEntity.getBody();
 
     return createdCustomer;
@@ -101,10 +99,6 @@ public class RegistrationIntegrationTests {
   
   @Test
   public void testCreateAndGetRegistration() {
-
-    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-      userService.createOwner();
-    }
     int customerId = postCustomer("Test", "xhzwwww@gmail.com", "123abvwwQ!!").getId();
     int courseId = Helper.createScheduledCourse( restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
     // Create Registration
@@ -126,11 +120,38 @@ public class RegistrationIntegrationTests {
   }
 
   @Test
-  public void testGetRegistrationsByCustomer() {
+  public void testCreateRegistrationCustomerNotFound() {
+    int customerId = -1;
+    int courseId = Helper.createScheduledCourse( restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
+    // Create Registration
+    ResponseEntity < RegistrationResponseDTO > createResponse = restTemplate.postForEntity(
+      "/registrations/" + customerId + "/" + courseId, null, RegistrationResponseDTO.class);
+    assertEquals(HttpStatus.NOT_FOUND, createResponse.getStatusCode());
+  }
 
-    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-      userService.createOwner();
-    }
+  @Test
+  public void testCreateRegistrationCourseNotFound() {
+    int customerId = postCustomer("Test", "xhzwwww@gmail.com", "123abvwwQ!!").getId();
+    int courseId = -11111;
+    // Create Registration
+    ResponseEntity < RegistrationResponseDTO > createResponse = restTemplate.postForEntity(
+      "/registrations/" + customerId + "/" + courseId, null, RegistrationResponseDTO.class);
+    assertEquals(HttpStatus.NOT_FOUND, createResponse.getStatusCode());
+  }
+
+  @Test
+  public void testCreateRegistrationCourseAndCustomerNotFound() {
+    int customerId = -11111;
+    int courseId = -11111;
+    // Create Registration
+    ResponseEntity < RegistrationResponseDTO > createResponse = restTemplate.postForEntity(
+      "/registrations/" + customerId + "/" + courseId, null, RegistrationResponseDTO.class);
+    assertEquals(HttpStatus.NOT_FOUND, createResponse.getStatusCode());
+  }
+
+
+  @Test
+  public void testGetRegistrationsByCustomer() {
     int customerId = postCustomer("Test", "xhzwwwabcdw@gmail.com", "123abvwwQ!!").getId();
     int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
     // Create Registration
@@ -142,17 +163,24 @@ public class RegistrationIntegrationTests {
     assertEquals(HttpStatus.OK, getResponse.getStatusCode());
     RegistrationListResponseDTO registrations = getResponse.getBody();
     assertNotNull(registrations);
-
     assertEquals(registrations.getRegistrations().get(0).getCustomer().getId(),customerId);
-   
+  }
+
+  @Test
+  public void testGetRegistrationsByCustomerNotFound() {
+    int customerId = -1111;
+    int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
+    // Create Registration
+    restTemplate.postForEntity(
+      "/registrations/" + customerId + "/" + courseId, null, RegistrationResponseDTO.class);
+    // Get Registrations by Customer
+    ResponseEntity < RegistrationListResponseDTO > getResponse = restTemplate
+      .getForEntity("/customers/" + customerId + "/registrations", RegistrationListResponseDTO.class);
+    assertEquals(HttpStatus.NOT_FOUND, getResponse.getStatusCode());
   }
 
   @Test
   public void testGetRegistrationsByCourse() {
-
-    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-      userService.createOwner();
-    }
     int customerId = postCustomer("Test", "xhzw222wwabcdw@gmail.com", "123abvwwQ!!").getId();
     int newCustomerId = postCustomer("Test", "abcdwe2wwabcdw@gmail.com", "123abvwwQ!!").getId();
     int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
@@ -170,16 +198,28 @@ public class RegistrationIntegrationTests {
     assertNotNull(registrations);
     assertEquals(registrations.getRegistrations().get(0).getScheduledCourse().getId(),courseId);
     assertEquals(registrations.getRegistrations().get(1).getScheduledCourse().getId(),courseId);
+  }
 
+  @Test
+  public void testGetRegistrationsByCourseNotFound() {
+    int customerId = postCustomer("Test", "xhzw222wwabcdw@gmail.com", "123abvwwQ!!").getId();
+    int newCustomerId = postCustomer("Test", "abcdwe2wwabcdw@gmail.com", "123abvwwQ!!").getId();
+    int courseId = -1111;
+    // Create Registration
+    restTemplate.postForEntity("/registrations/" + customerId + "/" + courseId, null, RegistrationResponseDTO.class);
+
+    restTemplate.postForEntity("/registrations/" + newCustomerId + "/" + courseId, null, RegistrationResponseDTO.class);
+
+    // Get Registrations by Course Not Found
+    ResponseEntity < RegistrationListResponseDTO > getResponse = restTemplate
+      .getForEntity("/courses/" + courseId + "/registrations", RegistrationListResponseDTO.class);
+    assertEquals(HttpStatus.NOT_FOUND, getResponse.getStatusCode());
   }
 
   @Test
   public void testDeleteRegistration() {
     int courseId = 1;
     int customerId = 0;
-    if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-      userService.createOwner();
-    }
     customerId = postCustomer("Test", "abcdedw@gmail.com", "123abvwwQ!!").getId();
     courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
 

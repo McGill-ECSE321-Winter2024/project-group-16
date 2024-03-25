@@ -5,6 +5,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration.Key;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice.DailyScheduleService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
+import ca.mcgill.ecse321.utils.EmailValidator;
 import ca.mcgill.ecse321.utils.Helper;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.*;
 
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +34,9 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private OwnerRepository ownerRepository;
+
+    @Autowired
+    private CourseTypeRepository courseTypeRepository;
 
     @Autowired
     private RegistrationRepository registrationRepository;
@@ -97,6 +102,7 @@ public class UserService {
             personRepository.save(person);
             return person;
         }
+
         throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner already exists.");
     }
 
@@ -118,14 +124,14 @@ public class UserService {
             String name = existingPerson.getName();
             String password = existingPerson.getPassword();
 
-            Customer customer = customerRepository.findCustomerById(existingPerson.getId());
+            Optional<Customer> customer = customerRepository.findById(existingPerson.getId());
 
-            PersonRole newPersonRole = new Instructor(customer, experience);
+            PersonRole newPersonRole = new Instructor(customer.get(), experience);
 
             Customer instructor = (Customer) newPersonRole;
             personRoleRepository.save(newPersonRole);
 
-            List<Registration> customerPayments = registrationRepository.findRegistrationsByKeyCustomer(customer);
+            List<Registration> customerPayments = registrationRepository.findRegistrationsByKeyCustomer(customer.get());
             for (Registration oldPayment : customerPayments) {
                 Key updatedKey = new Key(instructor, oldPayment.getKey().getScheduledCourse());
                 Registration newPayment = new Registration(updatedKey);
@@ -136,7 +142,7 @@ public class UserService {
             PersonRole oldPersonRole = existingPerson.getPersonRole();
 
             personRoleRepository.delete(oldPersonRole);
-            customerRepository.delete(customer);
+            customerRepository.delete(customer.get());
             personRepository.delete(existingPerson);
             personRepository.deleteByEmail(email);
             existingPerson.delete();
@@ -326,6 +332,7 @@ public class UserService {
      * @return the id of the deleted user
      */
     private int deleteUser(Person person, int id) {
+        System.out.println("delete user !!");
         personRepository.delete(person);
         personRoleRepository.delete(person.getPersonRole());
         if (person.getPersonRole() instanceof Customer) {
@@ -343,6 +350,7 @@ public class UserService {
             ownerRepository.delete(getOwner());
             dailyScheduleRepository.deleteAll();
         }
+
         person.delete();
         return id;
     }
@@ -378,12 +386,17 @@ public class UserService {
     public Instructor approveCustomer(int customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
         Optional<Instructor> instructor = instructorRepository.findById(customerId);
-        if (instructor.isPresent()) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " is already an instructor.");
-        }
+
         if (!customer.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
         }
+        if (!customer.get().getHasApplied()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " has not applied to be an instructor.");
+        }
+        if (instructor.isPresent()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " is already an instructor.");
+        }
+
         Person person = personRepository.findPersonByPersonRole(customer.get());
         Person newPerson = createInstructor(person.getEmail(), "");
         return (Instructor) newPerson.getPersonRole();
@@ -444,6 +457,8 @@ public class UserService {
      */
     @Transactional
     public CourseType suggestCourseType(PersonRole personRole, CourseType courseType) {
+        Helper.validateCourseType(courseTypeRepository,courseType.getDescription(), courseType.getPrice(), true);
+        Helper.validatePersonRole(personRole);
         CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getDescription(), courseType.getApprovedByOwner(), courseType.getPrice());
         if(personRole instanceof Instructor){
             Person person = getPersonById(personRole.getId());
@@ -451,6 +466,7 @@ public class UserService {
             instructor.addInstructorSuggestedCourseType(courseTypeCreated);
             instructorRepository.save(instructor);
         }
+
         if (personRole instanceof Owner){
             Owner owner = getOwner();
             owner.addOwnerSuggestedCourse(courseTypeCreated);
@@ -465,7 +481,17 @@ public class UserService {
      */
     @Transactional
     public Person findPersonByEmail(String email) {
-        return personRepository.findPersonByEmail(email);
+        if (email == null || email.isBlank()) {
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Email cannot be null or blank.");
+        }
+        if (!EmailValidator.validate(email)) {
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Email is not valid.");
+        }
+        Person person = personRepository.findPersonByEmail(email);
+        if (person == null) {
+            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "No person with email " + email + " found.");
+        }
+        return person;
     }
 
     /**

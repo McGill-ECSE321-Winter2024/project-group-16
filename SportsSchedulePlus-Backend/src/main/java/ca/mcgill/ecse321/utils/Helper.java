@@ -8,18 +8,20 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 /**
  * Helper class that contains methods for list comparison useful for the override of equals in the models
@@ -98,18 +100,20 @@ public class Helper {
    */
   public static void validateUser(PersonRepository personRepository,String name, String email, String password, boolean newEmail) {
     if(newEmail){
-    if (personRepository.findPersonByEmail(email) != null) {
-      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "User with email " + email + " already exists.");
-    }
-  }
-    if (!Pattern.matches("[a-zA-Z\\s]+", name)) {
-      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name cannot contain special characters.");
+
+      if (personRepository.findPersonByEmail(email) != null) {
+        throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "User with email " + email + " already exists.");
+      }
     }
 
     if (name.isBlank()) {
       throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name cannot be blank.");
     }
-  
+
+    if (!Pattern.matches("[a-zA-Z\\s]+", name)) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name cannot contain special characters.");
+    }
+
     if (!PasswordValidator.isValidPassword(password)) {
       throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Password is not valid.");
     }
@@ -173,6 +177,36 @@ public class Helper {
     return scheduledCourseResponse.getBody().getId();
   }
 
+      /**
+     * Validates the course type before saving or updating it.
+     * @param description
+     * @param price
+     * @param newDescription
+     */
+    public static void validateCourseType(CourseTypeRepository courseTypeRepository, String description, float price, boolean newDescription) {
+        if (description == null || description.trim().isEmpty()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description cannot be null or empty.");
+        }
+        if (price <= 0) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course price must be greater than zero.");
+        }
+        if (newDescription) {
+            if (courseTypeRepository.findCourseTypeByDescription(description) != null) {
+                throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description must be unique");
+            }
+        }
+        if (!description.matches(".*[a-zA-Z].*")) {
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Description must contain letters.");
+        }
+        if (description.length() > 60) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description cannot exceed 60 characters.");
+        }
+    }
 
+  public static void validatePersonRole(PersonRole personRole) {
+    if (personRole == null) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person role cannot be null.");
+    }
+  }
   
 }

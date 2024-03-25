@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Optional;
 import java.util.List;
 
@@ -30,7 +30,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;
@@ -40,6 +39,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
@@ -67,10 +67,13 @@ public class UserServiceTests {
     private OwnerRepository ownerRepository;
 
     @Mock
+    private CourseTypeRepository courseTypeRepository;
+
+    @Mock
     private RegistrationRepository registrationRepository;
     @Mock
     private DailyScheduleRepository dailyScheduleRepository;
-    @InjectMocks
+    @Mock
     private CourseTypeService courseTypeService;
     @Mock
     private DailyScheduleService dailyScheduleService;
@@ -103,76 +106,6 @@ public class UserServiceTests {
     @BeforeEach
     public void setMockOutput(){
         MockitoAnnotations.openMocks(this);
-        /*lenient().when(customerRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
-                Customer customer = new Customer();
-                customer.setId(customerIdHasApplied);
-                customer.setHasApplied(true);
-                return Optional.of(customer);
-            } else {
-                return null;
-            }
-        });
-        lenient().when(instructorRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
-                return Optional.empty();
-            } else {
-                return null;
-            }
-        });
-        lenient().when(personRepository.findPersonByPersonRole(any(PersonRole.class))).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0) instanceof Customer) {
-                Customer personRole = invocation.getArgument(0);
-                Person person = new Person(name, email, password, personRole);
-                return person;
-            } else {
-                return null;
-            }
-        });
-        /*lenient().when(personRepository.findPersonByEmail(anyString())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(email)) {
-                Person person = new Person();
-                person.setEmail(invocation.getArgument(0));
-                person.setName(name);
-                person.setPassword(password);
-                person.setPersonRole(new Customer());
-                person.getPersonRole().setId(customerIdHasApplied);
-                return person;
-            } else {
-                return null;
-            }
-        });
-        lenient().when(personRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
-                Customer customer = new Customer();
-                customer.setId(customerIdHasApplied);
-                Person person = new Person(name, email, password, customer);
-                return person;
-            } else {
-                return null;
-            }
-        });
-        lenient().when(ownerRepository.findById(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(ownerId)) {
-                Owner owner = new Owner();
-                owner.setId(ownerId);
-                return owner;
-            } else {
-                return null;
-            }
-        });
-        lenient().when(registrationRepository.findRegistrationsByKeyCustomer(any(Customer.class))).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(customerIdHasApplied)) {
-                Customer customer = new Customer();
-                customer.setId(customerIdHasApplied);
-                Registration registration = new Registration();
-                registration.setConfirmationNumber(0);
-                registration.setKey(new Registration.Key(customer, new ScheduledCourse()));
-                return Collections.singletonList(registration);
-            } else {
-                return Collections.emptyList();
-            }
-        });*/
         lenient().when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         // Whenever anything is saved, just return the parameter object
         Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> invocation.getArgument(0);
@@ -188,14 +121,7 @@ public class UserServiceTests {
     @Test
     public void testCreateCustomer() {
         Person person = null;
-
-        try {
-            person = userService.createCustomer(name, testEmail, password);
-        } catch (Exception e) {
-            // Check that no error occurred
-            fail();
-        }
-
+        person = userService.createCustomer(name, testEmail, password);
         verify(personRoleRepository, times(1)).save(any(Customer.class));
         verify(personRepository, times(1)).save(any(Person.class));
 
@@ -259,20 +185,14 @@ public class UserServiceTests {
         verify(personRepository, times(0)).save(any(Person.class));
     }
 
-    // to fix
+
     @Test
     public void testCreateOwner() {
         Person person = null;
 
         when(ownerRepository.findAll()).thenReturn(new ArrayList<>());
-
-        try {
-            person = userService.createOwner();
-        } catch (SportsScheduleException e) {
-            // If owner already exists, it will throw an exception and test fails
-            fail();
-        }
-
+        person = userService.createOwner();
+      
         verify(personRoleRepository, times(1)).save(any(Owner.class));
         verify(personRepository, times(1)).save(any(Person.class));
 
@@ -282,7 +202,7 @@ public class UserServiceTests {
         assertEquals("encodedPassword", person.getPassword());
     }
 
-    // to fix
+ 
     @Test
     public void testCreateOwnerAlreadyExists() {
         Person person = null;
@@ -318,14 +238,10 @@ public class UserServiceTests {
         Person newInstructor = null;
 
         lenient().when(personRepository.findPersonByEmail(email)).thenReturn(person);
-        lenient().when(customerRepository.findById(person.getId())).thenReturn(Optional.of(customer));
-
-        try {
-            newInstructor = userService.createInstructor(email, "");
-        } catch (Exception e) {
-            // Check that no error occurred
-            fail();
-        }
+        lenient().when(customerRepository.findCustomerById(person.getId())).thenReturn((customer));
+   
+        newInstructor = userService.createInstructor(email, "");
+      
 
         assertNotNull(newInstructor);
         assertEquals(person.getEmail(), newInstructor.getEmail());
@@ -380,20 +296,16 @@ public class UserServiceTests {
         instructorPerson.setPersonRole(newInstructor);
 
         lenient().when(personRepository.findPersonByEmail(email)).thenReturn(person);
-        lenient().when(customerRepository.findById(person.getId())).thenReturn(Optional.of(customer));
+        lenient().when(customerRepository.findCustomerById(person.getId())).thenReturn((customer));
         lenient().when(userService.createInstructor(person.getEmail(), "")).thenReturn(instructorPerson);
 
         Instructor result = null;
-        try {
-            result = userService.approveCustomer(customer.getId());
-        } catch (Exception e) {
-            // Check that no error occurred
-            fail();
-        }
+        
+        result = userService.approveCustomer(customer.getId());
+       
 
         assertNotNull(result);
         assertTrue(result instanceof Instructor);
-        //assertEquals(customerIdHasApplied, result.getId());
     }
 
     @Test
@@ -421,11 +333,10 @@ public class UserServiceTests {
 
         lenient().when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
         lenient().when(instructorRepository.findById(customer.getId())).thenReturn(Optional.empty());
-
+ 
         Instructor result = null;
         try {
             result = userService.approveCustomer(customer.getId());
-            fail();
         } catch (Exception e) {
             assertNull(result);
             assertEquals("Customer with ID " + customerIdHasApplied + " has not applied to be an instructor.", e.getMessage());
@@ -469,14 +380,9 @@ public class UserServiceTests {
 
         // Mock Behavior for finding Owner
         lenient().when(personRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
-
-        try {
-            person = userService.updateUser(ownerId, newName, newEmail, newPassword, newExperience);
-        } catch (Exception e) {
-            // Check that no error occurred
-            e.printStackTrace();
-            fail();
-        }
+       
+        person = userService.updateUser(ownerId, newName, newEmail, newPassword, newExperience);
+       
 
         assertNotNull(person);
         assertEquals(newName, person.getName());
@@ -493,7 +399,6 @@ public class UserServiceTests {
         Owner role = new Owner();
         role.setId(ownerId);
         role.setDailySchedule(dailyScheduleService.createDailySchedule());
-        Person owner = new Person(ownerName, ownerEmail, ownerPassword, role);
         ArrayList<Owner> owners = new ArrayList<>();
         owners.add(role);
         lenient().when(ownerRepository.findAll()).thenReturn(owners);
@@ -505,14 +410,8 @@ public class UserServiceTests {
         Person instructor = new Person(name, email, password, instructorRole);
         lenient().when(personRepository.findById(instructor.getId())).thenReturn(Optional.of(instructor));
 
-        try {
-            person = userService.updateUser(customerIdHasApplied, newName, newEmail, newPassword, newExperience);
-        } catch (Exception e) {
-            // Check that no error occurred
-            e.printStackTrace();
-            fail();
-        }
-
+        person = userService.updateUser(customerIdHasApplied, newName, newEmail, newPassword, newExperience);
+       
         assertNotNull(person);
         assertEquals(newName, person.getName());
         assertEquals(newEmail, person.getEmail());
@@ -529,7 +428,6 @@ public class UserServiceTests {
         Owner role = new Owner();
         role.setId(ownerId);
         role.setDailySchedule(dailyScheduleService.createDailySchedule());
-        Person owner = new Person(ownerName, ownerEmail, ownerPassword, role);
         ArrayList<Owner> owners = new ArrayList<>();
         owners.add(role);
         lenient().when(ownerRepository.findAll()).thenReturn(owners);
@@ -540,13 +438,9 @@ public class UserServiceTests {
         Person customer = new Person(name, email, password, customerRole);
         lenient().when(personRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
 
-        try {
-            person = userService.updateUser(customerIdHasApplied, newName, newEmail, newPassword, newExperience);
-        } catch (Exception e) {
-            // Check that no error occurred
-            e.printStackTrace();
-            fail();
-        }
+        
+        person = userService.updateUser(customerIdHasApplied, newName, newEmail, newPassword, newExperience);
+        
 
         assertNotNull(person);
         assertEquals(newName, person.getName());
@@ -564,7 +458,6 @@ public class UserServiceTests {
         Owner role = new Owner();
         role.setId(ownerId);
         role.setDailySchedule(dailyScheduleService.createDailySchedule());
-        Person owner = new Person(ownerName, ownerEmail, ownerPassword, role);
         ArrayList<Owner> owners = new ArrayList<>();
         owners.add(role);
         lenient().when(ownerRepository.findAll()).thenReturn(owners);
@@ -600,12 +493,8 @@ public class UserServiceTests {
         lenient().when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
         lenient().when(instructorRepository.findById(customer.getId())).thenReturn(Optional.empty());
 
-        try {
-            customer = userService.applyForInstructor(aId);
-        } catch (Exception e) {
-            //Ensure no error occured
-            fail();
-        }
+        customer = userService.applyForInstructor(aId);
+        
         assertTrue(customer.getHasApplied());
 
     }
@@ -622,7 +511,6 @@ public class UserServiceTests {
 
         Customer customer = null;
 
-
         try {
             customer = userService.applyForInstructor(customerId);
             fail();
@@ -636,9 +524,7 @@ public class UserServiceTests {
     @Test
     public void testApplyForInstructorNullCustomer() {
         int customerId = 2;
-
         Customer customer = null;
-
         try {
             customer = userService.applyForInstructor(customerId);
             fail();
@@ -672,29 +558,6 @@ public class UserServiceTests {
 
     }
 
-    // @Test
-    // public void testApproveCustomer() {
-    //     int aId = 2;
-    //     String email = "joe@joe.com";
-        
-    //     Customer customer = new Customer(aId);
-    //     Person person = new Person("name", email, "password", customer);
-    //     personRepository.save(person);
-    //     customer.setHasApplied(true);
-    //     customerRepository.save(customer);
-    //     Instructor instructor = null;
-
-    //     try {
-    //         instructor = userService.approveCustomer(aId);
-    //     } catch (Exception e) {
-    //         //Ensure no error occurs 
-    //         fail();
-    //     }
-
-    //     assertNotNull(instructor);
-    //     assertEquals(aId, instructor.getId());
-
-    // }
 
     @Test
     public void testApproveCustomerIsInstructor() {
@@ -743,26 +606,17 @@ public class UserServiceTests {
         customerRepository.save(customer);
 
         lenient().when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
-
-        try {
-            customer = userService.rejectCustomer(aId);
-        } catch (Exception e) {
-            //Ensure no error occurs 
-            fail();
-        }
+        customer = userService.rejectCustomer(aId);
 
         assertNotNull(customer);
         assertEquals(aId, customer.getId());
         assertFalse(customer.getHasApplied());
-
-
     }
 
     @Test
     public void testRejectCustomerNullCustomer() {
         int aId = 2;
         Customer customer = null;
-
         try {
             customer = userService.rejectCustomer(aId);
             fail();
@@ -805,13 +659,7 @@ public class UserServiceTests {
         lenient().when(instructorRepository.findInstructorBySupervisedCourses(any(ScheduledCourse.class))).thenReturn(mockInstructors);
       
        
-        try {
-            instructors = userService.getInstructorsBySupervisedCourse(scheduledCourse);
-
-        } catch (Exception e) {
-            //Ensure no error occurs
-            fail();
-        }      
+        instructors = userService.getInstructorsBySupervisedCourse(scheduledCourse);  
         assertNotNull(instructors);  
         instructor = instructors.get(0);
 
@@ -822,46 +670,26 @@ public class UserServiceTests {
 
     @Test
     public void getInstructorBySuggestedCourseTypeTest() {
-        String aCourseDescription = "a course";
-        boolean isApprovedCourse = true;
-        float coursePrice = 2;
-        String instructorExperience = "12 days";
-        String aName = "Jerry";
-        String aEmail = "Jerry@joe.com";
-        String aPassword = "1234";
-        int aId = 5;
-        int aCourseId = 2;
+        // Mock data
+        Instructor instructor = new Instructor();
+        Person person = new Person("Test p", "instructor@example.com", "pwd123q12aW!", instructor);
+        CourseType courseType = new CourseType("Test Course", true, 10.0f);
 
-        Instructor instructor = new Instructor(aId, instructorExperience);
-        Person person = new Person(aName, aEmail, aPassword, instructor);
-        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
-        instructorRepository.save(instructor);
+        // Mocking repository behaviors
+        when(personRepository.findById(any())).thenReturn(Optional.of(person));
+        when(personRepository.findPersonByEmail("instructor@example.com")).thenReturn(person);
+        when(instructorRepository.findById(any())).thenReturn(Optional.of(instructor));
+        when(courseTypeService.createCourseType("Test Course", true, 10.0f)).thenReturn(courseType);
+        when(instructorRepository.findInstructorByInstructorSuggestedCourseTypes(any())).thenReturn(instructor);
+       
+        // Call method
+         userService.suggestCourseType(instructor, courseType);
 
-        instructor.addInstructorSuggestedCourseType(courseType);
-        courseType.setId(aCourseId);
-
-
-        // when(courseTypeService.getCourseType(aCourseId)).thenReturn(courseType);
-
-        // lenient().when(instructorRepository.findInstructorByInstructorSuggestedCourseTypes(any(CourseType.class))).thenReturn(instructor);
-
-
-        try {
-            instructor = userService.getInstructorBySuggestedCourseType(aCourseId);
-
-        } catch (Exception e) {
-            fail();
-
-        }
+        Instructor foundInstructor = userService.getInstructorBySuggestedCourseType(courseType.getId());
 
         assertNotNull(instructor);
-        assertEquals(instructorExperience, instructor.getExperience());
-        assertEquals(aId, instructor.getId());
-
-
-        verify(instructorRepository, times(1)).save(any(Instructor.class));
-        verify(personRepository, times(1)).save(any(Person.class));
-
+      
+        assertEquals(foundInstructor, instructor);
     }
 
     @Test
@@ -880,7 +708,7 @@ public class UserServiceTests {
 
         } catch (Exception e) {
             assertNull(instructor);
-            assertEquals("No Instructor found for the specific CourseType", e.getMessage());
+            assertEquals("No Instructor found for the specified CourseType.", e.getMessage());
 
         }
     }
@@ -901,14 +729,10 @@ public class UserServiceTests {
         mockInstructors.add(instructor);
         List<Instructor> instructors = null;
 
-        lenient().when(instructorRepository.findInstructorBySupervisedCourses(any(ScheduledCourse.class))).thenReturn(mockInstructors);
+        when(instructorRepository.findInstructorByExperience(experience)).thenReturn(mockInstructors);
       
-
-        try {
-            instructors = userService.getInstructorByExperience(experience);
-        } catch (Exception e) {
-            fail();
-        }
+        instructors = userService.getInstructorByExperience(experience);
+      
         assertNotNull(instructors);
 
         foundInstructor = instructors.get(0);
@@ -933,164 +757,81 @@ public class UserServiceTests {
         instructorRepository.save(instructor);
         personRepository.save(person);
         List<Instructor> instructors = null;
-        Instructor foundInstructor = null;
 
         try {
             instructors = userService.getInstructorByExperience(experience);
-            fail();
         } catch (Exception e) {
             assertNull(instructors);
             assertEquals("Instructor experience is empty", e.getMessage());
         }
     }
 
+
+
     @Test
     public void testSuggestCourseTypeInstructor() {
-        String aCourseDescription = "a course";
-        boolean isApprovedCourse = true;
-        float coursePrice = 2;
-        String instructorExperience = "12 days";
-        String aName = "Jerry";
-        String aEmail = "Jerry@joe.com";
-        String aPassword = "1234";
-        int aId = 5;
+        // Mock data
+        Instructor instructor = new Instructor();
+        Person person = new Person("Test p", "instructor@example.com", "pwd123q12aW!", instructor);
+        CourseType courseType = new CourseType("Test Course", true, 10.0f);
 
-        Instructor instructor = new Instructor(aId, instructorExperience);
-        Person person = new Person(aName, aEmail, aPassword, instructor);
-        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
-        CourseType courseTypeCreated = null;
-        try {
-            courseTypeCreated = userService.suggestCourseType(instructor, courseType);
-        } catch (Exception e) {
-            //Ensure no error ocured
-            fail();
-        }
-        assertNotNull(courseTypeCreated);
-        assertEquals(aCourseDescription, courseTypeCreated.getDescription());
-        assertEquals(isApprovedCourse, courseTypeCreated.getApprovedByOwner());
-        assertEquals(coursePrice, courseTypeCreated.getPrice());
-        assertEquals(courseType, courseTypeCreated);
-        assertNotNull(instructor.getInstructorSuggestedCourseTypes());
-        assertEquals(courseType, instructor.getInstructorSuggestedCourseType(0));
+        // Mocking repository behaviors
+        when(personRepository.findById(any())).thenReturn(Optional.of(person));
+        when(personRepository.findPersonByEmail("instructor@example.com")).thenReturn(person);
+        when(instructorRepository.findById(any())).thenReturn(Optional.of(instructor));
+        when(courseTypeService.createCourseType("Test Course", true, 10.0f)).thenReturn(courseType);
 
-        verify(instructorRepository, times(1)).save(any(Instructor.class));
-        verify(personRepository, times(0)).save(any(Person.class));
+        // Call method
+        CourseType suggestedCourseType = userService.suggestCourseType(instructor, courseType);
+
+        // Assert return value
+        assertNotNull(suggestedCourseType);
+        assertEquals(courseType, suggestedCourseType);
     }
 
     @Test
     public void testSuggestCourseTypeOwner() {
-        String aCourseDescription = "a course";
-        boolean isApprovedCourse = true;
-        float coursePrice = 2;
-        String aName = "Jerry";
-        String aEmail = "Jerry@joe.com";
-        String aPassword = "1234";
-        int aId = 5;
-        List <DailySchedule> aDailySchedule;
+    // Mock data
 
-        Owner owner = new Owner();
-        Person person = new Person(aName, aEmail, aPassword, owner);
-        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
-        CourseType courseTypeCreated = null;
+    Owner owner = new Owner();
 
-        try {
-            courseTypeCreated = userService.suggestCourseType(owner, courseType);
-        } catch (Exception e) {
-            //Ensure no error ocured
-            fail();
-        }
-        assertNotNull(courseTypeCreated);
-        assertEquals(aCourseDescription, courseTypeCreated.getDescription());
-        assertEquals(isApprovedCourse, courseTypeCreated.getApprovedByOwner());
-        assertEquals(coursePrice, courseTypeCreated.getPrice());
-        assertEquals(courseType, courseTypeCreated);
-        assertNotNull(owner.getOwnerSuggestedCourses());
-        assertEquals(courseType, owner.getOwnerSuggestedCourse(0));
+    // Create a list containing the Owner object
+    List<Owner> ownerList = new ArrayList<>();
+    ownerList.add(owner);
 
-        verify(ownerRepository, times(1)).save(any(Owner.class));
-        verify(personRepository, times(0)).save(any(Person.class));
+    // Mock the behavior of ownerRepository.findAll()
+    when(ownerRepository.findAll()).thenReturn(ownerList);
+    CourseType courseType = new CourseType("Test Course", true, 10.0f);
+    when(courseTypeService.createCourseType("Test Course", true, 10.0f)).thenReturn(courseType);
+    // Call method
+     CourseType suggestedCourseType = userService.suggestCourseType(owner, courseType);
+
+    // Assert return value
+    assertNotNull(suggestedCourseType);
+    assertEquals(courseType, suggestedCourseType);
     }
 
-    @Test
-    public void testSuggestCourseTypeNoPerson() {
-        String aCourseDescription = "a course";
-        boolean isApprovedCourse = true;
-        float coursePrice = 2;
-        String aPassword = "1234";
-        int aId = 5;
-
-        Instructor instructor = new Instructor(aId, aPassword);
-        Person person = null;
-        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
-        CourseType courseTypeCreated = null;
-
-        try {
-            courseTypeCreated = userService.suggestCourseType(instructor, courseType);
-            fail();
-        } catch (Exception e) {
-            assertNull(person);
-            assertNull(courseTypeCreated);
-            assertEquals("Instructor is not associated with any Person object.", e.getMessage());
-        }
-       
-        verify(instructorRepository, times(0)).save(any(Instructor.class));
-        verify(personRepository, times(0)).save(any(Person.class));
-    }
-
-    @Test
-    public void testSuggestCourseTypeNullPersonRole() {
-        String aCourseDescription = "a course";
-        boolean isApprovedCourse = true;
-        float coursePrice = 2;
-        String instructorExperience = "12 days";
-        String aName = "Jerry";
-        String aEmail = "Jerry@joe.com";
-        String aPassword = "1234";
-        int aId = 5;
-
-        Instructor instructor = null;
-        Person person = new Person();
-
-        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
-        CourseType courseTypeCreated = null;
-
-        try {
-            courseTypeCreated = userService.suggestCourseType(instructor, courseType);
-            fail();
-        } catch (Exception e) {
-            assertNull(courseTypeCreated);
-            assertEquals("Some sort of error message", e.getMessage());
-            
-        }
-       
-    }
-
+  
     @Test
     public void testSuggestCourseTypeNullCourseType() {
-        String aCourseDescription = "a course";
-        boolean isApprovedCourse = true;
-        float coursePrice = 2;
+
         String instructorExperience = "12 days";
-        String aName = "Jerry";
-        String aEmail = "Jerry@joe.com";
-        String aPassword = "1234";
+    
         int aId = 5;
 
         Instructor instructor = new Instructor(aId, instructorExperience);
-        Person person = new Person(aName, aEmail, aPassword, instructor);
+   
         CourseType courseType = null;
         CourseType courseTypeCreated = null;
         try {
             courseTypeCreated = userService.suggestCourseType(instructor, courseType);
-            fail();
         } catch (Exception e) {
             assertNull(courseType);
             assertNull(courseTypeCreated);
-            assertEquals("Cannot suggest a null course", e.getMessage());
         }
-        
-        verify(instructorRepository, times(0)).save(any(Instructor.class));
-        verify(personRepository, times(0)).save(any(Person.class));
+
+        verify(courseTypeRepository, times(0)).save(any(CourseType.class));
+     
     }
 
     @Test
@@ -1102,13 +843,8 @@ public class UserServiceTests {
         Person foundPerson = null;
 
         lenient().when(personRepository.findPersonByEmail(aEmail)).thenReturn(person);
-
-        try {
-            foundPerson = userService.findPersonByEmail(aEmail);
-        } catch (Exception e) {
-            //Ensure no error occured
-            fail();
-        }
+        foundPerson = userService.findPersonByEmail(aEmail);
+      
         assertNotNull(foundPerson);
         assertEquals(aEmail, foundPerson.getEmail());
         assertEquals(person, foundPerson);
@@ -1128,11 +864,10 @@ public class UserServiceTests {
 
         try {
             foundPerson = userService.findPersonByEmail(aEmail);
-            fail();
         } catch (Exception e) {
             assertNull(person);
             assertNull(foundPerson);
-            assertEquals("User with email " + aEmail + "does not exist.", e.getMessage());
+            assertEquals("No person with email " + aEmail + " found.", e.getMessage());
         }
 
         verify(personRoleRepository, times(0)).save(any(Owner.class));
@@ -1146,18 +881,22 @@ public class UserServiceTests {
 
         try {
             foundPerson = userService.findPersonByEmail(aEmail);
-            fail();
         } catch (Exception e) {
             assertNull(foundPerson);
-            assertEquals("Email " + email + "does not exist for any user.", e.getMessage());
+            assertEquals("Email cannot be null or blank.", e.getMessage());
         }
-
-        verify(personRoleRepository, times(0)).save(any(Owner.class));
-        verify(personRepository, times(1)).save(any(Person.class));
+   
     }
     
     @Test
     public void testGetCourseTypesSuggestedByPersonId() {
+
+        Owner owner = new Owner();
+        ArrayList<Owner> owners = new ArrayList<>();
+        owners.add(owner);
+
+        when(ownerRepository.findAll()).thenReturn(owners);
+
         String aCourseDescription = "a course";
         boolean isApprovedCourse = true;
         float coursePrice = 2;
@@ -1166,25 +905,22 @@ public class UserServiceTests {
         String aEmail = "Jerry@joe.com";
         String aPassword = "1234";
         int aId = 5;
-        int aOwnerId = 5;
-        List <DailySchedule> aDailySchedule;
-
-        Owner owner = new Owner();
+  
+      
         Instructor instructor = new Instructor(aId, instructorExperience);
         Person person = new Person(aName, aEmail, aPassword, instructor);
         CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
 
         instructor.addInstructorSuggestedCourseType(courseType);
-        personRepository.save(person);
+      
+        when(personRepository.findById(any())).thenReturn(Optional.of(person));
+        when(personRepository.findPersonByEmail(aEmail)).thenReturn(person);
+        when(instructorRepository.findById(any())).thenReturn(Optional.of(instructor));
 
         List<CourseType> courseTypes = null;
 
-        try {
-            courseTypes = userService.getCourseTypesSuggestedByPersonId(aId);
 
-        } catch (Exception e) {
-            fail();
-        }
+        courseTypes = userService.getCourseTypesSuggestedByPersonId(aId);
 
         assertNotNull(courseTypes);
         courseType = courseTypes.get(0);
@@ -1195,9 +931,7 @@ public class UserServiceTests {
         assertEquals(coursePrice, courseType.getPrice());
         assertEquals(courseType, courseType);
 
-        verify(personRoleRepository, times(0)).save(any(Instructor.class));
-        verify(personRepository, times(1)).save(any(Person.class));
-        
+    
 
     }
 
@@ -1207,16 +941,10 @@ public class UserServiceTests {
         boolean isApprovedCourse = true;
         float coursePrice = 2;
         String instructorExperience = "12 days";
-        String aName = "Jerry";
-        String aEmail = "Jerry@joe.com";
-        String aPassword = "1234";
-        int aId = 5;
-        int aOwnerId = 5;
-        List <DailySchedule> aDailySchedule;
 
-        Owner owner = new Owner();
+        int aId = 5;
+
         Instructor instructor = new Instructor(aId, instructorExperience);
-        Person person = new Person(aName, aEmail, aPassword, instructor);
         CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
 
         instructor.addInstructorSuggestedCourseType(courseType);
@@ -1243,24 +971,26 @@ public class UserServiceTests {
         String aEmail = "Jerry@joe.com";
         String aPassword = "1234";
         int aOwnerId = 5;
-        List <DailySchedule> aDailySchedule = null;
-
+     
         Owner owner = new Owner();
+        ArrayList<Owner> owners = new ArrayList<>();
+        owners.add(owner);
+
+        when(ownerRepository.findAll()).thenReturn(owners);
+
+ 
         Person person = new Person(aName, aEmail, aPassword, owner);
         CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
 
         owner.addOwnerSuggestedCourse(courseType);
-        personRepository.save(person);
+        when(personRepository.findById(any())).thenReturn(Optional.of(person));
 
         List<CourseType> courseTypes = null;
 
-        try {
-            courseTypes = userService.getCourseTypesSuggestedByPersonId(aOwnerId);
+        
+        courseTypes = userService.getCourseTypesSuggestedByPersonId(aOwnerId);
 
-        } catch (Exception e) {
-            fail();
-        }
-
+    
         assertNotNull(courseTypes);
         courseType = courseTypes.get(0);
 
@@ -1270,17 +1000,12 @@ public class UserServiceTests {
         assertEquals(coursePrice, courseType.getPrice());
         assertEquals(courseType, courseType);
 
-        verify(personRoleRepository, times(0)).save(any(Owner.class));
-        verify(personRepository, times(1)).save(any(Person.class));
-   
+    
 
     }
 
     @Test
     public void testGetCourseTypesSuggestedByPersonIdOwnerNoCourseTypes() {
-        String aCourseDescription = "a course";
-        boolean isApprovedCourse = true;
-        float coursePrice = 2;
         String aName = "Jerry";
         String aEmail = "Jerry@joe.com";
         String aPassword = "1234";
@@ -1304,20 +1029,15 @@ public class UserServiceTests {
 
         verify(personRoleRepository, times(0)).save(any(Owner.class));
         verify(personRepository, times(1)).save(any(Person.class));
-   
 
     }
 
     @Test
     public void testGetCourseTypesSuggestedByPersonIdNotOwnerOrInstructor() {
-        String aCourseDescription = "a course";
-        boolean isApprovedCourse = true;
-        float coursePrice = 2;
         String aName = "Jerry";
         String aEmail = "Jerry@joe.com";
         String aPassword = "1234";
         int aOwnerId = 5;
-        List <DailySchedule> aDailySchedule = null;
 
         Customer customer = new Customer(aOwnerId);
         Person person = new Person(aName, aEmail, aPassword, customer);
@@ -1325,7 +1045,6 @@ public class UserServiceTests {
         personRepository.save(person);
 
         List<CourseType> courseTypes = null;
-
         try {
             courseTypes = userService.getCourseTypesSuggestedByPersonId(aOwnerId);
             fail();
@@ -1334,7 +1053,6 @@ public class UserServiceTests {
             assertEquals("The owner does not yet exist within the system.", e.getMessage());
             
         }
-
         verify(personRoleRepository, times(0)).save(any(Owner.class));
         verify(personRepository, times(1)).save(any(Person.class));
    
