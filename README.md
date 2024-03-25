@@ -37,4 +37,4 @@ However, to ensure a good flow in the project workload, we have decided to split
 
 ## Individual Efforts (Budget)
 We have created a excel spreadsheet in order to visualize the hours every member of the team has put in for iteration 1, including which main tasks they worked on.\
-[Sprint 1 Budget](https://docs.google.com/spreadsheets/d/1xLnBuVPIr9tvh49kfRFqiPK2vfZRNgzemxMTLZt0INA/edit?usp=sharing)
+[Budget](https://docs.google.com/spreadsheets/d/1xLnBuVPIr9tvh49kfRFqiPK2vfZRNgzemxMTLZt0INA/edit?usp=sharing)
