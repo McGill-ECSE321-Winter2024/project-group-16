@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
-import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
@@ -42,7 +41,7 @@ public class CourseTypeService {
     @Transactional
     public CourseType createCourseType(String description, boolean approvedByOwner, float price) {
         // Validate the course before saving
-        validateCourseType(description, price, true);
+        Helper.validateCourseType(courseTypeRepository,description, price, true);
         CourseType courseType = new CourseType();
         courseType.setDescription(description);
         courseType.setApprovedByOwner(approvedByOwner);
@@ -63,7 +62,7 @@ public class CourseTypeService {
     public CourseType updateCourseType(int id, String description, boolean approvedByOwner, float price) {
         CourseType courseType = getCourseType(id);
         boolean newDescription = !courseType.getDescription().equals(description);
-        validateCourseType(description, price, newDescription);
+        Helper.validateCourseType(courseTypeRepository,description, price, newDescription);
         courseType.setDescription(description);
         courseType.setApprovedByOwner(approvedByOwner);
         courseType.setPrice(price);
@@ -87,31 +86,7 @@ public class CourseTypeService {
         return instructor;
     }
 
-    /**
-     * Validates the course type before saving or updating it.
-     * @param description
-     * @param price
-     * @param newDescription
-     */
-    private void validateCourseType(String description, float price, boolean newDescription) {
-        if (description == null || description.trim().isEmpty()) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description cannot be null or empty.");
-        }
-        if (price <= 0) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course price must be greater than zero.");
-        }
-        if (newDescription) {
-            if (courseTypeRepository.findCourseTypeByDescription(description) != null) {
-                throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description must be unique");
-            }
-        }
-        if (!description.matches(".*[a-zA-Z].*")) {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Description must contain letters.");
-        }
-        if (description.length() > 60) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description cannot exceed 60 characters.");
-        }
-    }
+
 
     /**
      * @param id
@@ -152,11 +127,6 @@ public class CourseTypeService {
          if (!optionalCourseType.isPresent() ) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There is no course type with ID " + id + ".");
         } 
-        //List<ScheduledCourse> courses = scheduledCourseRepository.findScheduledCoursesByCourseType(optionalCourseType.get());
-        /*for (ScheduledCourse course : courses) {
-            scheduledCourseRepository.delete(course);
-        }
-        courseTypeRepository.deleteById(id);*/
     }
 
     /**
