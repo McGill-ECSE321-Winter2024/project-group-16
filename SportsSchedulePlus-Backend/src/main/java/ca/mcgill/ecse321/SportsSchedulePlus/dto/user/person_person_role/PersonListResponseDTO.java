@@ -5,6 +5,9 @@ import java.util.List;
 public class PersonListResponseDTO {
     private List<PersonDTO> persons;
     
+    public PersonListResponseDTO(){
+        
+    }
     public PersonListResponseDTO(List<PersonDTO> persons) {
         this.persons = persons;
     }

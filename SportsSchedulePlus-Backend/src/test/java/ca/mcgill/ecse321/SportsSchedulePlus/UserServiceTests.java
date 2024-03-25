@@ -478,7 +478,6 @@ public class UserServiceTests {
         }
     }
 
-    //Noah below
     @Test
     public void testApplyForInstructor() {
         int aId = 2;
