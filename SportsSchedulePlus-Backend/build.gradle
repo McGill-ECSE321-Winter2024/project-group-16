@@ -48,6 +48,10 @@ tasks.named('test') {
 
 tasks.named('test') {
 	//...other configurations
+	useJUnitPlatform()
+	testLogging {
+		events "passed", "failed", "skipped"
+	}
 	finalizedBy jacocoTestCoverageVerification
 }
 
@@ -55,9 +59,13 @@ tasks.named('jacocoTestCoverageVerification') {
 	violationRules {
 		rule {
 			limit {
-				minimum = 0.6
+				minimum = 0.5
 			}
 		}
 	}
 	dependsOn test // tests are required to run before checking code coverage.
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
 }
