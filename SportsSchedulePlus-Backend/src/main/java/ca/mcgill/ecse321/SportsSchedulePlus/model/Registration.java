@@ -14,7 +14,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Payment {
+public class Registration {
   @EmbeddedId
   private Key key;
   //------------------------
@@ -22,16 +22,19 @@ public class Payment {
   //------------------------
 
   //Payment Attributes
+ 
   private int confirmationNumber;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public Registration() {
 
-  public Payment(int aConfirmationNumber) {
+  }
+  public Registration(int aConfirmationNumber) {
     confirmationNumber = aConfirmationNumber;
   }
-  public Payment(Key key) {
+  public Registration(Key key) {
     this.key = key;
   }
 
@@ -62,6 +65,32 @@ public class Payment {
   public String toString() {
     return super.toString() + "[" +
       "confirmationNumber" + ":" + getConfirmationNumber() + "]";
+  }
+
+  /**
+   * Compares this Payment object with the specified object for equality.
+   *
+   * @param object The object to compare with this Payment.
+   * @return true if the given object is equal to this Payment; false otherwise.
+   */
+  @Override
+  public boolean equals(Object object) {
+    // Cast the compared object to Payment for detailed attribute comparison
+    Registration other = (Registration) object;
+
+    // Compare the keys for equality
+    return this.key.equals(other.getKey());
+  }
+
+  /**
+   * Generates a hash code for this Payment object based on its attributes.
+   *
+   * @return A hash code value for this Payment.
+   */
+  @Override
+  public int hashCode() {
+    // Using Objects.hash to generate hash code based on the key attribute
+    return Objects.hash(key);
   }
 
   @Embeddable
@@ -96,10 +125,9 @@ public class Payment {
 
     @Override
     public boolean equals(Object obj) {
-      if (!(obj instanceof Key)) {
+      if (!(obj instanceof Key other)) {
         return false;
       }
-      Key other = (Key) obj;
       return this.getCustomer().getId() == other.getCustomer().getId() &&
         this.getScheduledCourse().getId() == other.getScheduledCourse().getId();
     }
