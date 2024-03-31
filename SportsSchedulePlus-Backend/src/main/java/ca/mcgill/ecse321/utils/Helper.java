@@ -114,13 +114,14 @@ public class Helper {
       throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name cannot contain special characters.");
     }
 
+    if (!EmailValidator.validate(email)) {
+      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Email is not valid.");
+    }
+
     if (!PasswordValidator.isValidPassword(password)) {
       throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Password is not valid.");
     }
 
-    if (!EmailValidator.validate(email)) {
-      throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Email is not valid.");
-    }
 
   }
 
