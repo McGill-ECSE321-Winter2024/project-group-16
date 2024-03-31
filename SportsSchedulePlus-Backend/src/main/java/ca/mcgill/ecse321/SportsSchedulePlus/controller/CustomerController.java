@@ -46,6 +46,17 @@ public class CustomerController {
         Person person = userService.getPersonById(id);
         return new PersonDTO(person);
     }
+
+     /**
+     * Retrieves the customer by the path variable email
+     * @param id
+     * @return PersonDTO
+     */
+    @GetMapping(value = {"/customers/email/{email}"})
+    public PersonDTO getCustomer(@PathVariable("email") String email) {
+        Person person = userService.findPersonByEmail(email);
+        return new PersonDTO(person);
+    }
     
     /**
      * Deletes the customer by the path variable id
