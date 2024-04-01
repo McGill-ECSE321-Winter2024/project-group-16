@@ -1,6 +1,26 @@
 import { createStore } from "vuex";
+// Define a custom Vuex plugin to persist specific state properties
+const customPersistedState = store => {
+  // Subscribe to Vuex store mutations
+  store.subscribe((mutation, state) => {
+    // Define an array of state properties to persist
+    const persistedProperties = ["useremail", "userData", "loggedIn"];
+    
+    // Check if the mutated property is in the array of persisted properties
+    if (persistedProperties.includes(mutation.type)) {
+      // Retrieve the value of the mutated property
+      const value = state[mutation.type];
+      
+      // Persist the property to local storage
+      localStorage.setItem(mutation.type, JSON.stringify(value));
+    }
+  });
+};
+
+
 
 export default createStore({
+ 
   state: {
     hideConfigButton: false,
     isPinned: false,
@@ -18,11 +38,19 @@ export default createStore({
     showMain: true,
     layout: "default",
     useremail:"",
+    loggedIn:false,
+    userData: { id: -1 , name: "", email: "",role:"",password:"" },
   },
   mutations: {
 
     setUserEmail(state, email) {
       state.useremail = email;
+    },
+    setUserData(state, userData) {
+      state.userData = userData;
+    },
+    setLoggedIn(state, isLoggedIn) {
+      state.loggedIn = isLoggedIn;
     },
     toggleConfigurator(state) {
       state.showConfig = !state.showConfig;
@@ -54,9 +82,30 @@ export default createStore({
     setUserEmail({ commit }, email) {
       commit("setUserEmail", email);
     },
+    setUserData({ commit }, userData) {
+      commit("setUserData", userData);
+    },
+    setLoggedIn({ commit }, loggedIn) {
+      commit("setLoggedIn", loggedIn);
+    },
     toggleSidebarColor({ commit }, payload) {
       commit("sidebarType", payload);
     },
+    toggleShowSidenav({ commit }, payload) {
+      commit("showSidenav", payload);
+    },
   },
-  getters: {},
+  getters: {
+    isLoggedIn(state) {
+        return state.loggedIn;
+    },
+    userData(state) {
+      return state.userData;
+  }
+},
+plugins: [customPersistedState]
+
 });
+
+
+

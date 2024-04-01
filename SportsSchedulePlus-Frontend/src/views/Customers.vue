@@ -61,48 +61,44 @@
                 <span :class="{'badge': true, 'badge-sm': true, 'bg-gradient-success': customer.personRoleDto.hasApplied === true, 'bg-gradient-secondary':  customer.personRoleDto.hasApplied  === false}">{{ customer.personRoleDto.hasApplied  }}</span>
               </td>
               <td class="align-middle text-center text-sm">
-                <span :class="{'badge': true, 'badge-sm': true, 'bg-gradient-success': true , 'bg-gradient-secondary':  false}">{{ false  }}</span>
+                <span :class="{'badge': true, 'badge-sm': true, 'bg-gradient-warn':  'Approved', 'bg-gradient-secondary':  'Rejected'}">{{ 'Pending' }}</span>
               </td>
               <td class="align-middle text-center">
-            <button
-              type="button"
-              class="btn"
-              :class="[
-                'btn-sm',
-                'btn-pill',
-                'text-white',
-                'fw-bold',
-                {
-                  'btn-success': customer.personRoleDto.hasApplied,
-                  'btn-secondary': !customer.personRoleDto.hasApplied
-                }
-              ]"
-              @click="approveCustomer(customer.id)"
-              :disabled="!customer.personRoleDto.hasApplied"
-              data-toggle="tooltip"
-              data-original-title="Approve user"
-            >
-              Approve
-            </button>
+                <button
+                  type="button"
+                  class="btn control btn-info  badge mb-0 btn-pill fw-bold text-white"
+                  @click="approveCustomer(customer)"
+                  :disabled="!customer.personRoleDto.hasApplied"
+                  data-toggle="tooltip"
+                  data-original-title="Approve user"
+                >
+                  Approve
+                </button>
+              </td>
+              <td class="align-middle text-center">
+                <button
+                  type="button"
+                  class="control btn btn-danger  badge mb-0 btn-pill fw-bold"
+                  @click="deleteCustomer(customer.id)"
+                  data-toggle="tooltip"
+                  data-original-title="Delete user"
+                >
+                  Delete
+                </button>
           </td>
-          
-          <td class="align-middle text-center">
-            <button
-              type="button"
-              class="btn btn-danger btn-sm btn-pill fw-bold"
-              @click="deleteCustomer(customer.id)"
-              data-toggle="tooltip"
-              data-original-title="Delete user"
-            >
-              Delete
-            </button>
-          </td>
+        
 
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+      <!-- Message component to display messages -->
+      <div v-if="message" class="alert alert-dismissible fade show" :class="message.type" role="alert">
+        {{ message.text }}
+        <button type="button" class="btn-close" @click="clearMessage" aria-label="Close"></button>
+      </div>
+      <!-- End of Message component -->
   </div>
 </template>
 
@@ -137,13 +133,27 @@ export default {
         baseURL: "http://localhost:8080"
       });
       try {
-        const response = await axiosClient.put(`/customers/${customerId}/approve`);
+        const response = await axiosClient.put(`/customers/approve/${customerId}`);
+
+
         this.loadCustomers(); // Reload the customer list after approval
         console.log("Customer approved successfully!");
       } catch (error) {
         console.error('Error approving customer:', error);
       }
     },
+    clearMessage() {
+    // Clear the message
+    this.message = null;
+  },
+    async showMessage(text, type) {
+    // Display message with the provided text and type
+    this.message = { text, type };
+
+    // Clear the message after 3 seconds
+    setTimeout(this.clearMessage, 3000);
+   },
+
     async deleteCustomer(customerId) {
       const axiosClient = axios.create({
         baseURL: "http://localhost:8080"
@@ -159,6 +169,8 @@ export default {
     }
   }
 };
+
+
 </script>
 
 <style scoped>

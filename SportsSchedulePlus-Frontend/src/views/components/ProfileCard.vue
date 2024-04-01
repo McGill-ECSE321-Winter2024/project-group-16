@@ -1,3 +1,4 @@
+
 <template>
   <div class="card card-profile">
     <img
@@ -18,102 +19,169 @@
       </div>
     </div>
     <div class="card-header text-center border-0 pt-0 pt-lg-2 pb-4 pb-lg-3">
-      <div class="d-flex justify-content-between">
-        <a
-          href="javascript:;"
-          class="btn btn-sm btn-info mb-0 d-none d-lg-block"
-          >Connect</a
-        >
-        <a
-          href="javascript:;"
-          class="btn btn-sm btn-info mb-0 d-block d-lg-none"
-        >
-          <i class="ni ni-collection"></i>
-        </a>
-        <a
-          href="javascript:;"
-          class="btn btn-sm btn-dark float-right mb-0 d-none d-lg-block"
-          >Message</a
-        >
-        <a
-          href="javascript:;"
-          class="btn btn-sm btn-dark float-right mb-0 d-block d-lg-none"
-        >
-          <i class="ni ni-email-83"></i>
-        </a>
+      <div class="justify-content-between">
+        <a href="javascript:;" class="btn  btn-info  d-lg-block" @click="applyForInstructor">Apply to become an instructor</a>
+        <a href="javascript:;" class="btn btn-sm btn-info mb-0 d-block d-lg-none"><i class="ni ni-collection"></i></a>
+        <a href="javascript:;" class="btn  btn-danger float-right mb-0 d-none d-lg-block" @click="deleteAccount">Delete my account</a>
+        <a href="javascript:;" class="btn btn-sm btn-dark float-right mb-0 d-block d-lg-none"><i class="ni ni-email-83"></i></a>
       </div>
     </div>
     <div class="card-body pt-0">
       <div class="row">
         <div class="col">
           <div class="d-flex justify-content-center">
-            <div class="d-grid text-center">
-              <span class="text-lg font-weight-bolder">22</span>
-              <span class="text-sm opacity-8">Friends</span>
+            <div class="d-grid text-center" v-if="userData.role === 'Instructor' || userData.role === 'Customer'">
+              <span class="text-lg font-weight-bolder">{{ scheduledCourses.length }}</span>
+              <span class="text-sm opacity-8">Scheduled courses</span>
+              
             </div>
-            <div class="d-grid text-center mx-4">
-              <span class="text-lg font-weight-bolder">10</span>
-              <span class="text-sm opacity-8">Photos</span>
+            <div class="d-grid text-center mx-4" v-if="userData.role === 'Instructor'">
+              <span class="text-lg font-weight-bolder">{{ supervisedCourses.length }}</span>
+              <span class="text-sm opacity-8">Supervised courses</span>
             </div>
-            <div class="d-grid text-center">
-              <span class="text-lg font-weight-bolder">89</span>
-              <span class="text-sm opacity-8">Comments</span>
+            <div class="d-grid text-center" v-if="userData.role === 'Instructor' || !!(userData.role === 'Owner')">
+              <span class="text-lg font-weight-bolder">{{ suggestedCourses.length }}</span>
+              <span class="text-sm opacity-8">Course types</span>
             </div>
           </div>
         </div>
       </div>
       <div class="text-center mt-4">
+        <div class="h6 mt-4">
+          <i class="ni business_briefcase-24 mr-2"></i> {{ userData.role }}
+        </div>
         <h5>
           <span class="font-weight-light">{{ userData.name }}</span>
         </h5>
         <div class="h6 font-weight-300">
           <i class="ni location_pin mr-2"></i>{{ userData.email }}
         </div>
-        <div class="h6 mt-4">
-          <i class="ni business_briefcase-24 mr-2"></i> {{userData.role}}
-        </div>
-        <div>
-          <i class="ni education_hat mr-2"></i>Sports Center
-        </div>
       </div>
+      <br>
+      <div class="justify-content-between">
+          <!-- Error Message Template -->
+<div v-if="errorMessage" class="alert alert-danger text-white" role="alert">
+  {{ errorMessage }}
+</div>
+
+<!-- Success Message Template -->
+<div v-if="successMessage" class="alert alert-success text-white" role="alert">
+  {{ successMessage }}
+</div>
+</div>
     </div>
+
   </div>
 </template>
+
 <script setup>
-import { ref, onMounted } from "vue";
-import axios from "axios";
-import { useStore } from "vuex";
+import { ref, computed } from 'vue';
+import axios from 'axios';
+import { useRouter, useRoute } from 'vue-router'
 
-// Define a reactive variable to store the retrieved user data
-const userData = ref({ name: "", email: "" });
+const router = useRouter()
 
-// Get the user's email from the Vuex store
-const store = useStore();
-const userEmail = store.state.useremail;
+// Retrieve userData from localStorage
+const userData = JSON.parse(localStorage.getItem('userData'));
 
-// Create an Axios client
 const axiosClient = axios.create({
-  baseURL: "http://localhost:8080" // Adjust the base URL as per your backend endpoint
+  baseURL: "http://localhost:8080"
 });
 
-// Function to fetch user data from the backend
-const fetchUserData = async () => {
+// Reactive variables for success and error messages
+const successMessage = ref('');
+const errorMessage = ref('');
+
+var userID = userData.id;
+
+// Function to delete user account
+const deleteAccount = async () => {
   try {
-    console.log("Retrieve user data");
-    const response = await axiosClient.get(`/customers/email/${userEmail}`);
-    // Assign response data to userData variable
-    userData.value = {
-      name: response.data.name,
-      email: response.data.email
-    };
-    console.log(userData.value); // For debugging
+    await axiosClient.delete(`/customers/${userID}`);
+    console.log("Account deleted");
+    localStorage.setItem("loggedIn",false);
+    localStorage.setItem("userData",null);
+    successMessage.value = "Account deleted successfully."
+    // Redirect after a short delay
+       setTimeout(() => {
+      router.push("/signup");}, 2000); // Redirect after 2 seconds
   } catch (error) {
-    console.error("Error fetching user data:", error);
+    console.error('Error deleting account:', error);
+    errorMessage.value = 'There was an error deleting your account.'; // Set error message
   }
 };
 
-// Lifecycle hook to fetch user data when the component is mounted
+// Function to apply for instructorship
+const applyForInstructor = async () => {
+  try {
+    const response = await axiosClient.put(`/customers/${userID}/apply`);
+    console.log("Applied for instructor:", response.data);
+    successMessage.value = "Applied for instructor successfully.";
+    // Optionally, clear error message if set
+    errorMessage.value = '';
+  } catch (error) {
+    console.error('Error applying for instructor:', error);
+    errorMessage.value = 'There was an error applying for instructorship.'; // Set error message
+    // Optionally, clear success message if set
+    successMessage.value = '';
+  }
+};
+import { onMounted } from "vue";
+
+const scheduledCourses = ref([]);
+const supervisedCourses = ref([]);
+const suggestedCourses = ref([]);
+
+// Function to fetch scheduled courses
+const fetchScheduledCourses = async () => {
+  try {
+    const response = await axiosClient.get(`/customers/${userID}/registrations`);
+    scheduledCourses.value = response.data.registrations;
+  } catch (error) {
+    console.error('Error fetching scheduled courses:', error);
+    errorMessage.value = 'There was an error fetching scheduled courses.'; // Set error message
+  }
+};
+
+
+// Function to fetch supverised courses
+const fetchSupervisedCourses = async () => {
+  try {
+    const response = await axiosClient.get(`/scheduledCourses/instructors/${userID}`);
+     
+    supervisedCourses.value = response.data.supervisedCourses;
+    suggestedCourses.value = response.data.instructorSuggestedCourseTypes;
+  } catch (error) {
+    console.error('Error fetching supervised courses:', error);
+    errorMessage.value = 'There was an error fetching instructor supervised courses.'; // Set error message
+  }
+};
+
+
+// Function to fetch supverised courses
+const fetchOwnerSuggestedCourses = async () => {
+  try {
+    const response = await axiosClient.get(`/courseTypes/approvedByOwner/true`);
+    suggestedCourses.value = response.data.courseTypes;
+  } catch (error) {
+    console.error('Error fetching owner course types:', error);
+    errorMessage.value = 'There was an error fetching owner course types.'; // Set error message
+  }
+};
+
+
 onMounted(() => {
-  fetchUserData();
+  if(userData.role === "Instructor" || userData.role === "Customer" ){
+  fetchScheduledCourses();
+  }
+  if(userData.role === "Instructor"){
+  fetchSupervisedCourses();
+  }
+  if(userData.role === "Owner"){
+  fetchOwnerSuggestedCourses();
+  }
+
 });
+
+
 </script>

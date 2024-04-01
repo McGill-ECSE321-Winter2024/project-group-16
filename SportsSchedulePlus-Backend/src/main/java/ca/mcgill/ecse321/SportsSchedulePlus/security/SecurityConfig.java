@@ -39,8 +39,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", corsConfiguration);
 
         return http
-            .cors().configurationSource(request -> corsConfiguration)
-            .and()
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
