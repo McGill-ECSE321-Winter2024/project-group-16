@@ -106,25 +106,25 @@ public class CustomerController {
     
     /**
      * Approves a customer to become an instructor
-     * @param customerId
+     * @param customerEmail
      * @return PersonDTO
      */
-    @PutMapping(value = {"/customers/approve/{customerId}"})
-    public PersonDTO approveCustomer(@PathVariable("customerId") int customerId) {
-        userService.approveCustomer(customerId);
-        Person person = userService.getPersonById(customerId);
+    @PutMapping(value = {"/customers/{customerEmail}/approve"})
+    public PersonDTO approveCustomer(@PathVariable("customerEmail") String customerEmail) {
+        userService.approveCustomer(customerEmail);
+        Person person = userService.findPersonByEmail(customerEmail);
         return new PersonDTO(person);
     }
     
     /**
      * Rejects a customer's request to become an instructor
-     * @param customerId
+     * @param customerEmail
      * @return PersonDTO
      */
-    @PutMapping(value = {"/customers/{customerId}/reject"})
-    public PersonDTO rejectCustomer(@PathVariable("customerId") int customerId) {
-        userService.rejectCustomer(customerId);
-        Person person = userService.getPersonById(customerId);
+    @PutMapping(value = {"/customers/{customerEmail}/reject"})
+    public PersonDTO rejectCustomer(@PathVariable("customerEmail") String customerEmail) {
+        userService.rejectCustomer(customerEmail);
+        Person person = userService.findPersonByEmail(customerEmail);
         return new PersonDTO(person);
     }
 
