@@ -16,6 +16,7 @@ public class Customer extends PersonRole {
   //------------------------
 
   private boolean hasApplied;
+  private State state = State.NONE;
 
 
 
@@ -40,7 +41,17 @@ public class Customer extends PersonRole {
     boolean wasSet = false;
     hasApplied = aHasApplied;
     wasSet = true;
+    this.setState(State.PENDING);
     return wasSet;
+  }
+
+  public State getState() {
+    return state;
+  }
+
+  public boolean setState(State newState) {
+    state = newState;
+    return true;
   }
 
  

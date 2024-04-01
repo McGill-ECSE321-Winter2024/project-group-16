@@ -121,15 +121,26 @@ public class CourseTypeController {
         CourseType updatedCourseType = courseTypeService.updateCourseType(id, request.getDescription(), request.isApprovedByOwner(), request.getPrice());
         return new CourseTypeResponseDTO(updatedCourseType);
     }
-    
-    /**
-     * Toggles the approval of the course type with the path variable id 
-     * @return CourseTypeResponseDTO
+     /**
+     * Approves the course type with the given ID
+     * @param id The ID of the course type to be approved
+     * @return The approved course type
      */
-    @PutMapping("/courseTypes/toggleApproval/{id}")
-    public CourseTypeResponseDTO updateCourseTypeApproval(@PathVariable(name = "id") int id) {
-        CourseType updatedCourseType = courseTypeService.toggleCourseTypeApproval(id);
-        return new CourseTypeResponseDTO(updatedCourseType);
+    @PutMapping("/courseTypes/approve/{id}")
+    public CourseTypeResponseDTO approveCourseType(@PathVariable int id) {
+        CourseType courseType = courseTypeService.approveCourseType(id);
+        return new CourseTypeResponseDTO(courseType);
+    }
+
+    /**
+     * Rejects the course type with the given ID
+     * @param id The ID of the course type to be rejected
+     * @return The rejected course type
+     */
+    @PutMapping("/courseTypes/reject/{id}")
+    public CourseTypeResponseDTO rejectCourseType(@PathVariable int id) {
+        CourseType courseType = courseTypeService.rejectCourseType(id);
+        return new CourseTypeResponseDTO(courseType);
     }
     
     /**

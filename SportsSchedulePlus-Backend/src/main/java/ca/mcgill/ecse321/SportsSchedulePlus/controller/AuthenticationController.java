@@ -48,7 +48,7 @@ public class AuthenticationController {
             if (exception.getMessage().equals("User does not exist.")) {
                 return new ResponseEntity<>("User with email " + loginDto.getEmail() + " does not exist.", HttpStatus.UNAUTHORIZED);
             } else if (exception.getMessage().equals("Bad credentials")) {
-                return new ResponseEntity<>("Incorrect password, please try again."+exception.getMessage()+loginDto.getPassword(), HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>("Incorrect password, please try again.", HttpStatus.UNAUTHORIZED);
             }
         }
         return new ResponseEntity<>("Authentication error.", HttpStatus.UNAUTHORIZED);

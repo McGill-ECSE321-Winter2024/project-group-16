@@ -13,6 +13,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Owner;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.State;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
@@ -127,6 +128,7 @@ public class CourseTypeService {
          if (!optionalCourseType.isPresent() ) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There is no course type with ID " + id + ".");
         } 
+        courseTypeRepository.deleteById(id);
     }
 
     /**
@@ -181,31 +183,47 @@ public class CourseTypeService {
     }
 
     /**
-     * toggles the approval status of the course type with the given ID
-     * @param id
-     * @return the course type with the given ID
-     */
-    @Transactional
-    public CourseType toggleCourseTypeApproval(int id) {
-        CourseType courseType = courseTypeRepository.findById(id).orElse(null);
+    * Approves the course type with the given ID
+    * @param id The ID of the course type to be approved
+    * @return The approved course type
+    */
+   @Transactional
+   public CourseType approveCourseType(int id) {
+       CourseType courseType = courseTypeRepository.findById(id).orElse(null);
 
-        if (courseType == null){
-            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "No course type with specified ID exists in the system");
-        }
+       if (courseType == null) {
+           throw new SportsScheduleException(HttpStatus.NOT_FOUND, "No course type with specified ID exists in the system");
+       }
 
-        boolean approvalStatus = courseType.getApprovedByOwner();
-        courseType.setApprovedByOwner(!approvalStatus);
-        Owner owner = Helper.toList(ownerRepository.findAll()).get(0);
+       courseType.setApprovedByOwner(true);
+       courseType.setState(State.APPROVED);
 
-        if (!approvalStatus) {
-            owner.addApprovedCourse(courseType);
-        }
-        else {
-            owner.removeApprovedCourse(courseType);
-        }
+       Owner owner = Helper.toList(ownerRepository.findAll()).get(0); // Assuming there is only one owner
+       owner.addApprovedCourse(courseType);
 
-        courseTypeRepository.save(courseType);
-        ownerRepository.save(owner);
-        return courseType;
-    }
+       courseTypeRepository.save(courseType);
+       ownerRepository.save(owner);
+
+       return courseType;
+   }
+
+   /**
+    * Rejects the course type with the given ID
+    * @param id The ID of the course type to be rejected
+    * @return The rejected course type
+    */
+   @Transactional
+   public CourseType rejectCourseType(int id) {
+       CourseType courseType = courseTypeRepository.findById(id).orElse(null);
+
+       if (courseType == null) {
+           throw new SportsScheduleException(HttpStatus.NOT_FOUND, "No course type with specified ID exists in the system");
+       }
+
+       courseType.setApprovedByOwner(false);
+       courseType.setState(State.REJECTED);
+
+       courseTypeRepository.save(courseType);
+       return courseType;
+   }
 }

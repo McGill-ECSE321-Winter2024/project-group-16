@@ -131,6 +131,7 @@ public class UserService {
             PersonRole newPersonRole = new Instructor(customer, experience);
 
             Customer instructor = (Customer) newPersonRole;
+            instructor.setState(State.APPROVED);
             personRoleRepository.save(newPersonRole);
             List<Registration> customerPayments = registrationRepository.findRegistrationsByKeyCustomer(customer);
             for (Registration oldPayment : customerPayments) {
@@ -333,25 +334,38 @@ public class UserService {
      */
     private int deleteUser(Person person, int id) {
         personRepository.delete(person);
-        personRoleRepository.delete(person.getPersonRole());
+        PersonRole role = person.getPersonRole();
+       
         if (person.getPersonRole() instanceof Customer) {
+            this.deleteCustomerRegistrations(id);
             Optional<Customer> optionalCustomer = customerRepository.findById(id);
             if (optionalCustomer.isPresent()) {
+                personRoleRepository.delete(role);
                 customerRepository.delete(optionalCustomer.get());
             }
         }   if (person.getPersonRole() instanceof Instructor){
             Optional<Instructor> optionalInstructor = instructorRepository.findById(id);
             if (optionalInstructor.isPresent()) {
+                personRoleRepository.delete(role);
                 instructorRepository.delete(optionalInstructor.get());
             }
         }
          if (person.getPersonRole() instanceof Owner){
+            personRoleRepository.delete(role);
             ownerRepository.delete(getOwner());
             dailyScheduleRepository.deleteAll();
         }
 
         person.delete();
         return id;
+    }
+
+    private void deleteCustomerRegistrations(int id){
+        Customer customer = customerRepository.findCustomerById(id);
+        List<Registration> registrations = registrationRepository.findRegistrationsByKeyCustomer(customer);
+        for(Registration registration : registrations){
+            registrationRepository.delete(registration);
+        }
     }
 
     /**
@@ -378,41 +392,77 @@ public class UserService {
     }
 
     /**
-     * @param customerId
+     * @param email
      * @return returns a new Instructor account for a customer if he has applied.
      */
     @Transactional
-    public Instructor approveCustomer(int customerId) {
-        Optional<Customer> customer = customerRepository.findById(customerId);
-        Optional<Instructor> instructor = instructorRepository.findById(customerId);
+    public Instructor approveCustomer(String email) {
+        System.out.println("Starting approval process for email: " + email);
         
-        if (instructor.isPresent()) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " is already an instructor.");
+        // Find person by email
+        Person person = personRepository.findPersonByEmail(email);
+        if (person == null) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with email " + email + " does not exist.");
         }
+        System.out.println("Person found with email: " + email);
+        
+        // Get customerId
+        int customerId = person.getId();
+        System.out.println("Customer ID retrieved: " + customerId);
+        
+        // Find customer by customerId
+        Optional<Customer> customer = customerRepository.findById(customerId);
         if (!customer.isPresent()) {
+            System.out.println("Customer with ID " + customerId + " does not exist.");
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
         }
+        System.out.println("Customer found with ID: " + customerId);
+        
+        // Check if the customer is already an instructor
+        Optional<Instructor> instructor = instructorRepository.findById(customerId);
+        if (instructor.isPresent()) {
+            System.out.println("Customer with ID " + customerId + " is already an instructor.");
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " is already an instructor.");
+        }
+        
+        // Check if the customer has applied
         if (!customer.get().getHasApplied()){
+            System.out.println("Customer with ID " + customerId + " has not applied to be an instructor.");
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " has not applied to be an instructor.");
         }
-        Person person = personRepository.findPersonByPersonRole(customer.get());
-
+        System.out.println("Customer with ID " + customerId + " has applied to be an instructor.");
+        
+        // Update customer state to APPROVED
+        customer.get().setState(State.APPROVED);
+        customerRepository.save(customer.get());
+        System.out.println("Customer state updated to APPROVED.");
+        
+        // Create new instructor
         Person newPerson = createInstructor(person.getEmail(), "");
+        System.out.println("New instructor account created for email: " + email);
+        
+        // Return the new instructor
         return (Instructor) newPerson.getPersonRole();
     }
 
+
     /**
-     * @param customerId
+     * @param customerEmail
      * @return returns the customer with the given id, changes the hasApplied attribute to false
      */
     @Transactional
-    public Customer rejectCustomer(int customerId) {
+    public Customer rejectCustomer(String email) {
+        Person person = personRepository.findPersonByEmail(email);
+        if(person == null){
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with email " + email + " does not exist.");
+        }
+        int customerId = person.getId();
         Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
         if (!optionalCustomer.isPresent()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
         }
         Customer customer = optionalCustomer.get();
-        customer.setHasApplied(false);
+        customer.setState(State.REJECTED);
         customerRepository.save(customer);
         return customer;
     }
