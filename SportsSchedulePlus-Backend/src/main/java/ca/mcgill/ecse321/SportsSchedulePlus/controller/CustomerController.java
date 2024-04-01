@@ -109,7 +109,7 @@ public class CustomerController {
      * @param customerId
      * @return PersonDTO
      */
-    @PutMapping(value = {"/customers/{customerId}/approve"})
+    @PutMapping(value = {"/customers/approve/{customerId}"})
     public PersonDTO approveCustomer(@PathVariable("customerId") int customerId) {
         userService.approveCustomer(customerId);
         Person person = userService.getPersonById(customerId);

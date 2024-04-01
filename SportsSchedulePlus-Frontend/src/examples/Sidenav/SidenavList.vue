@@ -8,6 +8,7 @@ import SidenavCard from "./SidenavCard.vue";
 
 const store = useStore();
 const isRTL = computed(() => store.state.isRTL);
+const loggedIn = localStorage.getItem("loggedIn");
 
 const getRoute = () => {
   const route = useRoute();
@@ -35,9 +36,22 @@ const getRoute = () => {
 
       <li class="nav-item">
         <sidenav-item
-          to="/tables"
-          :class="getRoute() === 'tables' ? 'active' : ''"
-          :navText="isRTL ? 'الجداول' : 'Tables'"
+          to="/customers"
+          :class="getRoute() === 'customers' ? 'active' : ''"
+          :navText="isRTL ? 'الجداول' : 'Customers'"
+        >
+          <template v-slot:icon>
+            <i
+              class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"
+            ></i>
+          </template>
+        </sidenav-item>
+      </li>
+      <li class="nav-item">
+        <sidenav-item
+          to="/instructors"
+          :class="getRoute() === 'instructors' ? 'active' : ''"
+          :navText="isRTL ? 'الجداول' : 'Instructors'"
         >
           <template v-slot:icon>
             <i
@@ -101,7 +115,7 @@ const getRoute = () => {
         </h6>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item" v-if="!!loggedIn">
         <sidenav-item
           to="/profile"
           :class="getRoute() === 'profile' ? 'active' : ''"
@@ -113,7 +127,7 @@ const getRoute = () => {
         </sidenav-item>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item" v-if="!loggedIn">
         <sidenav-item
           to="/signin"
           :class="getRoute() === 'signin' ? 'active' : ''"
@@ -125,7 +139,7 @@ const getRoute = () => {
         </sidenav-item>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item" v-if="!loggedIn">
         <sidenav-item
           to="/signup"
           :class="getRoute() === 'signup' ? 'active' : ''"

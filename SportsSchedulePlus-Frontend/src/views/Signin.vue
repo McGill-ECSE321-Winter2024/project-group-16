@@ -1,3 +1,5 @@
+
+
 <script setup>
 import { onBeforeUnmount, onBeforeMount } from "vue";
 import { useStore } from "vuex";
@@ -39,13 +41,37 @@ const axiosClient = axios.create({
   baseURL: "http://localhost:8080"
 });
 
+
+
 const signUp = async () => {
   try {
     const user = { email: email.value, password: password.value };
-    const response = await axiosClient.post('/authentication/login',user);
-    console.log('Signin successful:', response.data.message);
-    // Set the user's email in the Vuex store
-    store.dispatch("setUserEmail", email.value);
+    await axiosClient.post('/authentication/login',user);
+    console.log("pwd",password);
+    var response = await axiosClient.get(`/customers/email/${email.value}`);
+    var userRole;
+    if(email.value === "sports.schedule.plus@gmail.com"){
+       userRole = "Owner";
+    }
+    else{
+      userRole = response.data.role;
+    }
+   
+    // Assign response data to userData variable
+    var userData = {
+      id: response.data.id,
+      name: response.data.name,
+      email: response.data.email,
+      role: userRole,
+      password: password.value
+    };
+     console.log(response.data);
+    // Save user data to local storage
+    localStorage.setItem('userData', JSON.stringify(userData));
+    // Save login status to local storage
+    localStorage.setItem('loggedIn', true);
+ 
+
     router.push('/profile');
     // You can do something after successful signup, like redirecting the user to another page.
   } catch (error) {
@@ -163,6 +189,3 @@ const signUp = async () => {
   </main>
 </div>
 </template>
-
-
-

@@ -1,14 +1,16 @@
 /* eslint no-undef: "off" */
 import { createRouter, createWebHistory } from "vue-router";
 import Dashboard from "../views/Dashboard.vue";
-import Tables from "../views/Tables.vue";
+import Customers from "../views/Customers.vue";
+import Instructors from "../views/Instructors.vue";
+
 import Billing from "../views/Billing.vue";
 import VirtualReality from "../views/VirtualReality.vue";
 import RTL from "../views/Rtl.vue";
 import Profile from "../views/Profile.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
-
+import Registrations from "../views/Registrations.vue";
 
 
 
@@ -24,9 +26,14 @@ const routes = [
     component: Dashboard,
   },
   {
-    path: "/tables",
-    name: "Tables",
-    component: Tables,
+    path: "/customers",
+    name: "customers",
+    component: Customers,
+  },
+  {
+    path: "/instructors",
+    name: "instructors",
+    component: Instructors,
   },
   {
     path: "/billing",
@@ -57,6 +64,11 @@ const routes = [
     path: "/signup",
     name: "Signup",
     component: Signup,
+  },
+  {
+  path: "/customer/registrations",
+  name: "registrations",
+  component: Registrations,
   },
 ];
 

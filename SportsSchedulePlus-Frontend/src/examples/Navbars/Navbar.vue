@@ -10,6 +10,8 @@ const isRTL = computed(() => store.state.isRTL);
 
 const route = useRoute();
 
+const loggedIn = localStorage.getItem("loggedIn");
+
 const currentRouteName = computed(() => {
   return route.name;
 });
@@ -26,6 +28,14 @@ const closeMenu = () => {
     showMenu.value = false;
   }, 100);
 };
+var userLoggedIn = localStorage.getItem("loggedIn");
+
+const logout = () => {
+  // Change local storage
+  localStorage.setItem("loggedIn",false);
+  // Redirect to the Signin page
+  route.push({ name: 'Signin' });
+}
 </script>
 <template>
   <nav
@@ -70,6 +80,7 @@ const closeMenu = () => {
             >
               <i class="fa fa-user" :class="isRTL ? 'ms-sm-2' : 'me-sm-2'"></i>
               <span v-if="isRTL" class="d-sm-inline d-none">يسجل دخول</span>
+              <span v-if="!!loggedIn"  class="d-sm-inline d-none"  @click="logout">Log out</span>
               <span v-else class="d-sm-inline d-none">Sign In</span>
             </router-link>
           </li>
