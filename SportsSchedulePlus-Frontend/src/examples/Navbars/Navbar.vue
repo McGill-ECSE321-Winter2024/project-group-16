@@ -2,41 +2,29 @@
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
-import Breadcrumbs from "../Breadcrumbs.vue";
 
+// Reactive variables
 const showMenu = ref(false);
 const store = useStore();
-const isRTL = computed(() => store.state.isRTL);
-
 const route = useRoute();
 
-const loggedIn = localStorage.getItem("loggedIn");
-
-const currentRouteName = computed(() => {
-  return route.name;
-});
+// Computed properties
+const loggedIn = computed(() => localStorage.getItem("loggedIn"));
+const isRTL = computed(() => store.state.isRTL);
+const currentRouteName = computed(() => route.name);
 const currentDirectory = computed(() => {
   let dir = route.path.split("/")[1];
   return dir.charAt(0).toUpperCase() + dir.slice(1);
 });
 
+// Methods
+const logout = () => store.dispatch('logout');
 const minimizeSidebar = () => store.commit("sidebarMinimize");
 const toggleConfigurator = () => store.commit("toggleConfigurator");
+const closeMenu = () => setTimeout(() => showMenu.value = false, 100);
 
-const closeMenu = () => {
-  setTimeout(() => {
-    showMenu.value = false;
-  }, 100);
-};
-var userLoggedIn = localStorage.getItem("loggedIn");
-
-const logout = () => {
-  // Change local storage
-  localStorage.setItem("loggedIn",false);
-  // Redirect to the Signin page
-  route.push({ name: 'Signin' });
-}
 </script>
+
 <template>
   <nav
     class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
@@ -80,7 +68,7 @@ const logout = () => {
             >
               <i class="fa fa-user" :class="isRTL ? 'ms-sm-2' : 'me-sm-2'"></i>
               <span v-if="isRTL" class="d-sm-inline d-none">يسجل دخول</span>
-              <span v-if="!!loggedIn"  class="d-sm-inline d-none"  @click="logout">Log out</span>
+              <span v-if="loggedIn"  class="d-sm-inline d-none"  @click="logout">Log out</span>
               <span v-else class="d-sm-inline d-none">Sign In</span>
             </router-link>
           </li>

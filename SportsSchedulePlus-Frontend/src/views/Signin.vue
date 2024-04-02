@@ -43,7 +43,7 @@ const axiosClient = axios.create({
 
 
 
-const signUp = async () => {
+const signIn = async () => {
   try {
     const user = { email: email.value, password: password.value };
     await axiosClient.post('/authentication/login',user);
@@ -56,7 +56,6 @@ const signUp = async () => {
     else{
       userRole = response.data.role;
     }
-   
     // Assign response data to userData variable
     var userData = {
       id: response.data.id,
@@ -70,8 +69,7 @@ const signUp = async () => {
     localStorage.setItem('userData', JSON.stringify(userData));
     // Save login status to local storage
     localStorage.setItem('loggedIn', true);
- 
-
+    await store.dispatch('login', userData);
     router.push('/profile');
     // You can do something after successful signup, like redirecting the user to another page.
   } catch (error) {
@@ -110,7 +108,7 @@ const signUp = async () => {
                   <p class="mb-0">Enter your email and password to sign in</p>
                 </div>
                 <div class="card-body">
-                 <form role="form" @submit.prevent="signUp">
+                 <form role="form" @submit.prevent="signIn">
                     <div class="mb-3">
                       <argon-input
                         id="email"

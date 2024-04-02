@@ -1,7 +1,7 @@
 <template>
     <div class="card">
       <div class="card-header pb-0">
-        <h6>Customers table</h6>
+        <h6>Course types table</h6>
       </div>
       <div class="card-body px-0 pt-0 pb-2">
         <div class="table-responsive p-0">
@@ -11,17 +11,12 @@
                 <th
                   class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                 >
-                  Name
+                  Description
                 </th>
                 <th
                   class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
                 >
-                  Email
-                </th>
-                <th
-                  class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                >
-                  Applied
+                  Price
                 </th>
                 <th
                   class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
@@ -46,61 +41,52 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(customer, index) in customers" :key="index">
+              <tr v-for="(courseType, index) in courseTypes" :key="index">
                 <td>
                   <div class="d-flex px-2 py-1">
                     <div>
                       <img
-                        src="../assets/img/user.png"
+                        src="../assets/img/circle.png"
                         class="avatar avatar-sm me-3"
-                        :alt="customer.name"
                       />
                     </div>
                     <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-0 text-sm">{{ customer.name }}</h6>
-                      <p class="text-xs text-secondary mb-0">
-                        {{ customer.email }}
-                      </p>
+                      <h6 class="mb-0 text-sm">{{ courseType.description }}</h6>
                     </div>
                   </div>
                 </td>
                 <td>
                   <p class="text-xs font-weight-bold mb-0">
-                    {{ customer.email }}
+                    {{ courseType.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
                   </p>
                 </td>
-                <td class="align-middle text-center text-sm">
-                  <span
-                    :class="{'badge': true, 'badge-lg': true, 'bg-gradient-success': customer.personRoleDto.hasApplied === true, 'bg-gradient-secondary':  customer.personRoleDto.hasApplied  === false}"
-                    >{{ customer.personRoleDto.hasApplied  }}</span
-                  >
-                </td>
+  
                 <td class="align-middle text-center text-sm">
                   <span
                     :style="{
-                      'background': customer.applicationState.toUpperCase() === 'APPROVED' ? 'linear-gradient(to right, #85D4E3, #3498db)' :
-                                  customer.applicationState.toUpperCase() === 'REJECTED' ? 'linear-gradient(to right, #F7CAC9, #FF6F61)' :
-                                  customer.applicationState.toUpperCase() === 'NONE' ? 'linear-gradient(to right, #D3D3D3, #808080)' :
-                                  customer.applicationState.toUpperCase() === 'PENDING' ? 'linear-gradient(to right, #FFDEAD, #FFA500)' : '',
-                      'color': 'white',
-                      'width':'100px',
-                      'padding': '10px 10px',
-                      'border-radius': '5px',
-                      'background-size': '100% 100%'
+                      'background': courseType.state.toUpperCase() === 'APPROVED' ? 'linear-gradient(to right, #85D4E3, #3498db)' :
+                                  courseType.state.toUpperCase() === 'REJECTED' ? 'linear-gradient(to right, #F7CAC9, #FF6F61)' :
+                                  courseType.state.toUpperCase() === 'NONE' ? 'linear-gradient(to right, #D3D3D3, #808080)' :
+                                  courseType.state.toUpperCase() === 'PENDING' ? 'linear-gradient(to right, #FFDEAD, #FFA500)' : '',
+                              'color': 'white',
+                              'width':'100px',
+                              'padding': '10px 10px',
+                              'border-radius': '5px',
+                              'background-size': '100% 100%'
                   }"
                     class="badge badge-lg"
-                    >{{ customer.applicationState }}</span
-                  >
+                    >{{ courseType.state }}
+                  </span>
                 </td>
   
                 <td class="align-middle text-center">
                   <button
                     type="button"
                     class="bg-gradient-success border badge text-white badge-lg"
-                    @click="approveCustomer(customer.email)"
-                    :disabled="customer.applicationState.toUpperCase() === 'APPROVED' || !customer.personRoleDto.hasApplied|| customer.applicationState.toUpperCase() === 'REJECTED'"
+                    @click="approveCourseType(courseType.id)"
+                    :disabled="courseType.state.toUpperCase() === 'APPROVED' || !!courseType.approvedByOwner"
                     data-toggle="tooltip"
-                    data-original-title="Approve user"
+                    data-original-title="Approve course type"
                   >
                     Approve
                   </button>
@@ -109,11 +95,10 @@
                   <button
                     type="button"
                     class="bg-gradient-warning border badge text-white badge-lg"
-                    @click="rejectCustomer(customer.email)"
-                    :disabled="customer.applicationState.toUpperCase() === 'APPROVED' || 
-                      customer.applicationState.toUpperCase() === 'REJECTED' || !customer.personRoleDto.hasApplied"
+                    @click="rejectCourseType(courseType.id)"
+                    :disabled="courseType.state.toUpperCase() === 'APPROVED' || courseType.state.toUpperCase() === 'REJECTED' || !!courseType.approvedByOwner"
                     data-toggle="tooltip"
-                    data-original-title="Reject user"
+                    data-original-title="Reject course type"
                   >
                     Reject
                   </button>
@@ -122,7 +107,7 @@
                   <button
                     type="button"
                     class="bg-gradient-danger border badge text-white badge-lg"
-                    @click="deleteCustomer(customer.id)"
+                    @click="deleteCourseType(courseType.id)"
                     data-toggle="tooltip"
                     data-original-title="Delete user"
                   >
@@ -130,6 +115,7 @@
                   </button>
                 </td>
               </tr>
+  
               <!-- Add empty rows to fill the table -->
               <tr
                 v-for="index in Math.max(0,5)"
@@ -151,7 +137,7 @@
       <!-- Message component to display messages -->
       <div
         v-if="message"
-        class="alert alert-dismissible fade show"
+        class="alert alert-dismissible mb-2 px-2 fade show"
         :class="message.type"
         role="alert"
       >
@@ -173,76 +159,75 @@
   export default {
     data() {
       return {
-        customers: []
+        courseTypes: [],
+        message: null
       };
     },
     mounted() {
-      this.loadCustomers();
+      this.loadCourseTypes();
     },
     methods: {
-      async loadCustomers() {
+      async loadCourseTypes() {
         const axiosClient = axios.create({
           baseURL: "http://localhost:8080"
         });
         try {
-          const response = await axiosClient.get('/customers');
-          this.customers = response.data.persons;
-          console.log(response.data.persons);
-  
+          const response = await axiosClient.get('/courseTypes');
+          this.courseTypes = response.data.courseTypes;
         } catch (error) {
-          console.error('Error loading customers: ', error);
+          this.showMessage('Error loading course types', 'alert-danger');
+          console.error('Error loading course types: ', error);
         }
       },
-      async approveCustomer(customerId) {
+      async approveCourseType(courseTypeId) {
         const axiosClient = axios.create({
           baseURL: "http://localhost:8080"
         });
         try {
-          const response = await axiosClient.put(`/customers/${customerId}/approve`);
-  
-          console.log("Customer approved successfully!");
-          this.loadCustomers(); // Reload the customer list after approval
+          await axiosClient.put(`/courseTypes/approve/${courseTypeId}`);
+          this.loadCourseTypes(); // Reload the course type list after approval
+          this.showMessage('Course type approved successfully!', 'alert-warn');
         } catch (error) {
-          console.error('Error approving customer:', error);
+          this.showMessage('Error approving course type', 'alert-danger');
+          console.error('Error approving course type:', error);
         }
       },
-      async rejectCustomer(customerId) {
+      async rejectCourseType(courseTypeId) {
         const axiosClient = axios.create({
           baseURL: "http://localhost:8080"
         });
         try {
-          const response = await axiosClient.put(`/customers/${customerId}/reject`);
-  
-          console.log("Customer rejected successfully!");
-          this.loadCustomers(); // Reload the customer list after approval
+          await axiosClient.put(`/courseTypes/reject/${courseTypeId}`);
+          this.loadCourseTypes(); // Reload the course type list after rejection
+          this.showMessage('Course type rejected successfully!', 'alert-warn');
         } catch (error) {
-          console.error('Error rejecting customer:', error);
+          this.showMessage('Error rejecting course type', 'alert-danger');
+          console.error('Error rejecting course type:', error);
+        }
+      },
+      async deleteCourseType(courseTypeId) {
+        const axiosClient = axios.create({
+          baseURL: "http://localhost:8080"
+        });
+        try {
+          await axiosClient.delete(`/courseTypes/${courseTypeId}`);
+          this.loadCourseTypes(); // Reload the course type list after deleting the course type
+          this.showMessage('Course type deleted successfully!', 'alert-warn');
+        } catch (error) {
+          this.showMessage('Error deleting course type, course type must not have associated scheduled courses.', 'alert-warn');
+          console.error('Error deleting course type:', error);
         }
       },
       clearMessage() {
-      // Clear the message
-      this.message = null;
-    },
-      async showMessage(text, type) {
-      // Display message with the provided text and type
-      this.message = { text, type };
+        // Clear the message
+        this.message = null;
+      },
+      showMessage(text, type) {
+        // Display message with the provided text and type
+        this.message = { text, type };
   
-      // Clear the message after 3 seconds
-      setTimeout(this.clearMessage, 3000);
-     },
-  
-      async deleteCustomer(customerId) {
-        const axiosClient = axios.create({
-          baseURL: "http://localhost:8080"
-        });
-        try {
-          await axiosClient.delete(`/customers/${customerId}`);
-          // Optionally, you can reload the customers list after deleting the user
-          this.loadCustomers();
-          console.log("User deleted successfully!");
-        } catch (error) {
-          console.error('Error deleting user:', error);
-        }
+        // Clear the message after 3 seconds
+        setTimeout(this.clearMessage, 3000);
       }
     }
   };

@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 
@@ -7,15 +7,20 @@ import SidenavItem from "./SidenavItem.vue";
 import SidenavCard from "./SidenavCard.vue";
 
 const store = useStore();
-const isRTL = computed(() => store.state.isRTL);
-const loggedIn = localStorage.getItem("loggedIn");
+const isRTL = ref(store.state.isRTL);
 
 const getRoute = () => {
   const route = useRoute();
   const routeArr = route.path.split("/");
   return routeArr[1];
 };
+
+const loggedIn = computed(() => localStorage.getItem("loggedIn"));
+const logout = () => store.dispatch('logout');
+
 </script>
+
+
 <template>
   <div
     class="collapse navbar-collapse w-auto h-auto h-100"
@@ -40,10 +45,8 @@ const getRoute = () => {
           :class="getRoute() === 'customers' ? 'active' : ''"
           :navText="isRTL ? 'الجداول' : 'Customers'"
         >
-          <template v-slot:icon>
-            <i
-              class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"
-            ></i>
+        <template v-slot:icon>
+            <i class="ni ni-single-02 text-warning text-sm opacity-300"></i>
           </template>
         </sidenav-item>
       </li>
@@ -53,6 +56,32 @@ const getRoute = () => {
           :class="getRoute() === 'instructors' ? 'active' : ''"
           :navText="isRTL ? 'الجداول' : 'Instructors'"
         >
+        <template v-slot:icon>
+            <i class="ni ni-single-02 text-info text-sm opacity-300"></i>
+          </template>
+        </sidenav-item>
+      </li>
+      <li class="nav-item">
+        <sidenav-item
+          to="/courseTypes"
+          :class="getRoute() === 'courseTypes' ? 'active' : ''"
+          :navText="isRTL ? 'الجداول' : 'Course types'"
+        >
+        
+          <template v-slot:icon>
+            <i
+              class="ni ni-collection text-warning text-sm opacity-10"
+            ></i>
+          </template>
+        </sidenav-item>
+      </li>
+      <li class="nav-item">
+        <sidenav-item
+          to="/scheduledCourses"
+          :class="getRoute() === 'scheduledCourses' ? 'active' : ''"
+          :navText="isRTL ? 'الجداول' : 'Scheduled courses'"
+        >
+        
           <template v-slot:icon>
             <i
               class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"
@@ -127,6 +156,19 @@ const getRoute = () => {
         </sidenav-item>
       </li>
 
+      <li class="nav-item" v-if="!!loggedIn"  @click="logout">
+        <sidenav-item
+          to="/signin"
+          :class="getRoute() === 'signin' ? 'active' : ''"
+          :navText="isRTL ? 'حساب تعريفي' : 'Logout'"
+        >
+          <template v-slot:icon>
+            <i class="fa fa-sign-out text-dark text-sm opacity-1000"></i>
+          </template>
+        </sidenav-item>
+      </li>
+      
+
       <li class="nav-item" v-if="!loggedIn">
         <sidenav-item
           to="/signin"
@@ -153,26 +195,5 @@ const getRoute = () => {
     </ul>
   </div>
 
-  <div class="pt-3 mx-3 mt-3 sidenav-footer">
-    <sidenav-card
-      :card="{
-        title: 'Need Help?',
-        description: 'Please check our docs',
-        links: [
-          {
-            label: 'Documentation',
-            route:
-              'https://www.creative-tim.com/learning-lab/vue/overview/argon-dashboard/',
-            color: 'dark',
-          },
-          {
-            label: 'Buy now',
-            route:
-              'https://www.creative-tim.com/product/vue-argon-dashboard-pro?ref=vadp',
-            color: 'success',
-          },
-        ],
-      }"
-    />
-  </div>
+ 
 </template>
