@@ -9,8 +9,8 @@ import Profile from "../views/Profile.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
 import Registrations from "../views/Registrations.vue";
-
-
+import CourseTypes from "../views/CourseTypes.vue";
+import ScheduledCourses from "../views/ScheduledCourses.vue";
 
 const routes = [
   {
@@ -25,13 +25,23 @@ const routes = [
   },
   {
     path: "/customers",
-    name: "customers",
+    name: "Customers",
     component: Customers,
   },
   {
     path: "/instructors",
-    name: "instructors",
+    name: "Instructors",
     component: Instructors,
+  },
+  {
+    path: "/courseTypes",
+    name: "Course Types",
+    component: CourseTypes,
+  },
+  {
+    path: "/scheduledCourses",
+    name: "Scheduled courses",
+    component: ScheduledCourses,
   },
   {
     path: "/billing",

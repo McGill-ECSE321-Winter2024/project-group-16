@@ -84,8 +84,7 @@ const updateUserProfile = async () => {
 </script>
 <template>
   <main>
-    <div class="container-fluid">
-      <div
+    <div
         class="page-header min-height-300"
         style="
           background-image: url(&quot;https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80&quot;);
@@ -95,6 +94,8 @@ const updateUserProfile = async () => {
       >
         <span class="mask bg-gradient-success opacity-6"></span>
       </div>
+    <div class="container">
+     
       <div class="card shadow-lg mt-n6">
         <div class="card-body p-3">
           <div class="row gx-4">
@@ -103,7 +104,6 @@ const updateUserProfile = async () => {
                 <img
                   src="../assets/img/user.png"
                   alt="profile_image"
-                  class="shadow-sm w-100 border-radius-lg"
                 />
               </div>
             </div>
@@ -121,7 +121,7 @@ const updateUserProfile = async () => {
                   class="p-1 bg-transparent nav nav-pills nav-fill"
                   role="tablist"
                 >
-                  <li class="nav-item">
+                  <li v-if="userData.role === 'Instructor' || userData.role === 'Customer'" class="nav-item">
                  
                       <svg
                         class="text-dark"
@@ -160,7 +160,7 @@ const updateUserProfile = async () => {
                           </g>
                         </g>
                       </svg>
-                      <router-link to="/customer/registrations"> <span class="ms-1">Scheduled courses</span></router-link>
+                      <router-link  to="/customer/registrations"> <span class="ms-1">Scheduled courses</span></router-link>
                
                   </li>
                  
@@ -172,12 +172,12 @@ const updateUserProfile = async () => {
       </div>
     </div>
 
-    <div class="py-4 container-fluid">
-      <div class="row justify-content-center">
-        <div class="col-md-4">
+    <div class="py-4 container">
+      <div class="row">
+        <div class="col">
           <profile-card class="h-100"/>
         </div>
-        <div class="col-md-5">
+        <div class="col">
           <div class="card row h-100">
             <div class="card-header pb-1">
               <div class="d-flex align-items-center">
