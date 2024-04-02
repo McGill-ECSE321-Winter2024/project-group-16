@@ -5,8 +5,6 @@ import Customers from "../views/Customers.vue";
 import Instructors from "../views/Instructors.vue";
 
 import Billing from "../views/Billing.vue";
-import VirtualReality from "../views/VirtualReality.vue";
-import RTL from "../views/Rtl.vue";
 import Profile from "../views/Profile.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
@@ -40,16 +38,7 @@ const routes = [
     name: "Billing",
     component: Billing,
   },
-  {
-    path: "/virtual-reality",
-    name: "Virtual Reality",
-    component: VirtualReality,
-  },
-  {
-    path: "/rtl-page",
-    name: "RTL",
-    component: RTL,
-  },
+
   {
     path: "/profile",
     name: "Profile",
