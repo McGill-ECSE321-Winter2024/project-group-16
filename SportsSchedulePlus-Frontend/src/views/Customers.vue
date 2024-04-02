@@ -1,4 +1,18 @@
 <template>
+    <!-- Dialog component -->
+      <v-dialog v-model="dialog" max-width="500px">
+        <v-card>
+          <v-card-title class="headline">Confirm Deletion</v-card-title>
+          <v-card-text>
+            Are you sure you want to delete this instructor?
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="error" text @click="dialog = false">Cancel</v-btn>
+            <v-btn color="success" text @click="confirmDelete">Delete</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
   <div class="card">
     <div class="card-header pb-0">
       <h6>Customers table</h6>
@@ -79,14 +93,14 @@
                 <button
                   type="button"
                   class="control btn btn-danger  badge mb-0 btn-pill fw-bold"
-                  @click="deleteCustomer(customer.id)"
+                  @click="showDialog(customer.id)"
                   data-toggle="tooltip"
                   data-original-title="Delete user"
                 >
                   Delete
                 </button>
           </td>
-        
+
 
             </tr>
           </tbody>
@@ -108,7 +122,9 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      customers: []
+      customers: [],
+      dialog: false,
+      customerIdToDelete: null
     };
   },
   mounted() {
@@ -123,14 +139,27 @@ export default {
         const response = await axiosClient.get('/customers');
         this.customers = response.data.persons;
         console.log(response.data.persons);
-        
+
       } catch (error) {
         console.error('Error loading customers: ', error);
       }
     },
+          async showDialog(customerId) {
+                this.customerIdToDelete = customerId;
+                this.dialog = true;
+              },
+          async confirmDelete() {
+                if (this.customerIdToDelete) {
+                  await this.deleteCustomer(this.customerIdToDelete);
+                  // Reset customerIdToDelete and close dialog
+                  this.customerIdToDelete = null;
+                  this.dialog = false;
+                }
+           },
     async approveCustomer(customerId) {
       const axiosClient = axios.create({
-        baseURL: "http://localhost:8080"
+        baseURL: "http://localhost:8080",
+
       });
       try {
         const response = await axiosClient.put(`/customers/approve/${customerId}`);
