@@ -9,6 +9,7 @@ import Profile from "../views/Profile.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
 import Registrations from "../views/Registrations.vue";
+import Classes from "../views/Classes.vue";
 
 
 
@@ -59,6 +60,12 @@ const routes = [
   name: "registrations",
   component: Registrations,
   },
+  {
+    path: "/classes",
+    name: "classes",
+    component: Classes,
+    },
+
 ];
 
 const router = createRouter({
