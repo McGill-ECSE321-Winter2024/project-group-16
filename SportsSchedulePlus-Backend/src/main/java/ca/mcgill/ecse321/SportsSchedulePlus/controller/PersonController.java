@@ -17,7 +17,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonDT
 /*
  * Rest Controller that handles CRUD on Person
  */
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:8087")
 @RestController
 public class PersonController {
 

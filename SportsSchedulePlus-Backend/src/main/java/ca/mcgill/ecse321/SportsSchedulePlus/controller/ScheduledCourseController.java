@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Rest Controller that handles ScheduledCourse
  */
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:8087")
 @RestController
 public class ScheduledCourseController {
 

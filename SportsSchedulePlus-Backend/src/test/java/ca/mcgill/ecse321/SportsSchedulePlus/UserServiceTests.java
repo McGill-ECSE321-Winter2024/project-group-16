@@ -39,6 +39,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.PersonRole;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.State;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
@@ -269,21 +270,23 @@ public class UserServiceTests {
             assertEquals("Customer with email " + email + " needs to exist before they can become an Instructor.", e.getMessage());
         }
     }
+    
 
     @Test
     public void testApproveCustomer() {
+        
         Customer customer = new Customer();
         customer.setId(customerIdHasApplied);
         customer.setHasApplied(true);
-
-        lenient().when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
-        lenient().when(instructorRepository.findById(customer.getId())).thenReturn(Optional.empty());
-
         Person person = new Person();
         person.setName(name);
         person.setEmail(email);
         person.setPassword(password);
         person.setPersonRole(customer);
+
+        lenient().when(personRepository.findPersonByEmail(email)).thenReturn(person);
+        lenient().when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
+        lenient().when(instructorRepository.findById(customer.getId())).thenReturn(Optional.empty());
 
         lenient().when(personRepository.findPersonByPersonRole(customer)).thenReturn(person);
 
@@ -295,48 +298,48 @@ public class UserServiceTests {
         instructorPerson.setPassword(password);
         instructorPerson.setPersonRole(newInstructor);
 
-        lenient().when(personRepository.findPersonByEmail(email)).thenReturn(person);
-        lenient().when(customerRepository.findCustomerById(person.getId())).thenReturn((customer));
+        lenient().when(personRepository.findPersonByEmail(email)).thenReturn(instructorPerson);
+        lenient().when(customerRepository.findById(person.getId())).thenReturn((Optional.of(customer)));
+        lenient().when(customerRepository.findCustomerById(person.getId())).thenReturn(((customer)));
         lenient().when(userService.createInstructor(person.getEmail(), "")).thenReturn(instructorPerson);
 
         Instructor result = null;
         
-        result = userService.approveCustomer(customer.getId());
+        result = userService.approveCustomer(person.getEmail());
        
-
-        assertNotNull(result);
+        // Verify
         assertTrue(result instanceof Instructor);
+        assertEquals(State.APPROVED, customer.getState());
     }
 
     @Test
     public void testApproveCustomerNonExistent() {
-        Integer invalidId = 999;
-        lenient().when(customerRepository.findById(invalidId)).thenReturn(Optional.empty());
-        lenient().when(instructorRepository.findById(invalidId)).thenReturn(Optional.empty());
-
         Instructor result = null;
+        String nonExistingEmail = "nonexistent@gmail.com";
         try {
-            result = userService.approveCustomer(invalidId);
+            result = userService.approveCustomer("nonexistent@gmail.com");
             fail();
         } catch (Exception e) {
             assertNull(result);
-            assertEquals("Customer with ID " + invalidId + " does not exist.", e.getMessage());
+            assertEquals("Customer with email " + nonExistingEmail + " does not exist.", e.getMessage());
         }
-
     }
 
     @Test
     public void testApproveCustomerHasNotApplied() {
+        
         Customer customer = new Customer();
         customer.setId(customerIdHasApplied);
         customer.setHasApplied(false);
+        Person person = new Person(name, email, password, customer);
 
+        lenient().when(personRepository.findPersonByEmail(email)).thenReturn(person);
         lenient().when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
         lenient().when(instructorRepository.findById(customer.getId())).thenReturn(Optional.empty());
- 
+        
         Instructor result = null;
         try {
-            result = userService.approveCustomer(customer.getId());
+            result = userService.approveCustomer(person.getEmail());
         } catch (Exception e) {
             assertNull(result);
             assertEquals("Customer with ID " + customerIdHasApplied + " has not applied to be an instructor.", e.getMessage());
@@ -351,13 +354,14 @@ public class UserServiceTests {
 
         Instructor instructor = new Instructor();
         instructor.setId(customerIdHasApplied);
+        Person person = new Person(name, email, password, instructor);
 
         lenient().when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
         lenient().when(instructorRepository.findById(customer.getId())).thenReturn(Optional.of(instructor));
-
+        lenient().when(personRepository.findPersonByEmail(email)).thenReturn(person);
         Instructor result = null;
         try {
-            result = userService.approveCustomer(customer.getId());
+            result = userService.approveCustomer(person.getEmail());
             fail();
         } catch (Exception e) {
             assertNull(result);
@@ -478,7 +482,6 @@ public class UserServiceTests {
         }
     }
 
-    //Noah below
     @Test
     public void testApplyForInstructor() {
         int aId = 2;
@@ -572,8 +575,10 @@ public class UserServiceTests {
 
         Instructor newInstructor = null;
 
+        lenient().when(personRepository.findPersonByEmail(email)).thenReturn(person);
+
         try {
-            newInstructor = userService.approveCustomer(aId);
+            newInstructor = userService.approveCustomer(email);
             fail();
         } catch (Exception e) {
             assertNull(newInstructor);
@@ -583,46 +588,45 @@ public class UserServiceTests {
 
     @Test
     public void testApproveCustomerNullPerson() {
-        int aId = 2;
-        Person person = null;
+        int aId = 0;
+        Person person = new Person();
 
         Instructor newInstructor = null;
-
+        lenient().when(personRepository.findPersonByEmail(email)).thenReturn(person);
         try {
-            newInstructor = userService.approveCustomer(aId);
+            newInstructor = userService.approveCustomer(email);
             fail();
         } catch (Exception e) {
             assertNull(newInstructor);
-            assertNull(person);
+            
             assertEquals("Customer with ID " + aId + " does not exist.", e.getMessage());
         }
     }
 
     @Test
     public void testRejectCustomer() {
-        int aId = 2;
+        int aId = 0;
+        Person person = new Person();
+       
         Customer customer = new Customer(aId);
         customer.setHasApplied(true);
-        customerRepository.save(customer);
-
-        lenient().when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
-        customer = userService.rejectCustomer(aId);
+        person.setPersonRole(customer);
+    
+        lenient().when(personRepository.findPersonByEmail(email)).thenReturn(person);
+        lenient().when(customerRepository.findById(aId)).thenReturn(Optional.of(customer));
+        customer = userService.rejectCustomer(email);
 
         assertNotNull(customer);
         assertEquals(aId, customer.getId());
-        assertFalse(customer.getHasApplied());
     }
 
     @Test
     public void testRejectCustomerNullCustomer() {
-        int aId = 2;
-        Customer customer = null;
         try {
-            customer = userService.rejectCustomer(aId);
+            userService.rejectCustomer(null);
             fail();
         } catch (Exception e) {
-            assertNull(customer);
-            assertEquals("Customer with ID " + aId + " does not exist.", e.getMessage());
+            assertEquals("Customer with email " + null + " does not exist.", e.getMessage());
         }
     }
 

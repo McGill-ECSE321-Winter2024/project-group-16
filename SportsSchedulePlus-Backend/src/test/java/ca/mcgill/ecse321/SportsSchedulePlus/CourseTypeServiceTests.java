@@ -44,19 +44,19 @@ public class CourseTypeServiceTests {
     public void setMockOutput() {
         lenient().when(courseTypeRepository.findById(any())).thenAnswer(invocation -> {
             if (invocation.getArgument(0).equals(COURSE_TYPE_ID)) {
-                CourseType ct = new CourseType();
-                ct.setDescription(DESCRIPTION);
-                ct.setApprovedByOwner(APPROVED_BY_OWNER);
-                ct.setPrice(PRICE);
-                return Optional.of(ct);
+                CourseType courseType = new CourseType();
+                courseType.setDescription(DESCRIPTION);
+                courseType.setApprovedByOwner(APPROVED_BY_OWNER);
+                courseType.setPrice(PRICE);
+                return Optional.of(courseType);
             }
             return Optional.empty();
         });
 
         lenient().when(courseTypeRepository.save(any(CourseType.class))).thenAnswer(invocation -> {
-            CourseType ct = invocation.getArgument(0);
-            allCourseTypesList.add(ct);
-            return ct;
+            CourseType courseType = invocation.getArgument(0);
+            allCourseTypesList.add(courseType);
+            return courseType;
         });
 
         lenient().when(courseTypeRepository.findAll()).thenReturn(allCourseTypesList);
@@ -64,32 +64,32 @@ public class CourseTypeServiceTests {
         lenient().when(courseTypeRepository.findByPrice(anyFloat())).thenAnswer(invocation -> {
             float price = invocation.getArgument(0);
             if (price == PRICE) {
-                CourseType ct = new CourseType();
-                ct.setDescription(DESCRIPTION);
-                ct.setApprovedByOwner(APPROVED_BY_OWNER);
-                ct.setPrice(PRICE);
+                CourseType courseType = new CourseType();
+                courseType.setDescription(DESCRIPTION);
+                courseType.setApprovedByOwner(APPROVED_BY_OWNER);
+                courseType.setPrice(PRICE);
                 List < CourseType > result = new ArrayList < > ();
-                result.add(ct);
+                result.add(courseType);
                 return result;
             }
             return new ArrayList < CourseType > (); // Return an empty list if the price doesn't match
         });
 
         lenient().when(courseTypeRepository.findByApprovedByOwnerTrue()).thenAnswer(invocation -> {
-            CourseType ct = new CourseType();
-            ct.setDescription(DESCRIPTION);
-            ct.setApprovedByOwner(true); // This is redundant as we're mocking findByApprovedByOwnerTrue
-            ct.setPrice(PRICE);
+            CourseType courseType = new CourseType();
+            courseType.setDescription(DESCRIPTION);
+            courseType.setApprovedByOwner(true); // This is redundant as we're mocking findByApprovedByOwnerTrue
+            courseType.setPrice(PRICE);
             List < CourseType > approvedCourseTypes = new ArrayList < > ();
-            approvedCourseTypes.add(ct);
+            approvedCourseTypes.add(courseType);
             return approvedCourseTypes;
         });
-        CourseType ct = new CourseType();
-        ct.setDescription("Some Description");
-        ct.setApprovedByOwner(true);
-        ct.setPrice(20.0f);
+        CourseType courseType = new CourseType();
+        courseType.setDescription("Some Description");
+        courseType.setApprovedByOwner(true);
+        courseType.setPrice(20.0f);
         List < CourseType > courseTypeList = new ArrayList < > ();
-        courseTypeList.add(ct);
+        courseTypeList.add(courseType);
 
         // Mocking findAll to return a non-empty list to simulate existing course types
         lenient().when(courseTypeRepository.findAll()).thenReturn(courseTypeList);
@@ -114,7 +114,7 @@ public class CourseTypeServiceTests {
 
         List < CourseType > allCourseTypes = courseTypeService.getAllCourseTypes();
         assertFalse(allCourseTypes.isEmpty());
-        assertTrue(allCourseTypes.stream().anyMatch(ct -> description.equals(ct.getDescription()) && ct.getPrice() == price && ct.isApprovedByOwner() == approvedByOwner));
+        assertTrue(allCourseTypes.stream().anyMatch(courseType -> description.equals(courseType.getDescription()) && courseType.getPrice() == price && courseType.isApprovedByOwner() == approvedByOwner));
     }
 
     @Test

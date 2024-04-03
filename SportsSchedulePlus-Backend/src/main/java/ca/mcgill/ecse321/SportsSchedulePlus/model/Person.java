@@ -43,7 +43,6 @@ public class Person {
 
   }
   public Person(String aName, String aEmail, String aPassword, PersonRole aPersonRole) {
-    //ADDED THIS ID -JESS
     this.id = aPersonRole.getId();
     name = aName;
     password = aPassword;

@@ -7,4 +7,8 @@ bin/
 SportsSchedulePlus-Backend/bin/
 
 # Compiled class files
+<<<<<<< HEAD
 SportsSchedulePlus-Backend/build/
+=======
+SportsSchedulePlus-Backend/build/
+>>>>>>> ed2f9b0f2cd2a26a267c20ad9e8ad64963d1e46b

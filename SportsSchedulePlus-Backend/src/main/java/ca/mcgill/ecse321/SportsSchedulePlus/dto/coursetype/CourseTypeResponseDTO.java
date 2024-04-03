@@ -2,11 +2,12 @@ package ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 
-public class CourseTypeResponseDTO {
+public class CourseTypeResponseDTO implements Comparable<CourseTypeResponseDTO>{
     private Integer id;
     private String description;
     private boolean approvedByOwner;
     private float price;
+    private String state;
 
     public CourseTypeResponseDTO(Integer id, String description, boolean approvedByOwner, float price) {
         this.id = id;
@@ -21,6 +22,7 @@ public class CourseTypeResponseDTO {
         this.description = courseType.getDescription();
         this.approvedByOwner = courseType.isApprovedByOwner();
         this.price = courseType.getPrice();
+        this.state = courseType.getState().toString();
     }
 
 
@@ -55,4 +57,14 @@ public class CourseTypeResponseDTO {
     public void setPrice(float price) {
         this.price = price;
     }
+    
+    public String getState(){
+        return this.state;
+    }
+    @Override
+    public int compareTo(CourseTypeResponseDTO response){
+       return this.description.compareTo(response.getDescription());
+    }
+
+   
 }

@@ -23,7 +23,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
  *
  * @author Vladimir Venkov
  */
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:8087")
 @RestController
 public class RegistrationController {
 
