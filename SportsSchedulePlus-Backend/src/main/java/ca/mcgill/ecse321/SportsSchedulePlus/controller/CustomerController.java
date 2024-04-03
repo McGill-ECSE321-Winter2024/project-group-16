@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Rest Controller that handles CRUD on Customer
  */
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:8087")
 @RestController
 public class CustomerController {
 
@@ -44,6 +44,17 @@ public class CustomerController {
     @GetMapping(value = {"/customers/{id}"})
     public PersonDTO getCustomer(@PathVariable("id") int id) {
         Person person = userService.getPersonById(id);
+        return new PersonDTO(person);
+    }
+
+     /**
+     * Retrieves the customer by the path variable email
+     * @param id
+     * @return PersonDTO
+     */
+    @GetMapping(value = {"/customers/email/{email}"})
+    public PersonDTO getCustomer(@PathVariable("email") String email) {
+        Person person = userService.findPersonByEmail(email);
         return new PersonDTO(person);
     }
     
@@ -95,25 +106,25 @@ public class CustomerController {
     
     /**
      * Approves a customer to become an instructor
-     * @param customerId
+     * @param customerEmail
      * @return PersonDTO
      */
-    @PutMapping(value = {"/customers/{customerId}/approve"})
-    public PersonDTO approveCustomer(@PathVariable("customerId") int customerId) {
-        userService.approveCustomer(customerId);
-        Person person = userService.getPersonById(customerId);
+    @PutMapping(value = {"/customers/{customerEmail}/approve"})
+    public PersonDTO approveCustomer(@PathVariable("customerEmail") String customerEmail) {
+        userService.approveCustomer(customerEmail);
+        Person person = userService.findPersonByEmail(customerEmail);
         return new PersonDTO(person);
     }
     
     /**
      * Rejects a customer's request to become an instructor
-     * @param customerId
+     * @param customerEmail
      * @return PersonDTO
      */
-    @PutMapping(value = {"/customers/{customerId}/reject"})
-    public PersonDTO rejectCustomer(@PathVariable("customerId") int customerId) {
-        userService.rejectCustomer(customerId);
-        Person person = userService.getPersonById(customerId);
+    @PutMapping(value = {"/customers/{customerEmail}/reject"})
+    public PersonDTO rejectCustomer(@PathVariable("customerEmail") String customerEmail) {
+        userService.rejectCustomer(customerEmail);
+        Person person = userService.findPersonByEmail(customerEmail);
         return new PersonDTO(person);
     }
 

@@ -32,6 +32,7 @@ public class CourseType {
   private String description;
   private boolean approvedByOwner;
   private float price;
+  private State state = State.NONE;
 
   //CourseType Associations
   @OneToMany(fetch = FetchType.EAGER)
@@ -203,9 +204,13 @@ public class CourseType {
       aScheduledCourse.delete();
       scheduledCourses.remove(aScheduledCourse);
     }
-
   }
-
+  public void setState(State state){
+    this.state = state;
+  }
+  public State getState(){
+    return this.state;
+  }
   public String toString() {
     return super.toString() + "[" +
       "description" + ":" + getDescription() + "," +

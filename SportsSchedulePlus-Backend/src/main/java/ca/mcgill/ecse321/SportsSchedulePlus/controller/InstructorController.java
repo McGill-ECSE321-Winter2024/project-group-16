@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * Rest Controller that handles CRUD on Instructor
  */
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:8087")
 @RestController
 public class InstructorController {
 
@@ -47,7 +47,7 @@ public class InstructorController {
      * @param experience
      * @return PersonListResponseDTO
      */
-    @GetMapping(value = {"/instructors/{experience}"})
+    @GetMapping(value = {"/instructors/experience/{experience}"})
     public PersonListResponseDTO getInstructorByExperience(@PathVariable("experience") String experience) {
         List<PersonDTO> instructorDTOs = new ArrayList<>();
         for (Instructor instructor: userService.getInstructorByExperience(experience)) {

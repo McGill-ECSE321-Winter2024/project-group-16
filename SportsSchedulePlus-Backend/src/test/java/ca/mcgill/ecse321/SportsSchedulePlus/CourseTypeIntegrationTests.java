@@ -77,6 +77,28 @@ public class CourseTypeIntegrationTests {
         assertEquals("Advanced Yoga", courseType.getDescription());
     }
 
+     // Test updating a CourseType with invalid data
+    @Test
+    public void testUpdateInvalidCourseType() {
+        // Create a CourseType first
+        int id = createCourseType("Yoga", true, 20.0f);
+
+        // Attempt to update the CourseType with invalid inputs
+        CourseTypeRequestDTO updatedCourseType = new CourseTypeRequestDTO();
+        updatedCourseType.setDescription(""); // Invalid description
+        updatedCourseType.setApprovedByOwner(false);
+        updatedCourseType.setPrice(-10.0f); // Invalid price
+
+        client.put("/courseTypes/" + id, updatedCourseType);
+       
+        // Ensure that the CourseType remains unchanged
+        ResponseEntity<CourseTypeRequestDTO> getResponse = client.getForEntity("/courseTypes/" + id, CourseTypeRequestDTO.class);
+        assertEquals(HttpStatus.OK, getResponse.getStatusCode());
+        CourseTypeRequestDTO retrievedCourseType = getResponse.getBody();
+        assertNotNull(retrievedCourseType);
+        assertEquals("Yoga", retrievedCourseType.getDescription());
+    }
+
     // Test creating a CourseType with invalid data
     @Test
     public void testCreateInvalidCourseType() {
