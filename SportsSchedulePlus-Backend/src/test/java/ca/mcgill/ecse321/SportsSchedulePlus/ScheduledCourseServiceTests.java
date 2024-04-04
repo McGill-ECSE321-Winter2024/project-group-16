@@ -137,6 +137,7 @@ public class ScheduledCourseServiceTests {
   @Test
   public void testCreateScheduledCourse() {
     CourseType tCourseType = new CourseType();
+    tCourseType.setApprovedByOwner(true);
     tCourseType.setId(5);
     when(courseTypeRepository.findById(5)).thenReturn(Optional.of(tCourseType));
     ScheduledCourse scheduledCourse = null;
@@ -161,6 +162,7 @@ public class ScheduledCourseServiceTests {
   public void testCreateScheduledCourseWithInvalidTime() {
 
     CourseType tCourseType = new CourseType();
+    tCourseType.setApprovedByOwner(true);
     tCourseType.setId(5);
     when(courseTypeRepository.findById(5)).thenReturn(Optional.of(tCourseType));
 
