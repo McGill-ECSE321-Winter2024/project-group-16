@@ -578,4 +578,9 @@ public class UserService {
         } 
     }
 
+    @Transactional
+    public List<ScheduledCourse> getSupervisedCourses(Instructor instructor) {
+        return instructor.getSupervisedCourses();
+    }
+
 }

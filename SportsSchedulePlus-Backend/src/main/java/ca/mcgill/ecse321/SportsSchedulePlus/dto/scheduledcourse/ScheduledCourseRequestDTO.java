@@ -10,6 +10,8 @@ public class ScheduledCourseRequestDTO {
     private String endTime;
     private String location;
 
+    private int instructorId;
+
     private CourseTypeRequestDTO courseType;
     
     
@@ -52,6 +54,14 @@ public class ScheduledCourseRequestDTO {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public int getInstructorId() {
+        return instructorId;
+    }
+
+    public void setInstructorId(int instructorId) {
+        this.instructorId = instructorId;
     }
 
     public CourseTypeRequestDTO getCourseType() {

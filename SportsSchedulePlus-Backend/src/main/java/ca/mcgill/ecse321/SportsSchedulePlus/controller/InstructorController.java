@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseListDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonListResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.*;
@@ -85,6 +87,23 @@ public class InstructorController {
         return new PersonListResponseDTO(instructorDTOs);
     }
     
+    /**
+     * Retrieves the supervised courses by the instructor with the path variable instructorEmail
+     * @param instructorEmail
+     * @return
+     */
+    @GetMapping(value = {"/instructors/{instructorEmail}/supervised-courses"})
+    public ScheduledCourseListDTO getSupervisedCoursesByInstructor(@PathVariable("instructorEmail") String instructorEmail) {
+        Instructor instructor = userService.getInstructor(instructorEmail);
+        List<ScheduledCourse> scheduledCourses = userService.getSupervisedCourses(instructor);
+        List<ScheduledCourseResponseDTO> scheduledCourseDTOs = new ArrayList<>();
+        for (ScheduledCourse scheduledCourse : scheduledCourses) {
+            scheduledCourseDTOs.add(new ScheduledCourseResponseDTO(scheduledCourse));
+        }
+        return new ScheduledCourseListDTO(scheduledCourseDTOs);
+    }
+
+
     /**
      * Retrieves instructor by their suggested course type
      * @param courseTypeId
