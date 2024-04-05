@@ -1,28 +1,3 @@
-<!-- <script setup>
-// defineProps({
-//     // possible values: 'all', 'customer', 'instructor', 'courseType'
-//     displayType: {
-//         type: String,
-//         required: false,
-//     },
-//     customerId: {
-//         type: Number,
-//         required: false,
-//         default: 0
-//     },
-//     instructorId: {
-//         type: Number,
-//         required: false,
-//         default: 0
-//     },
-//     courseTypeId: {
-//         type: Number,
-//         required: false,
-//         default: 0
-//     },
-// });
-</script> -->
-
 <template>
     <div class="row">
           <div class="col-12">
@@ -86,7 +61,7 @@ export default {
     this.loadScheduledCourses();
   },
   props: {
-    displayType: {
+    displayType: { // instructor, customer, courseType, anythin else will display all scheduled courses
         type: String,
         required: false,
     },

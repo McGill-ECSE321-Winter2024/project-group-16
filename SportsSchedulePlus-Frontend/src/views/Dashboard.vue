@@ -1,6 +1,5 @@
 <script setup>
-import WeeklySchedule from '../components/WeeklySchedule.vue';
-
+  import WeeklySchedule from '../components/WeeklySchedule.vue';
 </script>
 
 <template>
