@@ -103,7 +103,7 @@ public class InstructorIntegrationTests {
         Customer customer = customerRepository.findCustomerById(newCustomer.getId());
         customer.setHasApplied(true);
         customerRepository.save(customer);
-        restTemplate.put("/customers/" + newCustomer.getId() + "/approve", null);
+        restTemplate.put("/customers/" + newCustomer.getEmail() + "/approve", null);
         PersonDTO updatedCustomer = new PersonDTO("John","newemail@gmail.com","paswd124!!AWVC",role );
         return updatedCustomer;
     }

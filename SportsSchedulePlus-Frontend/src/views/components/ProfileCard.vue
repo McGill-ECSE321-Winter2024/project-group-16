@@ -12,7 +12,7 @@
           <a href="javascript:;">
             <img
               src="../../assets/img/user.png"
-              class="rounded-circle img-fluid border border-2 border-white"
+              class="rounded-circle img-fluid"
             />
           </a>
         </div>
@@ -20,10 +20,10 @@
     </div>
     <div class="card-header text-center border-0 pt-0 pt-lg-2 pb-4 pb-lg-3">
       <div class="justify-content-between">
-        <a href="javascript:;" class="btn  btn-info  d-lg-block" @click="applyForInstructor">Apply to become an instructor</a>
-        <a href="javascript:;" class="btn btn-sm btn-info mb-0 d-block d-lg-none"><i class="ni ni-collection"></i></a>
-        <a href="javascript:;" class="btn  btn-danger float-right mb-0 d-none d-lg-block" @click="deleteAccount">Delete my account</a>
-        <a href="javascript:;" class="btn btn-sm btn-dark float-right mb-0 d-block d-lg-none"><i class="ni ni-email-83"></i></a>
+        <div class="btn-group-vertical">
+        <a href="javascript:;" class="btn  bg-gradient-info  btn-block" v-if="userData.role === 'Customer'" @click="applyForInstructor">Apply to become an instructor</a>
+        <a href="javascript:;" class="btn  bg-gradient-danger  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" @click="deleteAccount">Delete my account</a>
+      </div>
       </div>
     </div>
     <div class="card-body pt-0">

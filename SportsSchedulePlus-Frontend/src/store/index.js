@@ -1,27 +1,13 @@
 import { createStore } from "vuex";
-// Define a custom Vuex plugin to persist specific state properties
-const customPersistedState = store => {
-  // Subscribe to Vuex store mutations
-  store.subscribe((mutation, state) => {
-    // Define an array of state properties to persist
-    const persistedProperties = ["useremail", "userData", "loggedIn"];
-    
-    // Check if the mutated property is in the array of persisted properties
-    if (persistedProperties.includes(mutation.type)) {
-      // Retrieve the value of the mutated property
-      const value = state[mutation.type];
-      
-      // Persist the property to local storage
-      localStorage.setItem(mutation.type, JSON.stringify(value));
-    }
-  });
-};
 
-
+const LOGIN = "LOGIN";
+const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+const LOGOUT = "LOGOUT";
 
 export default createStore({
  
   state: {
+    isLoggedIn: !!localStorage.getItem("loggedIn"),
     hideConfigButton: false,
     isPinned: false,
     showConfig: false,
@@ -37,21 +23,26 @@ export default createStore({
     showFooter: true,
     showMain: true,
     layout: "default",
-    useremail:"",
-    loggedIn:false,
     userData: { id: -1 , name: "", email: "",role:"",password:"" },
   },
   mutations: {
 
-    setUserEmail(state, email) {
-      state.useremail = email;
+    [LOGIN] (state) {
+      state.pending = true;
     },
+    [LOGIN_SUCCESS] (state) {
+      state.isLoggedIn = true;
+      state.pending = false;
+    },
+    [LOGOUT](state) {
+      state.isLoggedIn = false;
+    },
+
+
     setUserData(state, userData) {
       state.userData = userData;
     },
-    setLoggedIn(state, isLoggedIn) {
-      state.loggedIn = isLoggedIn;
-    },
+
     toggleConfigurator(state) {
       state.showConfig = !state.showConfig;
     },
@@ -79,14 +70,22 @@ export default createStore({
     },
   },
   actions: {
-    setUserEmail({ commit }, email) {
-      commit("setUserEmail", email);
+    login({ commit }, creds) {
+      commit(LOGIN); // show spinner
+      return new Promise(resolve => {
+        setTimeout(() => {
+          localStorage.setItem("loggedIn", true);
+          commit(LOGIN_SUCCESS);
+          resolve();
+        }, 1000);
+      });
+    },
+    logout({ commit }) {
+      localStorage.removeItem("loggedIn");
+      commit(LOGOUT);
     },
     setUserData({ commit }, userData) {
       commit("setUserData", userData);
-    },
-    setLoggedIn({ commit }, loggedIn) {
-      commit("setLoggedIn", loggedIn);
     },
     toggleSidebarColor({ commit }, payload) {
       commit("sidebarType", payload);
@@ -96,14 +95,13 @@ export default createStore({
     },
   },
   getters: {
-    isLoggedIn(state) {
-        return state.loggedIn;
-    },
+    isLoggedIn: state => {
+      return state.isLoggedIn
+     },
     userData(state) {
       return state.userData;
   }
 },
-plugins: [customPersistedState]
 
 });
 
