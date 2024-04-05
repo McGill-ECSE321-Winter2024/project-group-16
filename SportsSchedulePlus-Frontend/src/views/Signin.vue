@@ -44,18 +44,31 @@ const axiosClient = axios.create({
 
 
 const signIn = async () => {
+  userRole = "Customer";
   try {
     const user = { email: email.value, password: password.value };
     await axiosClient.post('/authentication/login',user);
     console.log("pwd",password);
+
     var response = await axiosClient.get(`/customers/email/${email.value}`);
+
+    try {
+    var instructorResponse = await axiosClient.get(`/instructors/${email.value}`);
+    // Handle the response here
+    console.log("Instructor found: ",instructorResponse.data);
+    userRole = "Instructor";
+    
+    } catch (error) {
+        // Handle any errors that occur during the request
+        console.error('Error fetching instructor data:', error);
+    }
+
+
     var userRole;
     if(email.value === "sports.schedule.plus@gmail.com"){
        userRole = "Owner";
     }
-    else{
-      userRole = response.data.role;
-    }
+    
     // Assign response data to userData variable
     var userData = {
       id: response.data.id,
@@ -64,7 +77,7 @@ const signIn = async () => {
       role: userRole,
       password: password.value
     };
-     console.log(response.data);
+    console.log(response.data);
     // Save user data to local storage
     localStorage.setItem('userData', JSON.stringify(userData));
     // Save login status to local storage

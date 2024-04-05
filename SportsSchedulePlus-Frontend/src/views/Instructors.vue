@@ -48,6 +48,7 @@
               </thead>
               <tbody>
                 <tr v-for="(instructor, index) in instructors" :key="index">
+                  
                   <td>
                     <div class="d-flex px-2 py-1">
                       <div>
@@ -68,13 +69,12 @@
                     <p class="text-xs text-secondary mb-0">{{ instructor.organization }}</p>
                   </td>
                   <td class="align-middle text-center text-sm">
-                    <span :class="{'badge': true, 'badge-sm': true, 'bg-gradient-success': instructor.personRoleDto.hasApplied === true, 'bg-gradient-secondary':  instructor.personRoleDto.hasApplied  === false}">{{ instructor.personRoleDto.hasApplied  }}</span>
+                    <span :class="{'badge': true, 'badge-lg': true, 'bg-gradient-success': instructor.personRoleDto.hasApplied === true, 'bg-gradient-secondary':  instructor.personRoleDto.hasApplied  === false}">{{ instructor.personRoleDto.hasApplied  }}</span>
                   </td>
-
                   <td class="align-middle text-center">
                   <button
                     type="button"
-                    class="control btn btn-danger  badge mb-0 btn-pill fw-bold"
+                    class="bg-gradient-danger border badge text-white badge-lg"
                     @click="showDialog(instructor.id)"
                     data-toggle="tooltip"
                     data-original-title="Delete user"
@@ -83,6 +83,22 @@
                   </button>
                  </td>
                 </tr>
+
+                  <!-- Add empty rows to fill the table -->
+              <tr
+                v-for="index in Math.max(0,5)"
+                :key="'empty' + index"
+                class="empty-row"
+              >
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+               
+              </tr>
+
+
+                
               </tbody>
             </table>
           </div>
@@ -148,6 +164,8 @@
   };
   </script>
 
-  <style scoped>
-  /* Add your custom CSS styles here */
-  </style>
+<style scoped>
+.empty-row td {
+  height: 50px; /* Adjust as needed */
+}
+</style>

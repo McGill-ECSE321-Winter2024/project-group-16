@@ -50,6 +50,7 @@ var password = ref('');
 var userID = userData.id;
 
 
+
 password.value = userData.password
 
 
@@ -57,24 +58,34 @@ const axiosClient = axios.create({
   baseURL: "http://localhost:8080"
 });
 
+
 // Reactive variables for success and error messages
 const successMessage = ref('');
 const errorMessage = ref('');
 
 const updateUserProfile = async () => {
+
   try {
-    const response = await axiosClient.put(`/customers/${userID}`, {
+    var endpoint;
+    if (userData.role != "Owner"){
+      endpoint = `/customers/${userID}`;
+    }
+    else{
+      endpoint = "/owner";
+    }
+    const response = await axiosClient.put(endpoint, {
       name: name.value,
       email: email.value,
       password: password.value,
     });
+  
     console.log("Update");
     successMessage.value = 'Profile updated successfully !';
     errorMessage.value = ''; // Clear error message if any
   } catch (error) {
-    console.error('Error updating profile:', error);
+    console.error('Error updating profile:', error.response.data.errors[0]);
     successMessage.value = ''; // Clear success message if any
-    errorMessage.value = 'There was an error updating your profile.'; // Set error message
+    errorMessage.value =  error.response.data.errors[0];
   }
 };
 

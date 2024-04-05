@@ -139,21 +139,20 @@ const fetchScheduledCourses = async () => {
     scheduledCourses.value = response.data.registrations;
   } catch (error) {
     console.error('Error fetching scheduled courses:', error);
-    errorMessage.value = 'There was an error fetching scheduled courses.'; // Set error message
   }
 };
 
 
 // Function to fetch supverised courses
 const fetchSupervisedCourses = async () => {
+  var response;
   try {
-    const response = await axiosClient.get(`/scheduledCourses/instructors/${userID}`);
-     
+   response = await axiosClient.get(`/scheduledCourses/instructors/${userID}`);
+     console.log(response.response.status)
     supervisedCourses.value = response.data.supervisedCourses;
     suggestedCourses.value = response.data.instructorSuggestedCourseTypes;
   } catch (error) {
     console.error('Error fetching supervised courses:', error);
-    errorMessage.value = 'There was an error fetching instructor supervised courses.'; // Set error message
   }
 };
 
@@ -165,7 +164,6 @@ const fetchOwnerSuggestedCourses = async () => {
     suggestedCourses.value = response.data.courseTypes;
   } catch (error) {
     console.error('Error fetching owner course types:', error);
-    errorMessage.value = 'There was an error fetching owner course types.'; // Set error message
   }
 };
 
