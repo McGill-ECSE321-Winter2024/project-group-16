@@ -132,7 +132,7 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testGetInstructor() {
-        postInstructor("New instructor","instructor@gmail.com","pwd123ABCDEE!!!","");
+        PersonDTO person = postInstructor("New instructor","instructor@gmail.com","pwd123ABCDEE!!!","");
         ResponseEntity<PersonDTO> responseEntity = restTemplate.getForEntity("/instructors/instructor@gmail.com", PersonDTO.class);
         
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());

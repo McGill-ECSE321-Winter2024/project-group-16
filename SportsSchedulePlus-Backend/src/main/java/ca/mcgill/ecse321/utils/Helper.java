@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.instructor.InstructorResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
@@ -148,12 +149,13 @@ public class Helper {
    * @param courseType
    * @return ScheduledCourseRequestDTO
    */
-  private static ScheduledCourseRequestDTO createCourseRequest (String location, String date, String startTime, String endTime, CourseTypeRequestDTO courseType){
+  private static ScheduledCourseRequestDTO createCourseRequest (String location, String date, String startTime, String endTime, int instructorId,  CourseTypeRequestDTO courseType){
     ScheduledCourseRequestDTO scheduledCourseRequest = new ScheduledCourseRequestDTO();
     scheduledCourseRequest.setLocation(location);
     scheduledCourseRequest.setDate(date);
     scheduledCourseRequest.setStartTime(startTime);
     scheduledCourseRequest.setEndTime(endTime);
+    scheduledCourseRequest.setInstructorId(instructorId);
     scheduledCourseRequest.setCourseType(courseType);
     return scheduledCourseRequest;
   }
@@ -166,11 +168,11 @@ public class Helper {
    * @param endTime
    * @return int
    */
-  public static int createScheduledCourse(RestTemplate restTemplate,String location, String date, String startTime, String endTime) {
+  public static int createScheduledCourse(RestTemplate restTemplate,String location, String date, String startTime, String endTime, int instructorId) {
     ResponseEntity < CourseTypeRequestDTO > courseTypeResponse = restTemplate.postForEntity("/courseTypes",
     createCourseTypeRequest("Yoga", true, 20.0f), CourseTypeRequestDTO.class);
 
-    ScheduledCourseRequestDTO courseRequest = createCourseRequest(location,date,startTime,endTime,courseTypeResponse.getBody());
+    ScheduledCourseRequestDTO courseRequest = createCourseRequest(location,date,startTime,endTime, instructorId, courseTypeResponse.getBody());
 
     ResponseEntity < ScheduledCourseRequestDTO > scheduledCourseResponse = restTemplate.postForEntity(
       "/scheduledCourses", courseRequest, ScheduledCourseRequestDTO.class);
@@ -208,6 +210,5 @@ public class Helper {
     if (personRole == null) {
       throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Person role cannot be null.");
     }
-  }
-  
+  }  
 }

@@ -243,11 +243,10 @@ public class UserServiceTests {
    
         newInstructor = userService.createInstructor(email, "");
       
-
         assertNotNull(newInstructor);
         assertEquals(person.getEmail(), newInstructor.getEmail());
         assertEquals(person.getName(), newInstructor.getName());
-        assertEquals("encodedPassword", newInstructor.getPassword());
+        assertEquals(password, newInstructor.getPassword());
         assertEquals(Instructor.class, newInstructor.getPersonRole().getClass());
         assertEquals(person.getId(), newInstructor.getId());
     }
