@@ -133,9 +133,11 @@ public class Helper {
    * @param price
    * @return
    */
-  public static CourseTypeRequestDTO createCourseTypeRequest(String description, boolean approvedByOwner, float price) {
+  public static CourseTypeRequestDTO createCourseTypeRequest(String name, String description, String image, boolean approvedByOwner, float price) {
     CourseTypeRequestDTO courseTypeRequest = new CourseTypeRequestDTO();
+    courseTypeRequest.setName(name);
     courseTypeRequest.setDescription(description);
+    courseTypeRequest.setImage(image);
     courseTypeRequest.setApprovedByOwner(approvedByOwner);
     courseTypeRequest.setPrice(price);
     return courseTypeRequest;
@@ -170,7 +172,7 @@ public class Helper {
    */
   public static int createScheduledCourse(RestTemplate restTemplate,String location, String date, String startTime, String endTime, int instructorId) {
     ResponseEntity < CourseTypeRequestDTO > courseTypeResponse = restTemplate.postForEntity("/courseTypes",
-    createCourseTypeRequest("Yoga", true, 20.0f), CourseTypeRequestDTO.class);
+    createCourseTypeRequest("Yoga", "Yoga description", "Yoga image", true, 20.0f), CourseTypeRequestDTO.class);
 
     ScheduledCourseRequestDTO courseRequest = createCourseRequest(location,date,startTime,endTime, instructorId, courseTypeResponse.getBody());
 
@@ -186,23 +188,32 @@ public class Helper {
      * @param price
      * @param newDescription
      */
-    public static void validateCourseType(CourseTypeRepository courseTypeRepository, String description, float price, boolean newDescription) {
+    public static void validateCourseType(CourseTypeRepository courseTypeRepository, String name, String description, String image, float price, boolean newName) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course name cannot be null or empty.");
+        }
         if (description == null || description.trim().isEmpty()) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description cannot be null or empty.");
+        }
+        if (image == null || image.trim().isEmpty()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course image cannot be null or empty.");
         }
         if (price <= 0) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course price must be greater than zero.");
         }
-        if (newDescription) {
-            if (courseTypeRepository.findCourseTypeByDescription(description) != null) { 
-              throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description must be unique");
+        if (newName) {
+            if (courseTypeRepository.findCourseTypeByName(name) != null) { 
+              throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course name already exists.");
             }
         }
-        if (!description.matches(".*[a-zA-Z].*")) {
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Description must contain letters.");
+        if (!name.matches(".*[a-zA-Z].*")) {
+            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Name must contain letters.");
         }
-        if (description.length() > 60) {
-            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course description cannot exceed 60 characters.");
+        if (name.length() > 60) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course name cannot exceed 60 characters.");
+        }
+        if (!description.matches(".*[a-zA-Z].*")) {
+          throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Description must contain letters.");
         }
     }
 

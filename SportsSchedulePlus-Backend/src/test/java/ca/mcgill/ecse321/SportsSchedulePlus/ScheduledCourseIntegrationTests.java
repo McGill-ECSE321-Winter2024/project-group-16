@@ -72,7 +72,7 @@ public class ScheduledCourseIntegrationTests {
         personRepository.deleteAll();
         ownerRepository.deleteAll();
 
-        
+
         personRoleRepository.deleteAll();
         customerRepository.deleteAll();
         instructorRepository.deleteAll();
@@ -126,7 +126,7 @@ public class ScheduledCourseIntegrationTests {
     @Test
     public void testUpdateScheduledCourse() {
         ResponseEntity < CourseTypeRequestDTO > courseTypeResponse = restTemplate.postForEntity("/courseTypes",
-            Helper.createCourseTypeRequest("Description", false, 12f), CourseTypeRequestDTO.class);
+            Helper.createCourseTypeRequest("Name", "Description", "Image", false, 12f), CourseTypeRequestDTO.class);
 
         PersonDTO instructorDTO = postInstructor("New instructor","instr@gmail.com","pwd123ABCDEE!!!","");
         int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Downtown Gym", "2024-04-15", "09:00:00", "11:00:00", instructorDTO.getId());
@@ -159,7 +159,7 @@ public class ScheduledCourseIntegrationTests {
     public void testUpdateScheduledCourseWithInvalidInputs() {
     
         restTemplate.postForEntity("/courseTypes",
-            Helper.createCourseTypeRequest("Description", false, 12f), CourseTypeRequestDTO.class);
+            Helper.createCourseTypeRequest("Name", "Description", "Image", false, 12f), CourseTypeRequestDTO.class);
 
         PersonDTO instructorDTO = postInstructor("New instructor","instr@gmail.com","pwd123ABCDEE!!!","");
         int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Downtown Gym", "2024-04-15", "09:00:00", "11:00:00", instructorDTO.getId());

@@ -44,7 +44,7 @@ public class ScheduledCourseRepositoryTests {
   @Test
   public void testFindScheduledCourseByLocation() {
     // Create and save a ScheduledCourse
-    CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+    CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
     courseTypeRepository.save(courseType);
     ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
     scheduledCourseRepository.save(scheduledCourse);
@@ -63,7 +63,7 @@ public class ScheduledCourseRepositoryTests {
    */
   @Test
   public void testFindScheduledCoursesByDate() {
-    CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+    CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
     courseTypeRepository.save(courseType);
     ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
     scheduledCourseRepository.save(scheduledCourse);
@@ -81,7 +81,7 @@ public class ScheduledCourseRepositoryTests {
    */
   @Test
   public void testFindScheduledCoursesByDateBetween() {
-    CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+    CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
     courseTypeRepository.save(courseType);
     ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
     scheduledCourseRepository.save(scheduledCourse);
@@ -101,7 +101,7 @@ public class ScheduledCourseRepositoryTests {
    */
   @Test
   public void testFindScheduledCoursesByCourseType() {
-    CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+    CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
     courseTypeRepository.save(courseType);
     ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
     scheduledCourseRepository.save(scheduledCourse);
@@ -120,7 +120,7 @@ public class ScheduledCourseRepositoryTests {
    */
   @Test
   public void testFindScheduledCoursesByStartTime() {
-    CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+    CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
     courseTypeRepository.save(courseType);
     ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
     scheduledCourseRepository.save(scheduledCourse);
@@ -138,7 +138,7 @@ public class ScheduledCourseRepositoryTests {
    */
   @Test
   public void testFindScheduledCoursesByEndTime() {
-    CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+    CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
     courseTypeRepository.save(courseType);
     ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
     scheduledCourseRepository.save(scheduledCourse);

@@ -510,9 +510,9 @@ public class UserService {
      */
     @Transactional
     public CourseType suggestCourseType(PersonRole personRole, CourseType courseType) {
-        Helper.validateCourseType(courseTypeRepository,courseType.getDescription(), courseType.getPrice(), true);
+        Helper.validateCourseType(courseTypeRepository, courseType.getName(), courseType.getDescription(), courseType.getImage(), courseType.getPrice(), true);
         Helper.validatePersonRole(personRole);
-        CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getDescription(), courseType.getApprovedByOwner(), courseType.getPrice());
+        CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getName(), courseType.getDescription(), courseType.getImage(), courseType.getApprovedByOwner(), courseType.getPrice());
         if(personRole instanceof Instructor){
             Person person = getPersonById(personRole.getId());
             Instructor instructor = getInstructor(person.getEmail());

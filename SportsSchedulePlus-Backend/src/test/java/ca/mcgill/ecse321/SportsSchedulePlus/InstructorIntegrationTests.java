@@ -147,7 +147,7 @@ public class InstructorIntegrationTests {
         postInstructor("New instructor","instructor@gmail.com","pwd123ABCDEE!!!","");
         Instructor instructor =  (Instructor) userService.findPersonByEmail("instructor@gmail.com").getPersonRole();
         instructor.setExperience("Yoga");
-        CourseType courseType = new CourseType("Yoga",true,20f);
+        CourseType courseType = new CourseType("Yoga", "Yoga description", "yoga.jpg", true,20f);
         courseTypeRepository.save(courseType);
         ScheduledCourse course = new ScheduledCourse(0,Date.valueOf("2024-05-15"),Time.valueOf("10:00:00"),Time.valueOf("12:00:00"),"Gym",courseType);
         scheduledCourseRepository.save(course);
@@ -169,7 +169,9 @@ public class InstructorIntegrationTests {
         postInstructor("New instructor","instructor@gmail.com","pwd123ABCDEE!!!","");
         // Create a new course type request
         CourseTypeRequestDTO courseTypeRequestDTO = new CourseTypeRequestDTO();
-        courseTypeRequestDTO.setDescription("Yoga Basics");
+        courseTypeRequestDTO.setName("Yoga Basics");
+        courseTypeRequestDTO.setDescription("Yoga Basics description");
+        courseTypeRequestDTO.setImage("yoga.jpg");
         courseTypeRequestDTO.setPrice(20.0f);
 
         // Send a POST request to suggest a course type for the instructor
@@ -185,7 +187,9 @@ public class InstructorIntegrationTests {
         postInstructor("New instructor","instructor@gmail.com","pwd123ABCDEE!!!","");
         // Create a new course type request
         CourseTypeRequestDTO courseTypeRequestDTO = new CourseTypeRequestDTO();
-        courseTypeRequestDTO.setDescription("Yoga Basics");
+        courseTypeRequestDTO.setName("Yoga Basics");
+        courseTypeRequestDTO.setDescription("Yoga Basics description");
+        courseTypeRequestDTO.setImage("yoga.jpg");
         courseTypeRequestDTO.setPrice(20.0f);
 
         // Send a POST request to suggest a course type for the instructor

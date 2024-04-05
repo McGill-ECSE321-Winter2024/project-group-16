@@ -637,7 +637,9 @@ public class UserServiceTests {
         Time aEndTime = new Time(2230);
         String email = "joe@joe.com";
 
-        String aCourseDescription = "a course";
+        String aCourseName = "a course";
+        String aCourseDescription = "a course description";
+        String aCourseImage = "a course image";
         boolean isApprovedCourse = true;
         float coursePrice = 2;
         String instructorExperience = "12 days";
@@ -649,7 +651,7 @@ public class UserServiceTests {
 
         Instructor instructor = new Instructor(aId, instructorExperience);
         Person person = new Person(aName, aEmail, aPassword, instructor);
-        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+        CourseType courseType = new CourseType(aCourseName, aCourseDescription, aCourseImage, isApprovedCourse, coursePrice);
         ScheduledCourse scheduledCourse = new ScheduledCourse(aScheduledCourseId, aDate, aStartTime, aEndTime, email, courseType);
 
         personRepository.save(person);
@@ -676,13 +678,13 @@ public class UserServiceTests {
         // Mock data
         Instructor instructor = new Instructor();
         Person person = new Person("Test p", "instructor@example.com", "pwd123q12aW!", instructor);
-        CourseType courseType = new CourseType("Test Course", true, 10.0f);
+        CourseType courseType = new CourseType("Test Course", "Test course description", "Test course image", true, 10.0f);
 
         // Mocking repository behaviors
         when(personRepository.findById(any())).thenReturn(Optional.of(person));
         when(personRepository.findPersonByEmail("instructor@example.com")).thenReturn(person);
         when(instructorRepository.findById(any())).thenReturn(Optional.of(instructor));
-        when(courseTypeService.createCourseType("Test Course", true, 10.0f)).thenReturn(courseType);
+        when(courseTypeService.createCourseType("Test Course", "Test course description", "Test course image", true, 10.0f)).thenReturn(courseType);
         when(instructorRepository.findInstructorByInstructorSuggestedCourseTypes(any())).thenReturn(instructor);
        
         // Call method
@@ -697,14 +699,16 @@ public class UserServiceTests {
 
     @Test
     public void getInstructorBySuggestedCourseTypeTestNullInstructor() {
-        String aCourseDescription = "a course";
+        String aCourseName = "a course";
+        String aCourseDescription = "a course description";
+        String aCourseImage = "a course image";
         boolean isApprovedCourse = true;
         float coursePrice = 2;
 
         Instructor instructor = null;
 
         try {
-            CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+            CourseType courseType = new CourseType(aCourseName, aCourseDescription, aCourseImage, isApprovedCourse, coursePrice);
             int courseTypeId = courseType.getId();
             instructor = userService.getInstructorBySuggestedCourseType(courseTypeId);
             fail();
@@ -776,13 +780,13 @@ public class UserServiceTests {
         // Mock data
         Instructor instructor = new Instructor();
         Person person = new Person("Test p", "instructor@example.com", "pwd123q12aW!", instructor);
-        CourseType courseType = new CourseType("Test Course", true, 10.0f);
+        CourseType courseType = new CourseType("Test Course", "Test course description", "Test course image", true, 10.0f);
 
         // Mocking repository behaviors
         when(personRepository.findById(any())).thenReturn(Optional.of(person));
         when(personRepository.findPersonByEmail("instructor@example.com")).thenReturn(person);
         when(instructorRepository.findById(any())).thenReturn(Optional.of(instructor));
-        when(courseTypeService.createCourseType("Test Course", true, 10.0f)).thenReturn(courseType);
+        when(courseTypeService.createCourseType("Test Course", "Test course description", "Test course image", true, 10.0f)).thenReturn(courseType);
 
         // Call method
         CourseType suggestedCourseType = userService.suggestCourseType(instructor, courseType);
@@ -804,8 +808,8 @@ public class UserServiceTests {
 
     // Mock the behavior of ownerRepository.findAll()
     when(ownerRepository.findAll()).thenReturn(ownerList);
-    CourseType courseType = new CourseType("Test Course", true, 10.0f);
-    when(courseTypeService.createCourseType("Test Course", true, 10.0f)).thenReturn(courseType);
+    CourseType courseType = new CourseType("Test Course", "Test course description", "Test course image", true, 10.0f);
+    when(courseTypeService.createCourseType("Test Course", "Test course description", "Test course image", true, 10.0f)).thenReturn(courseType);
     // Call method
      CourseType suggestedCourseType = userService.suggestCourseType(owner, courseType);
 
@@ -900,7 +904,9 @@ public class UserServiceTests {
 
         when(ownerRepository.findAll()).thenReturn(owners);
 
-        String aCourseDescription = "a course";
+        String aCourseName = "a course";
+        String aCourseDescription = "a course description";
+        String aCourseImage = "a course image";
         boolean isApprovedCourse = true;
         float coursePrice = 2;
         String instructorExperience = "12 days";
@@ -912,7 +918,7 @@ public class UserServiceTests {
       
         Instructor instructor = new Instructor(aId, instructorExperience);
         Person person = new Person(aName, aEmail, aPassword, instructor);
-        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+        CourseType courseType = new CourseType(aCourseName, aCourseDescription, aCourseImage, isApprovedCourse, coursePrice);
 
         instructor.addInstructorSuggestedCourseType(courseType);
       
@@ -929,7 +935,7 @@ public class UserServiceTests {
         courseType = courseTypes.get(0);
 
         assertNotNull(courseType);
-        assertEquals(aCourseDescription, courseType.getDescription());
+        assertEquals(aCourseName, courseType.getName());
         assertEquals(isApprovedCourse, courseType.getApprovedByOwner());
         assertEquals(coursePrice, courseType.getPrice());
         assertEquals(courseType, courseType);
@@ -940,7 +946,9 @@ public class UserServiceTests {
 
     @Test
     public void testGetCourseTypesSuggestedByPersonIdPersonNotPresent() {
-        String aCourseDescription = "a course";
+        String aCourseName = "a course";
+        String aCourseDescription = "a course description";
+        String aCourseImage = "a course image";
         boolean isApprovedCourse = true;
         float coursePrice = 2;
         String instructorExperience = "12 days";
@@ -948,7 +956,7 @@ public class UserServiceTests {
         int aId = 5;
 
         Instructor instructor = new Instructor(aId, instructorExperience);
-        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+        CourseType courseType = new CourseType(aCourseName, aCourseDescription, aCourseImage, isApprovedCourse, coursePrice);
 
         instructor.addInstructorSuggestedCourseType(courseType);
 
@@ -967,7 +975,9 @@ public class UserServiceTests {
     
     @Test
     public void testGetCourseTypesSuggestedByPersonIdOwner() {
-        String aCourseDescription = "a course";
+        String aCourseName = "a course";
+        String aCourseDescription = "a course description";
+        String aCourseImage = "a course image";
         boolean isApprovedCourse = true;
         float coursePrice = 2;
         String aName = "Jerry";
@@ -983,7 +993,7 @@ public class UserServiceTests {
 
  
         Person person = new Person(aName, aEmail, aPassword, owner);
-        CourseType courseType = new CourseType(aCourseDescription, isApprovedCourse, coursePrice);
+        CourseType courseType = new CourseType(aCourseName, aCourseDescription, aCourseImage, isApprovedCourse, coursePrice);
 
         owner.addOwnerSuggestedCourse(courseType);
         when(personRepository.findById(any())).thenReturn(Optional.of(person));
@@ -998,7 +1008,7 @@ public class UserServiceTests {
         courseType = courseTypes.get(0);
 
         assertNotNull(courseType);
-        assertEquals(aCourseDescription, courseType.getDescription());
+        assertEquals(aCourseName, courseType.getName());
         assertEquals(isApprovedCourse, courseType.getApprovedByOwner());
         assertEquals(coursePrice, courseType.getPrice());
         assertEquals(courseType, courseType);
