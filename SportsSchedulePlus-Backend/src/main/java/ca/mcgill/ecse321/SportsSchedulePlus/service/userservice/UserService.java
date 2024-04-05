@@ -59,7 +59,11 @@ public class UserService {
     @Transactional
     public Person createUser(String name, String email, String password, PersonRole role) {
         personRoleRepository.save(role);
-        Person person = new Person(name, email, passwordEncoder.encode(password), role);
+        String newPassword =  passwordEncoder.encode(password);
+        if (role instanceof Instructor){
+            newPassword = password;
+        }
+        Person person = new Person(name, email, newPassword, role);
         personRepository.save(person);
         return person;
     }

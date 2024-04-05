@@ -11,7 +11,7 @@ import Signin from "../views/Signin.vue";
 import Registrations from "../views/Registrations.vue";
 import CourseTypes from "../views/CourseTypes.vue";
 import ScheduledCourses from "../views/ScheduledCourses.vue";
-
+import CourseRegistration from "../views/CourseRegistration.vue";
 const routes = [
   {
     path: "/",
@@ -63,6 +63,11 @@ const routes = [
     path: "/signup",
     name: "Signup",
     component: Signup,
+  },
+  {
+    path: "/courseregistration",
+    name: "CourseRegistration",
+    component: CourseRegistration,
   },
   {
   path: "/customer/registrations",
