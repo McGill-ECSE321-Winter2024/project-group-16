@@ -67,7 +67,7 @@ const logout = () => store.dispatch('logout');
           :class="getRoute() === 'courseTypes' ? 'active' : ''"
           :navText="isRTL ? 'الجداول' : 'Course types'"
         >
-        
+
           <template v-slot:icon>
             <i
               class="ni ni-collection text-warning text-sm opacity-10"
@@ -81,7 +81,7 @@ const logout = () => store.dispatch('logout');
           :class="getRoute() === 'scheduledCourses' ? 'active' : ''"
           :navText="isRTL ? 'الجداول' : 'Scheduled courses'"
         >
-        
+
           <template v-slot:icon>
             <i
               class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"
@@ -167,12 +167,12 @@ const logout = () => store.dispatch('logout');
           </template>
         </sidenav-item>
       </li>
-      
+
 
       <li class="nav-item" v-if="!loggedIn">
         <sidenav-item
           to="/signin"
-          :class="getRoute() === 'signin' ? 'active' : ''"
+          :class="getRoute() === 'signIn' ? 'active' : ''"
           :navText="isRTL ? 'تسجيل الدخول' : 'Sign In'"
         >
           <template v-slot:icon>
@@ -195,5 +195,5 @@ const logout = () => store.dispatch('logout');
     </ul>
   </div>
 
- 
+
 </template>

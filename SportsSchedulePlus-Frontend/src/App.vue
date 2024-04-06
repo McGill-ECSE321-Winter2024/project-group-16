@@ -17,7 +17,7 @@ import { computed } from "vue";
 import { useStore } from "vuex";
 import Sidenav from "./examples/Sidenav";
 import Configurator from "@/examples/Configurator.vue";
-import Navbar from "@/examples/Navbars/Navbar.vue";
+import Navbar from "@/examples/Navbars/TopNavBar.vue";
 
 const store = useStore();
 const isNavFixed = computed(() => store.state.isNavFixed);
@@ -52,7 +52,7 @@ const navClasses = computed(() => {
   <sidenav v-if="showSidenav" />
 
   <main
-    class="main-content position-relative max-height-vh-100 h-100 border-radius-lg"
+    class=" main-content position-relative max-height-vh-100 h-100 border-radius-lg"
   >
     <!-- nav -->
 
