@@ -1,189 +1,153 @@
+<template>
+  <main class="main-content mt-0">
+    <div class="page-header align-items-start min-vh-45 pt-5 ml-3 mr-3 border-radius-lg text-center"
+         :style="{backgroundImage: 'url(' + imagePath + ')', backgroundPosition: 'top'}">
+    </div>
+    <div class="container">
+      <div class="row mt-lg-n10 mt-md-n11 mt-n10 justify-content-center">
+        <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
+          <div class="card shadow">
+            <div class="card z-index-0">
+              <div class="card-headers text-center pt-4">
+                <h5 class="card-title">Log In</h5>
+              </div>
+            </div>
+            <v-form v-model="form" @submit.prevent="signIn">
+              <div class="card-body">
 
+                <v-text-field
+                  v-model="email"
+                  id="Email"
+                  color="#E2725B"
+                  label="Email"
+                  variant="underlined"
+                  aria-label="Email"
+                  placeholder="johnsmith@gmail.com"
+                  :rules="[rules.required]"
+                ></v-text-field>
+
+                <v-text-field
+                  v-model="password"
+                  color="#E2725B"
+                  label="Password"
+                  aria-label="Email"
+                  variant="underlined"
+                  placeholder="Enter your password"
+                  visible="false"
+                  :rules="[rules.required]"
+
+                ></v-text-field>
+
+                <v-divider></v-divider>
+
+                <div class="card-body">
+                  <v-btn
+                    :disabled="!form"
+                    :loading="loading"
+                    color="#E2725B"
+                    size="large"
+                    type="submit"
+                    variant="elevated"
+                    block
+                  >
+                    Sign In
+                  </v-btn>
+                  <v-divider></v-divider>
+                  <p style="text-align: center; font-style: italic;">Don't have an account?</p>
+                  <v-btn
+                    color="#E2725B"
+                    size="large"
+                    type="Create account"
+                    variant="elevated"
+                    @click="redirectToSignIn"
+                    block
+                  >
+                    Register
+                  </v-btn>
+                </div>
+
+                <div class="alert" role="alert" v-if="errorMessage">
+                  <v-alert
+                    color="error"
+                    variant="outlined"
+                    :text="errorMessage"
+                  >
+                  </v-alert>
+                </div>
+
+              </div>
+            </v-form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</template>
 
 <script setup>
-import { onBeforeUnmount, onBeforeMount } from "vue";
-import { useStore } from "vuex";
-import Navbar from "@/examples/PageLayout/Navbar.vue";
-import ArgonInput from "@/components/ArgonInput.vue";
-import ArgonSwitch from "@/components/ArgonSwitch.vue";
-import ArgonButton from "@/components/ArgonButton.vue";
-const body = document.getElementsByTagName("body")[0];
+import {ref} from 'vue';
+import axios from 'axios';
+import {useRouter} from 'vue-router'
+import image from '../assets/signup.jpg';
+import {useStore} from "vuex";
 
 const store = useStore();
-onBeforeMount(() => {
-  store.state.hideConfigButton = true;
-  store.state.showNavbar = false;
-  store.state.showSidenav = false;
-  store.state.showFooter = false;
-  body.classList.remove("bg-gray-100");
-});
-onBeforeUnmount(() => {
-  store.state.hideConfigButton = false;
-  store.state.showNavbar = true;
-  store.state.showSidenav = true;
-  store.state.showFooter = true;
-  body.classList.add("bg-gray-100");
-});
 
 
-
-import { ref } from 'vue';
-import axios from 'axios';
 const email = ref('');
 const password = ref('');
-
+const imagePath = image;
+const loading = ref(false);
+const form = ref(false)
 const errorMessage = ref('');
-import { useRouter, useRoute } from 'vue-router'
-
+const rules = {
+  required: value => !!value || 'Field is required',
+};
 const router = useRouter()
 
 const axiosClient = axios.create({
   baseURL: "http://localhost:8080"
 });
 
-
-
 const signIn = async () => {
   try {
-    const user = { email: email.value, password: password.value };
-    await axiosClient.post('/authentication/login',user);
-    console.log("pwd",password);
-    var response = await axiosClient.get(`/customers/email/${email.value}`);
-    var userRole;
-    if(email.value === "sports.schedule.plus@gmail.com"){
-       userRole = "Owner";
-    }
-    else{
+    const user = {email: email.value, password: password.value};
+    await axiosClient.post('/authentication/login', user);
+    console.log("pwd", password);
+    const response = await axiosClient.get(`/customers/email/${email.value}`);
+    let userRole;
+    if (email.value === "sports.schedule.plus@gmail.com") {
+      userRole = "Owner";
+    } else {
       userRole = response.data.role;
     }
-    // Assign response data to userData variable
-    var userData = {
+    const userData = {
       id: response.data.id,
       name: response.data.name,
       email: response.data.email,
       role: userRole,
       password: password.value
     };
-     console.log(response.data);
-    // Save user data to local storage
+    console.log(response.data);
     localStorage.setItem('userData', JSON.stringify(userData));
-    // Save login status to local storage
     localStorage.setItem('loggedIn', true);
     await store.dispatch('login', userData);
     router.push('/profile');
-    // You can do something after successful signup, like redirecting the user to another page.
   } catch (error) {
     console.error('Signin failed:', error.response.data);
     errorMessage.value = error.response.data;
   }
 };
 
+const onSubmit = () => {
+  if (!form.value) return;
+  loading.value = true;
+  setTimeout(() => (loading.value = false), 2000);
+};
 
+const redirectToSignIn = () => {
+  router.push('/signup');
+}
 
 </script>
-<template>
-  <div>
-  <div class="container top-0 position-sticky z-index-sticky">
-    <div class="row">
-      <div class="col-12">
-        <navbar
-          isBlur="blur  border-radius-lg my-3 py-2 start-0 end-0 mx-4 shadow"
-          v-bind:darkMode="true"
-          isBtn="bg-gradient-success"
-        />
-      </div>
-    </div>
-  </div>
-  <main class="mt-0 main-content">
-    <section>
-      <div class="page-header min-vh-100">
-        <div class="container">
-          <div class="row">
-            <div
-              class="mx-auto col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0"
-            >
-              <div class="card card-plain">
-                <div class="pb-0 card-header text-start">
-                  <h4 class="font-weight-bolder">Sign In</h4>
-                  <p class="mb-0">Enter your email and password to sign in</p>
-                </div>
-                <div class="card-body">
-                 <form role="form" @submit.prevent="signIn">
-                    <div class="mb-3">
-                      <argon-input
-                        id="email"
-                        type="email"
-                        placeholder="Email"
-                        name="email"
-                        size="lg"
-                        v-model="email"
-                      />
-                    </div>
-                    <div class="mb-3">
-                      <argon-input
-                        id="password"
-                        type="password"
-                        placeholder="Password"
-                        name="password"
-                        size="lg"
-                        v-model="password"
-                      />
-                    </div>
-                    <argon-switch id="rememberMe" name="remember-me"
-                      >Remember me</argon-switch
-                    >
-
-                    <div class="text-center">
-                      <argon-button
-                        class="mt-4"
-                        variant="gradient"
-                        color="success"
-                        fullWidth
-                        size="lg"
-                        >Sign in</argon-button
-                      >
-                    </div>
-                    <div class="alert" role="alert" v-if="errorMessage">{{ errorMessage }}</div>
-                  </form>
-                </div>
-                <div class="px-1 pt-0 text-center card-footer px-lg-2">
-                  <p class="mx-auto mb-4 text-sm">
-                    Don't have an account?
-                    <a
-                      href="/signup"
-                      class="text-success text-gradient font-weight-bold"
-                      >Sign up</a
-                    >
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div
-              class="top-0 my-auto text-center col-6 d-lg-flex d-none h-100 pe-0 position-absolute end-0 justify-content-center flex-column"
-            >
-              <div
-                class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden"
-                style="
-                  background-image: url(&quot;https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-ill.jpg&quot;);
-                  background-size: cover;
-                "
-              >
-                <span class="mask bg-gradient-success opacity-6"></span>
-                <h4
-                  class="mt-5 text-white font-weight-bolder position-relative"
-                >
-                  "Attention is the new currency"
-                </h4>
-                <p class="text-white position-relative">
-                  The more effortless the writing looks, the more effort the
-                  writer actually put into the process.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-</div>
-</template>
