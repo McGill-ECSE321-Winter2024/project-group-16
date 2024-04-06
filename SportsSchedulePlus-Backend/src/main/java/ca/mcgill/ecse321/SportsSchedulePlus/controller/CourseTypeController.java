@@ -31,7 +31,7 @@ public class CourseTypeController {
      */
     @PostMapping("/courseTypes")
     public CourseTypeResponseDTO createCourseType(@RequestBody CourseTypeRequestDTO request) {
-        CourseType createdCourseType = courseTypeService.createCourseType(request.getDescription(), request.isApprovedByOwner(), request.getPrice());
+        CourseType createdCourseType = courseTypeService.createCourseType(request.getName(), request.getDescription(), request.getImage(), request.isApprovedByOwner(), request.getPrice());
         return new CourseTypeResponseDTO(createdCourseType);
     }
     
@@ -118,7 +118,7 @@ public class CourseTypeController {
      */
     @PutMapping("/courseTypes/{id}")
     public CourseTypeResponseDTO updateCourseType(@PathVariable(name = "id") int id, @RequestBody CourseTypeRequestDTO request) {
-        CourseType updatedCourseType = courseTypeService.updateCourseType(id, request.getDescription(), request.isApprovedByOwner(), request.getPrice());
+        CourseType updatedCourseType = courseTypeService.updateCourseType(id, request.getName(), request.getDescription(), request.getImage(), request.isApprovedByOwner(), request.getPrice());
         return new CourseTypeResponseDTO(updatedCourseType);
     }
      /**

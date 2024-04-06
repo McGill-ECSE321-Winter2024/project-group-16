@@ -38,7 +38,9 @@ public class CourseTypeIntegrationTests {
     @Test
     public void testCreateAndGetCourseType() {
         CourseTypeRequestDTO newCourseType = new CourseTypeRequestDTO();
-        newCourseType.setDescription("Yoga");
+        newCourseType.setName("Yoga");
+        newCourseType.setDescription("Yoga description");
+        newCourseType.setImage("Yoga image");
         newCourseType.setApprovedByOwner(true);
         newCourseType.setPrice(20.0f);
 
@@ -54,17 +56,19 @@ public class CourseTypeIntegrationTests {
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         CourseTypeRequestDTO retrievedCourseType = getResponse.getBody();
         assertNotNull(retrievedCourseType);
-        assertEquals("Yoga", retrievedCourseType.getDescription());
+        assertEquals("Yoga", retrievedCourseType.getName());
     }
 
     // Test updating a CourseType
     @Test
     public void testUpdateCourseType() {
         // Assume this creates a CourseType and returns its ID
-        int id = createCourseType("Yoga", true, 20.0f);
+        int id = createCourseType("Yoga", "Yoga description", "Yoga image", true, 20.0f);
 
         CourseTypeRequestDTO updatedCourseType = new CourseTypeRequestDTO();
-        updatedCourseType.setDescription("Advanced Yoga");
+        updatedCourseType.setName("Advanced Yoga");
+        updatedCourseType.setDescription("Yoga description");
+        updatedCourseType.setImage("Yoga image");
         updatedCourseType.setApprovedByOwner(false);
         updatedCourseType.setPrice(25.0f);
 
@@ -74,18 +78,20 @@ public class CourseTypeIntegrationTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         CourseTypeRequestDTO courseType = response.getBody();
         assertNotNull(courseType);
-        assertEquals("Advanced Yoga", courseType.getDescription());
+        assertEquals("Advanced Yoga", courseType.getName());
+        assertEquals("Yoga description", courseType.getDescription());
+        assertEquals("Yoga image", courseType.getImage());
     }
 
      // Test updating a CourseType with invalid data
     @Test
     public void testUpdateInvalidCourseType() {
         // Create a CourseType first
-        int id = createCourseType("Yoga", true, 20.0f);
+        int id = createCourseType("Yoga", "Yoga description", "Yoga image", true, 20.0f);
 
         // Attempt to update the CourseType with invalid inputs
         CourseTypeRequestDTO updatedCourseType = new CourseTypeRequestDTO();
-        updatedCourseType.setDescription(""); // Invalid description
+        updatedCourseType.setName(""); // Invalid description
         updatedCourseType.setApprovedByOwner(false);
         updatedCourseType.setPrice(-10.0f); // Invalid price
 
@@ -96,14 +102,14 @@ public class CourseTypeIntegrationTests {
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         CourseTypeRequestDTO retrievedCourseType = getResponse.getBody();
         assertNotNull(retrievedCourseType);
-        assertEquals("Yoga", retrievedCourseType.getDescription());
+        assertEquals("Yoga", retrievedCourseType.getName());
     }
 
     // Test creating a CourseType with invalid data
     @Test
     public void testCreateInvalidCourseType() {
         CourseTypeRequestDTO newCourseType = new CourseTypeRequestDTO();
-        newCourseType.setDescription(""); // Invalid description
+        newCourseType.setName(""); // Invalid description
         newCourseType.setApprovedByOwner(true);
         newCourseType.setPrice(-10.0f); // Invalid price
 
@@ -119,9 +125,11 @@ public class CourseTypeIntegrationTests {
     }
 
     // Helper method to create a CourseType for use in tests
-    private int createCourseType(String description, boolean approvedByOwner, float price) {
+    private int createCourseType(String name, String description, String image, boolean approvedByOwner, float price) {
         CourseTypeRequestDTO newCourseType = new CourseTypeRequestDTO();
+        newCourseType.setName(name);
         newCourseType.setDescription(description);
+        newCourseType.setImage(image);
         newCourseType.setApprovedByOwner(approvedByOwner);
         newCourseType.setPrice(price);
         ResponseEntity<CourseTypeRequestDTO> response = client.postForEntity("/courseTypes", newCourseType, CourseTypeRequestDTO.class);

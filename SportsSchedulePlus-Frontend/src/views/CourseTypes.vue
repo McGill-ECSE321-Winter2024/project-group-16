@@ -186,7 +186,6 @@
         try {
           await axiosClient.put(`/courseTypes/approve/${courseTypeId}`);
           this.loadCourseTypes(); // Reload the course type list after approval
-          this.showMessage('Course type approved successfully!', 'alert-warn');
         } catch (error) {
           this.showMessage('Error approving course type', 'alert-danger');
           console.error('Error approving course type:', error);
@@ -199,7 +198,6 @@
         try {
           await axiosClient.put(`/courseTypes/reject/${courseTypeId}`);
           this.loadCourseTypes(); // Reload the course type list after rejection
-          this.showMessage('Course type rejected successfully!', 'alert-warn');
         } catch (error) {
           this.showMessage('Error rejecting course type', 'alert-danger');
           console.error('Error rejecting course type:', error);

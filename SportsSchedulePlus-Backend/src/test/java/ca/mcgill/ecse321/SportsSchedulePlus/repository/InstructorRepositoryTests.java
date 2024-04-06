@@ -79,7 +79,7 @@ public class InstructorRepositoryTests {
         Instructor instructor = createInstructor();
 
         // Create Scheduled Course
-        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+        CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
         courseTypeRepository.save(courseType);
         ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(scheduledCourse);
@@ -99,7 +99,7 @@ public class InstructorRepositoryTests {
     @Test
     public void testFindInstructorBySupervisedCourseNotFound(){
         // Create Scheduled Course
-        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+        CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
         courseTypeRepository.save(courseType);
         ScheduledCourse scheduledCourse = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(scheduledCourse);
@@ -120,7 +120,7 @@ public class InstructorRepositoryTests {
         Instructor instructor = createInstructor();
 
         // Create Course Type
-        CourseType courseType = new CourseType("pilates", true, 12.99F);
+        CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
         courseTypeRepository.save(courseType);
 
         // Add Course Type to Instructor
@@ -139,7 +139,7 @@ public class InstructorRepositoryTests {
     public void testFindInstructorBySuggestedCourseNotFound(){
  
         // Create Course Type
-        CourseType courseType = new CourseType("pilates", true, 12.99F);
+        CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
         courseTypeRepository.save(courseType);
 
         // Read Instructor From Database

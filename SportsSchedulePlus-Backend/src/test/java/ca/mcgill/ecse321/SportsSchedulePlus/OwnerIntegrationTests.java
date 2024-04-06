@@ -117,7 +117,7 @@ public class OwnerIntegrationTests {
     public void testSuggestCourseTypeInvalid() {
         postOwner("owner", "password");
         CourseTypeRequestDTO newCourseType = new CourseTypeRequestDTO();
-        newCourseType.setDescription("");
+        newCourseType.setName("");
         newCourseType.setApprovedByOwner(true);
         newCourseType.setPrice(-30f);
 
@@ -132,7 +132,9 @@ public class OwnerIntegrationTests {
     public void testSuggestCourseType() {
         postOwner("John Doe", "password");
         CourseTypeRequestDTO newCourseType = new CourseTypeRequestDTO();
-        newCourseType.setDescription("Yoga Basics");
+        newCourseType.setName("Yoga Basics");
+        newCourseType.setDescription("Yoga Basics for begginers.");
+        newCourseType.setImage("yoga.jpg");
         newCourseType.setApprovedByOwner(true);
         newCourseType.setPrice(20.0f);
 

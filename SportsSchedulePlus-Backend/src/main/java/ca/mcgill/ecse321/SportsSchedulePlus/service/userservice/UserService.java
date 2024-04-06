@@ -59,7 +59,11 @@ public class UserService {
     @Transactional
     public Person createUser(String name, String email, String password, PersonRole role) {
         personRoleRepository.save(role);
-        Person person = new Person(name, email, passwordEncoder.encode(password), role);
+        String newPassword =  passwordEncoder.encode(password);
+        if (role instanceof Instructor){
+            newPassword = password;
+        }
+        Person person = new Person(name, email, newPassword, role);
         personRepository.save(person);
         return person;
     }
@@ -506,9 +510,9 @@ public class UserService {
      */
     @Transactional
     public CourseType suggestCourseType(PersonRole personRole, CourseType courseType) {
-        Helper.validateCourseType(courseTypeRepository,courseType.getDescription(), courseType.getPrice(), true);
+        Helper.validateCourseType(courseTypeRepository, courseType.getName(), courseType.getDescription(), courseType.getImage(), courseType.getPrice(), true);
         Helper.validatePersonRole(personRole);
-        CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getDescription(), courseType.getApprovedByOwner(), courseType.getPrice());
+        CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getName(), courseType.getDescription(), courseType.getImage(), courseType.getApprovedByOwner(), courseType.getPrice());
         if(personRole instanceof Instructor){
             Person person = getPersonById(personRole.getId());
             Instructor instructor = getInstructor(person.getEmail());
@@ -576,6 +580,11 @@ public class UserService {
             // case where the person is a customer
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customers cannot have suggested courses.");
         } 
+    }
+
+    @Transactional
+    public List<ScheduledCourse> getSupervisedCourses(Instructor instructor) {
+        return instructor.getSupervisedCourses();
     }
 
 }

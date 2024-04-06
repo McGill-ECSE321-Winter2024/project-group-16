@@ -66,7 +66,7 @@ public class OwnerController {
     @PostMapping(value = {"/owner/suggest-course"})
     public ResponseEntity<String> suggestCourseType(@RequestBody CourseTypeRequestDTO request) {
         PersonRole owner = userService.getPersonById(userService.getOwner().getId()).getPersonRole();
-        CourseType courseType = new CourseType(request.getDescription(), false,request.getPrice());
+        CourseType courseType = new CourseType(request.getName(), request.getName(), request.getImage(), false, request.getPrice());;
         userService.suggestCourseType(owner, courseType);
         return ResponseEntity.ok("Course type suggested successfully.");
     }
