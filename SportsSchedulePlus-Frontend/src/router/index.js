@@ -11,6 +11,7 @@ import Signin from "../views/Signin.vue";
 import Registrations from "../views/Registrations.vue";
 import CourseTypes from "../views/CourseTypes.vue";
 import ScheduledCourses from "../views/ScheduledCourses.vue";
+import Classes from "../views/Classes.vue";
 
 const routes = [
   {

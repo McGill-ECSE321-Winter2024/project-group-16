@@ -20,6 +20,7 @@
     "prettify": "prettier --write ."
   },
   "dependencies": {
+    "@daypilot/daypilot-lite-vue": "^3.21.0",
     "@popperjs/core": "2.11.8",
     "axios": "1.5",
     "bootstrap": "5.3.3",
@@ -32,7 +33,7 @@
     "vue-count-to": "1.0.13",
     "vue-flatpickr-component": "11.0.4",
     "vue-router": "4.3.0",
-    "vuetify": "^3.5.13",
+    "vuetify": "^3.5.14",
     "vuex": "4.1.0"
   },
   "devDependencies": {

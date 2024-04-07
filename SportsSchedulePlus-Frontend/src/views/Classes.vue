@@ -1,3 +1,9 @@
+<script setup>
+import WeeklySchedule from '../components/WeeklySchedule.vue';
+</script>
+
+
+
 <template>
       <div class="classes-section">
       <div class="header">
@@ -23,6 +29,10 @@
         <div class="class-details" v-if="selectedCourse">
           <h2>{{ selectedCourse.description }}</h2> <!-- assuming name is to be replaced with description -->
           <div class="image-placeholder">IMAGE HERE</div>
+          <WeeklySchedule
+            displayType='courseType'
+            CourseTypeId=courseType.id
+          />
           <!-- Display price and state if course is selected -->
           <!-- Image and schedule button are omitted for simplicity -->
         </div>
