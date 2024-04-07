@@ -196,7 +196,7 @@ export default {
         console.error('Error deleting user:', error);
       }
     }
-  }
+  }f
 };
 
 
