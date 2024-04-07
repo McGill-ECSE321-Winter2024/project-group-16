@@ -40,11 +40,13 @@ public class CourseTypeService {
      * @return the new CourseType
      */
     @Transactional
-    public CourseType createCourseType(String description, boolean approvedByOwner, float price) {
+    public CourseType createCourseType(String name, String description, String image, boolean approvedByOwner, float price) {
         // Validate the course before saving
-        Helper.validateCourseType(courseTypeRepository,description, price, true);
+        Helper.validateCourseType(courseTypeRepository, name, description, image, price, true);
         CourseType courseType = new CourseType();
+        courseType.setName(name);
         courseType.setDescription(description);
+        courseType.setImage(image);
         courseType.setApprovedByOwner(approvedByOwner);
         courseType.setPrice(price);
         courseTypeRepository.save(courseType);
@@ -60,11 +62,13 @@ public class CourseTypeService {
      * @return the updated CourseType
      */
     @Transactional
-    public CourseType updateCourseType(int id, String description, boolean approvedByOwner, float price) {
+    public CourseType updateCourseType(int id, String name, String description, String image, boolean approvedByOwner, float price) {
         CourseType courseType = getCourseType(id);
-        boolean newDescription = !courseType.getDescription().equals(description);
-        Helper.validateCourseType(courseTypeRepository,description, price, newDescription);
+        boolean newName = !courseType.getName().equals(name);
+        Helper.validateCourseType(courseTypeRepository, name, description, image, price, newName);
+        courseType.setName(name);
         courseType.setDescription(description);
+        courseType.setImage(image);
         courseType.setApprovedByOwner(approvedByOwner);
         courseType.setPrice(price);
         courseTypeRepository.save(courseType);

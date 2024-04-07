@@ -33,7 +33,7 @@ public class ScheduledCourseController {
      */
     @PostMapping("/scheduledCourses")
     public ScheduledCourseResponseDTO createScheduledCourse(@RequestBody ScheduledCourseRequestDTO request) {
-        ScheduledCourse createdScheduledCourse = scheduledCourseService.createScheduledCourse(request.getDate(), request.getStartTime(), request.getEndTime(), request.getLocation(), request.getCourseType().getId());
+        ScheduledCourse createdScheduledCourse = scheduledCourseService.createScheduledCourse(request.getDate(), request.getStartTime(), request.getEndTime(), request.getLocation(),request.getInstructorId(), request.getCourseType().getId());
         return new ScheduledCourseResponseDTO(createdScheduledCourse);
     }
     /**
@@ -123,4 +123,18 @@ public class ScheduledCourseController {
         return new ScheduledCourseListDTO(scheduledCourseDTOs);
     }
 
+    /**
+     * Retrieves the scheduled courses for the course type with the path variable id
+     * @param courseTypeId
+     * @return
+     */
+    @GetMapping(value = "/courseTypes/{courseTypeId}/scheduledCourses")
+    public ScheduledCourseListDTO getScheduledCoursesByCourseType(@PathVariable("courseTypeId") int courseTypeId) {
+        List<ScheduledCourse> scheduledCourses = scheduledCourseService.getScheduledCoursesByCourseType(courseTypeId);
+        List<ScheduledCourseResponseDTO> scheduledCourseDTOs = new ArrayList<>();
+        for (ScheduledCourse scheduledCourse : scheduledCourses) {
+            scheduledCourseDTOs.add(new ScheduledCourseResponseDTO(scheduledCourse));
+        }
+        return new ScheduledCourseListDTO(scheduledCourseDTOs);
+    }
 }

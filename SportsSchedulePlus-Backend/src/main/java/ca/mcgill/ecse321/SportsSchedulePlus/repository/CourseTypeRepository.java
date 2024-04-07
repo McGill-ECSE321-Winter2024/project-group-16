@@ -11,7 +11,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 public interface CourseTypeRepository extends CrudRepository<CourseType, Integer> {
 
     // Find CourseType by description
-    CourseType findCourseTypeByDescription(String description);
+    CourseType findCourseTypeByName(String description);
 
     // Find CourseType by price less than
     List<CourseType> findByPriceLessThan(float maxPrice);

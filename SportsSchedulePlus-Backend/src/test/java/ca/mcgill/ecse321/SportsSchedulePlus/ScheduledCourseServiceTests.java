@@ -25,12 +25,14 @@ import org.mockito.stubbing.Answer;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsScheduleException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.CourseType;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.DailySchedule;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.CourseTypeService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.courseservice.ScheduledCourseService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice.DailyScheduleService;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,6 +43,9 @@ public class ScheduledCourseServiceTests {
 
   @Mock
   private CourseTypeRepository courseTypeRepository;
+
+  @Mock
+  private InstructorRepository instructorRepository;
 
   @Mock
   private DailyScheduleService dailyScheduleService; // Mock the DailyScheduleService
@@ -78,11 +83,11 @@ public class ScheduledCourseServiceTests {
     // Initialize CourseType for use in tests
     CourseType testCourseType = new CourseType();
     testCourseType.setId(10);
-    testCourseType.setDescription("yoga");
+    testCourseType.setName("yoga");
     testCourseType.setApprovedByOwner(true);
     testCourseType.setPrice(20.0f);
 
-    COURSE_TYPE.setDescription("Yoga");
+    COURSE_TYPE.setName("Yoga");
     COURSE_TYPE.setApprovedByOwner(true);
     COURSE_TYPE.setPrice(20.0f);
     COURSE_TYPE.setId(COURSE_TYPE_ID);
@@ -136,12 +141,16 @@ public class ScheduledCourseServiceTests {
 
   @Test
   public void testCreateScheduledCourse() {
+    Instructor tInstructor = new Instructor(1, "");
+    when(instructorRepository.findById(1)).thenReturn(Optional.of(tInstructor));
+
     CourseType tCourseType = new CourseType();
+    tCourseType.setApprovedByOwner(true);
     tCourseType.setId(5);
     when(courseTypeRepository.findById(5)).thenReturn(Optional.of(tCourseType));
     ScheduledCourse scheduledCourse = null;
     try {
-      scheduledCourse = scheduledCourseheduledCourseService.createScheduledCourse("2024-04-15", "09:00:00", "11:00:00", LOCATION, 5);
+      scheduledCourse = scheduledCourseheduledCourseService.createScheduledCourse("2024-04-15", "09:00:00", "11:00:00", LOCATION, 1, 5);
     } catch (SportsScheduleException e) {
       fail(e.getMessage());
     }
@@ -159,13 +168,16 @@ public class ScheduledCourseServiceTests {
 
   @Test
   public void testCreateScheduledCourseWithInvalidTime() {
+    Instructor tInstructor = new Instructor(1, "");
+    when(instructorRepository.findById(1)).thenReturn(Optional.of(tInstructor));
 
     CourseType tCourseType = new CourseType();
+    tCourseType.setApprovedByOwner(true);
     tCourseType.setId(5);
     when(courseTypeRepository.findById(5)).thenReturn(Optional.of(tCourseType));
 
     Exception exception = assertThrows(SportsScheduleException.class, () -> {
-      scheduledCourseheduledCourseService.createScheduledCourse("2024-04-15", "09:00:00", "08:00:00", LOCATION, 5);
+      scheduledCourseheduledCourseService.createScheduledCourse("2024-04-15", "09:00:00", "08:00:00", LOCATION, 1, 5);
 
     });
 

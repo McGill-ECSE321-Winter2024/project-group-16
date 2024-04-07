@@ -35,16 +35,18 @@ public class CourseTypeRepositoryTests {
      * Test to find CourseType by description/name.
      */
     @Test
-    public void testFindCourseTypeByDescription() {
-        String description = "Zumba";
+    public void testFindCourseTypeByName() {
+        String name = "Zumba";
+        String description = "Dance to great music, with great people, and burn a ton of calories without even realizing it.";
+        String image = "https://www.verywellfit.com/thmb/SaUyT2h2ujEDx4zCAU0ilFclWqI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/4688722-GettyImages-950806258-06e1e050ab184f3694fd96017c9a42ee.jpg";
         boolean approvedByOwner = true;
         Float price = (float) 50.99;
-        CourseType courseType = new CourseType(description, approvedByOwner, price);
+        CourseType courseType = new CourseType(name, description, image, approvedByOwner, price);
 
         courseTypeRepository.save(courseType);
 
         // Read CourseType from database.
-        CourseType loadedCourseType = courseTypeRepository.findCourseTypeByDescription(description);
+        CourseType loadedCourseType = courseTypeRepository.findCourseTypeByName(name);
 
         // Asserts
         assertNotNull(loadedCourseType);
@@ -75,12 +77,17 @@ public class CourseTypeRepositoryTests {
     }
 
     /**
-     * Negative result of searching course types by description.
+     * Negative result of searching course types by name.
      */
     @Test
     public void testFindByApprovedByOwnerFalse() {
         // Create CourseType not approved by the owner
-        CourseType notApprovedCourseType = new CourseType("Pilates", false, 28.0f);
+        String name = "Zumba";
+        String description = "Dance to great music, with great people, and burn a ton of calories without even realizing it.";
+        String image = "https://www.verywellfit.com/thmb/SaUyT2h2ujEDx4zCAU0ilFclWqI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/4688722-GettyImages-950806258-06e1e050ab184f3694fd96017c9a42ee.jpg";
+        boolean approvedByOwner = false;
+        Float price = (float) 50.99;
+        CourseType notApprovedCourseType = new CourseType(name, description, image, approvedByOwner, price);
         courseTypeRepository.save(notApprovedCourseType);
 
         // Read CourseTypes from database
@@ -116,8 +123,14 @@ public class CourseTypeRepositoryTests {
      */
     @Test
     public void testFindByPrice() {
+        String name = "Zumba";
+        String description = "Dance to great music, with great people, and burn a ton of calories without even realizing it.";
+        String image = "https://www.verywellfit.com/thmb/SaUyT2h2ujEDx4zCAU0ilFclWqI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/4688722-GettyImages-950806258-06e1e050ab184f3694fd96017c9a42ee.jpg";
+        boolean approvedByOwner = true;
+        Float price = (float) 50.99;
+        CourseType newCourseType = new CourseType(name, description, image, approvedByOwner, price);
+
         List<CourseType> courseTypes = new ArrayList<>();
-        CourseType newCourseType = new CourseType("Cardio", true, 27.0f);
         courseTypes.add(newCourseType);
         for (CourseType courseType : courseTypes) {
             courseTypeRepository.save(courseType);
@@ -164,16 +177,16 @@ public class CourseTypeRepositoryTests {
     }
 
     /**
-     * Negative result of searching course types by description.
+     * Negative result of searching course types by name.
      */
     @Test
-    public void testFindCourseTypeByDescriptionNotFound() {
+    public void testFindCourseTypeByNameNotFound() {
         List<CourseType> courseTypes = createCourseTypes();
         for (CourseType courseType : courseTypes) {
             courseTypeRepository.save(courseType);
         }
 
-        CourseType loadedCourseType = courseTypeRepository.findCourseTypeByDescription("NE");
+        CourseType loadedCourseType = courseTypeRepository.findCourseTypeByName("NE");
 
         // Asserts
         assertNull(loadedCourseType);
@@ -188,10 +201,10 @@ public class CourseTypeRepositoryTests {
         List<CourseType> courseTypes = new ArrayList<>();
 
         // Add sample course types
-        courseTypes.add(new CourseType("Cardio", true, 25.0f));
-        courseTypes.add(new CourseType("Stretching", true, 20.0f));
-        courseTypes.add(new CourseType("Strength Training", true, 30.0f));
-        courseTypes.add(new CourseType("Yoga", false, 22.0f)); // Not approved by owner
+        courseTypes.add(new CourseType("Cardio", "cardio description", "cardio image", true, 25.0f));
+        courseTypes.add(new CourseType("Stretching", "stretching description", "stretching image", true, 20.0f));
+        courseTypes.add(new CourseType("Strength Training", "strength description", "strength image", true, 30.0f));
+        courseTypes.add(new CourseType("Yoga", "yoga description", "yoga image", false, 22.0f)); // Not approved by owner
 
         return courseTypes;
     }
