@@ -65,7 +65,7 @@
                   <div class="d-flex px-2 py-1">
                     <div>
                       <img
-                        src="../assets/img/user.png"
+                        src="../assets/importedpng/user.png"
                         class="avatar avatar-sm me-3"
                         :alt="customer.name"
                       />
@@ -106,7 +106,7 @@
                     >{{ customer.applicationState }}</span
                   >
                 </td>
-  
+
                 <td class="align-middle text-center">
                   <button
                     type="button"
@@ -124,7 +124,7 @@
                     type="button"
                     class="bg-gradient-warning border badge text-white badge-lg"
                     @click="rejectCustomer(customer.email)"
-                    :disabled="customer.applicationState.toUpperCase() === 'APPROVED' || 
+                    :disabled="customer.applicationState.toUpperCase() === 'APPROVED' ||
                       customer.applicationState.toUpperCase() === 'REJECTED' || !customer.personRoleDto.hasApplied"
                     data-toggle="tooltip"
                     data-original-title="Reject user"
@@ -180,10 +180,10 @@
       <!-- End of Message component -->
     </div>
   </template>
-  
+
   <script>
   import axios from 'axios';
-  
+
   export default {
     data() {
       return {
@@ -204,7 +204,7 @@
           const response = await axiosClient.get('/customers');
           this.customers = response.data.persons;
           console.log(response.data.persons);
-  
+
         } catch (error) {
           console.error('Error loading customers: ', error);
         }
@@ -228,7 +228,7 @@
         });
         try {
           const response = await axiosClient.put(`/customers/${customerId}/approve`);
-  
+
           console.log("Customer approved successfully!");
           this.loadCustomers(); // Reload the customer list after approval
         } catch (error) {
@@ -241,7 +241,7 @@
         });
         try {
           const response = await axiosClient.put(`/customers/${customerId}/reject`);
-  
+
           console.log("Customer rejected successfully!");
           this.loadCustomers(); // Reload the customer list after approval
         } catch (error) {
@@ -255,11 +255,11 @@
       async showMessage(text, type) {
       // Display message with the provided text and type
       this.message = { text, type };
-  
+
       // Clear the message after 3 seconds
       setTimeout(this.clearMessage, 3000);
      },
-  
+
       async deleteCustomer(customerId) {
         const axiosClient = axios.create({
           baseURL: "http://localhost:8080"
@@ -276,10 +276,9 @@
     }
   };
   </script>
-  
+
   <style scoped>
   .empty-row td {
     height: 50px; /* Adjust as needed */
   }
   </style>
-  

@@ -2,7 +2,7 @@
 <template>
   <div class="card card-profile">
     <img
-      src="../../assets/img/bg-profile.jpg"
+      src="../assets/importedpng/profile_page_middle.png"
       alt="Image placeholder"
       class="card-img-top"
     />
@@ -11,7 +11,7 @@
         <div class="mt-n4 mt-lg-n6 mb-4 mb-lg-0">
           <a href="javascript:;">
             <img
-              src="../../assets/img/user.png"
+              src="../assets/importedpng/user.png"
               class="rounded-circle img-fluid"
             />
           </a>
@@ -21,8 +21,8 @@
     <div class="card-header text-center border-0 pt-0 pt-lg-2 pb-4 pb-lg-3">
       <div class="justify-content-between">
         <div class="btn-group-vertical">
-        <a href="javascript:;" class="btn  bg-gradient-info  btn-block" v-if="userData.role === 'Customer'" @click="applyForInstructor">Apply to become an instructor</a>
-        <a href="javascript:;" class="btn  bg-gradient-danger  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" @click="deleteAccount">Delete my account</a>
+        <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Customer'" @click="applyForInstructor" style="background-color: #E2725B; color: white;">Apply to become an instructor</a>
+        <a href="javascript:;" class="btn  bg-danger  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" @click="deleteAccount">Delete my account</a>
       </div>
       </div>
     </div>
@@ -33,7 +33,7 @@
             <div class="d-grid text-center" v-if="userData.role === 'Instructor' || userData.role === 'Customer'">
               <span class="text-lg font-weight-bolder">{{ scheduledCourses.length }}</span>
               <span class="text-sm opacity-8">Scheduled courses</span>
-              
+
             </div>
             <div class="d-grid text-center mx-4" v-if="userData.role === 'Instructor'">
               <span class="text-lg font-weight-bolder">{{ supervisedCourses.length }}</span>

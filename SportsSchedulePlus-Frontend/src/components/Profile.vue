@@ -3,15 +3,13 @@ import { onBeforeMount, onMounted, onBeforeUnmount } from "vue";
 import { useStore } from "vuex";
 import axios from 'axios';
 
-import setNavPills from "@/assets/js/nav-pills.js";
 import setTooltip from "@/assets/js/tooltip.js";
-import ProfileCard from "./components/ProfileCard.vue";
-import ArgonInput from "@/components/ArgonInput.vue";
-import ArgonButton from "@/components/ArgonButton.vue";
+import ProfileCard from "./ProfileCard.vue";
+import ArgonButton from "@/argon_components/ArgonButton.vue";
 import { ref } from 'vue';
-import { computed } from 'vue';
-const body = document.getElementsByTagName("body")[0];
+import imagePath from '../assets/importedpng/profile_page_top.png';
 
+const body = document.getElementsByTagName("body")[0];
 const store = useStore();
 
 
@@ -35,31 +33,23 @@ onBeforeUnmount(() => {
 onMounted(() => {
   store.state.isAbsolute = true;
   setTooltip();
- 
+
 });
 
-
-
-
 const userData = JSON.parse(localStorage.getItem("userData"));
-var email = ref('');
+let email = ref('');
 email.value = userData.email;
-var name = ref('');
+let name = ref('');
 name.value =  userData.name;
-var password = ref('');
-var userID = userData.id;
-
-
+let password = ref('');
+let userID = userData.id;
 
 password.value = userData.password
-
 
 const axiosClient = axios.create({
   baseURL: "http://localhost:8080"
 });
 
-
-// Reactive variables for success and error messages
 const successMessage = ref('');
 const errorMessage = ref('');
 
@@ -78,7 +68,7 @@ const updateUserProfile = async () => {
       email: email.value,
       password: password.value,
     });
-  
+
     console.log("Update");
     successMessage.value = 'Profile updated successfully !';
     errorMessage.value = ''; // Clear error message if any
@@ -97,23 +87,22 @@ const updateUserProfile = async () => {
   <main>
     <div
         class="page-header min-height-300"
-        style="
-          background-image: url(&quot;https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80&quot;);
-          margin-right: -24px;
-          margin-left: -34%;
-        "
+        :style="{
+          backgroundImage: 'url(' + imagePath + ')',
+          marginRight: '-24px',
+          marginLeft: '-34%'
+        }"
       >
-        <span class="mask bg-gradient-success opacity-6"></span>
       </div>
     <div class="container">
-     
+
       <div class="card shadow-lg mt-n6">
         <div class="card-body p-3">
           <div class="row gx-4">
             <div class="col-auto">
               <div class="avatar">
                 <img
-                  src="../assets/img/user.png"
+                  src="../assets/importedpng/user.png"
                   alt="profile_image"
                 />
               </div>
@@ -133,7 +122,7 @@ const updateUserProfile = async () => {
                   role="tablist"
                 >
                   <li v-if="userData.role === 'Instructor' || userData.role === 'Customer'" class="nav-item">
-                 
+
                       <svg
                         class="text-dark"
                         width="16px"
@@ -172,9 +161,9 @@ const updateUserProfile = async () => {
                         </g>
                       </svg>
                       <router-link  to="/customer/registrations"> <span class="ms-1">Scheduled courses</span></router-link>
-               
+
                   </li>
-                 
+
                 </ul>
               </div>
             </div>
@@ -232,7 +221,7 @@ const updateUserProfile = async () => {
             </div>
           </div>
         </div>
-       
+
       </div>
     </div>
   </main>

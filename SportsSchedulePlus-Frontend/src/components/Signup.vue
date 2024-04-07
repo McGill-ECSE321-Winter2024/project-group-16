@@ -94,7 +94,7 @@
 import {ref} from 'vue';
 import axios from 'axios';
 import {useRouter} from 'vue-router';
-import image from '../assets/signup.jpg';
+import image from '../assets/importedpng/signin_and_signup_top.png';
 
 const success = ref(false);
 const imagePath = image;

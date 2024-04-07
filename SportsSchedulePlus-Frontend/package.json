@@ -20,11 +20,13 @@
     "prettify": "prettier --write ."
   },
   "dependencies": {
+    "@daypilot/daypilot-lite-vue": "^3.21.0",
     "@popperjs/core": "2.11.8",
     "axios": "1.5",
     "bootstrap": "5.3.3",
     "chart.js": "4.4.1",
     "core-js": "3.36.0",
+    "daypilot-pro-vue": "https://npm.daypilot.org/daypilot-pro-vue/trial/2024.2.5912.tar.gz",
     "dropzone": "6.0.0-beta.2",
     "primeicons": "^7.0.0",
     "primevue": "^3.50.0",

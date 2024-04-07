@@ -48,12 +48,12 @@
               </thead>
               <tbody>
                 <tr v-for="(instructor, index) in instructors" :key="index">
-                  
+
                   <td>
                     <div class="d-flex px-2 py-1">
                       <div>
                         <img
-                          src="../assets/img/user.png"
+                          src="../assets/importedpng/user.png"
                           class="avatar avatar-sm me-3"
                           :alt="instructor.name"
                         />
@@ -94,11 +94,11 @@
                 <td></td>
                 <td></td>
                 <td></td>
-               
+
               </tr>
 
 
-                
+
               </tbody>
             </table>
           </div>

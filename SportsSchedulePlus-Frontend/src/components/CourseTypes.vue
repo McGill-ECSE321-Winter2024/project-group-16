@@ -46,7 +46,7 @@
                   <div class="d-flex px-2 py-1">
                     <div>
                       <img
-                        src="../assets/img/circle.png"
+                        src="../assets/importedpng/circle.png"
                         class="avatar avatar-sm me-3"
                       />
                     </div>
@@ -60,7 +60,7 @@
                     {{ courseType.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
                   </p>
                 </td>
-  
+
                 <td class="align-middle text-center text-sm">
                   <span
                     :style="{
@@ -78,7 +78,7 @@
                     >{{ courseType.state }}
                   </span>
                 </td>
-  
+
                 <td class="align-middle text-center">
                   <button
                     type="button"
@@ -115,7 +115,7 @@
                   </button>
                 </td>
               </tr>
-  
+
               <!-- Add empty rows to fill the table -->
               <tr
                 v-for="index in Math.max(0,5)"
@@ -152,10 +152,10 @@
       <!-- End of Message component -->
     </div>
   </template>
-  
+
   <script>
   import axios from 'axios';
-  
+
   export default {
     data() {
       return {
@@ -223,17 +223,16 @@
       showMessage(text, type) {
         // Display message with the provided text and type
         this.message = { text, type };
-  
+
         // Clear the message after 3 seconds
         setTimeout(this.clearMessage, 3000);
       }
     }
   };
   </script>
-  
+
   <style scoped>
   .empty-row td {
     height: 50px; /* Adjust as needed */
   }
   </style>
-  

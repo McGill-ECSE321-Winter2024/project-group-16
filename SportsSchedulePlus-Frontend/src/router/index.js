@@ -1,17 +1,16 @@
 /* eslint no-undef: "off" */
 import { createRouter, createWebHistory } from "vue-router";
-import Dashboard from "../views/Dashboard.vue";
-import Customers from "../views/Customers.vue";
-import Instructors from "../views/Instructors.vue";
+import Dashboard from ".././components/Dashboard.vue";
+import Customers from ".././components/Customers.vue";
+import Instructors from ".././components/Instructors.vue";
 
-import Billing from "../views/Billing.vue";
-import Profile from "../views/Profile.vue";
-import Signup from "../views/Signup.vue";
-import Signin from "../views/Signin.vue";
-import Registrations from "../views/Registrations.vue";
-import CourseTypes from "../views/CourseTypes.vue";
-import ScheduledCourses from "../views/ScheduledCourses.vue";
-import CourseRegistration from "../views/CourseRegistration.vue";
+import Profile from ".././components/Profile.vue";
+import Signup from ".././components/Signup.vue";
+import Signin from ".././components/Signin.vue";
+import Registrations from ".././components/Registrations.vue";
+import CourseTypes from ".././components/CourseTypes.vue";
+import ScheduledCourses from ".././components/ScheduledCourses.vue";
+import CourseRegistration from ".././components/CourseRegistration.vue";
 const routes = [
   {
     path: "/",
@@ -43,11 +42,7 @@ const routes = [
     name: "Scheduled courses",
     component: ScheduledCourses,
   },
-  {
-    path: "/billing",
-    name: "Billing",
-    component: Billing,
-  },
+
 
   {
     path: "/profile",

@@ -1,5 +1,5 @@
 <script setup>
-  import WeeklySchedule from '../components/WeeklySchedule.vue';
+  import WeeklySchedule from '.././argon_components/WeeklySchedule.vue';
 </script>
 
 <template>
