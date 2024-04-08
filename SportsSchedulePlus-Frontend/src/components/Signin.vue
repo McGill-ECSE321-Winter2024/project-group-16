@@ -28,6 +28,7 @@
 
                 <v-text-field
                   v-model="password"
+                  type="password"
                   color="#E2725B"
                   label="Password"
                   aria-label="Email"
