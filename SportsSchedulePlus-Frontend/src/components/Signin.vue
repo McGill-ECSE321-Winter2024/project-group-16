@@ -27,6 +27,11 @@
                 ></v-text-field>
 
                 <v-text-field
+                  
+                  :type="showPassword ? 'text' : 'password'"
+                  :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  @click:append="togglePassword"
+
                   v-model="password"
                   color="#E2725B"
                   label="Password"
@@ -35,6 +40,7 @@
                   placeholder="Enter your password"
                   visible="false"
                   :rules="[rules.required]"
+                  :hint="passwordHints"
 
                 ></v-text-field>
 
@@ -97,6 +103,7 @@ const store = useStore();
 
 const email = ref('');
 const password = ref('');
+const showPassword = ref(false);
 const imagePath = image;
 const loading = ref(false);
 const form = ref(false)
@@ -104,6 +111,11 @@ const errorMessage = ref('');
 const rules = {
   required: value => !!value || 'Field is required',
 };
+
+const togglePassword = () => {
+  showPassword.value = !showPassword.value;
+};
+
 const router = useRouter()
 
 const axiosClient = axios.create({

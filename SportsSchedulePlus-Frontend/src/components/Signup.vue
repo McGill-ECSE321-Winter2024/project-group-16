@@ -37,6 +37,11 @@
                 ></v-text-field>
 
                 <v-text-field
+                  
+                  :type="showPassword ? 'text' : 'password'"
+                  :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  @click:append="togglePassword"
+                  
                   v-model="password"
                   color="#E2725B"
                   label="Password"
@@ -101,10 +106,16 @@ const imagePath = image;
 const name = ref('');
 const email = ref('');
 const password = ref('');
+const showPassword = ref(false);
 const errorMessage = ref('');
 const router = useRouter()
 const loading = ref(false);
 const form = ref(false)
+
+const togglePassword = () => {
+  showPassword.value = !showPassword.value;
+};
+
 const passwordHints = "Between 8-20 characters, \n" +
   "1 uppercase letter, \n" +
   "1 lowercase letter, \n" +
@@ -143,4 +154,5 @@ const signUp = async () => {
     errorMessage.value = error.response.data.errors[0];
   }
 };
+  
 </script>
