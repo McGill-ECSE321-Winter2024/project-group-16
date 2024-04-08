@@ -170,7 +170,7 @@ public class CustomerIntegrationTests {
         Customer customer = customerRepository.findCustomerById(newCustomer.getId());
         customer.setHasApplied(true);
         customerRepository.save(customer);
-        restTemplate.put("/customers/" + newCustomer.getId() + "/approve", null);
+        restTemplate.put("/customers/" + newCustomer.getEmail() + "/approve", null);
         PersonDTO updatedCustomer = new PersonDTO("John","newemail@gmail.com","paswd124!!AWVC",role );
         restTemplate.put("/customers/" + newCustomer.getId(), updatedCustomer);
         ResponseEntity<PersonDTO> instructorEntity = restTemplate.getForEntity("/instructors/" + newCustomer.getEmail(), PersonDTO.class);

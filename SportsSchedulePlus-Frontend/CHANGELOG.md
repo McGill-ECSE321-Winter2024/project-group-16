@@ -9,11 +9,11 @@
 
 - Fix errors
 - Update dependencies
-- Add new components
+- Add new argon_components
 - Add new pages and layouts
 - Add new design blocks
 - Add vuex to the project
-- New base strucuture for more reusable components
+- New base strucuture for more reusable argon_components
 
 ## [2.0.1] - 2021-09-17
 

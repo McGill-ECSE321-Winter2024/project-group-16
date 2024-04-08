@@ -140,7 +140,7 @@ public class RegistrationService {
             .append("<p>Thank you for your payment. Here are the details:</p>")
             .append("<p><strong>Confirmation Number:</strong> ").append(registration.getConfirmationNumber()).append("</p>")
             .append("<p><strong>Customer Name:</strong> ").append(customerName).append("</p>")
-            .append("<p><strong>Course:</strong> ").append(registration.getKey().getScheduledCourse().getCourseType().getDescription()).append("</p>")
+            .append("<p><strong>Course:</strong> ").append(registration.getKey().getScheduledCourse().getCourseType().getName()).append("</p>")
             .append("<p><strong>Amount:</strong> $").append(new DecimalFormat("0.00").format(registration.getKey().getScheduledCourse().getCourseType().getPrice())).append("</p>")
             .append("</body>")
             .append("</html>");

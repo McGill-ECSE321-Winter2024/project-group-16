@@ -7,6 +7,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.*;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.dailyscheduleservice.DailyScheduleService;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.mailerservice.Mailer;
 import ca.mcgill.ecse321.utils.Helper;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+import java.util.Optional;
 
 
 @Service
@@ -59,13 +61,26 @@ public class ScheduledCourseService {
      * @return the new ScheduledCourse
      */
     @Transactional
-    public ScheduledCourse createScheduledCourse(String date, String startTime, String endTime, String location, int courseTypeId) {
+    public ScheduledCourse createScheduledCourse(String date, String startTime, String endTime, String location, int instructorId, int courseTypeId) {
         LocalDate localDate = LocalDate.parse(date);
         Date parsedDate = Date.valueOf(localDate);
 
         Time parsedStartTime = Time.valueOf(startTime);
         Time parsedEndTime = Time.valueOf(endTime);
 
+        Optional<CourseType> courseType = courseTypeRepository.findById(courseTypeId);
+        if (!courseType.isPresent()) {
+            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Course type with id " + courseTypeId + "not found.");
+        }
+        if (!courseType.get().getApprovedByOwner()) {
+            throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Course type must be approved by owner to be scheduled.");
+        }
+
+        // Check if the instructor exists
+        Optional<Instructor> instructor = instructorRepository.findById(instructorId);
+        if (!instructor.isPresent()) {
+            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Instructor with id " + instructorId + " not found.");
+        }
         // create the scheduled course
 
         ScheduledCourse scheduledCourse = new ScheduledCourse();
@@ -73,11 +88,15 @@ public class ScheduledCourseService {
         scheduledCourse.setStartTime(parsedStartTime);
         scheduledCourse.setEndTime(parsedEndTime);
         scheduledCourse.setLocation(location);
-        scheduledCourse.setCourseType(courseTypeRepository.findById(courseTypeId).orElse(null));
+        scheduledCourse.setCourseType(courseType.get());
 
         validateScheduledCourse(scheduledCourse);
 
         scheduledCourseRepository.save(scheduledCourse);
+
+        // add the scheduled course to the instructors list of supervised courses
+        instructor.get().addSupervisedCourse(scheduledCourse);
+
         return scheduledCourse;
     }
 
@@ -309,8 +328,12 @@ public class ScheduledCourseService {
      * @return list of all scheduled courses of the given course type
      */
     @Transactional
-    public List<ScheduledCourse> getScheduledCoursesByCourseType(CourseType courseType) {
-        return scheduledCourseRepository.findScheduledCoursesByCourseType(courseType);
+    public List<ScheduledCourse> getScheduledCoursesByCourseType(int courseTypeID) {
+        Optional<CourseType> courseType = courseTypeRepository.findById(courseTypeID);
+        if (!courseType.isPresent()) {
+            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Course type with id " + courseTypeID + " not found.");
+        }
+        return scheduledCourseRepository.findScheduledCoursesByCourseType(courseType.get());
     }
 
     /**

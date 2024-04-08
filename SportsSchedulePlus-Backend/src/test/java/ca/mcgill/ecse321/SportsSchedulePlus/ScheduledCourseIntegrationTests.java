@@ -15,9 +15,14 @@ import org.springframework.http.ResponseEntity;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.customer.CustomerRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.DailyScheduleRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
@@ -45,8 +50,14 @@ public class ScheduledCourseIntegrationTests {
     @Autowired
     private PersonRoleRepository personRoleRepository;
 
-     @Autowired
-     private DailyScheduleRepository dailyScheduleRepository;
+    @Autowired
+    private DailyScheduleRepository dailyScheduleRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private InstructorRepository instructorRepository;
 
 
     @Autowired
@@ -58,12 +69,17 @@ public class ScheduledCourseIntegrationTests {
      */
     @AfterEach
     public void clearDatabase() {
+        personRepository.deleteAll();
+        ownerRepository.deleteAll();
+
+
+        personRoleRepository.deleteAll();
+        customerRepository.deleteAll();
+        instructorRepository.deleteAll();
+        dailyScheduleRepository.deleteAll();
+
         scheduledCourseRepository.deleteAll();
         courseTypeRepository.deleteAll();
-        personRepository.deleteAll();
-        personRoleRepository.deleteAll();
-        ownerRepository.deleteAll(); 
-        dailyScheduleRepository.deleteAll();
     }
 
     @BeforeEach
@@ -73,10 +89,32 @@ public class ScheduledCourseIntegrationTests {
         }
     }
 
+    private PersonDTO postCustomer(String name, String email, String password) {
+        CustomerRequestDTO role = new CustomerRequestDTO();
+        PersonDTO personDto = new PersonDTO(name, email, password, role);
+    
+        // Send a POST request to the /customers endpoint
+    
+        ResponseEntity < PersonDTO > responseEntity = restTemplate.postForEntity("/customers", personDto, PersonDTO.class);
+        PersonDTO createdCustomer = responseEntity.getBody();
+    
+        return createdCustomer;
+      }
+    
+    private PersonDTO postInstructor(String name,String email, String password, String experience) {
+        PersonDTO newCustomer = postCustomer(name, email, password);
+        Customer customer = customerRepository.findCustomerById(newCustomer.getId());
+        restTemplate.put("/customers/" + customer.getId() + "/apply", null);
+        restTemplate.put("/customers/" + newCustomer.getEmail() + "/approve", null);
+        ResponseEntity < PersonDTO > getResponse = restTemplate.getForEntity("/instructors/" + newCustomer.getEmail(),PersonDTO.class);
+        return getResponse.getBody();
+    }
+
 
     @Test
     public void testCreateAndGetScheduledCourse() {
-        int courseId =  Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00");
+        PersonDTO instructorDTO = postInstructor("New instructor","instr@gmail.com","pwd123ABCDEE!!!","");
+        int courseId =  Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Some location", "2024-04-15", "09:00:00", "10:00:00", instructorDTO.getId());
 
         ResponseEntity < ScheduledCourseRequestDTO > getResponse = restTemplate
             .getForEntity("/scheduledCourses/course/" + courseId, ScheduledCourseRequestDTO.class);
@@ -88,9 +126,10 @@ public class ScheduledCourseIntegrationTests {
     @Test
     public void testUpdateScheduledCourse() {
         ResponseEntity < CourseTypeRequestDTO > courseTypeResponse = restTemplate.postForEntity("/courseTypes",
-            Helper.createCourseTypeRequest("Description", false, 12f), CourseTypeRequestDTO.class);
+            Helper.createCourseTypeRequest("Name", "Description", "Image", false, 12f), CourseTypeRequestDTO.class);
 
-        int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Downtown Gym", "2024-04-15", "09:00:00", "11:00:00");
+        PersonDTO instructorDTO = postInstructor("New instructor","instr@gmail.com","pwd123ABCDEE!!!","");
+        int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Downtown Gym", "2024-04-15", "09:00:00", "11:00:00", instructorDTO.getId());
 
         ScheduledCourse scheduledCourse = scheduledCourseRepository.findById(courseId).orElse(null);
         assertNotNull(scheduledCourse);
@@ -120,9 +159,10 @@ public class ScheduledCourseIntegrationTests {
     public void testUpdateScheduledCourseWithInvalidInputs() {
     
         restTemplate.postForEntity("/courseTypes",
-            Helper.createCourseTypeRequest("Description", false, 12f), CourseTypeRequestDTO.class);
+            Helper.createCourseTypeRequest("Name", "Description", "Image", false, 12f), CourseTypeRequestDTO.class);
 
-        int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Downtown Gym", "2024-04-15", "09:00:00", "11:00:00");
+        PersonDTO instructorDTO = postInstructor("New instructor","instr@gmail.com","pwd123ABCDEE!!!","");
+        int courseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Downtown Gym", "2024-04-15", "09:00:00", "11:00:00", instructorDTO.getId());
 
         // Attempt to update the scheduled course with invalid inputs
         ScheduledCourseRequestDTO updateInfo = new ScheduledCourseRequestDTO();
@@ -140,7 +180,8 @@ public class ScheduledCourseIntegrationTests {
 
     @Test
     public void testDeleteScheduledCourse() {
-        int scheduledCourseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Downtown Gym", "2024-04-15", "09:00:00", "11:00:00");
+        PersonDTO instructorDTO = postInstructor("New instructor","instr@gmail.com","pwd123ABCDEE!!!","");
+        int scheduledCourseId = Helper.createScheduledCourse(restTemplate.getRestTemplate(),"Downtown Gym", "2024-04-15", "09:00:00", "11:00:00", instructorDTO.getId());
 
         restTemplate.delete("/scheduledCourses/" + scheduledCourseId);
 

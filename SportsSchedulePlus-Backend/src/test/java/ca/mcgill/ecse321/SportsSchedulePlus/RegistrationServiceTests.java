@@ -196,7 +196,7 @@ public class RegistrationServiceTests {
   }
 
   private ScheduledCourse createScheduledCourse(int id) {
-    CourseType courseType = new CourseType("Test Course", false, 50.0f); // Create a course type
+    CourseType courseType = new CourseType("Test Course", "Test course description", "Test course image", false, 50.0f); // Create a course type
     ScheduledCourse scheduledCourse = new ScheduledCourse();
     scheduledCourse.setId(id); // Set course ID as needed
     scheduledCourse.setDate(Date.valueOf("2024-03-30")); // Set date as needed
