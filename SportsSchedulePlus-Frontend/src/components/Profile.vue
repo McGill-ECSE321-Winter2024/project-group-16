@@ -8,6 +8,7 @@ import ProfileCard from "./ProfileCard.vue";
 import ArgonButton from "@/argon_components/ArgonButton.vue";
 import { ref } from 'vue';
 import imagePath from '../assets/importedpng/profile_page_top.png';
+import WeeklySchedule from "./WeeklySchedule.vue";
 
 const body = document.getElementsByTagName("body")[0];
 const store = useStore();
@@ -182,7 +183,7 @@ const updateUserProfile = async () => {
             <div class="card-header pb-1">
               <div class="d-flex align-items-center">
                 <p class="mb-0">Edit Profile</p>
-                <argon-button color="success" size="lg" class="ms-auto" @click="updateUserProfile"
+                <argon-button size="lg" class="ms-auto" style="background-color: #E2725B; color: white;" @click="updateUserProfile"
                   >Update</argon-button
                 >
               </div>
@@ -222,6 +223,17 @@ const updateUserProfile = async () => {
           </div>
         </div>
 
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card row h-100">
+            <WeeklySchedule
+              :displayType=userData.role.toLowerCase()
+              :customerId=userData.id
+              :instructorId=userData.id
+            />
+          </div>
+        </div>
       </div>
     </div>
   </main>

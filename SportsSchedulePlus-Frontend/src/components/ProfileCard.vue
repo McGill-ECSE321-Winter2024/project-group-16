@@ -22,7 +22,7 @@
       <div class="justify-content-between">
         <div class="btn-group-vertical">
         <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Customer'" @click="applyForInstructor" style="background-color: #E2725B; color: white;">Apply to become an instructor</a>
-        <a href="javascript:;" class="btn  bg-danger  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" @click="deleteAccount">Delete my account</a>
+        <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" style="background-color: white ; color: #E2725B;" @click="deleteAccount">Delete my account</a>
       </div>
       </div>
     </div>

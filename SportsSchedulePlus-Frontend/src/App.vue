@@ -17,7 +17,6 @@ import {computed, ref} from "vue";
 import { useStore } from "vuex";
 import Sidenav from "@/examples/Sidenav";
 import Configurator from "@/examples/Configurator.vue";
-import Navbar from "@/examples/Navbars/TopNavBar.vue";
 
 const store = useStore();
 const isNavFixed = computed(() => store.state.isNavFixed);
@@ -25,11 +24,9 @@ const darkMode = computed(() => store.state.darkMode);
 const isAbsolute = computed(() => store.state.isAbsolute);
 const showSidenav = computed(() => store.state.showSidenav);
 const layout = computed(() => store.state.layout);
-const showNavbar = computed(() => store.state.showNavbar);
 const showConfig = computed(() => store.state.showConfig);
 const hideConfigButton = computed(() => store.state.hideConfigButton);
 const toggleConfigurator = () => store.commit("toggleConfigurator");
-const isSideNavHovered = ref(false);
 
 
 const navClasses = computed(() => {
@@ -56,9 +53,6 @@ const navClasses = computed(() => {
   <main
     class=" main-content position-relative max-height-vh-100 h-100 border-radius-lg"
   >
-    <!-- nav -->
-
-    <navbar :class="[navClasses]" v-if="showNavbar" />
 
     <router-view />
 
@@ -66,7 +60,6 @@ const navClasses = computed(() => {
       :toggle="toggleConfigurator"
       :class="[showConfig ? 'show' : '', hideConfigButton ? 'd-none' : '']"
     />
-
 
   </main>
 </div>
