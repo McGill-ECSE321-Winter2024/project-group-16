@@ -54,17 +54,12 @@ import axios from 'axios';
 import {DayPilotCalendar, DayPilotNavigator} from '@daypilot/daypilot-lite-vue';
 import { ref } from 'vue';
 
-try{
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  let email = ref('');
-  email.value = userData.email;
-  let name = ref('');
-  name.value =  userData.name;
-  let userID = userData.id;
-} catch (error) {
-  console.log(error);
-}
-
+const userData = JSON.parse(localStorage.getItem("userData"));
+let email = ref('');
+email.value = userData.email;
+let name = ref('');
+name.value =  userData.name;
+let userID = userData.id;
 
 export default {
   name: 'Calendar',
@@ -223,7 +218,7 @@ export default {
                 text: course.courseType.description // display course type name as text
             }));
         } else {
-            endpoint = '/scheduledCourses'; // scheduled course controller
+            endpoint = '/scheduledCourses/' + today; // scheduled course controller
             const scheduledCoursesResponse = await axiosClient.get(endpoint);
             events = scheduledCoursesResponse.data.scheduledCourses.map(course => ({
                 id: course.id,

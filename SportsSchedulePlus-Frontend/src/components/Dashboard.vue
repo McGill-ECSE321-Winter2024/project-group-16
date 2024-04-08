@@ -1,4 +1,5 @@
 <script setup>
+import WeeklySchedule from './WeeklySchedule.vue';
 import ArgonButton from "@/argon_components/ArgonButton.vue";
 </script>
 

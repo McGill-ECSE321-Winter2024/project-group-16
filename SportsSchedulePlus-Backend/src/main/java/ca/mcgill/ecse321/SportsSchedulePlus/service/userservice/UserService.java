@@ -95,7 +95,20 @@ public class UserService {
      * @return the new Person account for the owner
      */
     @Transactional
-    public Person createOwner() {  
+    public Person createOwner() {
+        // if (!Helper.toList(ownerRepository.findAll()).isEmpty()){
+        //     throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner already exists.");
+        // }
+        // else{
+        //     Owner owner = new Owner();
+        //     personRoleRepository.save(owner);
+        //     //Owner owner = (Owner) personRole;
+        //     owner.setDailySchedule(dailyScheduleService.createDailySchedule());
+        //     ownerRepository.save(owner);
+        //     Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("admin"), owner);
+        //     personRepository.save(person);
+        //     return person;
+        // }    
         try {
             getOwner();
         } catch (SportsSchedulePlusException e) {
@@ -104,7 +117,7 @@ public class UserService {
             //Owner owner = (Owner) personRole;
             owner.setDailySchedule(dailyScheduleService.createDailySchedule());
             ownerRepository.save(owner);
-            Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("Admin_123"), owner);
+            Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("admin"), owner);
             personRepository.save(person);
             return person;
         }
