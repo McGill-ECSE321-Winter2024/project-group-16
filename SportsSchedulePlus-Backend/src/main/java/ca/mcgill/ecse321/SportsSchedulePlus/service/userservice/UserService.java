@@ -96,21 +96,32 @@ public class UserService {
      */
     @Transactional
     public Person createOwner() {
-        if (!Helper.toList(ownerRepository.findAll()).isEmpty()){
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner already exists.");
-        }
-        else{
-            PersonRole personRole = new Owner();
-            personRoleRepository.save(personRole);
+        // if (!Helper.toList(ownerRepository.findAll()).isEmpty()){
+        //     throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner already exists.");
+        // }
+        // else{
+        //     Owner owner = new Owner();
+        //     personRoleRepository.save(owner);
+        //     //Owner owner = (Owner) personRole;
+        //     owner.setDailySchedule(dailyScheduleService.createDailySchedule());
+        //     ownerRepository.save(owner);
+        //     Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("admin"), owner);
+        //     personRepository.save(person);
+        //     return person;
+        // }    
+        try {
+            getOwner();
+        } catch (SportsSchedulePlusException e) {
             Owner owner = new Owner();
+            personRoleRepository.save(owner);
+            //Owner owner = (Owner) personRole;
             owner.setDailySchedule(dailyScheduleService.createDailySchedule());
             ownerRepository.save(owner);
-            Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("admin"), personRole);
+            Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("admin"), owner);
             personRepository.save(person);
             return person;
-        }    
-
-    
+        }
+        throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner already exists.");    
     }
 
     /**
