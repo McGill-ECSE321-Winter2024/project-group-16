@@ -1,11 +1,8 @@
 <template>
   <div class="container mt-5">
     <div class="row justify-content-center">
-      <div class="col-lg-6">
+      <div class="">
         <div class="card shadow-lg border-0">
-          <div class="card-header bg-primary text-white">
-            <h3 class="text-center text-white">Course Registration</h3>
-          </div>
           <div class="card-body">
             <form @submit.prevent="submitForm">
               <div class="form-group">

@@ -29,16 +29,6 @@ import ArgonButton from "@/argon_components/ArgonButton.vue";
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="row mt-4">
-          <WeeklySchedule
-            displayType='instructor'
-            instructorId=3355
-          />
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
