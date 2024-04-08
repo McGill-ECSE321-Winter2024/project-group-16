@@ -182,7 +182,7 @@ const updateUserProfile = async () => {
             <div class="card-header pb-1">
               <div class="d-flex align-items-center">
                 <p class="mb-0">Edit Profile</p>
-                <argon-button color="success" size="lg" class="ms-auto" @click="updateUserProfile"
+                <argon-button size="lg" class="ms-auto" style="background-color: #E2725B; color: white;" @click="updateUserProfile"
                   >Update</argon-button
                 >
               </div>
