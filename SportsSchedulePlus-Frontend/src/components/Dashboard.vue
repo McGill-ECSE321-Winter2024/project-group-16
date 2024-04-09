@@ -3,7 +3,7 @@ import ArgonButton from "@/argon_components/ArgonButton.vue";
 </script>
 
 <template>
-  <div class="py-4 container-fluid">
+  <div class="py-3 container-fluid">
     <div class="video-wrapper">
       <video controls
              autoplay
@@ -41,6 +41,8 @@ import ArgonButton from "@/argon_components/ArgonButton.vue";
   display: block;
   max-width: 100%;
   height: auto;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .video-wrapper {
@@ -53,9 +55,10 @@ import ArgonButton from "@/argon_components/ArgonButton.vue";
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Adjust the opacity here */
+  background-color: rgba(0, 0, 0, 0.5);
   text-align: center;
-
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .video::-webkit-media-controls {
