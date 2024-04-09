@@ -15,6 +15,7 @@
             <v-form v-model="form" @submit.prevent="signIn">
               <div class="card-body">
 
+
                 <v-text-field
                   v-model="email"
                   id="Email"
@@ -25,17 +26,24 @@
                   placeholder="johnsmith@gmail.com"
                   :rules="[rules.required]"
                 ></v-text-field>
+           
 
                 <v-text-field
+                  
+                  :type="showPassword ? 'text' : 'password'"
+                  :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  @click:append="togglePassword"
+
                   v-model="password"
                   type="password"
                   color="#E2725B"
                   label="Password"
                   aria-label="Email"
+                  :type="password"
                   variant="underlined"
                   placeholder="Enter your password"
-                  visible="false"
                   :rules="[rules.required]"
+                  :hint="passwordHints"
 
                 ></v-text-field>
 
@@ -98,6 +106,7 @@ const store = useStore();
 
 const email = ref('');
 const password = ref('');
+const showPassword = ref(false);
 const imagePath = image;
 const loading = ref(false);
 const form = ref(false)
@@ -105,6 +114,11 @@ const errorMessage = ref('');
 const rules = {
   required: value => !!value || 'Field is required',
 };
+
+const togglePassword = () => {
+  showPassword.value = !showPassword.value;
+};
+
 const router = useRouter()
 
 const axiosClient = axios.create({
@@ -134,6 +148,11 @@ const signIn = async () => {
     localStorage.setItem('userData', JSON.stringify(userData));
     localStorage.setItem('loggedIn', true);
     await store.dispatch('login', userData);
+    
+    setTimeout(() => {
+      router.go('/profile');
+
+    }) 
     router.push('/profile');
   } catch (error) {
     console.error('Signin failed:', error.response.data);

@@ -1,3 +1,38 @@
+<script setup>
+
+
+import { useStore } from "vuex";
+import SidenavItem from "./SidenavItem.vue";
+
+import {ref, watch} from "vue";
+
+import { useRoute, useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const getRoute = () => {
+  const route = useRoute();
+  const routeArr = route.path.split("/");
+  return routeArr[1];
+};
+
+
+const store = useStore();
+const isLoggedIn = ref(localStorage.getItem('loggedIn') || undefined)
+
+const userData = JSON.parse(localStorage.getItem("userData"));
+
+const isOwner = isLoggedIn && userData != null && userData.role === "Owner";
+const logout = () => {
+localStorage.setItem('loggedIn',false);
+localStorage.removeItem('userData');
+router.go(0);
+ store.dispatch('logout');
+};
+
+
+</script>
+
 <template>
   <div class="collapse navbar-collapse w-auto h-auto h-100" id="sidenav-collapse-main">
     <ul class="navbar-nav">
@@ -14,7 +49,7 @@
         </sidenav-item>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item" v-if="!!isOwner">
         <sidenav-item
           to="/customers"
           :class="getRoute() === 'customers' ? 'active' : ''"
@@ -25,7 +60,7 @@
           </template>
         </sidenav-item>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" v-if="!!isOwner">
         <sidenav-item
           to="/instructors"
           :class="getRoute() === 'instructors' ? 'active' : ''"
@@ -36,7 +71,7 @@
           </template>
         </sidenav-item>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" v-if="!!isOwner" >
         <sidenav-item
           to="/courseTypes"
           :class="getRoute() === 'courseTypes' ? 'active' : ''"
@@ -50,7 +85,7 @@
           </template>
         </sidenav-item>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" v-if="!!isOwner">
         <sidenav-item
           to="/scheduledCourses"
           :class="getRoute() === 'scheduledCourses' ? 'active' : ''"
@@ -66,15 +101,8 @@
       </li>
 
 
-      <li class="mt-3 nav-item">
-        <h6
-          class="text-xs ps-4 text-uppercase font-weight-bolder opacity-6 ms-2"
-        >
-          ACCOUNT PAGES
-        </h6>
-      </li>
 
-      <li class="nav-item" v-if="!!loggedIn">
+      <li class="nav-item" v-if="isLoggedIn">
         <sidenav-item
           to="/profile"
           :class="getRoute() === 'profile' ? 'active' : ''"
@@ -86,7 +114,7 @@
         </sidenav-item>
       </li>
 
-      <li class="nav-item" v-if="!!loggedIn" @click="logout">
+      <li class="nav-item" v-if="!!isLoggedIn" @click="logout">
         <sidenav-item
           to="/signin"
           :class="getRoute() === 'signin' ? 'active' : ''"
@@ -99,47 +127,10 @@
       </li>
 
 
-      <li class="nav-item" v-if="!loggedIn">
-        <sidenav-item
-          to="/signin"
-          :class="getRoute() === 'signIn' ? 'active' : ''"
-          navText="Sign In"
-        >
-          <template v-slot:icon>
-            <i class="ni ni-single-copy-04 text-danger text-sm opacity-10"></i>
-          </template>
-        </sidenav-item>
-      </li>
+   
 
-      <li class="nav-item" v-if="!loggedIn">
-        <sidenav-item
-          to="/signup"
-          :class="getRoute() === 'signup' ? 'active' : ''"
-          navText="Sign Up"
-        >
-          <template v-slot:icon>
-            <i class="ni ni-collection text-info text-sm opacity-10"></i>
-          </template>
-        </sidenav-item>
-      </li>
+   
     </ul>
   </div>
 </template>
-<script setup>
-import {ref, computed} from "vue";
-import {useRoute} from "vue-router";
-import {useStore} from "vuex";
-import SidenavItem from "./SidenavItem.vue";
 
-const store = useStore();
-
-const getRoute = () => {
-  const route = useRoute();
-  const routeArr = route.path.split("/");
-  return routeArr[1];
-};
-
-const loggedIn = computed(() => localStorage.getItem("loggedIn"));
-const logout = () => store.dispatch('logout');
-
-</script>
