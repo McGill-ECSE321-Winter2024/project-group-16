@@ -15,6 +15,7 @@
             <v-form v-model="form" @submit.prevent="signIn">
               <div class="card-body">
 
+
                 <v-text-field
                   v-model="email"
                   id="Email"
@@ -25,15 +26,16 @@
                   placeholder="johnsmith@gmail.com"
                   :rules="[rules.required]"
                 ></v-text-field>
+           
 
                 <v-text-field
                   v-model="password"
                   color="#E2725B"
                   label="Password"
                   aria-label="Email"
+                  :type="password"
                   variant="underlined"
                   placeholder="Enter your password"
-                  visible="false"
                   :rules="[rules.required]"
 
                 ></v-text-field>
@@ -133,6 +135,11 @@ const signIn = async () => {
     localStorage.setItem('userData', JSON.stringify(userData));
     localStorage.setItem('loggedIn', true);
     await store.dispatch('login', userData);
+    
+    setTimeout(() => {
+      router.go('/profile');
+
+    }) 
     router.push('/profile');
   } catch (error) {
     console.error('Signin failed:', error.response.data);

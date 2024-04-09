@@ -19,11 +19,11 @@ import ArgonButton from "@/argon_components/ArgonButton.vue";
           <p class="overlay-subheader">WORK HARDER, GET STRONGER, LIVE LONGER</p>
           <h1 class="overlay-header">MADE EASY AT OUR <span class="terracotta">GYM</span></h1>
           <div class="button-container">
-            <a href="/signup" style="text-decoration: none;">
+            <a href="/signup" v-if="!isLoggedIn" style="text-decoration: none;">
               <ArgonButton style="background-color: #E2725B; color: white;">Become a Member</ArgonButton>
             </a>
           </div>
-          <a href="/signin" style="text-decoration: none;">
+          <a href="/signin" v-if="!isLoggedIn" style="text-decoration: none;">
             <ArgonButton style="background-color: white; color: #E2725B;">Log In</ArgonButton>
           </a>
         </div>
@@ -120,3 +120,11 @@ import ArgonButton from "@/argon_components/ArgonButton.vue";
 }
 
 </style>
+
+<script>
+import {ref} from "vue";
+
+const isLoggedIn = ref(localStorage.getItem('loggedIn') || undefined)
+
+
+</script>
