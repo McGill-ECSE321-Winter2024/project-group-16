@@ -95,7 +95,7 @@ export default {
         durationBarVisible: false,
         timeRangeSelectedHandling: "Disabled",
         eventDeleteHandling: "Disabled",
-        eventMoveHandling: "Disabled",
+        eventMoveHandling: "Enabled",
         eventClickHandling: "Enabled",
         eventResizeHandling: "Disabled",
         businessBeginsHour: 8,
@@ -104,6 +104,9 @@ export default {
         onEventClick: (args) => {
           this.registerDialogVisible = true;
           this.updateScheduledCourseInfo(args);
+        },
+        onEventMove: (args) => {
+          this.moveScheduledCourse(args);
         },
       },
       courseDetails: {
@@ -259,6 +262,30 @@ export default {
         console.error('Error loading classes: ', error);
       }
 
+    },
+    async moveScheduledCourse(args) {
+      const axiosClient = axios.create({
+        baseURL: "http://localhost:8080"
+      });
+      const scheduledCourseId = args.e.id();
+      const newDate = args.newStart.toString().split('T')[0];
+      const newStartTime = args.newStart.toString().split('T')[1].split('.')[0];
+      const newEndTime = args.newEnd.toString().split('T')[1].split('.')[0];
+      try {
+        const updateResponse = await axiosClient.put('/scheduledCourses/' + scheduledCourseId, {
+          id: scheduledCourseId,
+          date: newDate,
+          startTime: newStartTime,
+          endTime: newEndTime,
+          location: "",
+          instructorId: 0,
+          courseType: null,
+        });
+        console.log(updateResponse);
+      } catch (error) {
+        console.error('Error moving class: ', error);
+      }
+      this.loadScheduledCourses();
     },
     getSundayOfWeek(date) {
       var day = date.getDay();

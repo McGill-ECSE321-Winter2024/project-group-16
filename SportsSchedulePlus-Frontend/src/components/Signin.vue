@@ -26,10 +26,10 @@
                   placeholder="johnsmith@gmail.com"
                   :rules="[rules.required]"
                 ></v-text-field>
-
-
+           
+                
                 <v-text-field
-
+                  
                   :type="showPassword ? 'text' : 'password'"
                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   @click:append="togglePassword"
@@ -44,7 +44,9 @@
                   :hint="passwordHints"
 
                 ></v-text-field>
-
+                <!--
+                  :type="password"
+                -->
                 <v-divider></v-divider>
 
                 <div class="card-body">
@@ -146,11 +148,11 @@ const signIn = async () => {
     localStorage.setItem('userData', JSON.stringify(userData));
     localStorage.setItem('loggedIn', true);
     await store.dispatch('login', userData);
-
+    
     setTimeout(() => {
       router.go('/profile');
 
-    })
+    }) 
     router.push('/profile');
   } catch (error) {
     console.error('Signin failed:', error.response.data);

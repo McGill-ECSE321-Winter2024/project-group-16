@@ -150,28 +150,55 @@ public class ScheduledCourseService {
      * @return the updated ScheduledCourse
      */
     @Transactional
-    public ScheduledCourse updateScheduledCourse(int id, String date, String startTime, String endTime, String location, int courseTypeId) {
+    public ScheduledCourse updateScheduledCourse(int id, String date, String startTime, String endTime, int instructorId, String location, int courseTypeId) {
         ScheduledCourse existingScheduledCourse = getScheduledCourse(id);
         ScheduledCourse originalScheduledCourseCourse = new ScheduledCourse(existingScheduledCourse);
-
-        if (!courseTypeRepository.findById(courseTypeId).isPresent()) {
+        
+        int newCourseTypeId;
+        if(courseTypeId == 0) {
+            newCourseTypeId = existingScheduledCourse.getCourseType().getId();
+        } else if (!courseTypeRepository.findById(courseTypeId).isPresent()) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Course type not found");
         }
+
+        String newLocation = "";
+        if (location == "") {
+            newLocation = existingScheduledCourse.getLocation();
+        } else {
+            newLocation = location;
+        }
+
+        int newInstructorId;
+        if (instructorId == 0) {
+            newInstructorId = instructorRepository.findInstructorBySupervisedCourses(existingScheduledCourse).get(0).getId();
+        } else if (!instructorRepository.findById(instructorId).isPresent()) {
+            throw new SportsScheduleException(HttpStatus.NOT_FOUND, "Instructor with id " + instructorId + " does not exist.");
+        } else {
+            newInstructorId = instructorId;
+        }
+
+        newCourseTypeId = courseTypeId;
         LocalDate localDate = LocalDate.parse(date);
         Date parsedDate = Date.valueOf(localDate);
 
         Time parsedStartTime = Time.valueOf(startTime);
         Time parsedEndTime = Time.valueOf(endTime);
 
+        Instructor instructor = instructorRepository.findById(newInstructorId).get();
+        instructor.removeSupervisedCourse(existingScheduledCourse);
+
         // update the scheduled course
         existingScheduledCourse.setDate(parsedDate);
         existingScheduledCourse.setStartTime(parsedStartTime);
         existingScheduledCourse.setEndTime(parsedEndTime);
-        existingScheduledCourse.setLocation(location);
-        existingScheduledCourse.setCourseType(courseTypeRepository.findById(courseTypeId).orElse(null));
+        existingScheduledCourse.setLocation(newLocation);
+        existingScheduledCourse.setCourseType(courseTypeRepository.findById(newCourseTypeId).orElse(null));
         validateScheduledCourse(existingScheduledCourse);
 
         scheduledCourseRepository.save(existingScheduledCourse);
+
+        instructor.addSupervisedCourse(existingScheduledCourse);
+        instructorRepository.save(instructor);
 
         notifyUsersOfCourseUpdate(originalScheduledCourseCourse, existingScheduledCourse);
         return existingScheduledCourse;
