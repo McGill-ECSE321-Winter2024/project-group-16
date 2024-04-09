@@ -22,7 +22,7 @@ const isLoggedIn = ref(localStorage.getItem('loggedIn') || undefined)
 
 const userData = JSON.parse(localStorage.getItem("userData"));
 
-const isOwner = isLoggedIn && userData != null && userData.role === "Owner";
+const isOwner = isLoggedIn.value && userData != null && userData.role === "Owner";
 const logout = () => {
 localStorage.setItem('loggedIn',false);
 localStorage.removeItem('userData');

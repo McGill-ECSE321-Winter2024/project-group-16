@@ -27,7 +27,7 @@
                   :rules="[rules.required]"
                 ></v-text-field>
            
-
+                
                 <v-text-field
                   
                   :type="showPassword ? 'text' : 'password'"
@@ -38,14 +38,15 @@
                   color="#E2725B"
                   label="Password"
                   aria-label="Email"
-                  :type="password"
                   variant="underlined"
                   placeholder="Enter your password"
                   :rules="[rules.required]"
                   :hint="passwordHints"
 
                 ></v-text-field>
-
+                <!--
+                  :type="password"
+                -->
                 <v-divider></v-divider>
 
                 <div class="card-body">
