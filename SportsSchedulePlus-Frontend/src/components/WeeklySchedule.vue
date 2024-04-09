@@ -1,34 +1,78 @@
-<template>
-    <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header pb-0">
-                <h6>Week of {{ todayFormatted }}</h6>
-              </div>
-              <div class="wrap">
-                <div class="left">
-                  <DayPilotNavigator id="nav" :config="navigatorConfig" />
-                </div>
-                <div class="content">
-                  <DayPilotCalendar id="dp" :config="config" ref="calendar" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-</template>
+<script setup>
+import CourseRegistration from './CourseRegistration.vue';
+</script>
 
+<template>
+  <div style="margin-left: 1.5%;">
+    <h6>Week of {{ selectedDayFormatted }}</h6>
+  </div>
+  <div class="wrap">
+    <div class="left">
+      <DayPilotNavigator id="nav" :config="navigatorConfig" />
+    </div>
+    <div class="content">
+      <DayPilotCalendar id="dp" :config="config" ref="calendar" />
+    </div>
+  </div>
+  <template>
+    <div>
+      <v-dialog v-model="registerDialogVisible">
+        <v-card class="popup"> <!-- change the style of this to be rounded corners like all other cards-->
+          <v-card-title>
+            Register for a Class
+          </v-card-title>
+
+          <v-card-text>
+            Class: {{ courseDetails.courseType }}<br>
+            Price: {{ courseDetails.price }}<br>
+            Instructor: {{ courseDetails.instructor }}<br>
+            Start Time: {{ courseDetails.startTime }}<br>
+            End Time: {{ courseDetails.endTime }}<br>
+            <CourseRegistration 
+              :customerID="userID"
+              :courseID="courseDetails.courseId"
+            />
+          </v-card-text>
+          <!-- <v-card-actions>
+            <v-btn @click="" color="#E2725B">
+              Register
+            </v-btn>
+          </v-card-actions> -->
+          <v-card-actions>
+            <v-btn @click="registerDialogVisible = false" color="#E2725B">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+  </template>
+</template>
 
 <script>
 import axios from 'axios';
 import {DayPilotCalendar, DayPilotNavigator} from '@daypilot/daypilot-lite-vue';
+import { ref } from 'vue';
+
+try{
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  let email = ref('');
+  email.value = userData.email;
+  let name = ref('');
+  name.value =  userData.name;
+  let userID = userData.id;
+} catch (error) {
+  console.log(error);
+}
+
 
 export default {
   name: 'Calendar',
   data: function() {
     const today = new Date().toISOString().split('T')[0];
     return {
-      todayFormatted: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+      selectedDayFormatted: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+      registerDialogVisible: false,
       navigatorConfig: {
         showMonths: 1,
         skipMonths: 1,
@@ -38,6 +82,9 @@ export default {
         theme: "swagnavigator",
         onTimeRangeSelected: args => {
           this.config.startDate = args.day;
+          const startDate = new Date(args.start); // Convert args.start to Date object
+          const sunday = this.getSundayOfWeek(startDate);
+          this.selectedDayFormatted = this.formatDate(sunday);
         }
       },
       config: {
@@ -49,11 +96,23 @@ export default {
         timeRangeSelectedHandling: "Disabled",
         eventDeleteHandling: "Disabled",
         eventMoveHandling: "Disabled",
-        eventClickHandling: "Disabled",
+        eventClickHandling: "Enabled",
         eventResizeHandling: "Disabled",
         businessBeginsHour: 8,
         businessEndsHour: 18,
         heightSpec: "BusinessHoursNoScroll",
+        onEventClick: (args) => {
+          this.registerDialogVisible = true;
+          this.updateScheduledCourseInfo(args);
+        },
+      },
+      courseDetails: {
+        courseId: '',
+        courseType: '',
+        instructor: '',
+        price: '',
+        startTime: '',
+        endTime: ''
       },
     };
   },
@@ -96,6 +155,7 @@ export default {
         baseURL: "http://localhost:8080"
       });
       try {
+        // update business hours
         const response = await axiosClient.get('/openingHours');
         const dailySchedules = response.data.dailySchedules;
         let minOpeningTime = dailySchedules[0].openingTime;
@@ -109,14 +169,13 @@ export default {
             maxClosingTime = schedule.closingTime;
           }
         }
-        
         const todayDate = new Date();
         const minOpeningDateTime = new Date(todayDate.toDateString() + ' ' + minOpeningTime);
         const maxClosingDateTime = new Date(todayDate.toDateString() + ' ' + maxClosingTime);
-        
         this.config.businessBeginsHour = minOpeningDateTime.getHours();
         this.config.businessEndsHour = maxClosingDateTime.getHours();
 
+        // update events displayed
         const today = new Date().toISOString().split('T')[0];
         let endpoint = '';
         let events = [];
@@ -164,7 +223,7 @@ export default {
                 text: course.courseType.description // display course type name as text
             }));
         } else {
-            endpoint = '/scheduledCourses/' + today; // scheduled course controller
+            endpoint = '/scheduledCourses'; // scheduled course controller
             const scheduledCoursesResponse = await axiosClient.get(endpoint);
             events = scheduledCoursesResponse.data.scheduledCourses.map(course => ({
                 id: course.id,
@@ -176,10 +235,39 @@ export default {
 
         this.scheduledCourses = events;
         this.calendar.update({ events });
-        console.log(events);
       } catch (error) {
         console.error('Error loading classes: ', error);
       }
+    },
+    async updateScheduledCourseInfo(args) {
+      const axiosClient = axios.create({
+        baseURL: "http://localhost:8080"
+      });
+      const scheduledCourseId = args.e.id();
+      try {
+        const scheduledCourseResponse = await axiosClient.get('/scheduledCourses/course/' + scheduledCourseId);
+        const instructorResponse = await axiosClient.get('/instructors/supervised-course/' + scheduledCourseId);
+        this.courseDetails = {
+          courseId: scheduledCourseResponse.data.id,
+          courseType: scheduledCourseResponse.data.courseType.name,
+          instructor: instructorResponse.data.persons[0].name,
+          price: scheduledCourseResponse.data.courseType.price,
+          startTime: scheduledCourseResponse.data.startTime,
+          endTime: scheduledCourseResponse.data.endTime
+        };
+      } catch (error) {
+        console.error('Error loading classes: ', error);
+      }
+
+    },
+    getSundayOfWeek(date) {
+      var day = date.getDay();
+      var diff = date.getDate() - day; // adjust when day is Sunday
+      return new Date(date.setDate(diff));
+    },
+    formatDate(date) {
+      var options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return date.toLocaleDateString('en-US', options);
     },
     clearMessage() {
       // Clear the message
@@ -209,6 +297,14 @@ export default {
   flex-grow: 1;
 }
 
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 30%;
+  width: 50%;
+  /* transform: translate(-50%, -50%); */
+}
+
 
 .swag_main 
 {
@@ -220,7 +316,7 @@ export default {
   text-transform: uppercase;
 }
 .swag_event { 
-	color: #000;
+	color: #344767;
   font-weight: 600;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -240,7 +336,7 @@ export default {
 	border-radius: 5px;
 	padding: 2px;
 	padding-left: 6px;
-	border: 1px solid #000;
+	border: 1px solid #C6C7C8;
   border-radius: 1rem;
 }
 .swag_alldayevent { 
@@ -454,6 +550,6 @@ export default {
 .swagnavigator_dayother { color: gray; }
 .swagnavigator_todaybox { border: 1px solid black; }
 .swagnavigator_busy { font-weight: bold; }
-.swagnavigator_select .swagnavigator_cell_box { background-color: #2dce89; opacity: 1; }
+.swagnavigator_select .swagnavigator_cell_box { background-color: #E2725B; opacity: 1; }
 
 </style>

@@ -1,5 +1,4 @@
 <script setup>
-import WeeklySchedule from './WeeklySchedule.vue';
 import ArgonButton from "@/argon_components/ArgonButton.vue";
 </script>
 
@@ -26,16 +25,6 @@ import ArgonButton from "@/argon_components/ArgonButton.vue";
           <a href="/signin" v-if="!isLoggedIn" style="text-decoration: none;">
             <ArgonButton style="background-color: white; color: #E2725B;">Log In</ArgonButton>
           </a>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="row mt-4">
-          <WeeklySchedule
-            displayType='instructor'
-            instructorId=3355
-          />
         </div>
       </div>
     </div>
