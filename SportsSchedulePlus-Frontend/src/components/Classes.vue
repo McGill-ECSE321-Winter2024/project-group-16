@@ -12,27 +12,27 @@ import WeeklySchedule from '../components/WeeklySchedule.vue';
         <p>Unlock your full potential with our diverse range of courses tailored to empower and inspire. Step into a world of opportunity and discover the perfect course that resonates with your passion and goals</p>
       </div>
     </div>
-      <div class="content">
-        <div class="classes-list">
-          <div
-            v-for="courseType in courseTypes"
-            :key="courseType.id"
-            class="class-item"
-            @click="selectCourse(courseType)"
-          >
-            <span class="class-icon"></span>
-            <span class="class-name">{{ courseType.description }}</span>
-            <!-- If you want to show the price in the list view, uncomment the next line -->
-            <!-- <span class="class-price">${{ courseType.price.toFixed(2) }}</span> -->
-          </div>
-        </div>
-        <div class="class-details" v-if="selectedCourse">
-          <h2>{{ selectedCourse.description }}</h2> <!-- assuming name is to be replaced with description -->
-          <div class="image-placeholder">IMAGE HERE</div>
-          <WeeklySchedule
-            displayType='courseType'
-            :courseTypeId=selectedCourse.id
-          />
+    <div class="content">
+    <div class="classes-list">
+      <div
+        v-for="courseType in courseTypes"
+        :key="courseType.id"
+        class="class-item"
+        @click="selectCourse(courseType)"
+      >
+        <img :src="courseType.image" class="class-icon" alt="Course Image"/> 
+        <span class="class-name">{{ courseType.name }}</span> 
+        <!-- ... -->
+      </div>
+    </div>
+    <div class="class-details" v-if="selectedCourse">
+    <h2>{{ selectedCourse.name }}</h2> <!-- Course name displayed above the image -->
+    <img :src="selectedCourse.image" class="class-image" alt="Selected Course Image"/> <!-- Main image displayed here -->
+    <p class="class-description">{{ selectedCourse.description }}</p> <!-- Description displayed directly below the image -->
+    <WeeklySchedule
+      displayType='courseType'
+      :courseTypeId="selectedCourse.id"
+    />
           <!-- Display price and state if course is selected -->
           <!-- Image and schedule button are omitted for simplicity -->
         </div>
@@ -144,13 +144,27 @@ import WeeklySchedule from '../components/WeeklySchedule.vue';
     margin-bottom: 10px; /* Add some margin below the placeholder */
   }
 
-.class-icon {
-  /* Add styles for your class icon */
-}
+  .class-icon {
+    width: 50px; /* Example size, adjust as needed */
+    height: 50px; /* Example size, adjust as needed */
+    object-fit: cover;
+    border-radius: 50%; /* Makes the image round */
+    margin-right: 10px; /* Adds space between image and text */
+  }
 
-.class-name {
-    
-}
+  .class-image {
+    max-width: 75%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    display: block; /* Ensures the image is block level for centering */
+    margin-left: auto; /* These two lines center the image */
+    margin-right: auto;
+  }
+
+  .class-description {
+    margin-bottom: 3rem;
+  }
 
 img {
   max-width: 100%;
