@@ -26,16 +26,12 @@
                   placeholder="johnsmith@gmail.com"
                   :rules="[rules.required]"
                 ></v-text-field>
-           
-                
-                <v-text-field
-                  
-                  :type="showPassword ? 'text' : 'password'"
-                  :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                  @click:append="togglePassword"
 
+                <div style="display: flex; align-items: center; position: relative;">
+                <v-text-field
                   v-model="password"
                   color="#E2725B"
+                  :type="passwordFieldType"
                   label="Password"
                   aria-label="Email"
                   variant="underlined"
@@ -44,9 +40,11 @@
                   :hint="passwordHints"
 
                 ></v-text-field>
-                <!--
-                  :type="password"
-                -->
+                <v-icon @click="toggleVisibility" style="margin-left: 10px; color: #E2725B; position: relative;">
+                  {{ showPassword ? 'mdi-eye' : 'mdi-eye-off' }}
+                </v-icon>
+                </div>
+
                 <v-divider></v-divider>
 
                 <div class="card-body">
@@ -95,7 +93,7 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import axios from 'axios';
 import {useRouter} from 'vue-router'
 import image from '../assets/importedpng/signin_and_signup_top.png';
@@ -115,10 +113,9 @@ const rules = {
   required: value => !!value || 'Field is required',
 };
 
-const togglePassword = () => {
+const toggleVisibility = () => {
   showPassword.value = !showPassword.value;
 };
-
 const router = useRouter()
 
 const axiosClient = axios.create({
@@ -148,11 +145,11 @@ const signIn = async () => {
     localStorage.setItem('userData', JSON.stringify(userData));
     localStorage.setItem('loggedIn', true);
     await store.dispatch('login', userData);
-    
+
     setTimeout(() => {
       router.go('/profile');
 
-    }) 
+    })
     router.push('/profile');
   } catch (error) {
     console.error('Signin failed:', error.response.data);
@@ -169,5 +166,7 @@ const onSubmit = () => {
 const redirectToSignIn = () => {
   router.push('/signup');
 }
+const passwordFieldType = computed(() => showPassword.value ? 'text' : 'password');
+
 
 </script>

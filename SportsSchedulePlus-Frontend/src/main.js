@@ -7,7 +7,7 @@ import "./assets/css/nucleo-svg.css";
 import ArgonDashboard from "./argon-dashboard";
 import PrimeVue from 'primevue/config';
 
-
+import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
