@@ -8,6 +8,7 @@ import ProfileCard from "./ProfileCard.vue";
 import ArgonButton from "@/argon_components/ArgonButton.vue";
 import { ref } from 'vue';
 import imagePath from '../assets/importedpng/profile_page_top.png';
+import WeeklySchedule from "./WeeklySchedule.vue";
 
 const body = document.getElementsByTagName("body")[0];
 const store = useStore();
@@ -30,9 +31,14 @@ onBeforeUnmount(() => {
 });
 
 
+import { useRoute, useRouter } from 'vue-router'
+
+const router = useRouter()
+
 onMounted(() => {
   store.state.isAbsolute = true;
-  setTooltip();
+  setTooltip()
+
 
 });
 
@@ -71,17 +77,19 @@ const updateUserProfile = async () => {
 
     console.log("Update");
     successMessage.value = 'Profile updated successfully !';
-    errorMessage.value = ''; // Clear error message if any
+    setTimeout(() => {
+      successMessage.value = '';
+    }, 2000);
+    errorMessage.value = '';
   } catch (error) {
     console.error('Error updating profile:', error.response.data.errors[0]);
-    successMessage.value = ''; // Clear success message if any
+    successMessage.value = '';
     errorMessage.value =  error.response.data.errors[0];
+    setTimeout(() => {
+      errorMessage.value = '';
+    }, 2000);
   }
 };
-
-
-
-
 </script>
 <template>
   <main>
@@ -181,8 +189,8 @@ const updateUserProfile = async () => {
           <div class="card row h-100">
             <div class="card-header pb-1">
               <div class="d-flex align-items-center">
-                <p class="mb-0">Edit Profile</p>
-                <argon-button color="success" size="lg" class="ms-auto" @click="updateUserProfile"
+                <p v-if="userData.role !== 'Owner'" class="mb-0">Edit Profile</p>
+                <argon-button v-if="userData.role !== 'Owner'" size="lg" class="ms-auto" style="background-color: #E2725B; color: white;" @click="updateUserProfile"
                   >Update</argon-button
                 >
               </div>
@@ -193,21 +201,21 @@ const updateUserProfile = async () => {
               <div class="mb-4">
                 <label for="name" class="form-label fs-6">Name</label>
                 <div class="input-group">
-                  <input id="name" class="form-control form-control-lg" type="text" v-model="name" placeholder="Enter your name">
+                  <input id="name" class="form-control form-control-lg" type="text" v-model="name" placeholder="Enter your name" :readonly="userData.role === 'Owner'">
                   <span class="input-group-text"><i class="fas fa-user"></i></span>
                 </div>
               </div>
               <div class="mb-4">
                 <label for="email" class="form-label fs-6">Email address</label>
                 <div class="input-group">
-                  <input id="email" class="form-control form-control-lg" type="email" v-model="email" placeholder="Enter your email">
+                  <input id="email" class="form-control form-control-lg" type="email" v-model="email" placeholder="Enter your email" :readonly="userData.role === 'Owner'">
                   <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                 </div>
               </div>
               <div class="mb-4">
                 <label for="password" class="form-label fs-6">Password</label>
                 <div class="input-group">
-                  <input id="password" class="form-control form-control-lg" type="password" v-model="password" placeholder="Enter your password">
+                  <input id="password" class="form-control form-control-lg" type="password" v-model="password" placeholder="Enter your password" :readonly="userData.role === 'Owner'">
                   <span class="input-group-text"><i class="fas fa-lock"></i></span>
                 </div>
               </div>
@@ -223,6 +231,28 @@ const updateUserProfile = async () => {
         </div>
 
       </div>
+      <div class="row">
+        <div class="col">
+          <div class="card  weekly-schedule-wrapper">
+            <WeeklySchedule
+              :displayType=userData.role.toLowerCase()
+              :customerId=userData.id
+              :instructorId=userData.id
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 </template>
+
+<style>
+.weekly-schedule-wrapper {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  width: 100%; /* Adjust width as needed */
+}
+</style>
+
+

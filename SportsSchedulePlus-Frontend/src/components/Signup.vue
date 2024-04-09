@@ -36,18 +36,25 @@
                   :rules="[rules.required]"
                 ></v-text-field>
 
-                <v-text-field
-                  v-model="password"
-                  color="#E2725B"
-                  label="Password"
-                  aria-label="Email"
-                  variant="underlined"
-                  placeholder="Enter your password"
-                  visible="false"
-                  :rules="[rules.required]"
-                  :hint="passwordHints"
+                <div style="display: flex; align-items: center; position: relative;">
+                  <v-text-field
+                    v-model="password"
+                    :type="passwordFieldType"
+                    color="#E2725B"
+                    label="Password"
+                    aria-label="Email"
+                    variant="underlined"
+                    placeholder="Enter your password"
+                    visible="false"
+                    :rules="[rules.required]"
+                    :hint="passwordHints"
+                    flex
+                  ></v-text-field>
+                  <v-icon @click="toggleVisibility" style="margin-left: 10px; color: #E2725B; position: relative;">
+                    {{ showPassword ? 'mdi-eye' : 'mdi-eye-off' }}
+                  </v-icon>
+                </div>
 
-                ></v-text-field>
 
                 <v-divider></v-divider>
 
@@ -91,7 +98,7 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {ref, computed} from 'vue';
 import axios from 'axios';
 import {useRouter} from 'vue-router';
 import image from '../assets/importedpng/signin_and_signup_top.png';
@@ -100,7 +107,6 @@ const success = ref(false);
 const imagePath = image;
 const name = ref('');
 const email = ref('');
-const password = ref('');
 const errorMessage = ref('');
 const router = useRouter()
 const loading = ref(false);
@@ -124,6 +130,14 @@ const onSubmit = () => {
   setTimeout(() => (loading.value = false), 2000);
 };
 
+const password = ref('');
+const showPassword = ref(false);
+
+const passwordFieldType = computed(() => showPassword.value ? 'text' : 'password');
+
+const toggleVisibility = () => {
+  showPassword.value = !showPassword.value;
+};
 const signUp = async () => {
   errorMessage.value = '';
   try {

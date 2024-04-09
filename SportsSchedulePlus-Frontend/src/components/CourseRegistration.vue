@@ -1,11 +1,8 @@
 <template>
   <div class="container mt-5">
     <div class="row justify-content-center">
-      <div class="col-lg-6">
+      <div class="">
         <div class="card shadow-lg border-0">
-          <div class="card-header bg-primary text-white">
-            <h3 class="text-center text-white">Course Registration</h3>
-          </div>
           <div class="card-body">
             <form @submit.prevent="submitForm">
               <div class="form-group">
@@ -88,7 +85,15 @@ const axiosClient = axios.create({
 
 if (isFormValid.value == true){
   console.log("Valid form");
-  //axiosClient.post("/registrations/{customerID}/{courseID}");
+  const scheduledCourseId = parseInt(localStorage.getItem("scheduledCourseId"));
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  let userID = parseInt(userData.id);
+  try {
+    axiosClient.post("/registrations/" + userID + "/" + scheduledCourseId);
+  } catch (error) {
+    console.log(error.response);
+  }
+  
 }
 
 </script>

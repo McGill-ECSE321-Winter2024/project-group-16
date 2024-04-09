@@ -57,6 +57,7 @@ public class CourseTypeIntegrationTests {
         CourseTypeRequestDTO retrievedCourseType = getResponse.getBody();
         assertNotNull(retrievedCourseType);
         assertEquals("Yoga", retrievedCourseType.getName());
+        assertEquals("Yoga description", retrievedCourseType.getDescription());
     }
 
     // Test updating a CourseType

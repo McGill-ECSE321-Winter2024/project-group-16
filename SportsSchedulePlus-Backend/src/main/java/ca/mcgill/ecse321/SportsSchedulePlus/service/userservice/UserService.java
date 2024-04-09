@@ -95,22 +95,20 @@ public class UserService {
      * @return the new Person account for the owner
      */
     @Transactional
-    public Person createOwner() {
-        if (!Helper.toList(ownerRepository.findAll()).isEmpty()){
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner already exists.");
-        }
-        else{
-            PersonRole personRole = new Owner();
-            personRoleRepository.save(personRole);
+    public Person createOwner() {    
+        try {
+            getOwner();
+        } catch (SportsSchedulePlusException e) {
             Owner owner = new Owner();
+            personRoleRepository.save(owner);
+            //Owner owner = (Owner) personRole;
             owner.setDailySchedule(dailyScheduleService.createDailySchedule());
             ownerRepository.save(owner);
-            Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("admin"), personRole);
+            Person person = new Person("owner", "sports.schedule.plus@gmail.com", "admin", owner);
             personRepository.save(person);
             return person;
-        }    
-
-    
+        }
+        throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner already exists.");    
     }
 
     /**
@@ -401,27 +399,21 @@ public class UserService {
      */
     @Transactional
     public Instructor approveCustomer(String email) {
-        System.out.println("Starting approval process for email: " + email);
-        
         // Find person by email
         Person person = personRepository.findPersonByEmail(email);
         if (person == null) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with email " + email + " does not exist.");
         }
-        System.out.println("Person found with email: " + email);
-        
         // Get customerId
         int customerId = person.getId();
-        System.out.println("Customer ID retrieved: " + customerId);
-        
+
         // Find customer by customerId
         Optional<Customer> customer = customerRepository.findById(customerId);
         if (!customer.isPresent()) {
             System.out.println("Customer with ID " + customerId + " does not exist.");
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
         }
-        System.out.println("Customer found with ID: " + customerId);
-        
+
         // Check if the customer is already an instructor
         Optional<Instructor> instructor = instructorRepository.findById(customerId);
         if (instructor.isPresent()) {
@@ -434,8 +426,7 @@ public class UserService {
             System.out.println("Customer with ID " + customerId + " has not applied to be an instructor.");
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " has not applied to be an instructor.");
         }
-        System.out.println("Customer with ID " + customerId + " has applied to be an instructor.");
-        
+ 
         // Update customer state to APPROVED
         customer.get().setState(State.APPROVED);
         customerRepository.save(customer.get());
@@ -443,8 +434,7 @@ public class UserService {
         
         // Create new instructor
         Person newPerson = createInstructor(person.getEmail(), "");
-        System.out.println("New instructor account created for email: " + email);
-        
+ 
         // Return the new instructor
         return (Instructor) newPerson.getPersonRole();
     }
