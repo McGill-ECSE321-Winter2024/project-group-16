@@ -13,6 +13,7 @@ import Registrations from ".././components/Registrations.vue";
 import CourseTypes from ".././components/CourseTypes.vue";
 import ScheduledCourses from ".././components/ScheduledCourses.vue";
 import CourseRegistration from ".././components/CourseRegistration.vue";
+import Classes from ".././components/Classes.vue"
 const routes = [
   {
     path: "/",

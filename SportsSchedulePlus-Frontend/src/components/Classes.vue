@@ -31,7 +31,7 @@ import WeeklySchedule from '../components/WeeklySchedule.vue';
           <div class="image-placeholder">IMAGE HERE</div>
           <WeeklySchedule
             displayType='courseType'
-            CourseTypeId=courseType.id
+            :courseTypeId=selectedCourse.id
           />
           <!-- Display price and state if course is selected -->
           <!-- Image and schedule button are omitted for simplicity -->
@@ -63,8 +63,9 @@ import WeeklySchedule from '../components/WeeklySchedule.vue';
           console.error('Error loading course types: ', error);
         }
       },
-      selectCourse(courseType) {
+      async selectCourse(courseType) {
         this.selectedCourse = courseType;
+        console.log(this.selectedCourse.id);
       },
     }
   };
