@@ -28,10 +28,7 @@ import CourseRegistration from './CourseRegistration.vue';
             Instructor: {{ courseDetails.instructor }}<br>
             Start Time: {{ courseDetails.startTime }}<br>
             End Time: {{ courseDetails.endTime }}<br>
-            <CourseRegistration 
-              :customerID="userID"
-              :courseID="courseDetails.courseId"
-            />
+            <CourseRegistration />
           </v-card-text>
           <!-- <v-card-actions>
             <v-btn @click="" color="#E2725B">
@@ -40,6 +37,36 @@ import CourseRegistration from './CourseRegistration.vue';
           </v-card-actions> -->
           <v-card-actions>
             <v-btn @click="registerDialogVisible = false" color="#E2725B">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+  </template>
+  <template>
+    <div>
+      <v-dialog v-model="creationDialogVisible">
+        <v-card class="popup"> <!-- change the style of this to be rounded corners like all other cards-->
+          <v-card-title>
+            Schedule a Class
+          </v-card-title>
+
+          <v-card-text>
+            Class: {{ courseDetails.courseType }}<br>
+            Price: {{ courseDetails.price }}<br>
+            Instructor: {{ courseDetails.instructor }}<br>
+            Start Time: {{ courseDetails.startTime }}<br>
+            End Time: {{ courseDetails.endTime }}<br>
+            <CourseRegistration />
+          </v-card-text>
+          <!-- <v-card-actions>
+            <v-btn @click="" color="#E2725B">
+              Register
+            </v-btn>
+          </v-card-actions> -->
+          <v-card-actions>
+            <v-btn @click="creationDialogVisible = false" color="#E2725B">
               Close
             </v-btn>
           </v-card-actions>
@@ -93,11 +120,11 @@ export default {
         viewType: "Week",
         startDate: today,
         durationBarVisible: false,
-        timeRangeSelectedHandling: "Disabled",
-        eventDeleteHandling: "Disabled",
+        timeRangeSelectedHandling: "Enabled",
+        eventDeleteHandling: "Enabled",
         eventMoveHandling: "Enabled",
         eventClickHandling: "Enabled",
-        eventResizeHandling: "Disabled",
+        eventResizeHandling: "Enabled",
         businessBeginsHour: 8,
         businessEndsHour: 18,
         heightSpec: "BusinessHoursNoScroll",
@@ -106,7 +133,16 @@ export default {
           this.updateScheduledCourseInfo(args);
         },
         onEventMove: (args) => {
-          this.moveScheduledCourse(args);
+          this.updateScheduledCourse(args);
+        },
+        onEventResize: (args) => {
+          this.updateScheduledCourse(args);
+        },
+        onEventDelete: (args) => {
+          this.deleteScheduledCourse(args);
+        },
+        onTimeRangeSelected: (args) => {
+          this.creationDialogVisible = true;
         },
       },
       courseDetails: {
@@ -258,12 +294,13 @@ export default {
           startTime: scheduledCourseResponse.data.startTime,
           endTime: scheduledCourseResponse.data.endTime
         };
+        localStorage.setItem("scheduledCourseId", scheduledCourseResponse.data.id)
       } catch (error) {
         console.error('Error loading classes: ', error);
       }
 
     },
-    async moveScheduledCourse(args) {
+    async updateScheduledCourse(args) {
       const axiosClient = axios.create({
         baseURL: "http://localhost:8080"
       });
@@ -284,6 +321,19 @@ export default {
         console.log(updateResponse);
       } catch (error) {
         console.error('Error moving class: ', error);
+      }
+      this.loadScheduledCourses();
+    },
+    async deleteScheduledCourse(args) {
+      const axiosClient = axios.create({
+        baseURL: "http://localhost:8080"
+      });
+      const scheduledCourseId = args.e.id();
+      try {
+        const deleteResponse = await axiosClient.delete('/scheduledCourses/' + scheduledCourseId);
+        console.log(deleteResponse);
+      } catch (error) {
+        console.error('Error deleting class: ', error);
       }
       this.loadScheduledCourses();
     },

@@ -85,7 +85,15 @@ const axiosClient = axios.create({
 
 if (isFormValid.value == true){
   console.log("Valid form");
-  //axiosClient.post("/registrations/{customerID}/{courseID}");
+  const scheduledCourseId = parseInt(localStorage.getItem("scheduledCourseId"));
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  let userID = parseInt(userData.id);
+  try {
+    axiosClient.post("/registrations/" + userID + "/" + scheduledCourseId);
+  } catch (error) {
+    console.log(error);
+  }
+  
 }
 
 </script>
