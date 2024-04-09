@@ -30,7 +30,7 @@
 
                 <v-text-field
                   
-                  :type="showPassword ? 'text' : 'password'"
+                  
                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   @click:append="togglePassword"
 
