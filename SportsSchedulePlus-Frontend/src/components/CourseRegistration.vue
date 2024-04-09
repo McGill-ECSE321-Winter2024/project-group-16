@@ -91,7 +91,7 @@ if (isFormValid.value == true){
   try {
     axiosClient.post("/registrations/" + userID + "/" + scheduledCourseId);
   } catch (error) {
-    console.log(error);
+    console.log(error.response);
   }
   
 }

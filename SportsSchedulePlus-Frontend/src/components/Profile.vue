@@ -233,7 +233,7 @@ const updateUserProfile = async () => {
       </div>
       <div class="row">
         <div class="col">
-          <div class="card row h-100">
+          <div class="card  weekly-schedule-wrapper">
             <WeeklySchedule
               :displayType=userData.role.toLowerCase()
               :customerId=userData.id
@@ -245,3 +245,14 @@ const updateUserProfile = async () => {
     </div>
   </main>
 </template>
+
+<style>
+.weekly-schedule-wrapper {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  width: 100%; /* Adjust width as needed */
+}
+</style>
+
+
