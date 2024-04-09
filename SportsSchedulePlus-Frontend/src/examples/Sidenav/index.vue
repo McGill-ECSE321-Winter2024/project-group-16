@@ -6,7 +6,6 @@ import SidenavList from "./SidenavList.vue";
 const store = useStore();
 const layout = computed(() => store.state.layout);
 const sidebarType = computed(() => store.state.sidebarType);
-const darkMode = computed(() => store.state.darkMode);
 </script>
 <template>
   <div
