@@ -18,6 +18,7 @@ import { useStore } from "vuex";
 import Sidenav from "@/examples/Sidenav";
 import Configurator from "@/examples/Configurator.vue";
 
+
 const store = useStore();
 const isNavFixed = computed(() => store.state.isNavFixed);
 const darkMode = computed(() => store.state.darkMode);
@@ -55,12 +56,15 @@ const navClasses = computed(() => {
   >
 
     <router-view />
-
+    
+    <app-footer v-show="showFooter" />
+    
     <configurator
       :toggle="toggleConfigurator"
       :class="[showConfig ? 'show' : '', hideConfigButton ? 'd-none' : '']"
     />
 
   </main>
+  
 </div>
 </template>
