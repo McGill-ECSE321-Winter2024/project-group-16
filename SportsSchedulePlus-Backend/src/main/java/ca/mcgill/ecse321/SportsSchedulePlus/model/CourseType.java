@@ -29,7 +29,9 @@ public class CourseType {
   @GeneratedValue
   private int id;
   @Column(unique = true)
+  private String name;
   private String description;
+  private String image;
   private boolean approvedByOwner;
   private float price;
   private State state = State.NONE;
@@ -45,8 +47,10 @@ public class CourseType {
   public CourseType() {
     scheduledCourses = new ArrayList < ScheduledCourse > ();
   }
-  public CourseType(String aDescription, boolean aApprovedByOwner, float aPrice) {
+  public CourseType(String aName, String aDescription, String aImage, boolean aApprovedByOwner, float aPrice) {
+    name = aName;
     description = aDescription;
+    image = aImage;
     approvedByOwner = aApprovedByOwner;
     price = aPrice;
     scheduledCourses = new ArrayList < ScheduledCourse > ();
@@ -56,9 +60,23 @@ public class CourseType {
   // INTERFACE
   //------------------------
 
+  public boolean setName(String aName) {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setDescription(String aDescription) {
     boolean wasSet = false;
     description = aDescription;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setImage(String aImage) {
+    boolean wasSet = false;
+    image = aImage;
     wasSet = true;
     return wasSet;
   }
@@ -77,8 +95,16 @@ public class CourseType {
     return wasSet;
   }
 
+  public String getName() {
+    return name;
+  }
+
   public String getDescription() {
     return description;
+  }
+
+  public String getImage() {
+    return image;
   }
 
   public boolean getApprovedByOwner() {
@@ -213,7 +239,9 @@ public class CourseType {
   }
   public String toString() {
     return super.toString() + "[" +
+      "name" + ":" + getName() + "," +
       "description" + ":" + getDescription() + "," +
+      "image" + ":" + getImage() + "," +
       "approvedByOwner" + ":" + getApprovedByOwner() + "," +
       "price" + ":" + getPrice() + "]";
   }
@@ -243,7 +271,9 @@ public class CourseType {
 
     // Compare individual attributes for equality
     return getId() == other.getId() &&
+      getName().equals(other.getName()) &&
       getDescription().equals(other.getDescription()) &&
+      getImage().equals(other.getImage()) &&
       getPrice() == other.getPrice();
   }
 
@@ -255,7 +285,7 @@ public class CourseType {
   @Override
   public int hashCode() {
     // Using Objects.hash to generate hash code based on selected attributes
-    return Objects.hash(getId(), getDescription(), getPrice(), getScheduledCourses());
+    return Objects.hash(getId(), getName(), getDescription(), getImage(), getPrice(), getScheduledCourses());
   }
 
 }

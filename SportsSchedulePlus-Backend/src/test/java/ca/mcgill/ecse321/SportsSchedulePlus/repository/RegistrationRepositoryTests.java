@@ -65,7 +65,7 @@ public class RegistrationRepositoryTests {
         // Create and save a registration
         Customer customer = new Customer();
         customerRepository.save(customer);
-        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+        CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
@@ -90,7 +90,7 @@ public class RegistrationRepositoryTests {
         // Create and save a registration
         Customer customer = new Customer();
         customerRepository.save(customer);
-        CourseType courseType = new CourseType("New Sample Description", true, 99.99f);
+        CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
@@ -116,7 +116,7 @@ public class RegistrationRepositoryTests {
         // Create and save a registration
         Customer customer = new Customer();
         customerRepository.save(customer);
-        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+        CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
@@ -142,7 +142,7 @@ public class RegistrationRepositoryTests {
         // Create and save a registration
         Customer customer = new Customer();
         customerRepository.save(customer);
-        CourseType courseType = new CourseType("New Sample Description", true, 99.99f);
+        CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
         courseTypeRepository.save(courseType);
         ScheduledCourse course = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(course);
@@ -184,7 +184,7 @@ public class RegistrationRepositoryTests {
     @Test
     public void testFindNoRegistrationsForScheduledCourseWithNoPayments() {
         // Create and save a scheduled course without registrations
-        CourseType courseType = new CourseType("Sample Description", true, 99.99f);
+        CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
         courseTypeRepository.save(courseType);
         ScheduledCourse scheduledCourseWithNoRegistrations = Helper.createScheduledCourse(courseType);
         scheduledCourseRepository.save(scheduledCourseWithNoRegistrations);

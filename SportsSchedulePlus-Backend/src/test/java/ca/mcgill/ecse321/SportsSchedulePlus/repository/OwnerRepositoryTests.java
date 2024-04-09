@@ -65,7 +65,7 @@ public class OwnerRepositoryTests {
         Owner owner = new Owner(1, dailyScheduleList);
 
         // Create Course Type
-        CourseType courseType = new CourseType("Yoga", true, 15.99F);
+        CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
         courseTypeRepository.save(courseType);
 
         // Add Suggested and Approved Course Type to Owner
@@ -102,7 +102,7 @@ public class OwnerRepositoryTests {
         ownerRepository.save(owner);
 
         // Create Course Type
-        CourseType courseType = new CourseType("Yoga", true, 15.99F);
+        CourseType courseType = new CourseType("Sample name", "sample description", "sample image",true, 99.99f);
         courseTypeRepository.save(courseType);
 
         // Read Owner From Database

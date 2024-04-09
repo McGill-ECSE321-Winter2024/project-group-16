@@ -13,12 +13,10 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
 <script setup>
-import { computed } from "vue";
+import {computed, ref} from "vue";
 import { useStore } from "vuex";
-import Sidenav from "./examples/Sidenav";
+import Sidenav from "@/examples/Sidenav";
 import Configurator from "@/examples/Configurator.vue";
-import Navbar from "@/examples/Navbars/Navbar.vue";
-import AppFooter from "@/examples/Footer.vue";
 
 
 const store = useStore();
@@ -27,10 +25,10 @@ const darkMode = computed(() => store.state.darkMode);
 const isAbsolute = computed(() => store.state.isAbsolute);
 const showSidenav = computed(() => store.state.showSidenav);
 const layout = computed(() => store.state.layout);
-const showNavbar = computed(() => store.state.showNavbar);
 const showConfig = computed(() => store.state.showConfig);
 const hideConfigButton = computed(() => store.state.hideConfigButton);
 const toggleConfigurator = () => store.commit("toggleConfigurator");
+
 
 const navClasses = computed(() => {
   return {
@@ -54,11 +52,8 @@ const navClasses = computed(() => {
   <sidenav v-if="showSidenav" />
 
   <main
-    class="main-content position-relative max-height-vh-100 h-100 border-radius-lg"
+    class=" main-content position-relative max-height-vh-100 h-100 border-radius-lg"
   >
-    <!-- nav -->
-
-    <navbar :class="[navClasses]" v-if="showNavbar" />
 
     <router-view />
     
@@ -68,6 +63,7 @@ const navClasses = computed(() => {
       :toggle="toggleConfigurator"
       :class="[showConfig ? 'show' : '', hideConfigButton ? 'd-none' : '']"
     />
+
   </main>
   
 </div>

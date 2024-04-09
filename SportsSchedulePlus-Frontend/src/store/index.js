@@ -5,15 +5,14 @@ const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 const LOGOUT = "LOGOUT";
 
 export default createStore({
- 
+
   state: {
     isLoggedIn: !!localStorage.getItem("loggedIn"),
     hideConfigButton: false,
     isPinned: false,
     showConfig: false,
     sidebarType: "bg-white",
-    isRTL: false,
-    mcolor: "",
+    color: "bg-white",
     darkMode: false,
     isNavFixed: false,
     isAbsolute: false,

@@ -59,7 +59,11 @@ public class UserService {
     @Transactional
     public Person createUser(String name, String email, String password, PersonRole role) {
         personRoleRepository.save(role);
-        Person person = new Person(name, email, passwordEncoder.encode(password), role);
+        String newPassword =  passwordEncoder.encode(password);
+        if (role instanceof Instructor){
+            newPassword = password;
+        }
+        Person person = new Person(name, email, newPassword, role);
         personRepository.save(person);
         return person;
     }
@@ -91,22 +95,20 @@ public class UserService {
      * @return the new Person account for the owner
      */
     @Transactional
-    public Person createOwner() {
-        if (!Helper.toList(ownerRepository.findAll()).isEmpty()){
-            throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner already exists.");
-        }
-        else{
-            PersonRole personRole = new Owner();
-            personRoleRepository.save(personRole);
+    public Person createOwner() {  
+        try {
+            getOwner();
+        } catch (SportsSchedulePlusException e) {
             Owner owner = new Owner();
+            personRoleRepository.save(owner);
+            //Owner owner = (Owner) personRole;
             owner.setDailySchedule(dailyScheduleService.createDailySchedule());
             ownerRepository.save(owner);
-            Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("admin"), personRole);
+            Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("Admin_123"), owner);
             personRepository.save(person);
             return person;
-        }    
-
-    
+        }
+        throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Owner already exists.");    
     }
 
     /**
@@ -506,9 +508,9 @@ public class UserService {
      */
     @Transactional
     public CourseType suggestCourseType(PersonRole personRole, CourseType courseType) {
-        Helper.validateCourseType(courseTypeRepository,courseType.getDescription(), courseType.getPrice(), true);
+        Helper.validateCourseType(courseTypeRepository, courseType.getName(), courseType.getDescription(), courseType.getImage(), courseType.getPrice(), true);
         Helper.validatePersonRole(personRole);
-        CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getDescription(), courseType.getApprovedByOwner(), courseType.getPrice());
+        CourseType courseTypeCreated = courseTypeService.createCourseType(courseType.getName(), courseType.getDescription(), courseType.getImage(), courseType.getApprovedByOwner(), courseType.getPrice());
         if(personRole instanceof Instructor){
             Person person = getPersonById(personRole.getId());
             Instructor instructor = getInstructor(person.getEmail());

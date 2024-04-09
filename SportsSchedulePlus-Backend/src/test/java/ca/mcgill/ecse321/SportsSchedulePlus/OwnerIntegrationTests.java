@@ -10,7 +10,6 @@ import ca.mcgill.ecse321.SportsSchedulePlus.repository.OwnerRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRoleRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.service.userservice.UserService;
-import ca.mcgill.ecse321.utils.Helper;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class OwnerIntegrationTests {
@@ -48,8 +46,6 @@ public class OwnerIntegrationTests {
 
   @Autowired
   private CourseTypeRepository courseTypeRepository;
-  @Autowired
-  private UserService userService;
 
   @Autowired
   private TestRestTemplate restTemplate;
@@ -66,12 +62,6 @@ public class OwnerIntegrationTests {
     courseTypeRepository.deleteAll();
   }
 
-   @BeforeEach
-    public void setup(){
-        if (Helper.toList(ownerRepository.findAll()).isEmpty()) {
-           userService.createOwner();
-        }
-    }
 
 
 
@@ -95,7 +85,7 @@ public class OwnerIntegrationTests {
 
     @Test
     public void testCreateOwner() {
-        userService.deleteUser(userService.getOwner().getId());
+        //userService.deleteUser(userService.getOwner().getId());
         PersonDTO personDto = new PersonDTO("owner", "owner@example.com", "Passworxd1234!!",new OwnerResponseDTO());
         
         ResponseEntity<PersonDTO> responseEntity = restTemplate.postForEntity("/owner", personDto, PersonDTO.class);
@@ -117,7 +107,7 @@ public class OwnerIntegrationTests {
     public void testSuggestCourseTypeInvalid() {
         postOwner("owner", "password");
         CourseTypeRequestDTO newCourseType = new CourseTypeRequestDTO();
-        newCourseType.setDescription("");
+        newCourseType.setName("");
         newCourseType.setApprovedByOwner(true);
         newCourseType.setPrice(-30f);
 
@@ -132,7 +122,9 @@ public class OwnerIntegrationTests {
     public void testSuggestCourseType() {
         postOwner("John Doe", "password");
         CourseTypeRequestDTO newCourseType = new CourseTypeRequestDTO();
-        newCourseType.setDescription("Yoga Basics");
+        newCourseType.setName("Yoga Basics");
+        newCourseType.setDescription("Yoga Basics for begginers.");
+        newCourseType.setImage("yoga.jpg");
         newCourseType.setApprovedByOwner(true);
         newCourseType.setPrice(20.0f);
 

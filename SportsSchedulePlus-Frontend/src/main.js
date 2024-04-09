@@ -5,7 +5,8 @@ import router from "./router";
 import "./assets/css/nucleo-icons.css";
 import "./assets/css/nucleo-svg.css";
 import ArgonDashboard from "./argon-dashboard";
-import Vuetify from 'vuetify'
+import PrimeVue from 'primevue/config';
+
 
 import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
@@ -18,6 +19,7 @@ const vuetify = createVuetify({
 })
 
 const appInstance = createApp(App);
+appInstance.use(PrimeVue)
 appInstance.use(store);
 appInstance.use(vuetify);
 appInstance.use(router);

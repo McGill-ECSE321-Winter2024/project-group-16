@@ -35,7 +35,9 @@ public class CourseTypeServiceTests {
     private CourseTypeService courseTypeService;
 
     private static final int COURSE_TYPE_ID = 1;
-    private static final String DESCRIPTION = "Yoga";
+    private static final String NAME = "Yoga";
+    private static final String DESCRIPTION = "Yoga for beginners";
+    private static final String IMAGE = "yoga.jpg";
     private static final boolean APPROVED_BY_OWNER = true;
     private static final float PRICE = 20.0f;
     private List < CourseType > allCourseTypesList = new ArrayList < > ();
@@ -45,7 +47,7 @@ public class CourseTypeServiceTests {
         lenient().when(courseTypeRepository.findById(any())).thenAnswer(invocation -> {
             if (invocation.getArgument(0).equals(COURSE_TYPE_ID)) {
                 CourseType courseType = new CourseType();
-                courseType.setDescription(DESCRIPTION);
+                courseType.setName(NAME);
                 courseType.setApprovedByOwner(APPROVED_BY_OWNER);
                 courseType.setPrice(PRICE);
                 return Optional.of(courseType);
@@ -65,7 +67,7 @@ public class CourseTypeServiceTests {
             float price = invocation.getArgument(0);
             if (price == PRICE) {
                 CourseType courseType = new CourseType();
-                courseType.setDescription(DESCRIPTION);
+                courseType.setName(NAME);
                 courseType.setApprovedByOwner(APPROVED_BY_OWNER);
                 courseType.setPrice(PRICE);
                 List < CourseType > result = new ArrayList < > ();
@@ -77,7 +79,7 @@ public class CourseTypeServiceTests {
 
         lenient().when(courseTypeRepository.findByApprovedByOwnerTrue()).thenAnswer(invocation -> {
             CourseType courseType = new CourseType();
-            courseType.setDescription(DESCRIPTION);
+            courseType.setName(NAME);
             courseType.setApprovedByOwner(true); // This is redundant as we're mocking findByApprovedByOwnerTrue
             courseType.setPrice(PRICE);
             List < CourseType > approvedCourseTypes = new ArrayList < > ();
@@ -85,7 +87,7 @@ public class CourseTypeServiceTests {
             return approvedCourseTypes;
         });
         CourseType courseType = new CourseType();
-        courseType.setDescription("Some Description");
+        courseType.setName("Some Description");
         courseType.setApprovedByOwner(true);
         courseType.setPrice(20.0f);
         List < CourseType > courseTypeList = new ArrayList < > ();
@@ -102,31 +104,36 @@ public class CourseTypeServiceTests {
         Mockito.when(courseTypeRepository.findAll()).thenReturn(allCourseTypesList);
         assertEquals(0, courseTypeService.getAllCourseTypes().size());
 
-        String description = "Pilates";
+        String name = "Pilates";
+        String description = "Pilates for beginners";
+        String image = "pilates.jpg";
         boolean approvedByOwner = true;
         float price = 30.0f;
 
         try {
-            courseTypeService.createCourseType(description, approvedByOwner, price);
+            courseTypeService.createCourseType(name, description, image, approvedByOwner, price);
         } catch (SportsScheduleException e) {
             fail(e.getMessage());
         }
 
         List < CourseType > allCourseTypes = courseTypeService.getAllCourseTypes();
         assertFalse(allCourseTypes.isEmpty());
-        assertTrue(allCourseTypes.stream().anyMatch(courseType -> description.equals(courseType.getDescription()) && courseType.getPrice() == price && courseType.isApprovedByOwner() == approvedByOwner));
+        assertTrue(allCourseTypes.stream().anyMatch(courseType -> name.equals(courseType.getName()) && description.equals(courseType.getDescription()) 
+                    && image.equals(courseType.getImage()) && courseType.getPrice() == price && courseType.isApprovedByOwner() == approvedByOwner));
     }
 
     @Test
     public void testUpdateCourseType() {
-        String newDescription = "Advanced Yoga";
+        String newName = "Advanced Yoga";
+        String newDescription = "Advanced Yoga. Prerequisite: Yoga for beginners";
+        String newImage = "advanced_yoga.jpg";
         boolean newApprovedByOwner = false;
         float newPrice = 25.0f;
 
-        CourseType updatedCourseType = courseTypeService.updateCourseType(COURSE_TYPE_ID, newDescription, newApprovedByOwner, newPrice);
+        CourseType updatedCourseType = courseTypeService.updateCourseType(COURSE_TYPE_ID, newName, newDescription, newImage, newApprovedByOwner, newPrice);
 
         assertNotNull(updatedCourseType);
-        assertEquals(newDescription, updatedCourseType.getDescription());
+        assertEquals(newName, updatedCourseType.getName());
         assertEquals(newPrice, updatedCourseType.getPrice());
         assertEquals(newApprovedByOwner, updatedCourseType.isApprovedByOwner());
     }
@@ -136,7 +143,7 @@ public class CourseTypeServiceTests {
         CourseType courseType = courseTypeService.getCourseType(COURSE_TYPE_ID);
 
         assertNotNull(courseType);
-        assertEquals(DESCRIPTION, courseType.getDescription());
+        assertEquals(NAME, courseType.getName());
         assertEquals(PRICE, courseType.getPrice());
         assertEquals(APPROVED_BY_OWNER, courseType.isApprovedByOwner());
     }
@@ -153,16 +160,16 @@ public class CourseTypeServiceTests {
     @Test
     public void testCreateCourseTypeWithEmptyDescription() {
         Exception exception = assertThrows(SportsScheduleException.class, () -> {
-            courseTypeService.createCourseType("", APPROVED_BY_OWNER, PRICE);
+            courseTypeService.createCourseType("", "", "", APPROVED_BY_OWNER, PRICE);
         });
 
-        assertEquals("Course description cannot be null or empty.", exception.getMessage());
+        assertEquals("Course name cannot be null or empty.", exception.getMessage());
     }
 
     @Test
     public void testCreateCourseTypeWithNegativePrice() {
         Exception exception = assertThrows(SportsScheduleException.class, () -> {
-            courseTypeService.createCourseType(DESCRIPTION, APPROVED_BY_OWNER, -10.0f);
+            courseTypeService.createCourseType(NAME, DESCRIPTION, IMAGE, APPROVED_BY_OWNER, -10.0f);
         });
 
         assertEquals("Course price must be greater than zero.", exception.getMessage());

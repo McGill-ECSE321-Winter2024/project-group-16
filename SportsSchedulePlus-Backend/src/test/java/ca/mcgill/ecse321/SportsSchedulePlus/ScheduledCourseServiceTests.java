@@ -83,11 +83,11 @@ public class ScheduledCourseServiceTests {
     // Initialize CourseType for use in tests
     CourseType testCourseType = new CourseType();
     testCourseType.setId(10);
-    testCourseType.setDescription("yoga");
+    testCourseType.setName("yoga");
     testCourseType.setApprovedByOwner(true);
     testCourseType.setPrice(20.0f);
 
-    COURSE_TYPE.setDescription("Yoga");
+    COURSE_TYPE.setName("Yoga");
     COURSE_TYPE.setApprovedByOwner(true);
     COURSE_TYPE.setPrice(20.0f);
     COURSE_TYPE.setId(COURSE_TYPE_ID);
