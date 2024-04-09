@@ -1,5 +1,6 @@
 <script setup>
 import CourseRegistration from './CourseRegistration.vue';
+import ScheduledCourseCreation from './ScheduledCourseCreation.vue';
 </script>
 
 <template>
@@ -16,7 +17,7 @@ import CourseRegistration from './CourseRegistration.vue';
   </div>
   <template>
     <div>
-      <v-dialog v-model="registerDialogVisible">
+      <v-dialog v-model="registerDialogVisible" persistent>
         <v-card class="popup"> <!-- change the style of this to be rounded corners like all other cards-->
           <v-card-title>
             Register for a Class
@@ -30,11 +31,6 @@ import CourseRegistration from './CourseRegistration.vue';
             End Time: {{ courseDetails.endTime }}<br>
             <CourseRegistration />
           </v-card-text>
-          <!-- <v-card-actions>
-            <v-btn @click="" color="#E2725B">
-              Register
-            </v-btn>
-          </v-card-actions> -->
           <v-card-actions>
             <v-btn @click="registerDialogVisible = false" color="#E2725B">
               Close
@@ -46,25 +42,15 @@ import CourseRegistration from './CourseRegistration.vue';
   </template>
   <template>
     <div>
-      <v-dialog v-model="creationDialogVisible">
+      <v-dialog v-model="creationDialogVisible" persistent>
         <v-card class="popup"> <!-- change the style of this to be rounded corners like all other cards-->
           <v-card-title>
             Schedule a Class
           </v-card-title>
 
           <v-card-text>
-            Class: {{ courseDetails.courseType }}<br>
-            Price: {{ courseDetails.price }}<br>
-            Instructor: {{ courseDetails.instructor }}<br>
-            Start Time: {{ courseDetails.startTime }}<br>
-            End Time: {{ courseDetails.endTime }}<br>
-            <CourseRegistration />
+            <ScheduledCourseCreation />
           </v-card-text>
-          <!-- <v-card-actions>
-            <v-btn @click="" color="#E2725B">
-              Register
-            </v-btn>
-          </v-card-actions> -->
           <v-card-actions>
             <v-btn @click="creationDialogVisible = false" color="#E2725B">
               Close
@@ -100,6 +86,7 @@ export default {
     return {
       selectedDayFormatted: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
       registerDialogVisible: false,
+      creationDialogVisible: false,
       navigatorConfig: {
         showMonths: 1,
         skipMonths: 1,
@@ -143,6 +130,8 @@ export default {
         },
         onTimeRangeSelected: (args) => {
           this.creationDialogVisible = true;
+          localStorage.setItem("startTime", JSON.stringify(args.start));
+          localStorage.setItem("endTime", JSON.stringify(args.end));
         },
       },
       courseDetails: {
@@ -407,7 +396,7 @@ export default {
 	top: 0px;
 	bottom: 0px;
 	margin: 0px;
-	background-color: #f8f9fa;
+	background-color: #fff;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
