@@ -1,21 +1,21 @@
 <template>
-    <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header pb-0">
-                <h6>Week of {{ todayFormatted }}</h6>
+  <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header pb-0">
+              <h6>Week of {{ todayFormatted }}</h6>
+            </div>
+            <div class="wrap">
+              <div class="left">
+                <DayPilotNavigator id="nav" :config="navigatorConfig" />
               </div>
-              <div class="wrap">
-                <div class="left">
-                  <DayPilotNavigator id="nav" :config="navigatorConfig" />
-                </div>
-                <div class="content">
-                  <DayPilotCalendar id="dp" :config="config" ref="calendar" />
-                </div>
+              <div class="content">
+                <DayPilotCalendar  id="dp" :config="config" ref="calendar" />
               </div>
             </div>
           </div>
         </div>
+      </div>
 </template>
 
 
@@ -24,192 +24,234 @@ import axios from 'axios';
 import {DayPilotCalendar, DayPilotNavigator} from '@daypilot/daypilot-lite-vue';
 
 export default {
-  name: 'Calendar',
-  data: function() {
-    const today = new Date().toISOString().split('T')[0];
-    return {
-      todayFormatted: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-      navigatorConfig: {
-        showMonths: 1,
-        skipMonths: 1,
-        selectMode: "Week",
-        startDate: today,
-        selectionDay: today,
-        theme: "swagnavigator",
-        onTimeRangeSelected: args => {
-          this.config.startDate = args.day;
-        }
-      },
-      config: {
-        lane: "auto",
-        theme: "swag",
-        viewType: "Week",
-        startDate: today,
-        durationBarVisible: false,
-        timeRangeSelectedHandling: "Disabled",
-        eventDeleteHandling: "Disabled",
-        eventMoveHandling: "Disabled",
-        eventClickHandling: "Disabled",
-        eventResizeHandling: "Disabled",
-        businessBeginsHour: 8,
-        businessEndsHour: 18,
-        heightSpec: "BusinessHoursNoScroll",
-      },
-    };
-  },
-  mounted() {
-    this.loadScheduledCourses();
-  },
-  props: {
-    displayType: { // instructor, customer, courseType, anythin else will display all scheduled courses
-        type: String,
-        required: false,
-    },
-    customerId: {
-        type: Number,
-        required: false,
-        default: 0
-    },
-    instructorId: {
-        type: Number,
-        required: false,
-        default: 0
-    },
-    courseTypeId: {
-        type: Number,
-        required: false,
-        default: 0
-    },
-  },
-  components: {
-    DayPilotCalendar,
-    DayPilotNavigator
-  },
-  computed: {
-    calendar() {
-      return this.$refs.calendar.control;
-    }
-  },
-  methods: {
-    async loadScheduledCourses() {
-      const axiosClient = axios.create({
-        baseURL: "http://localhost:8080"
-      });
-      try {
-        const response = await axiosClient.get('/openingHours');
-        const dailySchedules = response.data.dailySchedules;
-        let minOpeningTime = dailySchedules[0].openingTime;
-        let maxClosingTime = dailySchedules[0].closingTime;
-        for (let i = 1; i < dailySchedules.length; i++) {
-          const schedule = dailySchedules[i];
-          if (schedule.openingTime < minOpeningTime) {
-            minOpeningTime = schedule.openingTime;
-          }
-          if (schedule.closingTime > maxClosingTime) {
-            maxClosingTime = schedule.closingTime;
-          }
-        }
-        
-        const todayDate = new Date();
-        const minOpeningDateTime = new Date(todayDate.toDateString() + ' ' + minOpeningTime);
-        const maxClosingDateTime = new Date(todayDate.toDateString() + ' ' + maxClosingTime);
-        
-        this.config.businessBeginsHour = minOpeningDateTime.getHours();
-        this.config.businessEndsHour = maxClosingDateTime.getHours();
-
-        const today = new Date().toISOString().split('T')[0];
-        let endpoint = '';
-        let events = [];
-        if (this.displayType === 'instructor') {
-            // add the courses that the instructor is registered for
-            endpoint = '/customers/' + this.instructorId + '/registrations'; // registration controller
-            const registrationsResponse = await axiosClient.get(endpoint);
-            events = registrationsResponse.data.registrations.map(registration => ({
-                id: registration.scheduledCourse.id,
-                start: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.startTime, // combine date and start time
-                end: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.endTime, // combine date and end time
-                text: registration.scheduledCourse.courseType.description // display course type name as text
-            }));
-
-            // get the instructor email
-            endpoint = '/persons/' + this.instructorId; // person controller
-            const personResponse = await axiosClient.get(endpoint);
-            const instructorEmail = personResponse.data.email;
-
-            // add the courses that the instructor is teaching
-            endpoint = '/instructors/' + instructorEmail + '/supervised-courses'; // instructor controller
-            const scheduledCoursesResponse = await axiosClient.get(endpoint);
-            events = events.concat(scheduledCoursesResponse.data.scheduledCourses.map(course => ({
-                id: course.id,
-                start: course.date + 'T' + course.startTime, // combine date and start time
-                end: course.date + 'T' + course.endTime, // combine date and end time
-                text: course.courseType.description // display course type name as text
-            })));
-        } else if (this.displayType === 'customer') { // if we want to get the scheduled courses of a customer
-            endpoint = '/customers/' + this.customerId + '/registrations'; // registration controller
-            const registrationsResponse = await axiosClient.get(endpoint);
-            events = registrationsResponse.data.registrations.map(registration => ({
-                id: registration.scheduledCourse.id,
-                start: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.startTime, // combine date and start time
-                end: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.endTime, // combine date and end time
-                text: registration.scheduledCourse.courseType.description // display course type name as text
-            }));
-        } else if (this.displayType === 'courseType') { // if we want to get the schеduled courses of a course type
-            endpoint = '/courseTypes/' + this.courseTypeId + '/scheduledCourses'; // scheduled course controller
-            const scheduledCoursesResponse = await axiosClient.get(endpoint);
-            events = scheduledCoursesResponse.data.scheduledCourses.map(course => ({
-                id: course.id,
-                start: course.date + 'T' + course.startTime, // combine date and start time
-                end: course.date + 'T' + course.endTime, // combine date and end time
-                text: course.courseType.description // display course type name as text
-            }));
-        } else {
-            endpoint = '/scheduledCourses/' + today; // scheduled course controller
-            const scheduledCoursesResponse = await axiosClient.get(endpoint);
-            events = scheduledCoursesResponse.data.scheduledCourses.map(course => ({
-                id: course.id,
-                start: course.date + 'T' + course.startTime, // combine date and start time
-                end: course.date + 'T' + course.endTime, // combine date and end time
-                text: course.courseType.description // display course type name as text
-            }));
-        }
-
-        this.scheduledCourses = events;
-        this.calendar.update({ events });
-        console.log(events);
-      } catch (error) {
-        console.error('Error loading classes: ', error);
+name: 'Calendar',
+data: function() {
+  const today = new Date().toISOString().split('T')[0];
+  return {
+    todayFormatted: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+    navigatorConfig: {
+      showMonths: 1,
+      skipMonths: 1,
+      selectMode: "Week",
+      startDate: today,
+      selectionDay: today,
+      theme: "swagnavigator",
+      onTimeRangeSelected: args => {
+        this.config.startDate = args.day;
       }
     },
-    clearMessage() {
-      // Clear the message
-      this.message = null;
+    config: {
+      lane: "auto",
+      theme: "swag",
+      viewType: "Week",
+      startDate: today,
+      headerDateFormat: "dddd",
+      durationBarVisible: false,
+      timeRangeSelectedHandling: "Disabled",
+      eventDeleteHandling: "Disabled",
+      eventMoveHandling: "Disabled",
+      eventClickHandling: "Disabled",
+      eventResizeHandling: "Disabled",
+      businessBeginsHour: 8,
+      businessEndsHour: 18,
+      heightSpec: "BusinessHoursNoScroll",
     },
-    async showMessage(text, type) {
-      // display message with the provided text and type
-      this.message = { text, type };
-      // Clear the message after 3 seconds
-      setTimeout(this.clearMessage, 3000);
-    },
+  };
+},
+mounted() {
+  this.loadScheduledCourses();
+},
+props: {
+  displayType: { // instructor, customer, courseType, anythin else will display all scheduled courses
+      type: String,
+      required: false,
+  },
+  customerId: {
+      type: Number,
+      required: false,
+      default: 0
+  },
+  instructorId: {
+      type: Number,
+      required: false,
+      default: 0
+  },
+  courseTypeId: {
+      type: Number,
+      required: false,
+      default: 0
+  },
+},
+components: {
+  DayPilotCalendar,
+  DayPilotNavigator
+},
+computed: {
+  calendar() {
+    return this.$refs.calendar.control;
   }
+},
+methods: {
+  async loadScheduledCourses() {
+    const axiosClient = axios.create({
+      baseURL: "http://localhost:8080"
+    });
+    try {
+      const response = await axiosClient.get('/openingHours');
+      const dailySchedules = response.data.dailySchedules;
+      let minOpeningTime = dailySchedules[0].openingTime;
+      let maxClosingTime = dailySchedules[0].closingTime;
+      for (let i = 1; i < dailySchedules.length; i++) {
+        const schedule = dailySchedules[i];
+        if (schedule.openingTime < minOpeningTime) {
+          minOpeningTime = schedule.openingTime;
+        }
+        if (schedule.closingTime > maxClosingTime) {
+          maxClosingTime = schedule.closingTime;
+        }
+      }
+      
+      const todayDate = new Date();
+      const minOpeningDateTime = new Date(todayDate.toDateString() + ' ' + minOpeningTime);
+      const maxClosingDateTime = new Date(todayDate.toDateString() + ' ' + maxClosingTime);
+      
+      this.config.businessBeginsHour = minOpeningDateTime.getHours();
+      this.config.businessEndsHour = maxClosingDateTime.getHours();
+
+      const today = new Date().toISOString().split('T')[0];
+      let endpoint = '';
+      let events = [];
+      if (this.displayType === 'instructor') {
+          // add the courses that the instructor is registered for
+          endpoint = '/customers/' + this.instructorId + '/registrations'; // registration controller
+          const registrationsResponse = await axiosClient.get(endpoint);
+          events = registrationsResponse.data.registrations.map(registration => ({
+              id: registration.scheduledCourse.id,
+              start: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.startTime, // combine date and start time
+              end: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.endTime, // combine date and end time
+              text: registration.scheduledCourse.courseType.description // display course type name as text
+          }));
+
+          // get the instructor email
+          endpoint = '/persons/' + this.instructorId; // person controller
+          const personResponse = await axiosClient.get(endpoint);
+          const instructorEmail = personResponse.data.email;
+
+          // add the courses that the instructor is teaching
+          endpoint = '/instructors/' + instructorEmail + '/supervised-courses'; // instructor controller
+          const scheduledCoursesResponse = await axiosClient.get(endpoint);
+          events = events.concat(scheduledCoursesResponse.data.scheduledCourses.map(course => ({
+              id: course.id,
+              start: course.date + 'T' + course.startTime, // combine date and start time
+              end: course.date + 'T' + course.endTime, // combine date and end time
+              text: course.courseType.description // display course type name as text
+          })));
+      } else if (this.displayType === 'customer') { // if we want to get the scheduled courses of a customer
+          endpoint = '/customers/' + this.customerId + '/registrations'; // registration controller
+          const registrationsResponse = await axiosClient.get(endpoint);
+          events = registrationsResponse.data.registrations.map(registration => ({
+              id: registration.scheduledCourse.id,
+              start: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.startTime, // combine date and start time
+              end: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.endTime, // combine date and end time
+              text: registration.scheduledCourse.courseType.description // display course type name as text
+          }));
+      } else if (this.displayType === 'courseType') { // if we want to get the schеduled courses of a course type
+          endpoint = '/courseTypes/' + this.courseTypeId + '/scheduledCourses'; // scheduled course controller
+          const scheduledCoursesResponse = await axiosClient.get(endpoint);
+          events = scheduledCoursesResponse.data.scheduledCourses.map(course => ({
+              id: course.id,
+              start: course.date + 'T' + course.startTime, // combine date and start time
+              end: course.date + 'T' + course.endTime, // combine date and end time
+              text: course.courseType.description // display course type name as text
+          }));
+      } else {
+          endpoint = '/scheduledCourses/' + today; // scheduled course controller
+          const scheduledCoursesResponse = await axiosClient.get(endpoint);
+          events = scheduledCoursesResponse.data.scheduledCourses.map(course => ({
+              id: course.id,
+              start: course.date + 'T' + course.startTime, // combine date and start time
+              end: course.date + 'T' + course.endTime, // combine date and end time
+              text: course.courseType.description // display course type name as text
+          }));
+      }
+
+      this.scheduledCourses = events;
+      this.calendar.update({ events });
+      console.log(events);
+    } catch (error) {
+      console.error('Error loading classes: ', error);
+    }
+  },
+  clearMessage() {
+    // Clear the message
+    this.message = null;
+  },
+  async showMessage(text, type) {
+    // display message with the provided text and type
+    this.message = { text, type };
+    // Clear the message after 3 seconds
+    setTimeout(this.clearMessage, 3000);
+  },
+}
 };
 </script>
 
 <style>
-.wrap {
-  display: flex;
-  margin: 0 1.5% 1.5% 1.5%;
-}
+
 
 .left {
-  margin-right: 10px;
+margin-right: 10px;
 }
 
 .content {
-  flex-grow: 1;
+flex-grow: 1;
 }
 
+/* Week Selector */
+.swagnavigator_main {
+    border: 2px solid #000; /* Black border */
+    font-size: 1rem; /* Font size */
+    margin-left: 40%;
+    margin-bottom: 5%;
+}
 
+.swagnavigator_title,
+.swagnavigator_titleleft,
+.swagnavigator_titleright {
+    background-color: #1a1a1a; /* Black background */
+    color: #fff; /* White text color */
+    font-weight: bold; /* Bold font */
+    text-align: center; /* Center align text */
+}
+
+.swagnavigator_dayheader {
+    background-color: #1a1a1a; /* Black background */
+    color: #fff; /* White text color */
+    padding: 8px; /* Padding */
+    text-align: center; /* Center align text */
+}
+
+.swagnavigator_cell,
+.swagnavigator_weeknumber,
+.swagnavigator_weekend {
+    background-color: #f8f9fa; /* Light gray background */
+    color: #1a1a1a; /* Black text color */
+    padding: 8px; /* Padding */
+    text-align: center; /* Center align text */
+}
+
+.swagnavigator_todaybox {
+    border: 2px solid salmon; /* Salmon border */
+}
+
+.swagnavigator_busy {
+    font-weight: bold; /* Bold font */
+}
+
+.swagnavigator_select .swagnavigator_cell_box {
+    background-color: salmon; /* Salmon background */
+    opacity: 0.8; /* Opacity */
+}
 .swag_main 
 {
 	border: 1px solid #ffffff;
@@ -220,7 +262,7 @@ export default {
   text-transform: uppercase;
 }
 .swag_event { 
-	color: #000;
+	color: #344767;
   font-weight: 600;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -240,7 +282,7 @@ export default {
 	border-radius: 5px;
 	padding: 2px;
 	padding-left: 6px;
-	border: 1px solid #000;
+	border: 1px solid #C6C7C8;
   border-radius: 1rem;
 }
 .swag_alldayevent { 
@@ -291,7 +333,8 @@ export default {
 	border-right: 1px solid #ffffff;
 	border-bottom: 1px solid #ffffff;
 	color: #000000;
-	background: #f8f9fa;
+  color: #ffffff;
+	background: rgb(0, 0, 0);
 }
 .swag_rowheader_inner
 {
@@ -304,9 +347,10 @@ export default {
 	right: 0px;
 	border-right: 1px solid #ffffff;
 	border-bottom: 1px solid  #ffffff;
-	color: #000000;
-	background: #f8f9fa;
+	color: #ffffff;
+	background: rgb(0, 0, 0);
 }
+
 .swag_rowheader_minutes 
 {
 	font-size:10px; 
@@ -412,48 +456,5 @@ export default {
 .swag_loading { background-color: orange; color: white; padding: 2px; }
 .swag_scroll { background-color: #f3f3f3; }
 
-.swagnavigator_main { border-left: 1px solid #ffffff;border-right: 1px solid #ffffff;border-bottom: 1px solid #ffffff; font-size: 0.875rem; }
-.swagnavigator_main *, .swagnavigator_main *:before, .swagnavigator_main *:after { box-sizing: border-box; }
-.swagnavigator_line { border-bottom: 1px solid #ffffff; }
-/* month header */ 
-.swagnavigator_title, .swagnavigator_titleleft, .swagnavigator_titleright { 
-	border-top: 1px solid #ffffff;
-	color: #000000;
-	background: #f8f9fa;
-}
-.swagnavigator_title { text-align: center; }
-.swagnavigator_titleleft, .swagnavigator_titleright { text-align: center; }
-/* day headers */
-.swagnavigator_dayheader { 
-	color: #000000;
-	background: #f8f9fa;
-	padding: 0px;
-	text-align: center;
-}
-/* day cells */
-.swagnavigator_cell { 
-	color: #000000;
-	background: #ffffff;
-	text-align: center;
-}
-.swagnavigator_cell_text {
-	padding: 0px;
-}
-.swagnavigator_weeknumber { 
-	color: #000000;
-	background: #f8f9fa;
-	text-align: center;
-	padding: 0px;
-}
-.swagnavigator_weekend { 
-	color: #000000;
-	background: #f8f9fa;
-	text-align: center;
-	padding: 0px;
-}
-.swagnavigator_dayother { color: gray; }
-.swagnavigator_todaybox { border: 1px solid black; }
-.swagnavigator_busy { font-weight: bold; }
-.swagnavigator_select .swagnavigator_cell_box { background-color: #2dce89; opacity: 1; }
 
 </style>
