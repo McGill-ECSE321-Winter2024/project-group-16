@@ -38,7 +38,7 @@
                   color="#E2725B"
                   label="Password"
                   aria-label="Email"
-                  :type="password"
+              
                   variant="underlined"
                   placeholder="Enter your password"
                   :rules="[rules.required]"
