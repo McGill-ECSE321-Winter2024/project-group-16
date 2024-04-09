@@ -1,3 +1,7 @@
+<script setup>
+import CourseRegistration from './CourseRegistration.vue';
+</script>
+
 <template>
   <div class="row">
         <div class="col-12">
@@ -18,10 +22,22 @@
       </div>
 </template>
 
-
 <script>
 import axios from 'axios';
 import {DayPilotCalendar, DayPilotNavigator} from '@daypilot/daypilot-lite-vue';
+import { ref } from 'vue';
+
+try{
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  let email = ref('');
+  email.value = userData.email;
+  let name = ref('');
+  name.value =  userData.name;
+  let userID = userData.id;
+} catch (error) {
+  console.log(error);
+}
+
 
 export default {
 name: 'Calendar',
@@ -207,6 +223,14 @@ margin-right: 10px;
 flex-grow: 1;
 }
 
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 30%;
+  width: 50%;
+  /* transform: translate(-50%, -50%); */
+}
+
 /* Week Selector */
 .swagnavigator_main {
     border: 2px solid #000; /* Black border */
@@ -262,6 +286,7 @@ flex-grow: 1;
   text-transform: uppercase;
 }
 .swag_event { 
+	color: #344767;
 	color: #344767;
   font-weight: 600;
 	-moz-border-radius: 5px;
@@ -456,5 +481,48 @@ flex-grow: 1;
 .swag_loading { background-color: orange; color: white; padding: 2px; }
 .swag_scroll { background-color: #f3f3f3; }
 
+.swagnavigator_main { border-left: 1px solid #ffffff;border-right: 1px solid #ffffff;border-bottom: 1px solid #ffffff; font-size: 0.875rem; }
+.swagnavigator_main *, .swagnavigator_main *:before, .swagnavigator_main *:after { box-sizing: border-box; }
+.swagnavigator_line { border-bottom: 1px solid #ffffff; }
+/* month header */ 
+.swagnavigator_title, .swagnavigator_titleleft, .swagnavigator_titleright { 
+	border-top: 1px solid #ffffff;
+	color: #000000;
+	background: #f8f9fa;
+}
+.swagnavigator_title { text-align: center; }
+.swagnavigator_titleleft, .swagnavigator_titleright { text-align: center; }
+/* day headers */
+.swagnavigator_dayheader { 
+	color: #000000;
+	background: #f8f9fa;
+	padding: 0px;
+	text-align: center;
+}
+/* day cells */
+.swagnavigator_cell { 
+	color: #000000;
+	background: #ffffff;
+	text-align: center;
+}
+.swagnavigator_cell_text {
+	padding: 0px;
+}
+.swagnavigator_weeknumber { 
+	color: #000000;
+	background: #f8f9fa;
+	text-align: center;
+	padding: 0px;
+}
+.swagnavigator_weekend { 
+	color: #000000;
+	background: #f8f9fa;
+	text-align: center;
+	padding: 0px;
+}
+.swagnavigator_dayother { color: gray; }
+.swagnavigator_todaybox { border: 1px solid black; }
+.swagnavigator_busy { font-weight: bold; }
+.swagnavigator_select .swagnavigator_cell_box { background-color: #2dce89; opacity: 1; }
 
 </style>
