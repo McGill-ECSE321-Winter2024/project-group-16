@@ -31,9 +31,14 @@ onBeforeUnmount(() => {
 });
 
 
+import { useRoute, useRouter } from 'vue-router'
+
+const router = useRouter()
+
 onMounted(() => {
   store.state.isAbsolute = true;
-  setTooltip();
+  setTooltip()
+ 
 
 });
 
