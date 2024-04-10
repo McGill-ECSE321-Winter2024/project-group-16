@@ -4,7 +4,7 @@
         <v-card>
           <v-card-title class="headline">Confirm Deletion</v-card-title>
           <v-card-text>
-            Are you sure you want to delete this instructor?
+            Are you sure you want to delete this customer?
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
