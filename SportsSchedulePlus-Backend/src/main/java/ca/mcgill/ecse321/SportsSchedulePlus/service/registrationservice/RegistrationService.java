@@ -17,11 +17,13 @@ import jakarta.transaction.Transactional;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.beans.MailConfigBean;
 import ca.mcgill.ecse321.SportsSchedulePlus.exception.SportsSchedulePlusException;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Customer;
+import ca.mcgill.ecse321.SportsSchedulePlus.model.Instructor;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration.Key;
 
@@ -38,6 +40,8 @@ public class RegistrationService {
     private PersonRepository personRepository;
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private InstructorRepository instructorRepository;
     @Autowired
     private ScheduledCourseRepository scheduledCourseRepository;
 
@@ -154,6 +158,7 @@ public class RegistrationService {
      */
     @Transactional
     public Registration createRegistration(int customerId, int courseId) {
+        Optional<Instructor> instructor = instructorRepository.findById(customerId);
         Customer customer = customerRepository.findCustomerById(customerId);
         ScheduledCourse scheduledCourse = scheduledCourseRepository.findById(courseId).orElse(null);
         if (scheduledCourse == null) {
@@ -161,6 +166,13 @@ public class RegistrationService {
         }
         if (customer == null) {
             throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no customer with ID " + customerId + ".");
+        }
+
+        // if the customer is also an instructor
+        if (instructor.isPresent()) {
+            if (instructor.get().indexOfSupervisedCourse(scheduledCourse) != -1) {
+                throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Instructors cannot register for courses they supervise.");
+            }
         }
       
         Key key = new Key(customer, scheduledCourse);

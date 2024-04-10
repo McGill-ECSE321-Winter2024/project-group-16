@@ -577,4 +577,9 @@ public class UserService {
         return instructor.getSupervisedCourses();
     }
 
+    @Transactional
+    public List<CourseType> getInstructorSuggestedCourseTypes(Instructor instructor) {
+        return instructor.getInstructorSuggestedCourseTypes();
+    }
+
 }
