@@ -46,7 +46,7 @@
                   <div class="d-flex px-2 py-1">
                     <div>
                       <img
-                        src="../assets/importedpng/circle.png"
+                      :src="courseType.image" 
                         class="avatar avatar-sm me-3"
                       />
                     </div>

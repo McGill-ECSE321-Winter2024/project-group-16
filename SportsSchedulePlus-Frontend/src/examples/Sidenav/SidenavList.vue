@@ -1,12 +1,11 @@
 <script setup>
 
-
-import { useStore } from "vuex";
+import {useStore} from "vuex";
 import SidenavItem from "./SidenavItem.vue";
 
-import {ref, watch} from "vue";
+import {ref, onMounted} from "vue";
 
-import { useRoute, useRouter } from 'vue-router'
+import {useRoute, useRouter} from 'vue-router'
 
 const router = useRouter()
 
@@ -16,21 +15,27 @@ const getRoute = () => {
   return routeArr[1];
 };
 
-
 const store = useStore();
 const isLoggedIn = ref(localStorage.getItem('loggedIn') || undefined)
 
 const userData = JSON.parse(localStorage.getItem("userData"));
 
-const isOwner = isLoggedIn && userData != null && userData.role === "Owner";
+const isOwner = isLoggedIn.value && userData != null && userData.role === "Owner";
 const logout = () => {
-localStorage.setItem('loggedIn',false);
-localStorage.removeItem('userData');
-router.go(0);
- store.dispatch('logout');
+  localStorage.setItem('loggedIn', false);
+  store.dispatch('logout');
+  setTimeout(() => {
+      router.go('/signin');
+    }) 
+    router.push('/signin');
+};
+const sidebarColor = (color ="warning") => {
+  document.querySelector("#sidenav-main").setAttribute("data-color", color);
 };
 
-
+onMounted(() => {
+  sidebarColor();
+});
 </script>
 
 <template>
@@ -42,6 +47,8 @@ router.go(0);
           to="/dashboard-default"
           :class="getRoute() === 'dashboard-default' ? 'active' : ''"
           navText="Dashboard"
+          @click="sidebarColor()"
+
         >
           <template v-slot:icon>
             <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
@@ -71,7 +78,7 @@ router.go(0);
           </template>
         </sidenav-item>
       </li>
-      <li class="nav-item" v-if="!!isOwner" >
+      <li class="nav-item" v-if="!!isOwner">
         <sidenav-item
           to="/courseTypes"
           :class="getRoute() === 'courseTypes' ? 'active' : ''"
@@ -101,7 +108,6 @@ router.go(0);
       </li>
 
 
-
       <li class="nav-item" v-if="isLoggedIn">
         <sidenav-item
           to="/profile"
@@ -127,10 +133,6 @@ router.go(0);
       </li>
 
 
-   
-
-   
     </ul>
   </div>
 </template>
-

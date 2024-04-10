@@ -44,7 +44,19 @@ public class ScheduledCourseController {
      */
     @PutMapping("/scheduledCourses/{id}")
     public ScheduledCourseResponseDTO updateScheduledCourse(@PathVariable(name = "id") int id, @RequestBody ScheduledCourseRequestDTO request) {
-        ScheduledCourse updatedScheduledCourse = scheduledCourseService.updateScheduledCourse(id, request.getDate(), request.getStartTime(), request.getEndTime(), request.getLocation(), request.getCourseType().getId());
+        String newLocation = "";
+        if (!(request.getLocation() == null)) {
+            newLocation = request.getLocation();
+        }
+        int newCourseTypeId = 0;
+        if (!(request.getCourseType() == null)) {
+            newCourseTypeId = request.getCourseType().getId();
+        }
+        int instructorId = 0;
+        if (!(request.getInstructorId() == 0)) {
+            instructorId = request.getInstructorId();
+        }
+        ScheduledCourse updatedScheduledCourse = scheduledCourseService.updateScheduledCourse(id, request.getDate(), request.getStartTime(), request.getEndTime(), instructorId, newLocation, newCourseTypeId);
         return new ScheduledCourseResponseDTO(updatedScheduledCourse);
     }
     

@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
 <script setup>
-import {computed, ref} from "vue";
+import {computed} from "vue";
 import { useStore } from "vuex";
 import Sidenav from "@/examples/Sidenav";
 import Configurator from "@/examples/Configurator.vue";
@@ -21,7 +21,6 @@ import Configurator from "@/examples/Configurator.vue";
 
 const store = useStore();
 const isNavFixed = computed(() => store.state.isNavFixed);
-const darkMode = computed(() => store.state.darkMode);
 const isAbsolute = computed(() => store.state.isAbsolute);
 const showSidenav = computed(() => store.state.showSidenav);
 const layout = computed(() => store.state.layout);
@@ -33,9 +32,7 @@ const toggleConfigurator = () => store.commit("toggleConfigurator");
 const navClasses = computed(() => {
   return {
     "position-sticky bg-white left-auto top-2 z-index-sticky":
-      isNavFixed.value && !darkMode.value,
-    "position-sticky bg-default left-auto top-2 z-index-sticky":
-      isNavFixed.value && darkMode.value,
+      isNavFixed.value,
     "position-absolute px-4 mx-0 w-100 z-index-2": isAbsolute.value,
     "px-0 mx-4": !isAbsolute.value,
   };
@@ -56,15 +53,13 @@ const navClasses = computed(() => {
   >
 
     <router-view />
-    
-    <app-footer v-show="showFooter" />
-    
+
     <configurator
       :toggle="toggleConfigurator"
       :class="[showConfig ? 'show' : '', hideConfigButton ? 'd-none' : '']"
     />
 
   </main>
-  
+
 </div>
 </template>

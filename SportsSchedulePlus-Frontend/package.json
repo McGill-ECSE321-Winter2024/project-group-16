@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@daypilot/daypilot-lite-vue": "^3.21.0",
+    "@mdi/font": "^7.4.47",
     "@popperjs/core": "2.11.8",
     "axios": "1.5",
     "bootstrap": "5.3.3",
