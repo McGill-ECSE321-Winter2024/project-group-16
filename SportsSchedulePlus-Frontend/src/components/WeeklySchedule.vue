@@ -105,6 +105,7 @@ export default {
         lane: "auto",
         theme: "swag",
         viewType: "Week",
+        headerDateFormat:"dddd",
         startDate: today,
         durationBarVisible: false,
         timeRangeSelectedHandling: "Enabled",
@@ -381,30 +382,57 @@ export default {
 	font-size: 0.875rem;
   text-transform: uppercase;
 }
-.swag_event { 
-	color: #344767;
-  font-weight: 600;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+/* Event Styling */
+.swag_event {
+  color: #fff;
+  font-weight: bold;
+  border-radius: 10px; /* Rounded corners */
+  background-color: #4f69ec; /* Pretty color */
+  padding: 20px; /* Increased padding for better appearance */
+  max-width: 250px; /* Adjust width as needed */
+  margin: 20px; /* Adjust margin as needed */
+  box-shadow: 0px 4px 8px rgba(76, 175, 80, 0.2); /* Add a subtle shadow for depth */
+  transition: transform 0.2s ease; /* Add smooth transition effect */
 }
-.swag_event_inner { 
-	position: absolute;
-	overflow: hidden;
-	left: 0px;
-	right: 0px;
-	top: 0px;
-	bottom: 0px;
-	margin: 0px;
-	background-color: #fff;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	padding: 2px;
-	padding-left: 6px;
-	border: 1px solid #C6C7C8;
-  border-radius: 1rem;
+
+.swag_event:hover {
+  transform: translateY(-5px); /* Add a subtle hover effect */
 }
+
+.swag_event_inner {
+  position: relative;
+}
+
+.swag_event_title {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.swag_event_details {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.swag_event_time {
+  font-weight: bold;
+}
+
+.swag_event_description {
+  line-height: 1.4;
+}
+
+.swag_event_link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #1a73e8; /* Adjust link color */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.swag_event_link:hover {
+  color: #0d47a1; /* Adjust link hover color */
+}
+
 .swag_alldayevent { 
 }
 .swag_alldayevent_inner { 
@@ -441,34 +469,35 @@ export default {
 	color: #000000;
 	background: #f8f9fa;
 }
-.swag_colheader_inner
-{
-	text-align: center; 
-	padding: 2px;
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	bottom: 0px;
-	right: 0px;
-	border-right: 1px solid #ffffff;
-	border-bottom: 1px solid #ffffff;
-	color: #000000;
-	background: #f8f9fa;
+.swag_colheader_inner {
+  text-align: center;
+  padding: 8px; /* Increased padding for better spacing */
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  color: #000000;
+  background-color: #f8f9fa;
 }
-.swag_rowheader_inner
-{
-	font-size: 16pt;
-	text-align: right; 
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	bottom: 0px;
-	right: 0px;
-	border-right: 1px solid #ffffff;
-	border-bottom: 1px solid  #ffffff;
-	color: #000000;
-	background: #f8f9fa;
+
+.swag_rowheader_inner {
+  font-size: 20px;
+  text-align: right;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  color: #000000;
+  background-color: #f8f9fa;
+  padding: 8px; /* Increased padding for better spacing */
 }
+
 .swag_rowheader_minutes 
 {
 	font-size:10px; 
@@ -581,14 +610,15 @@ export default {
 .swagnavigator_title, .swagnavigator_titleleft, .swagnavigator_titleright { 
 	border-top: 1px solid #ffffff;
 	color: #000000;
-	background: #f8f9fa;
+	background: #ffa216;
+  font-weight: bold;
 }
-.swagnavigator_title { text-align: center; }
+.swagnavigator_title { text-align: center;  }
 .swagnavigator_titleleft, .swagnavigator_titleright { text-align: center; }
 /* day headers */
 .swagnavigator_dayheader { 
 	color: #000000;
-	background: #f8f9fa;
+	background: a;
 	padding: 0px;
 	text-align: center;
 }
@@ -617,5 +647,7 @@ export default {
 .swagnavigator_todaybox { border: 1px solid black; }
 .swagnavigator_busy { font-weight: bold; }
 .swagnavigator_select .swagnavigator_cell_box { background-color: #E2725B; opacity: 1; }
+
+
 
 </style>

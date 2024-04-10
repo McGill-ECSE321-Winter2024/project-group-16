@@ -23,9 +23,11 @@ const userData = JSON.parse(localStorage.getItem("userData"));
 const isOwner = isLoggedIn.value && userData != null && userData.role === "Owner";
 const logout = () => {
   localStorage.setItem('loggedIn', false);
-  localStorage.removeItem('userData');
-  router.go(0);
   store.dispatch('logout');
+  setTimeout(() => {
+      router.go('/signin');
+    }) 
+    router.push('/signin');
 };
 const sidebarColor = (color ="warning") => {
   document.querySelector("#sidenav-main").setAttribute("data-color", color);
