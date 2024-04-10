@@ -41,8 +41,8 @@ const routes = [
     component: CourseTypes,
   },
   {
-    path: "/scheduledCourses",
-    name: "Scheduled courses",
+    path: "/schedule",
+    name: "Schedule",
     component: ScheduledCourses,
   },
 

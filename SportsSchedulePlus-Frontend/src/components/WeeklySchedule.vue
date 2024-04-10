@@ -108,11 +108,11 @@ export default {
         headerDateFormat:"dddd",
         startDate: today,
         durationBarVisible: false,
-        timeRangeSelectedHandling: "Enabled",
-        eventDeleteHandling: "Enabled",
-        eventMoveHandling: "Enabled",
-        eventClickHandling: "Enabled",
-        eventResizeHandling: "Enabled",
+        timeRangeSelectedHandling: "Disabled",
+        eventDeleteHandling: "Disabled",
+        eventMoveHandling: "Disabled",
+        eventClickHandling: "Disabled",
+        eventResizeHandling: "Disabled",
         businessBeginsHour: 8,
         businessEndsHour: 18,
         heightSpec: "BusinessHoursNoScroll",
@@ -146,6 +146,7 @@ export default {
     };
   },
   mounted() {
+    this.configPermissions();
     this.loadScheduledCourses();
   },
   props: {
@@ -326,6 +327,41 @@ export default {
         console.error('Error deleting class: ', error);
       }
       this.loadScheduledCourses();
+    },
+    configPermissions() {
+      try {
+        const loggedIn = localStorage.getItem('loggedIn');
+        if (loggedIn === 'true') {
+          const userData = JSON.parse(localStorage.getItem('userData'));
+          console.log(userData.role);
+          if (userData.role === 'Customer') {
+            this.timeRangeSelectedHandling= "Disabled";
+            this.eventDeleteHandling= "Disabled";
+            this.eventMoveHandling= "Disabled";
+            this.eventClickHandling= "Enabled";
+            this.eventResizeHandling= "Disabled";
+          } else if (userData.role === 'Instructor') {
+            this.timeRangeSelectedHandling= "Enabled";
+            this.eventDeleteHandling= "Enabled";
+            this.eventMoveHandling= "Enabled";
+            this.eventClickHandling= "Enabled";
+            this.eventResizeHandling= "Enabled";
+          } else if (userData.role === 'Owner') {
+            this.timeRangeSelectedHandling= "Enabled";
+            this.eventDeleteHandling= "Enabled";
+            this.eventMoveHandling= "Enabled";
+            this.eventClickHandling= "Disabled";
+            this.eventResizeHandling= "Enabled";
+          }
+        }
+        this.timeRangeSelectedHandling= "Disabled";
+        this.eventDeleteHandling= "Disabled";
+        this.eventMoveHandling= "Disabled";
+        this.eventClickHandling= "Disabled";
+        this.eventResizeHandling= "Disabled";
+      } catch (error) {
+        console.log(error);
+      }
     },
     getSundayOfWeek(date) {
       var day = date.getDay();
