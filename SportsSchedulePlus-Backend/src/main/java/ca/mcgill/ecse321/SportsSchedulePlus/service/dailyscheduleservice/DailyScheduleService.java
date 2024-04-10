@@ -89,10 +89,7 @@ public class DailyScheduleService {
      */
     @Transactional
     public DailySchedule updateDailyScheduleByID(int id, Time openingTime, Time closingTime) {
-        Optional<DailySchedule> aOptionalDailySchedule = dailyScheduleRepository.findById(id);
-        if (!aOptionalDailySchedule.isPresent()) {
-            throw new SportsSchedulePlusException(HttpStatus.NOT_FOUND, "There is no schedule with ID " + id + ".");
-        }
+        DailySchedule dailySchedule = getDailyScheduleById(id);
         if (openingTime == null) {
             throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Opening time must be provided.");
         }
@@ -102,7 +99,6 @@ public class DailyScheduleService {
         if (openingTime.after(closingTime)) {
             throw new SportsSchedulePlusException(HttpStatus.BAD_REQUEST, "Opening time must be before closing time.");
         }
-        DailySchedule dailySchedule = getDailyScheduleById(id);
         dailySchedule.setOpeningTime(openingTime);
         dailySchedule.setClosingTime(closingTime);
         dailyScheduleRepository.save(dailySchedule);
