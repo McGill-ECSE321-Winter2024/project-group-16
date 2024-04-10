@@ -26,24 +26,19 @@
                   placeholder="johnsmith@gmail.com"
                   :rules="[rules.required]"
                 ></v-text-field>
+           
 
-                <div style="display: flex; align-items: center; position: relative;">
                 <v-text-field
                   v-model="password"
                   color="#E2725B"
-                  :type="passwordFieldType"
                   label="Password"
                   aria-label="Email"
+                  :type="password"
                   variant="underlined"
                   placeholder="Enter your password"
                   :rules="[rules.required]"
-                  :hint="passwordHints"
 
                 ></v-text-field>
-                <v-icon @click="toggleVisibility" style="margin-left: 10px; color: #E2725B; position: relative;">
-                  {{ showPassword ? 'mdi-eye' : 'mdi-eye-off' }}
-                </v-icon>
-                </div>
 
                 <v-divider></v-divider>
 
@@ -93,7 +88,7 @@
 </template>
 
 <script setup>
-import {computed, ref} from 'vue';
+import {ref} from 'vue';
 import axios from 'axios';
 import {useRouter} from 'vue-router'
 import image from '../assets/importedpng/signin_and_signup_top.png';
@@ -104,17 +99,12 @@ const store = useStore();
 
 const email = ref('');
 const password = ref('');
-const showPassword = ref(false);
 const imagePath = image;
 const loading = ref(false);
 const form = ref(false)
 const errorMessage = ref('');
 const rules = {
   required: value => !!value || 'Field is required',
-};
-
-const toggleVisibility = () => {
-  showPassword.value = !showPassword.value;
 };
 const router = useRouter()
 
@@ -123,33 +113,18 @@ const axiosClient = axios.create({
 });
 
 const signIn = async () => {
-  userRole = "Customer";
   try {
-    const user = { email: email.value, password: password.value };
-    await axiosClient.post('/authentication/login',user);
-    console.log("pwd",password);
-
-    var response = await axiosClient.get(`/customers/email/${email.value}`);
-
-    try {
-    var instructorResponse = await axiosClient.get(`/instructors/${email.value}`);
-    // Handle the response here
-    console.log("Instructor found: ",instructorResponse.data);
-    userRole = "Instructor";
-    
-    } catch (error) {
-        // Handle any errors that occur during the request
-        console.error('Error fetching instructor data:', error);
+    const user = {email: email.value, password: password.value};
+    await axiosClient.post('/authentication/login', user);
+    console.log("pwd", password);
+    const response = await axiosClient.get(`/customers/email/${email.value}`);
+    let userRole;
+    if (email.value === "sports.schedule.plus@gmail.com") {
+      userRole = "Owner";
+    } else {
+      userRole = response.data.role;
     }
-
-
-    var userRole;
-    if(email.value === "sports.schedule.plus@gmail.com"){
-       userRole = "Owner";
-    }
-    
-    // Assign response data to userData variable
-    var userData = {
+    const userData = {
       id: response.data.id,
       name: response.data.name,
       email: response.data.email,
@@ -157,24 +132,29 @@ const signIn = async () => {
       password: password.value
     };
     console.log(response.data);
-    // Save user data to local storage
     localStorage.setItem('userData', JSON.stringify(userData));
-    // Save login status to local storage
     localStorage.setItem('loggedIn', true);
     await store.dispatch('login', userData);
+    
+    setTimeout(() => {
+      router.go('/profile');
+
+    }) 
     router.push('/profile');
-    // You can do something after successful signup, like redirecting the user to another page.
   } catch (error) {
     console.error('Signin failed:', error.response.data);
     errorMessage.value = error.response.data;
   }
 };
 
+const onSubmit = () => {
+  if (!form.value) return;
+  loading.value = true;
+  setTimeout(() => (loading.value = false), 2000);
+};
 
 const redirectToSignIn = () => {
   router.push('/signup');
 }
-const passwordFieldType = computed(() => showPassword.value ? 'text' : 'password');
-
 
 </script>
