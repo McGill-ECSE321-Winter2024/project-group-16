@@ -25,6 +25,7 @@ import ca.mcgill.ecse321.SportsSchedulePlus.model.Person;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.Registration;
 import ca.mcgill.ecse321.SportsSchedulePlus.model.ScheduledCourse;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CustomerRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.PersonRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.RegistrationRepository;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.ScheduledCourseRepository;
@@ -37,6 +38,8 @@ public class RegistrationServiceTests {
   private RegistrationRepository registrationRepository;
   @Mock
   private CustomerRepository customerRepository;
+  @Mock
+  private InstructorRepository instructorRepository;
   @Mock
   private ScheduledCourseRepository scheduledCourseRepository;
 
