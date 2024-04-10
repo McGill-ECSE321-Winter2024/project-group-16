@@ -2,7 +2,7 @@
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="">
-        <div class="card shadow-lg border-0">
+        <div class="border-0">
           <div class="card-body">
             <form @submit.prevent="submitForm">
               <div class="form-group">
@@ -30,8 +30,10 @@
               <div class="text-center">
                 <button type="submit" class="btn btn-primary btn-lg px-5 mt-3 text-white">Register</button>
               </div>
-              <small v-if="alreadyRegistered" class="text-danger">You have already registered for this class.</small>
             </form>
+            <div class="text-center">
+              <small v-if="alreadyRegistered" class="text-danger">You have already registered for this class.</small>
+            </div>
           </div>
         </div>
       </div>
@@ -92,7 +94,6 @@ const submitForm = async () => {
     try {
       await axiosClient.post("/registrations/" + userID + "/" + scheduledCourseId);
       console.log("Registration successful");
-      alreadyRegistered.value = true;
     } catch (error) {
       alreadyRegistered.value = true;
     }

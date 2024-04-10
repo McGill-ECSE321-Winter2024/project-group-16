@@ -217,7 +217,9 @@ export default {
                 id: registration.scheduledCourse.id,
                 start: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.startTime, // combine date and start time
                 end: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.endTime, // combine date and end time
-                text: registration.scheduledCourse.courseType.description // display course type name as text
+                text: registration.scheduledCourse.courseType.description, // display course type name as text
+                backColor: "#E2725B",
+                moveDisabled: true,
             }));
 
             // get the instructor email
@@ -259,7 +261,8 @@ export default {
                 id: course.id,
                 start: course.date + 'T' + course.startTime, // combine date and start time
                 end: course.date + 'T' + course.endTime, // combine date and end time
-                text: course.courseType.description // display course type name as text
+                text: course.courseType.description, // display course type name as text
+                backColor: "#E2725B",
             }));
         }
 
@@ -335,23 +338,23 @@ export default {
           const userData = JSON.parse(localStorage.getItem('userData'));
           console.log(userData.role);
           if (userData.role === 'Customer') {
-            this.timeRangeSelectedHandling= "Disabled";
-            this.eventDeleteHandling= "Disabled";
-            this.eventMoveHandling= "Disabled";
-            this.eventClickHandling= "Enabled";
-            this.eventResizeHandling= "Disabled";
+            this.config.timeRangeSelectedHandling= "Disabled";
+            this.config.eventDeleteHandling= "Disabled";
+            this.config.eventMoveHandling= "Disabled";
+            this.config.eventClickHandling= "Enabled";
+            this.config.eventResizeHandling= "Disabled";
           } else if (userData.role === 'Instructor') {
-            this.timeRangeSelectedHandling= "Enabled";
-            this.eventDeleteHandling= "Enabled";
-            this.eventMoveHandling= "Enabled";
-            this.eventClickHandling= "Enabled";
-            this.eventResizeHandling= "Enabled";
+            this.config.timeRangeSelectedHandling= "Enabled";
+            this.config.eventDeleteHandling= "Enabled";
+            this.config.eventMoveHandling= "Enabled";
+            this.config.eventClickHandling= "Enabled";
+            this.config.eventResizeHandling= "Enabled";
           } else if (userData.role === 'Owner') {
-            this.timeRangeSelectedHandling= "Enabled";
-            this.eventDeleteHandling= "Enabled";
-            this.eventMoveHandling= "Enabled";
-            this.eventClickHandling= "Disabled";
-            this.eventResizeHandling= "Enabled";
+            this.config.timeRangeSelectedHandling= "Enabled";
+            this.config.eventDeleteHandling= "Enabled";
+            this.config.eventMoveHandling= "Enabled";
+            this.config.eventClickHandling= "Disabled";
+            this.config.eventResizeHandling= "Enabled";
           }
         }
         this.timeRangeSelectedHandling= "Disabled";
