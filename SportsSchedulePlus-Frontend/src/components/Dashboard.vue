@@ -1,13 +1,42 @@
 <script setup>
 import ArgonButton from "@/argon_components/ArgonButton.vue";
 import ModifyDailySchedule from "@/components/ModifyDailySchedule.vue";
-import {ref} from "vue";
+import {ref, onMounted} from "vue";
+import axios from 'axios';
 
+const dailySchedule = ref([]);
 const isLoggedIn = ref(localStorage.getItem('loggedIn') || undefined)
 const userData = JSON.parse(localStorage.getItem("userData"));
 const isOwner = isLoggedIn.value && userData != null && userData.role === "Owner";
-// need to get daily schedule from backend and fill in schedule
+const dailyScheduleDictionary = {
+  0: "Monday",
+  1: "Tuesday",
+  2: "Wednesday",
+  3: "Thursday",
+  4: "Friday",
+  5: "Saturday",
+  6: "Sunday"
+};
 
+const axiosClient = axios.create({
+  baseURL: "http://localhost:8080"
+});
+
+const loadDailySchedule = async () => {
+  try {
+    const response = await axiosClient.get('/openingHours');
+    dailySchedule.value = response.data.dailySchedules;
+  } catch (error) {
+    console.error('Error loading daily schedule: ', error);
+  }
+};
+
+const reloadDashboard = () => {
+  console.log("made it");
+  window.location.reload();
+};
+
+onMounted(loadDailySchedule);
 
 </script>
 
@@ -95,14 +124,11 @@ const isOwner = isLoggedIn.value && userData != null && userData.role === "Owner
           <div class="column content">
             <h1 class="header-text" style="font-size: 20px;"><strong style="color: #E2725B;">Business Hours</strong>
             </h1>
-            <p>M: 9:00 AM - 5:00 PM</p>
-            <p>T: 9:00 AM - 5:00 PM</p>
-            <p>W: 9:00 AM - 5:00 PM</p>
-            <p>TR: 9:00 AM - 5:00 PM</p>
-            <p>F: 9:00 AM - 5:00 PM</p>
-            <p>Sat: 9:00 AM - 5:00 PM</p>
-            <p>Sun: 9:00 AM - 5:00 PM</p>
-            <ModifyDailySchedule v-if="isOwner"/>
+            <div v-for="(day, index) in dailySchedule" :key="index">
+              <p><strong>{{ dailyScheduleDictionary[index] }}</strong>: {{ day.openingTime }} - {{ day.closingTime }}
+              </p>
+            </div>
+            <ModifyDailySchedule v-if="isOwner" @scheduleUpdated="reloadDashboard"/>
           </div>
 
           <!-- Second Column: Address -->
