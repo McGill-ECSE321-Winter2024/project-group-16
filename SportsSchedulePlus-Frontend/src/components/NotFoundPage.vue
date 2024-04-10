@@ -24,7 +24,7 @@
 				<img src="../assets/importedpng/404.png" alt="404 Not Found" />
 			</div>
 			<div class="btn-container">
-				<ArgonButton color="primary" variant="fill" @click="goToDashboard">Go Home</ArgonButton>
+				<ArgonButton style="background-color: #E2725B; color: white;" @click="goToDashboard">Go Home</ArgonButton>
 			</div>
 		</div>
 	</div>
@@ -149,7 +149,7 @@ body {
   }
 }
 .image-container {
-    margin-bottom: -20px; /* Add some spacing between the image and button */
+    margin-bottom: -90px; /* Add some spacing between the image and button */
     overflow: hidden; /* Hide the overflowing image */
     text-align: center; /* Center the image horizontally */
   }
@@ -157,7 +157,14 @@ body {
   .image-container img {
     display: block; /* Ensure the image is treated as a block element */
     margin: -50px auto 0; /* Center the image horizontally */
-    max-width: 400px; /* Ensure the image doesn't exceed its container's width */
+    margin-left: -85px; /* Center the image horizontally */
+    max-width: 700px; /* Ensure the image doesn't exceed its container's width */
+    margin-top: -80px; /* Add some spacing between the image and button */
   }
+
+  .custom-button {
+    background-color: #E2725B;
+    color: white;
+    }
     
 </style>

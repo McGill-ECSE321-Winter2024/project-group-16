@@ -1,10 +1,9 @@
 /* eslint no-undef: "off" */
 import { createRouter, createWebHistory } from "vue-router";
 
-<<<<<<< HEAD
+
 import NotFoundPage from "../components/NotFoundPage.vue";
-=======
->>>>>>> dabbc8b013ed44a854c354e40c7c0652c57110af
+
 import Dashboard from ".././components/Dashboard.vue";
 import Customers from ".././components/Customers.vue";
 import Instructors from ".././components/Instructors.vue";
@@ -77,18 +76,16 @@ const routes = [
   component: Registrations,
   },
   {
-<<<<<<< HEAD
     path: "/:catchAll(.*)",
     name: "404NotFound",
     component: NotFoundPage,
-  }
-=======
+  },
+  {
     path: "/classes",
     name: "classes",
     component: Classes,
-    },
+  }
 
->>>>>>> dabbc8b013ed44a854c354e40c7c0652c57110af
 ];
 
 const router = createRouter({
