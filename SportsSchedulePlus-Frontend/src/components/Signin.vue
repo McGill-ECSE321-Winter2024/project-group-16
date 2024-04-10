@@ -162,6 +162,10 @@ const signIn = async () => {
     // Save login status to local storage
     localStorage.setItem('loggedIn', true);
     await store.dispatch('login', userData);
+     
+    setTimeout(() => {
+      router.go('/profile');
+    }) 
     router.push('/profile');
     // You can do something after successful signup, like redirecting the user to another page.
   } catch (error) {

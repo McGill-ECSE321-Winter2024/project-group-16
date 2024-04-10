@@ -44,14 +44,17 @@ onMounted(() => {
 
 const userData = JSON.parse(localStorage.getItem("userData"));
 let email = ref('');
-email.value = userData.email;
+let userID  = -1;
 let name = ref('');
-name.value =  userData.name;
+
 let password = ref('');
-let userID = userData.id;
+if(userData != null){
+ userID = userData.id;
 
+name.value =  userData.name;
+email.value = userData.email;
 password.value = userData.password
-
+}
 const axiosClient = axios.create({
   baseURL: "http://localhost:8080"
 });
@@ -60,7 +63,7 @@ const successMessage = ref('');
 const errorMessage = ref('');
 
 const updateUserProfile = async () => {
-
+if(userData != null){
   try {
     var endpoint;
     if (userData.role != "Owner"){
@@ -89,6 +92,7 @@ const updateUserProfile = async () => {
       errorMessage.value = '';
     }, 2000);
   }
+}
 };
 </script>
 <template>
@@ -254,5 +258,4 @@ const updateUserProfile = async () => {
   width: 100%; /* Adjust width as needed */
 }
 </style>
-
 
