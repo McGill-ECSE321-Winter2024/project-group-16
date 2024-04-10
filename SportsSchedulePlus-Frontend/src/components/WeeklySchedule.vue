@@ -1,5 +1,6 @@
 <script setup>
 import CourseRegistration from './CourseRegistration.vue';
+import ScheduledCourseCreation from './ScheduledCourseCreation.vue';
 </script>
 
 <template>
@@ -16,7 +17,7 @@ import CourseRegistration from './CourseRegistration.vue';
   </div>
   <template>
     <div>
-      <v-dialog v-model="registerDialogVisible">
+      <v-dialog v-model="registerDialogVisible" persistent>
         <v-card class="popup"> <!-- change the style of this to be rounded corners like all other cards-->
           <v-card-title>
             Register for a Class
@@ -28,18 +29,30 @@ import CourseRegistration from './CourseRegistration.vue';
             Instructor: {{ courseDetails.instructor }}<br>
             Start Time: {{ courseDetails.startTime }}<br>
             End Time: {{ courseDetails.endTime }}<br>
-            <CourseRegistration 
-              :customerID="userID"
-              :courseID="courseDetails.courseId"
-            />
+            <CourseRegistration />
           </v-card-text>
-          <!-- <v-card-actions>
-            <v-btn @click="" color="#E2725B">
-              Register
-            </v-btn>
-          </v-card-actions> -->
           <v-card-actions>
             <v-btn @click="registerDialogVisible = false" color="#E2725B">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+  </template>
+  <template>
+    <div>
+      <v-dialog v-model="creationDialogVisible" persistent>
+        <v-card class="popup"> <!-- change the style of this to be rounded corners like all other cards-->
+          <v-card-title>
+            Schedule a Class
+          </v-card-title>
+
+          <v-card-text>
+            <ScheduledCourseCreation />
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click="creationDialogVisible = false" color="#E2725B">
               Close
             </v-btn>
           </v-card-actions>
@@ -73,6 +86,7 @@ export default {
     return {
       selectedDayFormatted: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
       registerDialogVisible: false,
+      creationDialogVisible: false,
       navigatorConfig: {
         showMonths: 1,
         skipMonths: 1,
@@ -91,13 +105,14 @@ export default {
         lane: "auto",
         theme: "swag",
         viewType: "Week",
+        headerDateFormat:"dddd",
         startDate: today,
         durationBarVisible: false,
-        timeRangeSelectedHandling: "Disabled",
-        eventDeleteHandling: "Disabled",
+        timeRangeSelectedHandling: "Enabled",
+        eventDeleteHandling: "Enabled",
         eventMoveHandling: "Enabled",
         eventClickHandling: "Enabled",
-        eventResizeHandling: "Disabled",
+        eventResizeHandling: "Enabled",
         businessBeginsHour: 8,
         businessEndsHour: 18,
         heightSpec: "BusinessHoursNoScroll",
@@ -106,7 +121,18 @@ export default {
           this.updateScheduledCourseInfo(args);
         },
         onEventMove: (args) => {
-          this.moveScheduledCourse(args);
+          this.updateScheduledCourse(args);
+        },
+        onEventResize: (args) => {
+          this.updateScheduledCourse(args);
+        },
+        onEventDelete: (args) => {
+          this.deleteScheduledCourse(args);
+        },
+        onTimeRangeSelected: (args) => {
+          this.creationDialogVisible = true;
+          localStorage.setItem("startTime", JSON.stringify(args.start));
+          localStorage.setItem("endTime", JSON.stringify(args.end));
         },
       },
       courseDetails: {
@@ -258,12 +284,13 @@ export default {
           startTime: scheduledCourseResponse.data.startTime,
           endTime: scheduledCourseResponse.data.endTime
         };
+        localStorage.setItem("scheduledCourseId", scheduledCourseResponse.data.id)
       } catch (error) {
         console.error('Error loading classes: ', error);
       }
 
     },
-    async moveScheduledCourse(args) {
+    async updateScheduledCourse(args) {
       const axiosClient = axios.create({
         baseURL: "http://localhost:8080"
       });
@@ -284,6 +311,19 @@ export default {
         console.log(updateResponse);
       } catch (error) {
         console.error('Error moving class: ', error);
+      }
+      this.loadScheduledCourses();
+    },
+    async deleteScheduledCourse(args) {
+      const axiosClient = axios.create({
+        baseURL: "http://localhost:8080"
+      });
+      const scheduledCourseId = args.e.id();
+      try {
+        const deleteResponse = await axiosClient.delete('/scheduledCourses/' + scheduledCourseId);
+        console.log(deleteResponse);
+      } catch (error) {
+        console.error('Error deleting class: ', error);
       }
       this.loadScheduledCourses();
     },
@@ -342,30 +382,57 @@ export default {
 	font-size: 0.875rem;
   text-transform: uppercase;
 }
-.swag_event { 
-	color: #344767;
-  font-weight: 600;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+/* Event Styling */
+.swag_event {
+  color: #fff;
+  font-weight: bold;
+  border-radius: 10px; /* Rounded corners */
+  background-color: #4f69ec; /* Pretty color */
+  padding: 20px; /* Increased padding for better appearance */
+  max-width: 250px; /* Adjust width as needed */
+  margin: 20px; /* Adjust margin as needed */
+  box-shadow: 0px 4px 8px rgba(76, 175, 80, 0.2); /* Add a subtle shadow for depth */
+  transition: transform 0.2s ease; /* Add smooth transition effect */
 }
-.swag_event_inner { 
-	position: absolute;
-	overflow: hidden;
-	left: 0px;
-	right: 0px;
-	top: 0px;
-	bottom: 0px;
-	margin: 0px;
-	background-color: #f8f9fa;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	padding: 2px;
-	padding-left: 6px;
-	border: 1px solid #C6C7C8;
-  border-radius: 1rem;
+
+.swag_event:hover {
+  transform: translateY(-5px); /* Add a subtle hover effect */
 }
+
+.swag_event_inner {
+  position: relative;
+}
+
+.swag_event_title {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.swag_event_details {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.swag_event_time {
+  font-weight: bold;
+}
+
+.swag_event_description {
+  line-height: 1.4;
+}
+
+.swag_event_link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #1a73e8; /* Adjust link color */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.swag_event_link:hover {
+  color: #0d47a1; /* Adjust link hover color */
+}
+
 .swag_alldayevent { 
 }
 .swag_alldayevent_inner { 
@@ -402,34 +469,35 @@ export default {
 	color: #000000;
 	background: #f8f9fa;
 }
-.swag_colheader_inner
-{
-	text-align: center; 
-	padding: 2px;
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	bottom: 0px;
-	right: 0px;
-	border-right: 1px solid #ffffff;
-	border-bottom: 1px solid #ffffff;
-	color: #000000;
-	background: #f8f9fa;
+.swag_colheader_inner {
+  text-align: center;
+  padding: 8px; /* Increased padding for better spacing */
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  color: #000000;
+  background-color: #f8f9fa;
 }
-.swag_rowheader_inner
-{
-	font-size: 16pt;
-	text-align: right; 
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	bottom: 0px;
-	right: 0px;
-	border-right: 1px solid #ffffff;
-	border-bottom: 1px solid  #ffffff;
-	color: #000000;
-	background: #f8f9fa;
+
+.swag_rowheader_inner {
+  font-size: 20px;
+  text-align: right;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  color: #000000;
+  background-color: #f8f9fa;
+  padding: 8px; /* Increased padding for better spacing */
 }
+
 .swag_rowheader_minutes 
 {
 	font-size:10px; 
@@ -542,14 +610,15 @@ export default {
 .swagnavigator_title, .swagnavigator_titleleft, .swagnavigator_titleright { 
 	border-top: 1px solid #ffffff;
 	color: #000000;
-	background: #f8f9fa;
+	background: #ffa216;
+  font-weight: bold;
 }
-.swagnavigator_title { text-align: center; }
+.swagnavigator_title { text-align: center;  }
 .swagnavigator_titleleft, .swagnavigator_titleright { text-align: center; }
 /* day headers */
 .swagnavigator_dayheader { 
 	color: #000000;
-	background: #f8f9fa;
+	background: a;
 	padding: 0px;
 	text-align: center;
 }
@@ -578,5 +647,7 @@ export default {
 .swagnavigator_todaybox { border: 1px solid black; }
 .swagnavigator_busy { font-weight: bold; }
 .swagnavigator_select .swagnavigator_cell_box { background-color: #E2725B; opacity: 1; }
+
+
 
 </style>

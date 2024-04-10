@@ -44,14 +44,17 @@ onMounted(() => {
 
 const userData = JSON.parse(localStorage.getItem("userData"));
 let email = ref('');
-email.value = userData.email;
+let userID  = -1;
 let name = ref('');
-name.value =  userData.name;
+
 let password = ref('');
-let userID = userData.id;
+if(userData != null){
+ userID = userData.id;
 
+name.value =  userData.name;
+email.value = userData.email;
 password.value = userData.password
-
+}
 const axiosClient = axios.create({
   baseURL: "http://localhost:8080"
 });
@@ -60,7 +63,7 @@ const successMessage = ref('');
 const errorMessage = ref('');
 
 const updateUserProfile = async () => {
-
+if(userData != null){
   try {
     var endpoint;
     if (userData.role != "Owner"){
@@ -89,6 +92,7 @@ const updateUserProfile = async () => {
       errorMessage.value = '';
     }, 2000);
   }
+}
 };
 </script>
 <template>
@@ -233,7 +237,7 @@ const updateUserProfile = async () => {
       </div>
       <div class="row">
         <div class="col">
-          <div class="card row h-100">
+          <div class="card  weekly-schedule-wrapper">
             <WeeklySchedule
               :displayType=userData.role.toLowerCase()
               :customerId=userData.id
@@ -245,3 +249,13 @@ const updateUserProfile = async () => {
     </div>
   </main>
 </template>
+
+<style>
+.weekly-schedule-wrapper {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  width: 100%; /* Adjust width as needed */
+}
+</style>
+

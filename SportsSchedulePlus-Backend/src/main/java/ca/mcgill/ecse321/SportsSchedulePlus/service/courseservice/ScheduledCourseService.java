@@ -389,7 +389,10 @@ public class ScheduledCourseService {
      */
     @Transactional
     public void deleteScheduledCourse(int id) {
-        getScheduledCourse(id);
+        ScheduledCourse scheduledCourse = getScheduledCourse(id);
+        Instructor instructor = instructorRepository.findInstructorBySupervisedCourses(scheduledCourse).get(0);
+        instructor.removeSupervisedCourse(getScheduledCourse(id));
+        instructorRepository.save(instructor);
         scheduledCourseRepository.deleteById(id);
     }
 

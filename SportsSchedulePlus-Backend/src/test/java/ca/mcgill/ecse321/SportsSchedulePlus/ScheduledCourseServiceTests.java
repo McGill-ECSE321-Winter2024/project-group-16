@@ -207,7 +207,7 @@ public class ScheduledCourseServiceTests {
     when(scheduledCourseheduledCourseRepository.findById(SCHEDULED_COURSE_ID)).thenReturn(Optional.of(original));
 
     // Call the method under test with new values for the scheduledCourseheduled course
-    ScheduledCourse updated = scheduledCourseheduledCourseService.updateScheduledCourse(SCHEDULED_COURSE_ID, "2024-05-15", "10:00:00", "12:00:00", "Uptown Gym", COURSE_TYPE_ID);
+    ScheduledCourse updated = scheduledCourseheduledCourseService.updateScheduledCourse(SCHEDULED_COURSE_ID, "2024-05-15", "10:00:00", "12:00:00", 0, "Uptown Gym", COURSE_TYPE_ID);
 
     // Assertions to verify the updated ScheduledCourse properties
     assertNotNull(updated, "The updated scheduledCourseheduled course should not be null.");
