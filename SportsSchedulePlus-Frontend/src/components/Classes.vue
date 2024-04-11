@@ -12,7 +12,6 @@
     </div>
     <v-divider></v-divider>
 
-
     <v-dialog v-model="showModal" width="40%">
       <v-card
         prepend-icon="mdi-update"
@@ -84,10 +83,11 @@
 import WeeklySchedule from '../components/WeeklySchedule.vue';
 import ArgonButton from "@/argon_components/ArgonButton.vue";
 import axios from 'axios';
-import {computed, reactive, ref} from 'vue';
+import {computed, reactive, ref, onMounted} from 'vue';
 
 const userData = JSON.parse(localStorage.getItem("userData"));
 const isLoggedIn = localStorage.getItem("loggedIn");
+
 
 const courseTypes = ref([]);
 let selectedCourse = ref(null);
@@ -115,6 +115,9 @@ const loadCourseTypes = async () => {
     const response = await axios.get('http://localhost:8080/courseTypes');
     courseTypes.value = response.data.courseTypes;
     console.log(courseTypes.value);
+    if (courseTypes.value.length > 0) {
+      selectedCourse.value = courseTypes.value[0];
+    }
   } catch (error) {
     console.error('Error loading course types: ', error);
   }
@@ -153,6 +156,10 @@ const createCourseType = async (courseData) => {
     }, 2000);
   }
 };
+
+onMounted(() => {
+  loadCourseTypes();
+});
 </script>
 
 <style scoped>
