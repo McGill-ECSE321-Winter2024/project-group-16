@@ -104,7 +104,7 @@ public class UserService {
             //Owner owner = (Owner) personRole;
             owner.setDailySchedule(dailyScheduleService.createDailySchedule());
             ownerRepository.save(owner);
-            Person person = new Person("owner", "sports.schedule.plus@gmail.com", "admin", owner);
+            Person person = new Person("Owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("Admin1004!"), owner);
             personRepository.save(person);
             return person;
         }
