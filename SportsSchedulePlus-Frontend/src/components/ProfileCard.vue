@@ -1,4 +1,6 @@
 
+
+
 <template>
   <div class="card card-profile">
     <img
@@ -22,10 +24,27 @@
       <div class="justify-content-between">
         <div class="btn-group-vertical">
         <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Customer'" @click="applyForInstructor" style="background-color: #E2725B; color: white;">Apply to become an instructor</a>
-        <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" style="background-color: white ; color: #E2725B;" @click="deleteAccount">Delete my account</a>
+        <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" style="background-color: white ; color: #E2725B;" @click="toggleModal">Delete my account</a>
       </div>
       </div>
     </div>
+
+    <!-- Modal Start -->
+    
+    
+    <ModalComponent :show="showModal" @update:show="showModal = $event">
+      <div>
+        <h2 class="row justify-content-center">Are you sure?</h2>
+        <p class="row justify-content-center">If you delete your account, it will be lost forever</p>
+      </div>
+      <div class="btn-group-vertical">
+        <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" style="background-color: #E2725B; color: white;" @click="toggleModal">Wait, keep my account!</a>
+        <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" style="background-color: white ; color: #E2725B;" @click="deleteAccount">Delete account</a>
+      </div>
+    </ModalComponent>
+    
+    
+
     <div class="card-body pt-0">
       <div class="row">
         <div class="col">
@@ -78,6 +97,10 @@
 import { ref, computed } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router'
+import ModalComponent from './ModalComponent.vue';
+
+const showModal = ref(false);
+
 
 const router = useRouter()
 
@@ -93,6 +116,11 @@ const successMessage = ref('');
 const errorMessage = ref('');
 
 var userID = userData.id;
+
+// Function to show/hide modal
+function toggleModal() {
+  showModal.value = !showModal.value;
+}
 
 // Function to delete user account
 const deleteAccount = async () => {
@@ -186,3 +214,5 @@ onMounted(() => {
 
 
 </script>
+
+
