@@ -20,19 +20,33 @@
               <div class="row">
                 <div class="col">
                   <label for="startTime">Start Time</label>
-                  <v-time-picker
+                  <!-- <v-time-picker
                     v-model="startTime"
                     format="24hr"
                     no-title
-                  ></v-time-picker>
+                    readonly
+                  ></v-time-picker> -->
+                  <v-text-field
+                    v-model="startTime"
+                    prepend-icon="mdi-clock-time-four-outline"
+                    readonly
+                    style="padding: 10px 30px;"
+                  ></v-text-field>
                 </div>
                 <div class="col">
                   <label for="endTime">End Time</label>
-                  <v-time-picker
+                  <!-- <v-time-picker
                     v-model="endTime"
                     format="24hr"
                     no-title
-                  ></v-time-picker>
+                    readonly
+                  ></v-time-picker> -->
+                  <v-text-field
+                    v-model="endTime"
+                    prepend-icon="mdi-clock-time-four-outline"
+                    readonly
+                    style="padding: 10px 30px;"
+                  ></v-text-field>
                 </div>
               </div>
             </div>
@@ -94,7 +108,7 @@
       this.loadCourseTypes();
     },
     components: {
-      VTimePicker,
+      // VTimePicker,
     },
     methods: {
       async loadCourseTypes() {
@@ -154,6 +168,7 @@
           try {
             const scheduledCourseResponse = await axiosClient.post('/scheduledCourses', courseData);
             this.successMessage = 'Scheduled course created successfully.';
+            location.reload();
           } catch (error) {
             console.log(error);
           }

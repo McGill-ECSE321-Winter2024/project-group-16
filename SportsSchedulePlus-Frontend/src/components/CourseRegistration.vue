@@ -33,6 +33,7 @@
             </form>
             <div class="text-center">
               <small v-if="alreadyRegistered" class="text-danger">You have already registered for this class.</small>
+              <small v-if="registrationSuccess" class="text-success">You've registered, can't wait to see you there</small>
             </div>
           </div>
         </div>
@@ -55,6 +56,7 @@ const isCardholderNameValid = ref(true);
 const isExpirationDateValid = ref(true);
 const isCreditCardNumberValid = ref(true);
 let alreadyRegistered = ref(false);
+let registrationSuccess = ref(false);
 
 // Function to handle form submission
 const submitForm = async () => {
@@ -94,8 +96,12 @@ const submitForm = async () => {
     try {
       await axiosClient.post("/registrations/" + userID + "/" + scheduledCourseId);
       console.log("Registration successful");
+      alreadyRegistered.value = false;
+      registrationSuccess.value = true;
     } catch (error) {
+      console.log(error);
       alreadyRegistered.value = true;
+      registrationSuccess.value = false;
     }
   }
 };
