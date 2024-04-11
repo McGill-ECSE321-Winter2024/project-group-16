@@ -95,6 +95,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import {useStore} from "vuex";
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router'
 import ModalComponent from './ModalComponent.vue';
@@ -117,6 +118,8 @@ const errorMessage = ref('');
 
 var userID = userData.id;
 
+const store = useStore();
+
 // Function to show/hide modal
 function toggleModal() {
   showModal.value = !showModal.value;
@@ -128,12 +131,15 @@ const deleteAccount = async () => {
     await axiosClient.delete(`/customers/${userID}`);
     console.log("Account deleted");
     localStorage.setItem("loggedIn",false);
+    store.dispatch('logout');
     localStorage.setItem("userData",null);
     successMessage.value = "Account deleted successfully."
     // Redirect after a short delay
        setTimeout(() => {
-      router.push("/signup");}, 2000); // Redirect after 2 seconds
-  } catch (error) {
+        router.go("/signup");}, 2000); // Redirect after 2 seconds
+    router.push('/signup');
+  }   
+  catch (error) {
     console.error('Error deleting account:', error);
     errorMessage.value = 'There was an error deleting your account.'; // Set error message
   }
