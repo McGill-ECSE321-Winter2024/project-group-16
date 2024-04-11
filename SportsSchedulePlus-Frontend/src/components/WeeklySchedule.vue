@@ -621,11 +621,16 @@ export default {
   border-bottom: 1px solid #ffffff;
   color: #000000;
   background-color: #f8f9fa;
+  padding: 8px 15px; /* Adjusted padding */
+  font-weight:500;
+  background-color: #e8f0fe; /* Soft blue background */
+  border-top-left-radius: 10px; /* Rounder top left corner */
+  border-top-right-radius: 10px; /* Rounder top right corner */
+  
 }
 
 .swag_rowheader_inner {
-  font-size: 20px;
-  text-align: right;
+  font-size: 15px;
   position: absolute;
   top: 0;
   left: 0;
@@ -633,15 +638,18 @@ export default {
   right: 0;
   border-right: 1px solid #ffffff;
   border-bottom: 1px solid #ffffff;
-  color: #000000;
-  background-color: #f8f9fa;
-  padding: 8px; /* Increased padding for better spacing */
+  text-align: center;
+  color: black;
+  background-color: #e8f0fe; /* Soft blue background */
+  padding: 8px 10px; /* Adjusted padding */
+  font-weight:500;
+  
 }
 
 .swag_rowheader_minutes 
 {
 	font-size:10px; 
-	vertical-align: super; 
+	vertical-align:auto;
 	padding-left: 2px;
 	padding-right: 2px;
 }
@@ -758,7 +766,6 @@ export default {
 /* day headers */
 .swagnavigator_dayheader { 
 	color: #000000;
-	background: a;
 	padding: 0px;
 	text-align: center;
 }
@@ -787,6 +794,31 @@ export default {
 .swagnavigator_todaybox { border: 1px solid black; }
 .swagnavigator_busy { font-weight: bold; }
 .swagnavigator_select .swagnavigator_cell_box { background-color: #E2725B; opacity: 1; }
+
+
+
+
+
+/* Styling for table cells */
+.swag_cell_inner {
+  border-right: 1px solid #d2d2d2; /* Lighter gray border */
+  border-bottom: 1px solid #d2d2d2; /* Lighter gray border */
+  background-color: #ffffff; /* White background */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+/* Hover effect for table cells */
+.swag_cell_inner:hover {
+  background-color: #f5f5f5; /* Lighter gray on hover */
+}
+
+
+
+
+
+
+
+
 
 
 
