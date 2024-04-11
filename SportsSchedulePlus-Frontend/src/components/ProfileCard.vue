@@ -28,11 +28,11 @@
 
     <ModalComponent :show="showModal" @update:show="showModal = $event">
       <div>
-        <h2 class="row justify-content-center">Are you sure?</h2>
-        <p class="row justify-content-center">If you delete your account, it will be lost forever</p>
+        <h2 class="header-text row justify-content-center">Are you sure?</h2>
+        <p class="row justify-content-center">If you delete your account, it will be lost forever.</p>
       </div>
       <div class="btn-group-vertical">
-        <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" style="background-color: #E2725B; color: white;" @click="toggleModal">Wait, keep my account!</a>
+<!--        <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" style="background-color: #E2725B; color: white;" @click="toggleModal">Wait, keep my account!</a>-->
         <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" style="background-color: white ; color: #E2725B;" @click="deleteAccount">Delete my account</a>
       </div>
     </ModalComponent>
@@ -132,7 +132,7 @@ const deleteAccount = async () => {
        setTimeout(() => {
         router.go("/signup");}, 2000); // Redirect after 2 seconds
     router.push('/signup');
-  }   
+  }
   catch (error) {
     console.error('Error deleting account:', error);
     errorMessage.value = 'There was an error deleting your account.'; // Set error message
@@ -214,5 +214,16 @@ onMounted(() => {
 
 
 </script>
+<style>
+.header-text {
+  font-family: "Roboto Slab", serif;
+  font-size: 2em;
+  color: #E2725B;
+  font-weight: 400;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  margin: 20px;
+}
+</style>
 
 
