@@ -21,7 +21,7 @@
                 <small v-if="!isCreditCardNumberValid" class="text-danger">Please enter a valid Visa or MasterCard number.</small>
                  <!-- Visa and Mastercard logos -->
                 <div class="row justify-content-center mt-3">
-                  <div class="col-lg-6 text-right">
+                  <div class="col-lg-11 text-right">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/1200px-Visa.svg.png" alt="Visa Logo" style="height: 30px; margin-right: 10px;">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1200px-Mastercard-logo.svg.png" alt="Mastercard Logo" style="height: 30px;">
                   </div>

@@ -20,15 +20,39 @@ import ScheduledCourseCreation from './ScheduledCourseCreation.vue';
       <v-dialog v-model="registerDialogVisible" persistent>
         <v-card class="popup"> <!-- change the style of this to be rounded corners like all other cards-->
           <v-card-title>
-            Register for a Class
+            <h2>  Register for a class </h2>
+
           </v-card-title>
 
           <v-card-text>
-            Class: {{ courseDetails.courseType }}<br>
-            Price: {{ courseDetails.price }}<br>
-            Instructor: {{ courseDetails.instructor }}<br>
-            Start Time: {{ courseDetails.startTime }}<br>
-            End Time: {{ courseDetails.endTime }}<br>
+          <!-- Display the course details using disabled input fields -->
+          <div class="container mt-5">
+          <div class="border-0">
+          <div class="card-body">
+        <div class="form-group">
+          <label for="courseType">Class</label>
+          <input type="text" class="form-control" id="courseType" :value="courseDetails.courseType" disabled>
+        </div>
+        <div class="form-group">
+          <label for="price">Price</label>
+          <input type="text" class="form-control" id="price" :value="courseDetails.price" disabled>
+        </div>
+        <div class="form-group">
+          <label for="instructor">Instructor</label>
+          <input type="text" class="form-control" id="instructor" :value="courseDetails.instructor" disabled>
+        </div>
+        <div class="form-group">
+          <label for="startTime">Start Time</label>
+          <input type="text" class="form-control" id="startTime" :value="courseDetails.startTime" disabled>
+        </div>
+        <div class="form-group">
+          <label for="endTime">End Time</label>
+          <input type="text" class="form-control" id="endTime" :value="courseDetails.endTime" disabled>
+        </div>
+        </div>
+        </div>
+        </div>
+        <!-- End of displaying course details using disabled input fields -->
             <CourseRegistration />
           </v-card-text>
           <v-card-actions>
