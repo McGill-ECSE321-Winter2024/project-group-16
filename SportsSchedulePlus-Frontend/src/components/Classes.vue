@@ -1,52 +1,60 @@
 <template>
   <div class="classes-section">
     <div style="text-align:center;">
-      <ArgonButton style="color: white; background-color: #E2725B; display: inline-block; width: 200px;"
-                   @click="toggleModal"> Add Course Type
+      <ArgonButton v-if="isLoggedIn && (userData.role === 'Owner' || userData.role === 'Instructor')"
+                   style="color: white; background-color: #E2725B; display: inline-block; width: 250px;"
+                   @click="toggleModal"> Suggest New Course Type
       </ArgonButton>
       <div class="title-container">
         <h1 class="header-text" style="color: #E2725B;">Our Classes</h1>
         <p class="content">Gold Gym offers a wide variety of classes taught by trained professionals</p>
       </div>
     </div>
+    <v-divider></v-divider>
 
-    <v-dialog v-model="showModal" width="30%">
+
+    <v-dialog v-model="showModal" width="40%">
       <v-card
         prepend-icon="mdi-update"
         title="Add a New Course Type"
-        @submit.prevent="createCourseType(newCourse)"
       >
-<!--        <span class="close" @click="toggleModal">&times;</span>-->
-        <v-form >
+        <v-form @submit.prevent="createCourseType(newCourse)">
           <v-text-field style="padding: 20px "
+                        :rules="[rules.required]"
                         v-model="newCourse.name" label="Name" placeholder="Class Name"></v-text-field>
           <v-text-field style="padding: 20px " v-model="newCourse.description" label="Description"
+                        :rules="[rules.required]"
                         placeholder="Description"></v-text-field>
           <v-text-field style="padding: 20px " v-model="newCourse.image" label="Image URL"
+                        :rules="[rules.required]"
                         placeholder="Image URL"></v-text-field>
           <v-text-field style="padding: 20px " v-model.number="newCourse.price" label="Price"
+                        :rules="[rules.required, rules.price]" type="number"
                         placeholder="Price"></v-text-field>
-<!--          <v-btn type="submit">Create Course Type</v-btn>-->
-        </v-form>
-        <template #actions>
-          <v-col>
-            <v-btn @click="toggleModal" >Cancel</v-btn>
-          </v-col>
-          <v-divider style="color: white;"></v-divider>
-          <v-col>
-            <v-btn type="submit"
-                   style="background-color: #E2725B; color:white ;">Submit
+          <v-row justify-sm="center">
+            <v-btn :disabled="!areFieldsFilled"
+                   style="margin:20px; height: 50px; width:200px; background-color: #E2725B; color:white ;"
+                   type="submit">Create Course Type
             </v-btn>
-          </v-col>
-        </template>
+          </v-row>
+          <v-divider></v-divider>
+          <v-row justify-sm="center">
+            <v-btn style="margin:20px; width:200px;" @click="toggleModal">Cancel</v-btn>
+          </v-row>
 
+          <div class="row">
+            <div class="alert alert-success text-white fs-6" v-if="successMessage">{{ successMessage }}</div>
+            <div class="alert alert-danger text-white fs-6" v-if="errorMessage">{{ errorMessage }}</div>
+          </div>
+        </v-form>
       </v-card>
     </v-dialog>
 
 
-
-    <div class="content">
-      <div class="classes-list">
+    <div class="container-fluid content">
+      <div
+        style="max-height: 800px; overflow-y:auto; flex-grow: 1; text-align: center;"
+        class="classes-list">
         <div
           v-for="courseType in courseTypes"
           :key="courseType.id"
@@ -55,11 +63,11 @@
         >
           <img :src="courseType.image" class="class-icon" alt="Course Image"/>
           <span class="class-name">{{ courseType.name }}</span>
-          <!-- ... -->
         </div>
       </div>
-      <div class="class-details" v-if="selectedCourse">
-        <h2>{{ selectedCourse?.name }}</h2>
+      <div style="max-width: 80%; flex-grow: 1; padding: 20px; margin: 30px; text-align: center;" class="class-details"
+           v-if="selectedCourse">
+        <h2 style="font-size: 30px; color: #E2725B" class="class-description">{{ selectedCourse?.name }}</h2>
         <img :src="selectedCourse?.image" class="class-image" alt="Selected Course Image"/>
         <p class="class-description">{{ selectedCourse?.description }}</p>
         <WeeklySchedule
@@ -70,11 +78,16 @@
     </div>
   </div>
 </template>
+
+
 <script setup>
 import WeeklySchedule from '../components/WeeklySchedule.vue';
 import ArgonButton from "@/argon_components/ArgonButton.vue";
 import axios from 'axios';
-import {reactive, ref} from 'vue';
+import {computed, reactive, ref} from 'vue';
+
+const userData = JSON.parse(localStorage.getItem("userData"));
+const isLoggedIn = localStorage.getItem("loggedIn");
 
 const courseTypes = ref([]);
 let selectedCourse = ref(null);
@@ -84,6 +97,17 @@ const newCourse = reactive({
   description: '',
   image: '',
   price: null
+});
+const errorMessage = ref("");
+const successMessage = ref("");
+
+const areFieldsFilled = computed(() => {
+  return (
+    newCourse.name &&
+    newCourse.description &&
+    newCourse.image &&
+    newCourse.price
+  );
 });
 
 const loadCourseTypes = async () => {
@@ -101,6 +125,11 @@ const selectCourse = async (courseType) => {
   console.log(selectedCourse.value.id);
 };
 
+const rules = {
+  required: value => !!value || 'Field is required',
+  price: value => (value !== null && !isNaN(value) && value >= 0) || 'Price must be a valid number greater than or equal to zero'
+};
+
 const toggleModal = () => {
   showModal.value = !showModal.value;
 };
@@ -108,11 +137,20 @@ const toggleModal = () => {
 const createCourseType = async (courseData) => {
   try {
     const response = await axios.post('http://localhost:8080/courseTypes', courseData);
-    console.log(response.data);
+    successMessage.value = 'Course Type Added Successfully!';
+    errorMessage.value = '';
+    setTimeout(() => {
+      successMessage.value = '';
+    }, 2000);
     loadCourseTypes();
     toggleModal();
   } catch (error) {
-    console.error('Error creating course type: ', error);
+    console.error('Error creating course type: ', error.response.data.errors[0]);
+    successMessage.value = '';
+    errorMessage.value = error.response.data.errors[0];
+    setTimeout(() => {
+      errorMessage.value = '';
+    }, 2000);
   }
 };
 </script>
@@ -136,69 +174,27 @@ const createCourseType = async (courseData) => {
 
 .content {
   display: flex;
+  flex-direction: row;
   align-items: flex-start;
-  gap: 20px;
 }
 
 .classes-list {
-  width: auto;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-}
-
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="number"] {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-button[type="submit"] {
-  width: 100%;
-  background-color: #f44336;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button[type="submit"]:hover {
-  background-color: #d32f2f;
 }
 
 
 .class-item {
-  width: 500px;
+  width: 100%;
   cursor: pointer;
-  margin: 40px;
-  padding: 30px;
+  margin: 20px;
+  padding: 20px;
   background-color: #fff;
+  color: #E2725B;
   border-radius: 1rem;
   transition: transform 0.3s ease;
-  font-size: 30px;
+  font-size: 20px;
 
 }
 
@@ -212,8 +208,8 @@ button[type="submit"]:hover {
 
 .class-details {
   flex-grow: 1;
-  width: 100%;
-  max-width: 1500px;
+  width: 70%;
+  max-width: 1200px;
   background-color: #fff;
   border-radius: 15px;
   background-color: #fff;
@@ -230,6 +226,11 @@ button[type="submit"]:hover {
   background-color: #fff;
   border-radius: 10px;
   padding: 20px;
+  font-family: "Roboto Slab", serif;
+  font-size: 1em;
+  font-weight: 400;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
 }
 
 .class-details .class-image {
@@ -238,13 +239,6 @@ button[type="submit"]:hover {
 
 }
 
-.overlay-subheader {
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 
 .class-icon {
   width: 50px;

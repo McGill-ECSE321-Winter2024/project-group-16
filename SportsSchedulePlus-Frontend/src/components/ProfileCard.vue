@@ -1,6 +1,3 @@
-
-
-
 <template>
   <div class="card card-profile">
     <img
@@ -29,9 +26,6 @@
       </div>
     </div>
 
-    <!-- Modal Start -->
-    
-    
     <ModalComponent :show="showModal" @update:show="showModal = $event">
       <div>
         <h2 class="row justify-content-center">Are you sure?</h2>
@@ -42,8 +36,8 @@
         <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" style="background-color: white ; color: #E2725B;" @click="deleteAccount">Delete my account</a>
       </div>
     </ModalComponent>
-    
-    
+
+
 
     <div class="card-body pt-0">
       <div class="row">
