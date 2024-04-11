@@ -6,7 +6,7 @@
                    @click="toggleModal"> Suggest New Course Type
       </ArgonButton>
       <div class="title-container">
-        <h1 class="header-text" style="color: #E2725B;">Our Classes</h1>
+        <h1 class="header-text-classes" style="color: #E2725B;">Our Classes</h1>
         <p class="content">Gold Gym offers a wide variety of classes taught by trained professionals</p>
       </div>
     </div>
@@ -280,7 +280,7 @@ img {
 
 }
 
-.header-text {
+.header-text-classes {
   font-family: "Roboto Slab", serif;
   font-size: 2em;
   font-weight: bold;

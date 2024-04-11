@@ -28,7 +28,7 @@
 
     <ModalComponent :show="showModal" @update:show="showModal = $event">
       <div>
-        <h2 class="header-text row justify-content-center">Are you sure?</h2>
+        <h2 class="header-text-classes row justify-content-center">Are you sure?</h2>
         <p class="row justify-content-center">If you delete your account, it will be lost forever.</p>
       </div>
       <div class="btn-group-vertical">
@@ -215,7 +215,7 @@ onMounted(() => {
 
 </script>
 <style>
-.header-text {
+.header-text-classes {
   font-family: "Roboto Slab", serif;
   font-size: 2em;
   color: #E2725B;
