@@ -64,7 +64,7 @@ onMounted(() => {
 
         >
           <template v-slot:icon>
-            <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
+            <i class="ni ni-badge text-danger  text-sm opacity-10"></i>
           </template>
         </sidenav-item>
       </li>
@@ -77,7 +77,7 @@ onMounted(() => {
 
         >
           <template v-slot:icon>
-            <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
+            <i class="ni ni-calendar-grid-58 text-secondary text-sm opacity-10"></i>
           </template>
         </sidenav-item>
       </li>
