@@ -1,34 +1,50 @@
-<script setup>
-import WeeklySchedule from '../components/WeeklySchedule.vue';
-import ArgonButton from "@/argon_components/ArgonButton.vue";
-
-</script>
-
-
 <template>
   <div class="classes-section">
     <div style="text-align:center;">
-      <ArgonButton style="color: white; background-color: #E2725B; display: inline-block; width: 200px;" @click="toggleModal"> Add Course Type</ArgonButton>
+      <ArgonButton style="color: white; background-color: #E2725B; display: inline-block; width: 200px;"
+                   @click="toggleModal"> Add Course Type
+      </ArgonButton>
       <div class="title-container">
         <h1 class="header-text" style="color: #E2725B;">Our Classes</h1>
         <p class="content">Gold Gym offers a wide variety of classes taught by trained professionals</p>
       </div>
     </div>
 
+    <v-dialog v-model="showModal" width="30%">
+      <v-card
+        prepend-icon="mdi-update"
+        title="Add a New Course Type"
+        @submit.prevent="createCourseType(newCourse)"
+      >
+<!--        <span class="close" @click="toggleModal">&times;</span>-->
+        <v-form >
+          <v-text-field style="padding: 20px "
+                        v-model="newCourse.name" label="Name" placeholder="Class Name"></v-text-field>
+          <v-text-field style="padding: 20px " v-model="newCourse.description" label="Description"
+                        placeholder="Description"></v-text-field>
+          <v-text-field style="padding: 20px " v-model="newCourse.image" label="Image URL"
+                        placeholder="Image URL"></v-text-field>
+          <v-text-field style="padding: 20px " v-model.number="newCourse.price" label="Price"
+                        placeholder="Price"></v-text-field>
+<!--          <v-btn type="submit">Create Course Type</v-btn>-->
+        </v-form>
+        <template #actions>
+          <v-col>
+            <v-btn @click="toggleModal" >Cancel</v-btn>
+          </v-col>
+          <v-divider style="color: white;"></v-divider>
+          <v-col>
+            <v-btn type="submit"
+                   style="background-color: #E2725B; color:white ;">Submit
+            </v-btn>
+          </v-col>
+        </template>
 
-    <!-- Modal Start -->
-    <div class="modal" v-if="showModal">
-      <div class="modal-content">
-        <span class="close" @click="toggleModal">&times;</span>
-        <form @submit.prevent="createCourseType(newCourse)">
-          <input type="text" v-model="newCourse.name" placeholder="Name">
-          <input type="text" v-model="newCourse.description" placeholder="Description">
-          <input type="text" v-model="newCourse.image" placeholder="Image URL">
-          <input type="number" v-model="newCourse.price" placeholder="Price">
-          <button type="submit">Create Course Type</button>
-        </form>
-      </div>
-    </div>
+      </v-card>
+    </v-dialog>
+
+
+
     <div class="content">
       <div class="classes-list">
         <div
@@ -54,58 +70,51 @@ import ArgonButton from "@/argon_components/ArgonButton.vue";
     </div>
   </div>
 </template>
-
-<script>
+<script setup>
+import WeeklySchedule from '../components/WeeklySchedule.vue';
+import ArgonButton from "@/argon_components/ArgonButton.vue";
 import axios from 'axios';
+import {reactive, ref} from 'vue';
 
-export default {
-  data() {
-    return {
-      courseTypes: [],
-      selectedCourse: null,
-      showModal: false,
-      newCourse: {  // Initialize newCourse object for form binding
-        name: '',
-        description: '',
-        image: '',
-        price: null
-      },
-    };
-  },
+const courseTypes = ref([]);
+let selectedCourse = ref(null);
+let showModal = ref(false);
+const newCourse = reactive({
+  name: '',
+  description: '',
+  image: '',
+  price: null
+});
 
-  mounted() {
-    this.loadCourseTypes();
-  },
-  methods: {
-    async loadCourseTypes() {
-      try {
-        const response = await axios.get('http://localhost:8080/courseTypes');
-        this.courseTypes = response.data.courseTypes;
-        console.log(this.courseTypes);
-      } catch (error) {
-        console.error('Error loading course types: ', error);
-      }
-    },
-    async selectCourse(courseType) {
-      this.selectedCourse = courseType;
-      console.log(this.selectedCourse.id);
-    },
-    toggleModal() {
-      this.showModal = !this.showModal;
-    },
-    async createCourseType(courseData) {
-      try {
-        const response = await axios.post('http://localhost:8080/courseTypes', courseData);
-        console.log(response.data);
-        this.loadCourseTypes();
-        this.toggleModal();
-      } catch (error) {
-        console.error('Error creating course type: ', error);
-      }
-    },
+const loadCourseTypes = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/courseTypes');
+    courseTypes.value = response.data.courseTypes;
+    console.log(courseTypes.value);
+  } catch (error) {
+    console.error('Error loading course types: ', error);
   }
 };
 
+const selectCourse = async (courseType) => {
+  selectedCourse.value = courseType;
+  console.log(selectedCourse.value.id);
+};
+
+const toggleModal = () => {
+  showModal.value = !showModal.value;
+};
+
+const createCourseType = async (courseData) => {
+  try {
+    const response = await axios.post('http://localhost:8080/courseTypes', courseData);
+    console.log(response.data);
+    loadCourseTypes();
+    toggleModal();
+  } catch (error) {
+    console.error('Error creating course type: ', error);
+  }
+};
 </script>
 
 <style scoped>
@@ -136,30 +145,6 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-}
-
-.modal {
-  display: flex; /* Use flexbox for centering */
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  position: fixed;
-  z-index: 10; /* Make sure it's above other content */
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.5); /* Dim the background */
-}
-
-.modal-content {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
-  width: 30%; /* Adjust width as necessary */
-  max-width: 450px; /* Adjust max width as necessary */
-  margin: auto; /* For centering if not using flexbox in .modal */
 }
 
 .close {
@@ -204,40 +189,6 @@ button[type="submit"]:hover {
   background-color: #d32f2f;
 }
 
-.social-icons {
-  display: flex;
-  justify-content: center;
-  margin: 10px 0;
-}
-
-.social-icon {
-  font-size: 24px;
-  margin: 0 10px;
-  cursor: pointer;
-}
-
-.facebook {
-  color: #3b5998;
-}
-
-.google {
-  color: #dd4b39;
-}
-
-.linkedin {
-  color: #007bb6;
-}
-
-.account-info {
-  text-align: center;
-  margin: 10px 0;
-}
-
-.forgot-password {
-  text-align: center;
-  display: block;
-  margin-top: 10px
-}
 
 .class-item {
   width: 500px;
@@ -260,30 +211,30 @@ button[type="submit"]:hover {
 }
 
 .class-details {
-  flex-grow: 1; /* Allow this to grow to fill remaining space */
-  width: 100%; /* Use 100% of the calculated max-width */
-  max-width: 1500px; /* Subtract the width of the class list and the gap */
+  flex-grow: 1;
+  width: 100%;
+  max-width: 1500px;
   background-color: #fff;
-  border-radius: 15px; /* This will allow the right container to fill the remaining space */
-  background-color: #fff; /* White background for the entire right container */
-  border-radius: 15px; /* Rounded corners */
+  border-radius: 15px;
+  background-color: #fff;
+  border-radius: 15px;
   margin: 40px auto;
-  padding: 20px; /* Padding inside the box */
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* This will center-align the items horizontally */
+  align-items: center;
 }
 
 .class-details h2, .class-details .class-description, .class-details .weekly-schedule {
   max-width: 100%;
-  background-color: #fff; /* White background for each section */
-  border-radius: 10px; /* Rounded corners for each section */
-  padding: 20px; /* Padding inside each section */
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
 }
 
 .class-details .class-image {
-  width: 100%; /* This will make the image responsive */
-  border-radius: 10px; /* Rounded corners for the image */
+  width: 100%;
+  border-radius: 10px;
 
 }
 
@@ -296,21 +247,21 @@ button[type="submit"]:hover {
 }
 
 .class-icon {
-  width: 50px; /* Example size, adjust as needed */
-  height: 50px; /* Example size, adjust as needed */
+  width: 50px;
+  height: 50px;
   object-fit: cover;
-  border-radius: 50%; /* Makes the image round */
-  margin-right: 10px; /* Adds space between image and text */
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
 .class-image {
-  width: auto; /* or 100% if you want it to fill the container */
-  max-width: 800px; /* increase this value as needed */
-  height: auto; /* to maintain aspect ratio */
+  width: auto;
+  max-width: 800px;
+  height: auto;
   border-radius: 4px;
   margin-bottom: 1rem;
-  display: block; /* Ensures the image is block level for centering */
-  margin-left: auto; /* These two lines center the image horizontally */
+  display: block;
+  margin-left: auto;
   margin-right: auto;
 }
 
