@@ -52,7 +52,7 @@
 
     <div class="container-fluid content">
       <div
-        style="max-height: 800px; overflow-y:auto; flex-grow: 1; text-align: center;"
+        style="max-height: 800px; overflow-y:auto; flex-grow: 1; text-align: left;"
         class="classes-list">
         <div
           v-for="courseType in courseTypes"
