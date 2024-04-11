@@ -147,12 +147,15 @@ const fetchScheduledCourses = async () => {
 const fetchSupervisedCourses = async () => {
   var response;
   try {
-   response = await axiosClient.get(`/scheduledCourses/instructors/${userID}`);
-     console.log(response.response.status)
-    supervisedCourses.value = response.data.supervisedCourses;
-    suggestedCourses.value = response.data.instructorSuggestedCourseTypes;
+    let userEmail = userData.email;
+    const scheduledCoursesResponse = await axiosClient.get(`/instructors/${userEmail}/supervised-courses`);
+    console.log(scheduledCoursesResponse)
+    supervisedCourses.value = scheduledCoursesResponse.data.scheduledCourses;
+
+    const courseTypesResponse = await axiosClient.get(`/instructors/${userEmail}/suggested-course-types`);
+    suggestedCourses.value = courseTypesResponse.data.courseTypes;
   } catch (error) {
-    console.error('Error fetching supervised courses:', error);
+    console.log(error);
   }
 };
 

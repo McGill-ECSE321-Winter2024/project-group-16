@@ -95,7 +95,7 @@ public class UserService {
      * @return the new Person account for the owner
      */
     @Transactional
-    public Person createOwner() {  
+    public Person createOwner() {    
         try {
             getOwner();
         } catch (SportsSchedulePlusException e) {
@@ -104,7 +104,7 @@ public class UserService {
             //Owner owner = (Owner) personRole;
             owner.setDailySchedule(dailyScheduleService.createDailySchedule());
             ownerRepository.save(owner);
-            Person person = new Person("owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("Admin_123"), owner);
+            Person person = new Person("Owner", "sports.schedule.plus@gmail.com", passwordEncoder.encode("Admin1004!"), owner);
             personRepository.save(person);
             return person;
         }
@@ -399,27 +399,21 @@ public class UserService {
      */
     @Transactional
     public Instructor approveCustomer(String email) {
-        System.out.println("Starting approval process for email: " + email);
-        
         // Find person by email
         Person person = personRepository.findPersonByEmail(email);
         if (person == null) {
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with email " + email + " does not exist.");
         }
-        System.out.println("Person found with email: " + email);
-        
         // Get customerId
         int customerId = person.getId();
-        System.out.println("Customer ID retrieved: " + customerId);
-        
+
         // Find customer by customerId
         Optional<Customer> customer = customerRepository.findById(customerId);
         if (!customer.isPresent()) {
             System.out.println("Customer with ID " + customerId + " does not exist.");
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " does not exist.");
         }
-        System.out.println("Customer found with ID: " + customerId);
-        
+
         // Check if the customer is already an instructor
         Optional<Instructor> instructor = instructorRepository.findById(customerId);
         if (instructor.isPresent()) {
@@ -432,8 +426,7 @@ public class UserService {
             System.out.println("Customer with ID " + customerId + " has not applied to be an instructor.");
             throw new SportsScheduleException(HttpStatus.BAD_REQUEST, "Customer with ID " + customerId + " has not applied to be an instructor.");
         }
-        System.out.println("Customer with ID " + customerId + " has applied to be an instructor.");
-        
+ 
         // Update customer state to APPROVED
         customer.get().setState(State.APPROVED);
         customerRepository.save(customer.get());
@@ -441,8 +434,7 @@ public class UserService {
         
         // Create new instructor
         Person newPerson = createInstructor(person.getEmail(), "");
-        System.out.println("New instructor account created for email: " + email);
-        
+ 
         // Return the new instructor
         return (Instructor) newPerson.getPersonRole();
     }
@@ -583,6 +575,11 @@ public class UserService {
     @Transactional
     public List<ScheduledCourse> getSupervisedCourses(Instructor instructor) {
         return instructor.getSupervisedCourses();
+    }
+
+    @Transactional
+    public List<CourseType> getInstructorSuggestedCourseTypes(Instructor instructor) {
+        return instructor.getInstructorSuggestedCourseTypes();
     }
 
 }

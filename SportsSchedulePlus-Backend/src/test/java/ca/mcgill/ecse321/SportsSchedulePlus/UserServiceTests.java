@@ -200,7 +200,7 @@ public class UserServiceTests {
         assertNotNull(person);
         assertEquals(ownerName, person.getName());
         assertEquals(ownerEmail, person.getEmail());
-        assertEquals("encodedPassword", person.getPassword());
+        assertEquals("admin", person.getPassword());
     }
 
  

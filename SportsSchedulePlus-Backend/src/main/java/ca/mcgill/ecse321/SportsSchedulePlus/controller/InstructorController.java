@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeListDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseListDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonListResponseDTO;
@@ -116,6 +118,17 @@ public class InstructorController {
         return new PersonDTO(person);
     }
     
+    @GetMapping(value = {"/instructors/{instructorEmail}/suggested-course-types"})
+    public CourseTypeListDTO getSuggestedCourseTypesByInstructor(@PathVariable("instructorEmail") String instructorEmail) {
+        Instructor instructor = userService.getInstructor(instructorEmail);
+        List<CourseType> courseTypes = userService.getInstructorSuggestedCourseTypes(instructor);
+        List<CourseTypeResponseDTO> courseTypeDTOs = new ArrayList<>();
+        for (CourseType courseType : courseTypes) {
+            courseTypeDTOs.add(new CourseTypeResponseDTO(courseType));
+        }
+        return new CourseTypeListDTO(courseTypeDTOs);
+    }
+    
     /**
      * Deletes the instructor with the path variable id
      * @param id
@@ -150,7 +163,7 @@ public class InstructorController {
         if (instructor == null) {
             return ResponseEntity.notFound().build();
         }
-        CourseType courseType = new CourseType(courseTypeRequestDTO.getName(), courseTypeRequestDTO.getName(), courseTypeRequestDTO.getImage(), false, courseTypeRequestDTO.getPrice());
+        CourseType courseType = new CourseType(courseTypeRequestDTO.getName(), courseTypeRequestDTO.getDescription(), courseTypeRequestDTO.getImage(), false, courseTypeRequestDTO.getPrice());
         userService.suggestCourseType(instructor, courseType);
         return ResponseEntity.ok("Course type suggested successfully.");
     }

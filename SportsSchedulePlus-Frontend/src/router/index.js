@@ -1,8 +1,10 @@
 /* eslint no-undef: "off" */
 import { createRouter, createWebHistory } from "vue-router";
+
 import Dashboard from ".././components/Dashboard.vue";
 import Customers from ".././components/Customers.vue";
 import Instructors from ".././components/Instructors.vue";
+
 
 import Profile from ".././components/Profile.vue";
 import Signup from ".././components/Signup.vue";
@@ -11,6 +13,7 @@ import Registrations from ".././components/Registrations.vue";
 import CourseTypes from ".././components/CourseTypes.vue";
 import ScheduledCourses from ".././components/ScheduledCourses.vue";
 import CourseRegistration from ".././components/CourseRegistration.vue";
+import Classes from ".././components/Classes.vue"
 const routes = [
   {
     path: "/",
@@ -38,8 +41,8 @@ const routes = [
     component: CourseTypes,
   },
   {
-    path: "/scheduledCourses",
-    name: "Scheduled courses",
+    path: "/schedule",
+    name: "Schedule",
     component: ScheduledCourses,
   },
 
@@ -69,6 +72,12 @@ const routes = [
   name: "registrations",
   component: Registrations,
   },
+  {
+    path: "/classes",
+    name: "classes",
+    component: Classes,
+    },
+
 ];
 
 const router = createRouter({

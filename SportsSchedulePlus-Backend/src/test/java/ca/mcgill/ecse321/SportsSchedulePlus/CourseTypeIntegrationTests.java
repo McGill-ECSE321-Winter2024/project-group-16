@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.repository.CourseTypeRepository;
+import ca.mcgill.ecse321.SportsSchedulePlus.repository.InstructorRepository;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -22,7 +23,8 @@ public class CourseTypeIntegrationTests {
 
 	@Autowired
 	private TestRestTemplate client;
-
+    @Autowired
+    private InstructorRepository instructorRepo;
 	@Autowired
 	private CourseTypeRepository courseTypeRepo;
    
@@ -31,6 +33,7 @@ public class CourseTypeIntegrationTests {
 	@BeforeEach
 	@AfterEach
 	public void clearDatabase() {
+        instructorRepo.deleteAll();
 		courseTypeRepo.deleteAll();
 	}
 
@@ -57,6 +60,7 @@ public class CourseTypeIntegrationTests {
         CourseTypeRequestDTO retrievedCourseType = getResponse.getBody();
         assertNotNull(retrievedCourseType);
         assertEquals("Yoga", retrievedCourseType.getName());
+        assertEquals("Yoga description", retrievedCourseType.getDescription());
     }
 
     // Test updating a CourseType
