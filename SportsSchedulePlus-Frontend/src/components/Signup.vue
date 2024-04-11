@@ -71,6 +71,11 @@
                     Complete Registration
                   </v-btn>
                 </v-card-actions>
+
+                <div>
+                  <a style="width: 100%; display: inline-block; text-align: center; text-decoration: underline; color: black;" onmouseover="this.style.color = 'blue';" onmouseout="this.style.color = 'black';" @click="redirectToSignIn"> Already have an account? </a>
+                </div>
+
                 <div class="alert" role="alert" v-if="errorMessage">
                   <v-alert
                     color="error"
@@ -123,6 +128,10 @@ const rules = {
 const axiosClient = axios.create({
   baseURL: "http://localhost:8080"
 });
+
+const redirectToSignIn = () => {
+  router.push('/signin');
+}
 
 const onSubmit = () => {
   if (!form.value) return;
