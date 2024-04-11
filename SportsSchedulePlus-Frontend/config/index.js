@@ -41,5 +41,8 @@ module.exports = {
     port: 8087,
     backendHost: '127.0.0.1',
     backendPort: 8080,
+    client:{
+      overlay: false,
+    }
   }
 }

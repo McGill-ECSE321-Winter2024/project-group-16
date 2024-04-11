@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.controller;
 
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeListDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeRequestDTO;
+import ca.mcgill.ecse321.SportsSchedulePlus.dto.coursetype.CourseTypeResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseListDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.scheduledcourse.ScheduledCourseResponseDTO;
 import ca.mcgill.ecse321.SportsSchedulePlus.dto.user.person_person_role.PersonListResponseDTO;
@@ -114,6 +116,17 @@ public class InstructorController {
         Instructor instructor = userService.getInstructorBySuggestedCourseType(courseTypeId);
         Person person =  userService.getPersonById(instructor.getId());
         return new PersonDTO(person);
+    }
+    
+    @GetMapping(value = {"/instructors/{instructorEmail}/suggested-course-types"})
+    public CourseTypeListDTO getSuggestedCourseTypesByInstructor(@PathVariable("instructorEmail") String instructorEmail) {
+        Instructor instructor = userService.getInstructor(instructorEmail);
+        List<CourseType> courseTypes = userService.getInstructorSuggestedCourseTypes(instructor);
+        List<CourseTypeResponseDTO> courseTypeDTOs = new ArrayList<>();
+        for (CourseType courseType : courseTypes) {
+            courseTypeDTOs.add(new CourseTypeResponseDTO(courseType));
+        }
+        return new CourseTypeListDTO(courseTypeDTOs);
     }
     
     /**

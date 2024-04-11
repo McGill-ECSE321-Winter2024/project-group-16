@@ -1,14 +1,43 @@
 <script setup>
 import WeeklySchedule from './WeeklySchedule.vue';
 import ArgonButton from "@/argon_components/ArgonButton.vue";
-import {ref} from "vue";
+import ModifyDailySchedule from "@/components/ModifyDailySchedule.vue";
+import {ref, onMounted} from "vue";
+import axios from 'axios';
 
+const dailySchedule = ref([]);
 const isLoggedIn = ref(localStorage.getItem('loggedIn') || undefined)
+const userData = JSON.parse(localStorage.getItem("userData"));
+const isOwner = isLoggedIn.value && userData != null && userData.role === "Owner";
+const dailyScheduleDictionary = {
+  0: "Monday",
+  1: "Tuesday",
+  2: "Wednesday",
+  3: "Thursday",
+  4: "Friday",
+  5: "Saturday",
+  6: "Sunday"
+};
 
-// need to get daily schedule from backend and fill in schedule
-// add button: oncl
+const axiosClient = axios.create({
+  baseURL: "http://localhost:8080"
+});
 
+const loadDailySchedule = async () => {
+  try {
+    const response = await axiosClient.get('/openingHours');
+    dailySchedule.value = response.data.dailySchedules;
+  } catch (error) {
+    console.error('Error loading daily schedule: ', error);
+  }
+};
 
+const reloadDashboard = () => {
+  console.log("made it");
+  window.location.reload();
+};
+
+onMounted(loadDailySchedule);
 
 </script>
 
@@ -29,12 +58,15 @@ const isLoggedIn = ref(localStorage.getItem('loggedIn') || undefined)
           <p class="overlay-subheader">WORK HARDER, GET STRONGER, LIVE LONGER</p>
           <h1 class="overlay-header">MADE EASY AT <strong>GOLD GYM</strong></h1>
           <div class="button-container">
-            <a href="/signup" v-if="!isLoggedIn" style="text-decoration: none;">
-              <ArgonButton style="background-color: #E2725B; color: white;">Become a Member</ArgonButton>
+            <a href="/signup" v-if="!isLoggedIn">
+              <ArgonButton style="background-color: #E2725B; color: white; display: inline-block; width: 150px;">Join
+                Now
+              </ArgonButton>
             </a>
           </div>
-          <a href="/signin" v-if="!isLoggedIn" style="text-decoration: none;">
-            <ArgonButton style="background-color: white; color: #E2725B;">Log In</ArgonButton>
+          <a href="/signin" v-if="!isLoggedIn">
+            <ArgonButton style="background-color: white; color: #E2725B; display: inline-block; width: 150px;">Log In
+            </ArgonButton>
           </a>
         </div>
       </div>
@@ -59,9 +91,11 @@ const isLoggedIn = ref(localStorage.getItem('loggedIn') || undefined)
                 enthusiasts</strong> dedicated to helping you achieve your <strong> health</strong> and <strong>
                 wellness</strong> goals. Established with a vision to revolutionize the fitness experience, we strive to
                 provide a welcoming and motivating environment for individuals of all fitness levels.</p>
-              <Argon-Button style="background-color: white; color: #E2725B; border: 2px solid #E2725B;"> View Classes
-                Offered
-              </Argon-Button>
+              <a href="/classes">
+                <Argon-Button style="background-color: white; color: #E2725B; border: 2px solid #E2725B;"> View Classes
+                  Offered
+                </Argon-Button>
+              </a>
 
             </div>
           </v-sheet>
@@ -91,13 +125,11 @@ const isLoggedIn = ref(localStorage.getItem('loggedIn') || undefined)
           <div class="column content">
             <h1 class="header-text" style="font-size: 20px;"><strong style="color: #E2725B;">Business Hours</strong>
             </h1>
-            <p>M: 9:00 AM - 5:00 PM</p>
-            <p>T: 9:00 AM - 5:00 PM</p>
-            <p>W: 9:00 AM - 5:00 PM</p>
-            <p>TR: 9:00 AM - 5:00 PM</p>
-            <p>F: 9:00 AM - 5:00 PM</p>
-            <p>Sat: 9:00 AM - 5:00 PM</p>
-            <p>Sun: 9:00 AM - 5:00 PM</p>
+            <div v-for="(day, index) in dailySchedule" :key="index">
+              <p><strong>{{ dailyScheduleDictionary[index] }}</strong>: {{ day.openingTime }} - {{ day.closingTime }}
+              </p>
+            </div>
+            <ModifyDailySchedule v-if="isOwner" @scheduleUpdated="reloadDashboard"/>
           </div>
 
           <!-- Second Column: Address -->
@@ -156,7 +188,6 @@ const isLoggedIn = ref(localStorage.getItem('loggedIn') || undefined)
   height: auto;
   border-radius: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
 }
 
 .video-wrapper {
@@ -212,7 +243,6 @@ const isLoggedIn = ref(localStorage.getItem('loggedIn') || undefined)
   -moz-osx-font-smoothing: grayscale;
 }
 
-
 .button-container {
   display: flex;
   flex-direction: column;
@@ -228,6 +258,5 @@ const isLoggedIn = ref(localStorage.getItem('loggedIn') || undefined)
   text-transform: uppercase;
   margin: 20px;
 }
-
 
 </style>

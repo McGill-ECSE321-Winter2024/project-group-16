@@ -55,7 +55,32 @@ onMounted(() => {
           </template>
         </sidenav-item>
       </li>
+      <li class="nav-item">
+        <sidenav-item
+          to="/classes"
+          :class="getRoute() === 'classes' ? 'active' : ''"
+          navText="Classes"
+          @click="sidebarColor()"
 
+        >
+          <template v-slot:icon>
+            <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
+          </template>
+        </sidenav-item>
+      </li>
+      <li class="nav-item">
+        <sidenav-item
+          to="/schedule"
+          :class="getRoute() === 'schedule' ? 'active' : ''"
+          navText="Schedule"
+          @click="sidebarColor()"
+
+        >
+          <template v-slot:icon>
+            <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
+          </template>
+        </sidenav-item>
+      </li>
       <li class="nav-item" v-if="!!isOwner">
         <sidenav-item
           to="/customers"
@@ -106,8 +131,6 @@ onMounted(() => {
           </template>
         </sidenav-item>
       </li>
-
-
       <li class="nav-item" v-if="isLoggedIn">
         <sidenav-item
           to="/profile"
@@ -119,7 +142,6 @@ onMounted(() => {
           </template>
         </sidenav-item>
       </li>
-
       <li class="nav-item" v-if="!!isLoggedIn" @click="logout">
         <sidenav-item
           to="/signin"

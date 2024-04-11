@@ -129,14 +129,14 @@ const signIn = async () => {
     await axiosClient.post('/authentication/login',user);
     console.log("pwd",password);
 
-    var response = await axiosClient.get(`/customers/email/${email.value}`);
+    const response = await axiosClient.get(`/customers/email/${email.value}`);
 
     try {
-    var instructorResponse = await axiosClient.get(`/instructors/${email.value}`);
+    let instructorResponse = await axiosClient.get(`/instructors/${email.value}`);
     // Handle the response here
     console.log("Instructor found: ",instructorResponse.data);
     userRole = "Instructor";
-    
+
     } catch (error) {
         // Handle any errors that occur during the request
         console.error('Error fetching instructor data:', error);
@@ -147,7 +147,7 @@ const signIn = async () => {
     if(email.value === "sports.schedule.plus@gmail.com"){
        userRole = "Owner";
     }
-    
+
     // Assign response data to userData variable
     var userData = {
       id: response.data.id,
@@ -162,10 +162,10 @@ const signIn = async () => {
     // Save login status to local storage
     localStorage.setItem('loggedIn', true);
     await store.dispatch('login', userData);
-     
+
     setTimeout(() => {
       router.go('/profile');
-    }) 
+    })
     router.push('/profile');
     // You can do something after successful signup, like redirecting the user to another page.
   } catch (error) {

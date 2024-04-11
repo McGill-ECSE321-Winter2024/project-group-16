@@ -29,6 +29,7 @@
     "core-js": "3.36.0",
     "daypilot-pro-vue": "https://npm.daypilot.org/daypilot-pro-vue/trial/2024.2.5912.tar.gz",
     "dropzone": "6.0.0-beta.2",
+    "element-plus": "^2.6.3",
     "port": "^0.8.1",
     "primeicons": "^7.0.0",
     "primevue": "^3.50.0",
