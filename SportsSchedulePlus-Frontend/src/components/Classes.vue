@@ -202,7 +202,7 @@ onMounted(() => {
   border-radius: 1rem;
   transition: transform 0.3s ease;
   font-size: 20px;
-
+  font-family: "Roboto Slab", serif;
 }
 
 .class-item:hover {
@@ -292,7 +292,8 @@ img {
 .content {
   margin: 0 30px;
   color: #6a6868;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Roboto Slab", serif;
+
 }
 </style>
 
