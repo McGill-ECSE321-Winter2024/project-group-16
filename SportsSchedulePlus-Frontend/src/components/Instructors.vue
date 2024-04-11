@@ -135,6 +135,7 @@
           console.error('Error loading instructors: ', error);
         }
       },
+      
       async showDialog(instructorId) {
             this.instructorIdToDelete = instructorId;
             this.dialog = true;
