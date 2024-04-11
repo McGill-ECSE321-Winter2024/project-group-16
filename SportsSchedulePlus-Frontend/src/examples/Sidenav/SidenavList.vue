@@ -73,7 +73,7 @@ onMounted(() => {
           to="/schedule"
           :class="getRoute() === 'schedule' ? 'active' : ''"
           navText="Schedule"
-          @click="sidebarCsolor()"
+          @click="sidebarColor()"
 
         >
           <template v-slot:icon>
