@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.SportsSchedulePlus.repository;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,12 +22,19 @@ public class DailyScheduleRepositoryTests {
 
   @Autowired
   private DailyScheduleRepository dailyScheduleRepository;
+  @Autowired
+  private OwnerRepository ownerRepository;
+  @Autowired
+  private PersonRepository personRepository;
 
   /**
    * Clear the database after each test to ensure a clean state.
    */
   @AfterEach
+  @BeforeEach
   public void clearDatabase() {
+    personRepository.deleteAll();
+    ownerRepository.deleteAll();
     dailyScheduleRepository.deleteAll();
   }
 
