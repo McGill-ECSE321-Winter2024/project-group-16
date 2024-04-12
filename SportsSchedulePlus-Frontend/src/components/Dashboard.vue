@@ -122,10 +122,10 @@ onMounted(loadDailySchedule);
         >
           <!-- First Column: Business Hours -->
           <div class="column content">
-            <h1 class="header-text" style="font-size: 20px;"><strong style="color: #E2725B;">Business Hours</strong>
+            <h1 class="header-text" style="font-size: 20px"><strong style="color: #E2725B;">Business Hours</strong>
             </h1>
             <div v-for="(day, index) in dailySchedule" :key="index">
-              <p><strong>{{ dailyScheduleDictionary[index] }}</strong>: {{ day.openingTime }} - {{ day.closingTime }}
+              <p><strong>{{ dailyScheduleDictionary[index] }}</strong>: {{ day.openingTime }} AM - {{ day.closingTime }} PM
               </p>
             </div>
             <ModifyDailySchedule v-if="isOwner" @scheduleUpdated="reloadDashboard"/>

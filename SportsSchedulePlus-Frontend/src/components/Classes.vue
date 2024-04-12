@@ -3,7 +3,7 @@
     <div style="text-align:center;">
       <ArgonButton v-if="isLoggedIn && (userData.role === 'Owner' || userData.role === 'Instructor')"
                    style="color: white; background-color: #E2725B; display: inline-block; width: 250px;"
-                   @click="toggleModal"> Suggest New Course Type
+                   @click="toggleModal"> Suggest a course type
       </ArgonButton>
       <div class="title-container">
         <h1 class="header-text-classes" style="color: #E2725B;">Our Classes</h1>
@@ -194,13 +194,11 @@ onMounted(() => {
 
 .class-item {
   width: 100%;
-  cursor: pointer;
-  margin: 20px;
   padding: 20px;
   background-color: #fff;
   color: #E2725B;
   border-radius: 1rem;
-  transition: transform 0.3s ease;
+ 
   font-size: 20px;
   font-family: "Roboto Slab", serif;
 }
