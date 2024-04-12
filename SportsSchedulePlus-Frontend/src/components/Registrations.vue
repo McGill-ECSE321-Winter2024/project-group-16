@@ -7,15 +7,15 @@
     <template v-for="(registration, index) in registrations" :key="index">
       <div class="card mb-4 registration-card">
         <div class="card-header bg-dark text-white">
-          <h5 class="mb-0">{{ registration.scheduledCourse.description }}</h5>
+          <h5 class="mb-0">{{ registration.scheduledCourse.courseType.name }}</h5>
         </div>
         <div class="card-body">
           <ul class="list-group list-group-flush">
             <li class="list-group-item border-top-0">
-              <strong>Confirmation Number:</strong> {{ registration.confirmationNumber }}
+              <strong>Confirmation Number:</strong> #{{ registration.confirmationNumber }}
             </li>
             <li class="list-group-item">
-              <strong>Course Type:</strong> {{ registration.scheduledCourse.courseType.description }}
+              <strong>Course Type:</strong> {{ registration.scheduledCourse.courseType.name}}
             </li>
             <li class="list-group-item">
               <strong>Date:</strong> {{ formatDate(registration.scheduledCourse.date) }}
@@ -51,6 +51,7 @@ const fetchRegistrations = async () => {
   try {
     const response = await axiosClient.get(`/customers/${customerId}/registrations`);
     registrations.value = response.data.registrations;
+    console.log(response.data.registrations);
   } catch (error) {
     console.error('Error fetching registrations:', error);
   }
