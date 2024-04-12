@@ -21,7 +21,7 @@ import ScheduledCourseCreation from './ScheduledCourseCreation.vue';
     <div style="display: inline-block; margin: 0 20px 20px 20px;">
       <span style="font-weight: bold; color: #344767;">Available</span>
     </div>
-    <div style="display: inline-block; margin: 0 20px 20px 20px;">
+    <div id="registeredDiv" style="display: none; margin: 0 20px 20px 20px;">
       <span style="font-weight: bold; color: #E2725B;">You've registered</span>
     </div>
     <div id="supervisingDiv" style="display: none; margin: 0 20px 20px 20px;">
@@ -217,6 +217,7 @@ export default {
     this.configPermissions();
     this.loadScheduledCourses();
     this.renderSupervisingDiv();
+    this.renderRegisteredDiv();
   },
   props: {
     displayType: { // instructor, customer, courseType, anythin else will display all scheduled courses
@@ -248,6 +249,14 @@ export default {
       return this.$refs.calendar.control;
     }
   },
+  watch: {
+    courseTypeId(newValue, oldValue) {
+      this.configPermissions();
+      this.loadScheduledCourses();
+      this.renderSupervisingDiv();
+      this.renderRegisteredDiv();
+    }
+  },
   methods: {
     async loadScheduledCourses() {
       const axiosClient = axios.create({
@@ -277,7 +286,6 @@ export default {
         this.config.businessEndsHour = maxClosingDateTime.getHours();
 
         // update events displayed
-        const today = new Date().toISOString().split('T')[0];
         let endpoint = '';
         let events = [];
         if (this.displayType === 'instructor') {
@@ -319,15 +327,15 @@ export default {
                 fontColor: "#E2725B",
             }));
         } else if (this.displayType === 'courseType') { // if we want to get the schеduled courses of a course type
-            endpoint = '/courseTypes/' + this.courseTypeId + '/scheduledCourses'; // scheduled course controller
-            const scheduledCoursesResponse = await axiosClient.get(endpoint);
-            events = scheduledCoursesResponse.data.scheduledCourses.map(course => ({
-                id: course.id,
-                start: course.date + 'T' + course.startTime, // combine date and start time
-                end: course.date + 'T' + course.endTime, // combine date and end time
-                text: course.courseType.name, // display course type name as text
-                fontColor: "#344767"
-            }));
+          endpoint = '/courseTypes/' + this.courseTypeId + '/scheduledCourses'; // scheduled course controller
+          let scheduledCoursesByCourseTypeResponse = await axiosClient.get(endpoint);
+          events = scheduledCoursesByCourseTypeResponse.data.scheduledCourses.map(course => ({
+              id: course.id,
+              start: course.date + 'T' + course.startTime, // combine date and start time
+              end: course.date + 'T' + course.endTime, // combine date and end time
+              text: course.courseType.name, // display course type name as text
+              fontColor: "#344767"
+          }));
         } else {
           if (loggedIn) {
             // this load the whole schedule in the case there is a user logged in
@@ -419,7 +427,7 @@ export default {
               fontColor: "#344767",
             }))
         }
-      }
+        }
         this.scheduledCourses = events;
         this.calendar.update({ events });
       } catch (error) {
@@ -502,7 +510,6 @@ export default {
       const scheduledCourseId = args.e.id();
       try {
         const deleteResponse = await axiosClient.delete('/scheduledCourses/' + scheduledCourseId);
-        console.log(deleteResponse);
       } catch (error) {
         console.error('Error deleting class: ', error);
       }
@@ -571,6 +578,13 @@ export default {
           document.getElementById('supervisingDiv').style.display = 'inline-block';
       } else {
           document.getElementById('supervisingDiv').style.display = 'none';
+      }
+    },
+    renderRegisteredDiv() {
+      if (this.loggedIn) {
+          document.getElementById('registeredDiv').style.display = 'inline-block';
+      } else {
+          document.getElementById('registeredDiv').style.display = 'none';
       }
     },
   }

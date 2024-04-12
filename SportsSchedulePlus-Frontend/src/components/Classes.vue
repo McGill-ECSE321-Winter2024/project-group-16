@@ -125,7 +125,6 @@ const loadCourseTypes = async () => {
 
 const selectCourse = async (courseType) => {
   selectedCourse.value = courseType;
-  console.log(selectedCourse.value.id);
 };
 
 const rules = {
