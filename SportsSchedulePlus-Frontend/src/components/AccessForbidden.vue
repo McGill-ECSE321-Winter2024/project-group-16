@@ -80,50 +80,123 @@ router.beforeEach((to, from, next) => {
 </script>
 
 <style >
-* {
-  margin:0;
-  padding: 0;
-}
-body{
-  background: #233142;
-  
-}
-.whistle{
-  width: 20%;
-  fill: #E2725B;
-  margin: 100px 40%;
-  text-align: left;
-  transform: translate(-50%, -50%);
-  transform: rotate(0);
-  transform-origin: 80% 30%;
-  animation: wiggle .2s infinite;
+ * {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
-@keyframes wiggle {
-  0%{
-    transform: rotate(3deg);
-  }
-  50%{
-    transform: rotate(0deg);
-  }
-  100%{
-    transform: rotate(3deg);
-  }
+body {
+  padding: 0;
+  margin: 0;
 }
-.error-code {
-  margin-top: -100px;
-  margin-bottom: 20px;
-  color: #000000;
-  text-align: center;
-  font-family: 'Raleway';
-  font-size: 200px;
-  font-weight: 800;
+
+#notfound {
+  position: relative;
+  height: 100vh;
 }
-h2{
-  color: #000000;
+
+#notfound .notfound {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+.notfound {
+  max-width: 520px;
+  width: 100%;
+  line-height: 1.4;
   text-align: center;
-  font-family: 'Raleway';
-  font-size: 100px;
+}
+
+.notfound .notfound-404 {
+  position: relative;
+  height: 240px;
+}
+
+.notfound .notfound-404 h1 {
+  font-family: 'Montserrat', sans-serif;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  font-size: 252px;
+  font-weight: 900;
+  margin: 0px;
+  color: #262626;
   text-transform: uppercase;
+  letter-spacing: -40px;
+  margin-left: -20px;
 }
+
+.notfound .notfound-404 h1>span {
+  text-shadow: -8px 0px 0px #fff;
+}
+
+.notfound .notfound-404 h3 {
+  font-family: 'Cabin', sans-serif;
+  position: relative;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #262626;
+  margin: 0px;
+  letter-spacing: 3px;
+  padding-left: 6px;
+}
+
+.notfound h2 {
+  font-family: 'Cabin', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #000;
+  margin-top: 0px;
+  margin-bottom: 25px;
+}
+
+@media only screen and (max-width: 767px) {
+  .notfound .notfound-404 {
+    height: 200px;
+  }
+  .notfound .notfound-404 h1 {
+    font-size: 200px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .notfound .notfound-404 {
+    height: 162px;
+  }
+  .notfound .notfound-404 h1 {
+    font-size: 162px;
+    height: 150px;
+    line-height: 162px;
+  }
+  .notfound h2 {
+    font-size: 16px;
+  }
+}
+.image-container {
+    margin-bottom: -90px; /* Add some spacing between the image and button */
+    overflow: hidden; /* Hide the overflowing image */
+    text-align: center; /* Center the image horizontally */
+  }
+
+  .image-container img {
+    display: block; /* Ensure the image is treated as a block element */
+    margin: -50px auto 0; /* Center the image horizontally */
+    margin-left: -85px; /* Center the image horizontally */
+    max-width: 700px; /* Ensure the image doesn't exceed its container's width */
+    margin-top: -80px; /* Add some spacing between the image and button */
+  }
+
+  .custom-button {
+    background-color: #E2725B;
+    color: white;
+    }
 </style>

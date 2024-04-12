@@ -100,4 +100,42 @@ const router = createRouter({
   linkActiveClass: "active",
 });
 
+router.beforeEach((to, from, next) => {
+  console.log('Navigation to:', to.name);
+  const isLoggedIn = localStorage.getItem('loggedIn');
+  console.log('isLoggedIn:', isLoggedIn);
+  
+  const restrictedRoutesUsers = ['Instructors', 'Course Types', 'Customers'];
+  
+  if (isLoggedIn) {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    console.log('userData:', userData);
+    
+    if (userData.role === 'Owner') {
+        if (to.name === 'registrations') {
+            console.log('Redirecting to 403Forbidden');
+            router.push({ name: '403Forbidden' });
+        } else {
+            next();
+        }
+    } else if (userData.role === 'Instructor' || userData.role === 'Customer') {
+        if (restrictedRoutesUsers.includes(to.name)) {
+            console.log('Redirecting to 403Forbidden');
+            router.push({ name: '403Forbidden' });
+        } else {
+            next();
+        }
+    } else {
+        router.push({ name: 'Dashboard' });
+    }
+  } else {
+        if (restrictedRoutesUsers.includes(to.name) || to.name === 'registrations' || to.name === 'Profile') {
+            console.log('Redirecting to 403Forbidden');
+            router.push({ name: '403Forbidden' });
+        } else {
+            next();
+        }
+    }
+});
+
 export default router;
