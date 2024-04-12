@@ -19,7 +19,10 @@ import ScheduledCourseCreation from './ScheduledCourseCreation.vue';
   </div>
   <div style="text-align: center;">
     <div style="display: inline-block; margin: 0 20px 20px 20px;">
-      <span style="font-weight: bold; color: #344767;">Available</span>
+      <span style="font-weight: bold;">LEGEND</span>
+    </div>
+    <div style="display: inline-block; margin: 0 20px 20px 20px;">
+      <span style="font-weight: bold; color: #6A6868;">Available</span>
     </div>
     <div id="registeredDiv" style="display: none; margin: 0 20px 20px 20px;">
       <span style="font-weight: bold; color: #E2725B;">You've registered</span>
@@ -327,15 +330,105 @@ export default {
                 fontColor: "#E2725B",
             }));
         } else if (this.displayType === 'courseType') { // if we want to get the schеduled courses of a course type
-          endpoint = '/courseTypes/' + this.courseTypeId + '/scheduledCourses'; // scheduled course controller
-          let scheduledCoursesByCourseTypeResponse = await axiosClient.get(endpoint);
-          events = scheduledCoursesByCourseTypeResponse.data.scheduledCourses.map(course => ({
+          console.log(this.courseTypeId);
+          if (loggedIn) {
+          // this load the whole schedule in the case there is a user logged in
+          const userData = JSON.parse(localStorage.getItem("userData"));
+            let userRole = userData.role;
+            console.log(userRole);
+            let userId = userData.id;
+            if (userRole === 'Instructor') {
+              // this loads the whole schedule in the case the user that is logged in is an instructor
+              // add the courses that the instructor is registered for
+              endpoint = '/customers/' + userId + '/registrations'; // registration controller
+              let registrationsResponse = await axiosClient.get(endpoint);
+              let registrationResponseEvents = registrationsResponse.data.registrations.filter(registration => registration.scheduledCourse.courseType.id === this.courseTypeId);
+              events = registrationResponseEvents.map(registration => ({
+                  id: registration.scheduledCourse.id,
+                  start: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.startTime, // combine date and start time
+                  end: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.endTime, // combine date and end time
+                  text: registration.scheduledCourse.courseType.name, // display course type name as text
+                  fontColor: "#E2725B",
+                  moveDisabled: true,
+              }));
+
+              // get the instructor email
+              endpoint = '/persons/' + userId; // person controller
+              const personResponse = await axiosClient.get(endpoint);
+              const instructorEmail = personResponse.data.email;
+
+              // add the courses that the instructor is teaching
+              endpoint = '/instructors/' + instructorEmail + '/supervised-courses'; // instructor controller
+              let scheduledCoursesResponse = await axiosClient.get(endpoint);
+              let scheduledCourseEvents = scheduledCoursesResponse.data.scheduledCourses.filter(course => course.courseType.id === this.courseTypeId);
+              events = events.concat(scheduledCourseEvents.map(course => ({
+                  id: course.id,
+                  start: course.date + 'T' + course.startTime, // combine date and start time
+                  end: course.date + 'T' + course.endTime, // combine date and end time
+                  text: course.courseType.name, // display course type name as text
+                  fontColor: "#F59300",
+              })));
+              // get all the rest
+              const allScheduledCoursesResponse = await axiosClient.get('/scheduledCourses');
+              let allScheduledCoursesEvents = allScheduledCoursesResponse.data.scheduledCourses.filter(course => course.courseType.id === this.courseTypeId);
+              let newEvents = allScheduledCoursesEvents.map(course => ({
+                  id: course.id,
+                  start: course.date + 'T' + course.startTime, // combine date and start time
+                  end: course.date + 'T' + course.endTime, // combine date and end time
+                  text: course.courseType.name, // display course type name as text
+                  fontColor: "#6A6868",
+                })).filter(course => !events.some(event => event.id === course.id)); // filter out courses already present in events
+                newEvents.filter(course => course.courseType.id === this.courseTypeId);
+            } else if (userRole === 'Customer') {
+                // add the courses that the customer is registered for
+                endpoint = '/customers/' + userId + '/registrations'; // registration controller
+                let registrationsResponse = await axiosClient.get(endpoint);
+                let registrationEvents = registrationsResponse.data.registrations.filter(registration => registration.scheduledCourse.courseType.id === this.courseTypeId);
+                events = registrationEvents.map(registration => ({
+                    id: registration.scheduledCourse.id,
+                    start: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.startTime, // combine date and start time
+                    end: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.endTime, // combine date and end time
+                    text: registration.scheduledCourse.courseType.name, // display course type name as text
+                    fontColor: "#E2725B",
+                    moveDisabled: true,
+                }));
+                // get all the rest
+                let allScheduledCoursesResponse = await axiosClient.get('/scheduledCourses');
+                let allScheduledCoursesEvents = allScheduledCoursesResponse.data.scheduledCourses.filter(course => course.courseType.id === this.courseTypeId);
+                let newEvents = allScheduledCoursesEvents.map(course => ({
+                  id: course.id,
+                  start: course.date + 'T' + course.startTime, // combine date and start time
+                  end: course.date + 'T' + course.endTime, // combine date and end time
+                  text: course.courseType.name, // display course type name as text
+                  fontColor: "#6A6868",
+                })).filter(course => !events.some(event => event.id === course.id)); // filter out courses already present in events
+                events = events.concat(newEvents);
+            } else {
+              // get all the rest
+              let allScheduledCoursesResponse = await axiosClient.get('/scheduledCourses');
+              console.log(allScheduledCoursesResponse);
+              let registrationEvents = allScheduledCoursesResponse.data.scheduledCourses.filter(course => course.courseType.id === this.courseTypeId);
+              console.log(registrationEvents);
+              events = registrationEvents.map(course => ({
+                  id: course.id,
+                  start: course.date + 'T' + course.startTime, // combine date and start time
+                  end: course.date + 'T' + course.endTime, // combine date and end time
+                  text: course.courseType.name, // display course type name as text
+                  fontColor: "#6A6868",
+                }))
+            }
+          } else  {
+          // get all the rest
+          let allScheduledCoursesResponse = await axiosClient.get('/scheduledCourses');
+          let allScheduledCoursesEvents = allScheduledCoursesResponse.data.scheduledCourses.filter(course => course.courseType.id === this.courseTypeId);
+          events = allScheduledCoursesEvents.map(course => ({
               id: course.id,
               start: course.date + 'T' + course.startTime, // combine date and start time
               end: course.date + 'T' + course.endTime, // combine date and end time
               text: course.courseType.name, // display course type name as text
-              fontColor: "#344767"
-          }));
+              fontColor: "#6A6868",
+            }))
+        }
         } else {
           if (loggedIn) {
             // this load the whole schedule in the case there is a user logged in
@@ -378,7 +471,7 @@ export default {
                   start: course.date + 'T' + course.startTime, // combine date and start time
                   end: course.date + 'T' + course.endTime, // combine date and end time
                   text: course.courseType.name, // display course type name as text
-                  fontColor: "#344767",
+                  fontColor: "#6A6868",
                 })).filter(course => !events.some(event => event.id === course.id)); // filter out courses already present in events
 
               events = events.concat(newEvents);
@@ -401,7 +494,7 @@ export default {
                     start: course.date + 'T' + course.startTime, // combine date and start time
                     end: course.date + 'T' + course.endTime, // combine date and end time
                     text: course.courseType.name, // display course type name as text
-                    fontColor: "#344767",
+                    fontColor: "#6A6868",
                   })).filter(course => !events.some(event => event.id === course.id)); // filter out courses already present in events
 
                 events = events.concat(newEvents);
@@ -413,9 +506,9 @@ export default {
                     start: course.date + 'T' + course.startTime, // combine date and start time
                     end: course.date + 'T' + course.endTime, // combine date and end time
                     text: course.courseType.name, // display course type name as text
-                    fontColor: "#344767",
+                    fontColor: "#6A6868",
                   }))
-              }
+            }
         } else {
           // get all the rest
           const allScheduledCoursesResponse = await axiosClient.get('/scheduledCourses');
@@ -424,7 +517,7 @@ export default {
               start: course.date + 'T' + course.startTime, // combine date and start time
               end: course.date + 'T' + course.endTime, // combine date and end time
               text: course.courseType.name, // display course type name as text
-              fontColor: "#344767",
+              fontColor: "#6A6868",
             }))
         }
         }
@@ -581,7 +674,7 @@ export default {
       }
     },
     renderRegisteredDiv() {
-      if (this.loggedIn) {
+      if (this.loggedIn && this.userRole != 'Owner') {
           document.getElementById('registeredDiv').style.display = 'inline-block';
       } else {
           document.getElementById('registeredDiv').style.display = 'none';
