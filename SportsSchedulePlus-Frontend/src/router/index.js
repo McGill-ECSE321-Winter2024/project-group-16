@@ -1,6 +1,10 @@
 /* eslint no-undef: "off" */
 import { createRouter, createWebHistory } from "vue-router";
 
+
+import NotFoundPage from "../components/NotFoundPage.vue";
+import AccessForbidden from "../components/AccessForbidden.vue";
+
 import Dashboard from ".././components/Dashboard.vue";
 import Customers from ".././components/Customers.vue";
 import Instructors from ".././components/Instructors.vue";
@@ -73,10 +77,20 @@ const routes = [
   component: Registrations,
   },
   {
+    path: "/:catchAll(.*)",
+    name: "404NotFound",
+    component: NotFoundPage,
+  },
+  {
+    path: "/403",
+    name: "403Forbidden",
+    component: AccessForbidden,
+  },
+  {
     path: "/classes",
     name: "classes",
     component: Classes,
-    },
+  }
 
 ];
 
