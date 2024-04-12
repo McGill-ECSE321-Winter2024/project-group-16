@@ -112,7 +112,7 @@ const areFieldsFilled = computed(() => {
 
 const loadCourseTypes = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/courseTypes');
+    const response = await axios.get('http://localhost:8080/courseTypes/approvedByOwner/' + "true");
     courseTypes.value = response.data.courseTypes;
     console.log(courseTypes.value);
     if (courseTypes.value.length > 0) {
