@@ -76,7 +76,7 @@ onMounted(loadDailySchedule);
       <div class="d-flex flex-wrap">
         <div style="max-width: 35%; flex-grow: 1; padding-right: 20px; text-align: center;">
           <v-sheet
-            style="margin-top: 20px; margin-bottom: 20px; justify-content: flex-start;"
+            style="margin-top: 20px; margin-bottom: 20px; justify-content: flex-start; border-radius: 1rem;"
             class="d-flex flex-wrap text-center"
             elevation="4"
             height="100%"
@@ -84,8 +84,8 @@ onMounted(loadDailySchedule);
             rounded
           >
             <div class="content">
-              <h1 class="header-text" style="font-size: 30px;"><strong style="color: #E2725B;">ABOUT US</strong></h1>
-              <p class="header-text">welcome to gold gym, where fitness meets community </p>
+              <h1 class="header-text" style="font-size: 30px;"><strong style="color: #E2725B; font-family: 'Open sans', sans-serif">ABOUT US</strong></h1>
+              <p class="header-text" style="font-family: 'Open sans', sans-serif">welcome to gold gym, where fitness meets community </p>
               <p style="text-align: justify;">At Gold Gym, we're more than just a gym; we're a community of <strong>fitness
                 enthusiasts</strong> dedicated to helping you achieve your <strong> health</strong> and <strong>
                 wellness</strong> goals. Established with a vision to revolutionize the fitness experience, we strive to
@@ -103,7 +103,7 @@ onMounted(loadDailySchedule);
           <div
             style="width: 100%; height:100%; display: flex; justify-content: flex-end; margin-top: 20px; margin-bottom: 20px;">
             <img src="../assets/importedpng/about-us.jpg" alt="About us page picture"
-                 style="max-width: 100%; border-radius: 5px;">
+                 style="max-width: 100%; border-radius: 1rem;">
           </div>
         </div>
       </div>
@@ -113,7 +113,7 @@ onMounted(loadDailySchedule);
     <div class="container-fluid" style="margin-top: 20px;">
       <div class="d-flex flex-wrap">
         <v-sheet
-          style="margin-top: 20px; margin-bottom: 20px; justify-content: flex-start; position: relative;"
+          style="margin-top: 20px; margin-bottom: 20px; justify-content: flex-start; position: relative; border-radius: 1rem;"
           class="d-flex flex-wrap text-center"
           elevation="4"
           height="100%"
@@ -122,7 +122,7 @@ onMounted(loadDailySchedule);
         >
           <!-- First Column: Business Hours -->
           <div class="column content">
-            <h1 class="header-text" style="font-size: 20px;"><strong style="color: #E2725B;">Business Hours</strong>
+            <h1 class="header-text" style="font-size: 20px; font-family: 'Open sans', sans-serif"><strong style="color: #E2725B;">Business Hours</strong>
             </h1>
             <div v-for="(day, index) in dailySchedule" :key="index">
               <p style="width: 100%; display:grid;"><strong>{{ dailyScheduleDictionary[index] }}</strong> {{ day.openingTime }}AM - {{ day.closingTime }}PM
@@ -133,7 +133,7 @@ onMounted(loadDailySchedule);
 
           <!-- Second Column: Address -->
           <div class="column content">
-            <h1 class="header-text" style="font-size: 20px;"><strong style="color: #E2725B;">Address</strong>
+            <h1 class="header-text" style="font-size: 20px; font-family: 'Open sans', sans-serif"><strong style="color: #E2725B;">Address</strong>
             </h1>
             <p>123 Riverside Drive</p>
             <p>Saint-Henri, QC, J4P 3J5</p>
@@ -142,7 +142,7 @@ onMounted(loadDailySchedule);
 
           <!-- Third Column: Phone Number and Email -->
           <div class="column content">
-            <h1 class="header-text" style="font-size: 20px;"><strong style="color: #E2725B;">Contact Us</strong>
+            <h1 class="header-text" style="font-size: 20px;"><strong style="color: #E2725B;font-family: 'Open sans', sans-serif">Contact Us</strong>
             </h1>
             <p class="header-text">Phone</p>
             <p>123-456-7890</p>
