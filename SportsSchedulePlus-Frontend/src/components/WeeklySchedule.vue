@@ -9,6 +9,11 @@ import ScheduledCourseCreation from './ScheduledCourseCreation.vue';
   <div style="margin-left: 1.5%;">
     <h6>Week of {{ selectedDayFormatted }}</h6>
   </div>
+  <div style="text-align: center;">
+    <div id="deleteFailedDiv" style="display: none; margin: 0 20px 20px 20px;">
+      <span class="text-danger" style="font-weight: bold;">You cannot delete this class.</span>
+    </div>
+  </div>
   <div class="wrap">
     <div class="left">
       <DayPilotNavigator id="nav" :config="navigatorConfig" />
@@ -221,6 +226,7 @@ export default {
     this.loadScheduledCourses();
     this.renderSupervisingDiv();
     this.renderRegisteredDiv();
+    this.renderDeleteFailedDiv(false);
   },
   props: {
     displayType: { // instructor, customer, courseType, anythin else will display all scheduled courses
@@ -258,6 +264,7 @@ export default {
       this.loadScheduledCourses();
       this.renderSupervisingDiv();
       this.renderRegisteredDiv();
+      this.renderDeleteFailedDiv(false);
     }
   },
   methods: {
@@ -610,18 +617,25 @@ export default {
                 const deleteResponse = await axiosClient.delete('/scheduledCourses/' + scheduledCourseId);
               } catch (error) {
                 console.error('Error deleting class: ', error);
+                this.renderDeleteFailedDiv(true);
               }
+            } else {
+              this.renderDeleteFailedDiv(true);
             }
           } catch (error) {
             console.error('Error deleting class: ', error);
+            this.renderDeleteFailedDiv(true);
           }
         } else if (userData.role === 'Owner') {
           try {
             const deleteResponse = await axiosClient.delete('/scheduledCourses/' + scheduledCourseId);
           } catch (error) {
             console.error('Error deleting class: ', error);
+            this.renderDeleteFailedDiv(true);
           }
         }
+      } else {
+        this.renderDeleteFailedDiv(true);
       }
       this.loadScheduledCourses();
     },
@@ -696,6 +710,13 @@ export default {
           document.getElementById('registeredDiv').style.display = 'none';
       }
     },
+    renderDeleteFailedDiv(deleteFailed) { 
+      if (deleteFailed) {
+        document.getElementById('deleteFailedDiv').style.display = 'inline-block';
+      } else {
+        document.getElementById('deleteFailedDiv').style.display = 'none';
+      }
+    }
   }
 };
 </script>
