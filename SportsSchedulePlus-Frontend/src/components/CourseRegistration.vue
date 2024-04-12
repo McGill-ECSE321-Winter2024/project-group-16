@@ -98,6 +98,7 @@ const submitForm = async () => {
       console.log("Registration successful");
       alreadyRegistered.value = false;
       registrationSuccess.value = true;
+      location.reload();
     } catch (error) {
       console.log(error);
       alreadyRegistered.value = true;
