@@ -149,7 +149,7 @@ const applyForInstructor = async () => {
     errorMessage.value = '';
   } catch (error) {
     console.error('Error applying for instructor:', error);
-    errorMessage.value = 'There was an error applying for instructorship.'; // Set error message
+    errorMessage.value = 'You have already applied to become an instructor.'; // Set error message
     // Optionally, clear success message if set
     successMessage.value = '';
   }
