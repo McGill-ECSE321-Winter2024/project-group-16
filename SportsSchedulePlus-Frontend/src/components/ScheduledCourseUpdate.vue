@@ -20,35 +20,6 @@
                 <div class="row">
                   <div class="col">
                     <label for="startTime">Start Time</label>
-                    <!-- <v-time-picker
-                        v-model="startTime"
-                        format="24hr"
-                        no-title
-                    ></v-time-picker> -->
-                    <!-- <v-text-field
-                      v-model="startTime"
-                      :active="startTimeModal"
-                      :focused="startTimeModal"
-                      prepend-icon="mdi-clock-time-four-outline"
-                      readonly
-                      style="padding: 10px 30px;"
-                    >
-                      <v-dialog v-model="startTimeModal" activator="parent" width="auto" height="auto">
-                        <v-card>
-                          <v-card-text>
-                            <v-container>
-                              <v-time-picker format="24hr" :scrollable="true" v-if="startTimeModal" v-model="startTime"
-                                            :allowed-minutes="[0,15,30,45]"
-                              ></v-time-picker>
-                            </v-container>
-                          </v-card-text>
-                          <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn @click="startTimeModal = false">Confirm Selection</v-btn>
-                          </v-card-actions>
-                        </v-card>
-                      </v-dialog>
-                    </v-text-field> -->
                     <v-text-field
                       v-model="startTime"
                       prepend-icon="mdi-clock-time-four-outline"
@@ -58,30 +29,6 @@
                   </div>
                   <div class="col">
                     <label for="endTime">End Time</label>
-                    <!-- <v-text-field
-                      v-model="endTime"
-                      :active="endTimeModal"
-                      :focused="endTimeModal"
-                      prepend-icon="mdi-clock-time-four-outline"
-                      readonly
-                      style="padding: 10px 30px;"
-                    >
-                      <v-dialog v-model="endTimeModal" activator="parent" width="auto" height="auto">
-                        <v-card>
-                          <v-card-text>
-                            <v-container>
-                              <v-time-picker format="24hr" :scrollable="true" v-if="endTimeModal" v-model="endTime"
-                                            :allowed-minutes="[0,15,30,45]"
-                              ></v-time-picker>
-                            </v-container>
-                          </v-card-text>
-                          <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn @click="endTimeModal = false">Confirm Selection</v-btn>
-                          </v-card-actions>
-                        </v-card>
-                      </v-dialog>
-                    </v-text-field> -->
                     <v-text-field
                       v-model="endTime"
                       prepend-icon="mdi-clock-time-four-outline"
@@ -231,17 +178,14 @@
             };
             const courseData = {
               date: this.date.toISOString().split("T")[0],
-              startTime: this.startTime + ":00",
-              endTime: this.endTime + ":00",
+              startTime: this.startTime,
+              endTime: this.endTime,
               location: this.location,
               instructorId: 0,
               courseType: courseTypeData,
             };
-            console.log(courseData);
-            console.log(this.startTime);
             try {
               const scheduledCourseResponse = await axiosClient.put('/scheduledCourses/' + this.courseId, courseData);
-              console.log(scheduledCourseResponse);
               this.successMessage = 'Scheduled course updated successfully.';
               location.reload();
             } catch (error) {
