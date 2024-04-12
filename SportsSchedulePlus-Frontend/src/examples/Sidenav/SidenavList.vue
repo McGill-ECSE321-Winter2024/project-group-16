@@ -39,7 +39,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="collapse navbar-collapse w-auto h-auto h-100" id="sidenav-collapse-main">
+  <div class="collapse navbar-collapse w-auto h-auto" id="sidenav-collapse-main">
     <ul class="navbar-nav">
 
       <li class="nav-item">
@@ -117,20 +117,6 @@ onMounted(() => {
           </template>
         </sidenav-item>
       </li>
-      <li class="nav-item" v-if="!!isOwner">
-        <sidenav-item
-          to="/scheduledCourses"
-          :class="getRoute() === 'scheduledCourses' ? 'active' : ''"
-          navText="Scheduled courses"
-        >
-
-          <template v-slot:icon>
-            <i
-              class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"
-            ></i>
-          </template>
-        </sidenav-item>
-      </li>
       <li class="nav-item" v-if="isLoggedIn">
         <sidenav-item
           to="/profile"
@@ -139,6 +125,28 @@ onMounted(() => {
         >
           <template v-slot:icon>
             <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
+          </template>
+        </sidenav-item>
+      </li>
+      <li class="nav-item" v-if="!isLoggedIn">
+        <sidenav-item
+          to="/signin"
+          :class="getRoute() === 'profile' ? 'active' : ''"
+          navText="Sign in"
+        >
+          <template v-slot:icon>
+            <i class="ni ni-email-83 text-dark text-sm opacity-10"></i>
+          </template>
+        </sidenav-item>
+      </li>
+      <li class="nav-item" v-if="!isLoggedIn">
+        <sidenav-item
+          to="/signup"
+          :class="getRoute() === 'profile' ? 'active' : ''"
+          navText="Sign up"
+        >
+          <template v-slot:icon>
+            <i class="ni ni-circle-08 text-dark text-sm opacity-10"></i>
           </template>
         </sidenav-item>
       </li>
