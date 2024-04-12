@@ -62,3 +62,9 @@ const navClasses = computed(() => {
     </main>
   </div>
 </template>
+
+<style>
+  body {
+    font-family: "Open Sans", sans-serif;
+  }
+</style>

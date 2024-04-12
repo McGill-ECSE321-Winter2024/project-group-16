@@ -718,6 +718,7 @@ export default {
 }
 /* Event Styling */
 .swag_event {
+  font-family: 'Open Sans', sans-serif;
   color: #fff;
   font-weight: bold;
   border-radius: 10px; /* Rounded corners */

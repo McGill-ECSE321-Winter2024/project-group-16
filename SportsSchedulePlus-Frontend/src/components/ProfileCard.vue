@@ -216,7 +216,6 @@ onMounted(() => {
 </script>
 <style>
 .header-text-classes {
-  font-family: "Roboto Slab", serif;
   font-size: 2em;
   color: #E2725B;
   font-weight: 400;

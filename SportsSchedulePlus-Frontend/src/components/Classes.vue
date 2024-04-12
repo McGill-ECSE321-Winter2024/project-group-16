@@ -50,7 +50,7 @@
     </v-dialog>
 
 
-    <div class="container-fluid content">
+    <div class="container-fluid content" style="font-family: 'Open Sans', sans-serif;">
       <div
         style="max-height: 800px; flex-grow: 1; text-align: left;"
         class="classes-list">
@@ -61,14 +61,14 @@
           @click="selectCourse(courseType)"
         >
           <img :src="courseType.image" class="class-icon" alt="Course Image"/>
-          <span class="class-name">{{ courseType.name }}</span>
+          <span class="class-name" style="font-weight: bold;">{{ courseType.name }}</span>
         </div>
       </div>
       <div style="max-width: 80%; flex-grow: 1; padding: 20px; margin: 30px; text-align: center;" class="class-details"
            v-if="selectedCourse">
-        <h2 style="font-size: 30px; color: #E2725B" class="class-description">{{ selectedCourse?.name }}</h2>
+        <h2 style="font-size: 30px; color: #E2725B; font-weight: bold;" class="class-description">{{ selectedCourse?.name }}</h2>
         <img :src="selectedCourse?.image" class="class-image" alt="Selected Course Image"/>
-        <p class="class-description">{{ selectedCourse?.description }}</p>
+        <p class="class-description" style="font-weight: bold;">{{ selectedCourse?.description }}</p>
         <WeeklySchedule
           displayType='courseType'
           :courseTypeId="selectedCourse?.id"
@@ -199,7 +199,7 @@ onMounted(() => {
   border-radius: 1rem;
  
   font-size: 20px;
-  font-family: "Roboto Slab", serif;
+  
   margin-bottom: 10px;
 }
 
@@ -216,9 +216,8 @@ onMounted(() => {
   width: 70%;
   max-width: 1200px;
   background-color: #fff;
-  border-radius: 15px;
+  border-radius: 1rem;
   background-color: #fff;
-  border-radius: 15px;
   margin: 40px auto;
   padding: 20px;
   display: flex;
@@ -229,9 +228,9 @@ onMounted(() => {
 .class-details h2, .class-details .class-description, .class-details .weekly-schedule {
   max-width: 100%;
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 1rem;
   padding: 20px;
-  font-family: "Roboto Slab", serif;
+  
   font-size: 1em;
   font-weight: 400;
   letter-spacing: 0.075em;
@@ -240,7 +239,7 @@ onMounted(() => {
 
 .class-details .class-image {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 1rem;
 
 }
 
@@ -257,7 +256,7 @@ onMounted(() => {
   width: auto;
   max-width: 800px;
   height: auto;
-  border-radius: 4px;
+  border-radius: 1rem;
   margin-bottom: 1rem;
   display: block;
   margin-left: auto;
@@ -274,12 +273,11 @@ onMounted(() => {
 img {
   max-width: 100%;
   height: auto;
-  border-radius: 4px;
+  border-radius: 1rem;
 
 }
 
 .header-text-classes {
-  font-family: "Roboto Slab", serif;
   font-size: 2em;
   font-weight: bold;
   letter-spacing: 0.075em;
@@ -290,7 +288,7 @@ img {
 .content {
   margin: 0 30px;
   color: #6a6868;
-  font-family: "Roboto Slab", serif;
+  
 
 }
 </style>

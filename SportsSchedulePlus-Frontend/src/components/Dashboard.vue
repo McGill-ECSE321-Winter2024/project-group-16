@@ -76,7 +76,7 @@ onMounted(loadDailySchedule);
       <div class="d-flex flex-wrap">
         <div style="max-width: 35%; flex-grow: 1; padding-right: 20px; text-align: center;">
           <v-sheet
-            style="margin-top: 20px; margin-bottom: 20px; justify-content: flex-start;"
+            style="margin-top: 20px; margin-bottom: 20px; justify-content: flex-start; border-radius: 1rem;"
             class="d-flex flex-wrap text-center"
             elevation="4"
             height="100%"
@@ -103,7 +103,7 @@ onMounted(loadDailySchedule);
           <div
             style="width: 100%; height:100%; display: flex; justify-content: flex-end; margin-top: 20px; margin-bottom: 20px;">
             <img src="../assets/importedpng/about-us.jpg" alt="About us page picture"
-                 style="max-width: 100%; border-radius: 5px;">
+                 style="max-width: 100%; border-radius: 1rem;">
           </div>
         </div>
       </div>
@@ -113,7 +113,7 @@ onMounted(loadDailySchedule);
     <div class="container-fluid" style="margin-top: 20px;">
       <div class="d-flex flex-wrap">
         <v-sheet
-          style="margin-top: 20px; margin-bottom: 20px; justify-content: flex-start; position: relative;"
+          style="margin-top: 20px; margin-bottom: 20px; justify-content: flex-start; position: relative; border-radius: 1rem;"
           class="d-flex flex-wrap text-center"
           elevation="4"
           height="100%"
@@ -185,7 +185,7 @@ onMounted(loadDailySchedule);
   display: block;
   max-width: 100%;
   height: auto;
-  border-radius: 15px;
+  border-radius: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -201,7 +201,7 @@ onMounted(loadDailySchedule);
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   text-align: center;
-  border-radius: 15px;
+  border-radius: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -250,7 +250,6 @@ onMounted(loadDailySchedule);
 }
 
 .header-text {
-  font-family: "Roboto Slab", serif;
   font-size: 1em;
   font-weight: 400;
   letter-spacing: 0.075em;
