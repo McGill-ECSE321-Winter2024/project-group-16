@@ -1,4 +1,3 @@
-
 <template>
   <div class="card card-profile">
     <img
@@ -22,10 +21,24 @@
       <div class="justify-content-between">
         <div class="btn-group-vertical">
         <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Customer'" @click="applyForInstructor" style="background-color: #E2725B; color: white;">Apply to become an instructor</a>
-        <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" style="background-color: white ; color: #E2725B;" @click="deleteAccount">Delete my account</a>
+        <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" style="background-color: white ; color: #E2725B;" @click="toggleModal">Delete my account</a>
       </div>
       </div>
     </div>
+
+    <ModalComponent :show="showModal" @update:show="showModal = $event">
+      <div>
+        <h2 class="header-text-classes row justify-content-center">Are you sure?</h2>
+        <p class="row justify-content-center">If you delete your account, it will be lost forever.</p>
+      </div>
+      <div class="btn-group-vertical">
+<!--        <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" style="background-color: #E2725B; color: white;" @click="toggleModal">Wait, keep my account!</a>-->
+        <a href="javascript:;" class="btn  btn-block" v-if="userData.role === 'Instructor' || userData.role === 'Customer'" style="background-color: white ; color: #E2725B;" @click="deleteAccount">Delete my account</a>
+      </div>
+    </ModalComponent>
+
+
+
     <div class="card-body pt-0">
       <div class="row">
         <div class="col">
@@ -76,8 +89,13 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import {useStore} from "vuex";
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router'
+import ModalComponent from './ModalComponent.vue';
+
+const showModal = ref(false);
+
 
 const router = useRouter()
 
@@ -94,18 +112,28 @@ const errorMessage = ref('');
 
 var userID = userData.id;
 
+const store = useStore();
+
+// Function to show/hide modal
+function toggleModal() {
+  showModal.value = !showModal.value;
+}
+
 // Function to delete user account
 const deleteAccount = async () => {
   try {
     await axiosClient.delete(`/customers/${userID}`);
     console.log("Account deleted");
     localStorage.setItem("loggedIn",false);
+    store.dispatch('logout');
     localStorage.setItem("userData",null);
     successMessage.value = "Account deleted successfully."
     // Redirect after a short delay
        setTimeout(() => {
-      router.push("/signup");}, 2000); // Redirect after 2 seconds
-  } catch (error) {
+        router.go("/signup");}, 2000); // Redirect after 2 seconds
+    router.push('/signup');
+  }
+  catch (error) {
     console.error('Error deleting account:', error);
     errorMessage.value = 'There was an error deleting your account.'; // Set error message
   }
@@ -121,7 +149,7 @@ const applyForInstructor = async () => {
     errorMessage.value = '';
   } catch (error) {
     console.error('Error applying for instructor:', error);
-    errorMessage.value = 'There was an error applying for instructorship.'; // Set error message
+    errorMessage.value = 'You have already applied to become an instructor.'; // Set error message
     // Optionally, clear success message if set
     successMessage.value = '';
   }
@@ -186,3 +214,15 @@ onMounted(() => {
 
 
 </script>
+<style>
+.header-text-classes {
+  font-size: 2em;
+  color: #E2725B;
+  font-weight: 400;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  margin: 20px;
+}
+</style>
+
+

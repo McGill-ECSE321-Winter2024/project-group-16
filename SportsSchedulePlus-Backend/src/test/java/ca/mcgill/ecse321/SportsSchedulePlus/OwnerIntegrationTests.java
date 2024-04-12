@@ -80,7 +80,7 @@ public class OwnerIntegrationTests {
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
-        assertEquals("owner",responseEntity.getBody().getName());
+        assertEquals("Owner",responseEntity.getBody().getName());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class OwnerIntegrationTests {
         
         ResponseEntity<PersonDTO> responseEntity = restTemplate.postForEntity("/owner", personDto, PersonDTO.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals("owner",responseEntity.getBody().getName());
+        assertEquals("Owner",responseEntity.getBody().getName());
         assertNotNull(responseEntity.getBody());
     }
 

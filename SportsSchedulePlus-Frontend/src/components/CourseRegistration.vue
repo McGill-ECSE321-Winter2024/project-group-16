@@ -21,7 +21,7 @@
                 <small v-if="!isCreditCardNumberValid" class="text-danger">Please enter a valid Visa or MasterCard number.</small>
                  <!-- Visa and Mastercard logos -->
                 <div class="row justify-content-center mt-3">
-                  <div class="col-lg-6 text-right">
+                  <div class="col-lg-11 text-right">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/1200px-Visa.svg.png" alt="Visa Logo" style="height: 30px; margin-right: 10px;">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1200px-Mastercard-logo.svg.png" alt="Mastercard Logo" style="height: 30px;">
                   </div>
@@ -33,6 +33,7 @@
             </form>
             <div class="text-center">
               <small v-if="alreadyRegistered" class="text-danger">You have already registered for this class.</small>
+              <small v-if="registrationSuccess" class="text-success">You've registered, can't wait to see you there</small>
             </div>
           </div>
         </div>
@@ -55,6 +56,7 @@ const isCardholderNameValid = ref(true);
 const isExpirationDateValid = ref(true);
 const isCreditCardNumberValid = ref(true);
 let alreadyRegistered = ref(false);
+let registrationSuccess = ref(false);
 
 // Function to handle form submission
 const submitForm = async () => {
@@ -94,8 +96,12 @@ const submitForm = async () => {
     try {
       await axiosClient.post("/registrations/" + userID + "/" + scheduledCourseId);
       console.log("Registration successful");
+      alreadyRegistered.value = false;
+      registrationSuccess.value = true;
     } catch (error) {
+      console.log(error);
       alreadyRegistered.value = true;
+      registrationSuccess.value = false;
     }
   }
 };

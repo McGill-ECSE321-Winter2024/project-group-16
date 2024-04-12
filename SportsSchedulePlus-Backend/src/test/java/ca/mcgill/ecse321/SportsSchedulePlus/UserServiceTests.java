@@ -96,7 +96,7 @@ public class UserServiceTests {
     // Owner
     private static final String ownerEmail = "sports.schedule.plus@gmail.com";
     private static final String ownerPassword = "admin";
-    private static final String ownerName = "owner";
+    private static final String ownerName = "Owner";
 
     // Update user info
     private static final String newName = "John Titor";
@@ -200,7 +200,7 @@ public class UserServiceTests {
         assertNotNull(person);
         assertEquals(ownerName, person.getName());
         assertEquals(ownerEmail, person.getEmail());
-        assertEquals("admin", person.getPassword());
+        assertEquals("encodedPassword", person.getPassword());
     }
 
  

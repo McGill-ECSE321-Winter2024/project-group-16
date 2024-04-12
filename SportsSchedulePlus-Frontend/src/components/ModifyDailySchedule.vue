@@ -102,7 +102,7 @@ const isButtonDisabled = computed(() => {
               <v-card-text>
                 <v-container>
                   <v-time-picker format="24hr" :scrollable="true" v-if="startTimeModal" v-model="startTime"
-                                 :allowed-minutes="[15,30,45]"
+                                 :allowed-minutes="[0,15,30,45]"
                   ></v-time-picker>
                 </v-container>
               </v-card-text>
@@ -133,7 +133,7 @@ const isButtonDisabled = computed(() => {
                 <v-container>
                   <v-time-picker :min="startTime" format="24hr" :scrollable="true" v-if="endTimeModal" v-model="endTime"
                                  fullWidth
-                                 :allowed-minutes="[15,30,45]"></v-time-picker>
+                                 :allowed-minutes="[0,15,30,45]"></v-time-picker>
                 </v-container>
               </v-card-text>
               <v-card-actions>
