@@ -110,7 +110,7 @@
                     />
                   </div>
                   <div class="d-flex flex-column justify-content-center">
-                    <h6 class="mb-0 text-sm">{{ courseType.description }}</h6>
+                    <h6 class="mb-0 text-sm">{{ courseType.name }}</h6>
                   </div>
                 </div>
               </td>

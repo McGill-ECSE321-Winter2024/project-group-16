@@ -389,11 +389,15 @@ public class ScheduledCourseService {
      */
     @Transactional
     public void deleteScheduledCourse(int id) {
-        ScheduledCourse scheduledCourse = getScheduledCourse(id);
-        Instructor instructor = instructorRepository.findInstructorBySupervisedCourses(scheduledCourse).get(0);
-        instructor.removeSupervisedCourse(getScheduledCourse(id));
-        instructorRepository.save(instructor);
-        scheduledCourseRepository.deleteById(id);
+        try {
+            ScheduledCourse scheduledCourse = getScheduledCourse(id);
+            Instructor instructor = instructorRepository.findInstructorBySupervisedCourses(scheduledCourse).get(0);
+            instructor.removeSupervisedCourse(getScheduledCourse(id));
+            instructorRepository.save(instructor);
+            scheduledCourseRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new SportsScheduleException(HttpStatus.FORBIDDEN, "Scheduled course with ID " + id + " cannot be deleted because it is associated with a registration.");
+        }
     }
 
     /**

@@ -66,7 +66,7 @@
       </div>
       <div style="max-width: 80%; flex-grow: 1; padding: 20px; margin: 30px; text-align: center;" class="class-details"
            v-if="selectedCourse">
-        <h2 style="font-size: 30px; color: #E2725B; font-weight: bold;" class="class-description">{{ selectedCourse?.name }}</h2>
+        <h2 style="font-size: 30px; color: #E2725B; font-weight: bold; font-family: 'Open sans', sans-serif;" class="class-description">{{ selectedCourse?.name }}</h2>
         <img :src="selectedCourse?.image" class="class-image" alt="Selected Course Image"/>
         <p class="class-description" style="font-weight: bold;">{{ selectedCourse?.description }}</p>
         <WeeklySchedule

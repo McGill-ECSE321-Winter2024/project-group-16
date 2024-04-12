@@ -36,7 +36,7 @@ import ScheduledCourseCreation from './ScheduledCourseCreation.vue';
       <v-dialog v-model="registerDialogVisible" persistent>
         <v-card class="popup"> <!-- change the style of this to be rounded corners like all other cards-->
           <v-card-title>
-            <h2>  Register for a class </h2>
+            <h2 style="font-family: 'Open sans', sans-serif">  Register for a class </h2>
 
           </v-card-title>
 
@@ -89,7 +89,7 @@ import ScheduledCourseCreation from './ScheduledCourseCreation.vue';
       <v-dialog v-model="updateDialogVisible" persistent>
         <v-card class="popup"> <!-- change the style of this to be rounded corners like all other cards-->
           <v-card-title>
-            <h2>  Update class information </h2>
+            <h2 style="font-family: 'Open sans', sans-serif">  Update class information </h2>
           </v-card-title>
 
           <v-card-text>
@@ -601,10 +601,11 @@ export default {
       const scheduledCourseId = args.e.id();
       if (this.loggedIn) {
         const userData = JSON.parse(localStorage.getItem('userData'));
+        console.log(userData);
         if (userData.role === 'Instructor') {
           try {
-            const instructorResponse = await axiosClient.get('/scheduledCourses/instructors/' + userData.id);
-            if (instructorResponse.data.scheduledCourses.some(course => course.id === scheduledCourseId)) {
+            const scheduledCourseResponse = await axiosClient.get('/instructors/' + userData.email+ '/supervised-courses');
+            if (scheduledCourseResponse.data.scheduledCourses.some(course => course.id === scheduledCourseId)) {
               try {
                 const deleteResponse = await axiosClient.delete('/scheduledCourses/' + scheduledCourseId);
               } catch (error) {
@@ -621,11 +622,6 @@ export default {
             console.error('Error deleting class: ', error);
           }
         }
-      }
-      try {
-        const deleteResponse = await axiosClient.delete('/scheduledCourses/' + scheduledCourseId);
-      } catch (error) {
-        console.error('Error deleting class: ', error);
       }
       this.loadScheduledCourses();
     },
@@ -733,7 +729,7 @@ export default {
 }
 .swag_main, .swag_main td 
 {
-	font-size: 0.875rem;
+	font-size: 0.75rem;
   text-transform: uppercase;
 }
 /* Event Styling */
@@ -845,7 +841,6 @@ export default {
 }
 .swag_colheader_inner {
   text-align: center;
-  padding: 8px; /* Increased padding for better spacing */
   position: absolute;
   top: 0;
   left: 0;
@@ -855,7 +850,7 @@ export default {
   border-bottom: 1px solid #ffffff;
   color: #000000;
   background-color: #f8f9fa;
-  padding: 8px 15px; /* Adjusted padding */
+  padding-top: 5px; /*Adjusted padding*/
   font-weight:500;
   background-color: #e8f0fe; /* Soft blue background */
   border-top-left-radius: 10px; /* Rounder top left corner */
