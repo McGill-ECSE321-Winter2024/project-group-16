@@ -71,15 +71,31 @@ const updateUserProfile = async () => {
       } else {
         endpoint = "/owner";
       }
-      const response = await axiosClient.put(endpoint, {
+      var response = await axiosClient.put(endpoint, {
         name: name.value,
         email: email.value,
         password: password.value,
       });
 
       console.log("Update");
+      response = await axiosClient.get(endpoint);
+
       successMessage.value = 'Profile updated successfully !';
       setTimeout(() => {
+        endpoint = `/customers/${userID}`;
+
+// Assign response data to userData variable
+var userData = {
+id: response.data.id,
+name: response.data.name,
+email: response.data.email,
+role: response.data.role,
+password: password.value
+};
+console.log(response.data);
+// Save user data to local storage
+localStorage.setItem('userData', JSON.stringify(userData));
+
         successMessage.value = '';
       }, 2000);
       errorMessage.value = '';
@@ -103,19 +119,14 @@ const updateUserProfile = async () => {
           marginRight: '-24px',
           marginLeft: '-34%'
         }"
-    >
-    </div>
+    ></div>
     <div class="container">
-
       <div class="card shadow-lg mt-n6">
         <div class="card-body p-3">
           <div class="row gx-4">
             <div class="col-auto">
               <div class="avatar">
-                <img
-                  src="../assets/importedpng/user.png"
-                  alt="profile_image"
-                />
+                <img src="../assets/importedpng/user.png" alt="profile_image" />
               </div>
             </div>
             <div class="col-auto my-auto">
@@ -132,8 +143,10 @@ const updateUserProfile = async () => {
                   class="p-1 bg-transparent nav nav-pills nav-fill"
                   role="tablist"
                 >
-                  <li v-if="userData.role === 'Instructor' || userData.role === 'Customer'" class="nav-item">
-
+                  <li
+                    v-if="userData.role === 'Instructor' || userData.role === 'Customer'"
+                    class="nav-item"
+                  >
                     <svg
                       class="text-dark"
                       width="16px"
@@ -171,10 +184,10 @@ const updateUserProfile = async () => {
                         </g>
                       </g>
                     </svg>
-                    <router-link to="/customer/registrations"><span class="ms-1">Scheduled courses</span></router-link>
-
+                    <router-link to="/customer/registrations"
+                      ><span class="ms-1">Scheduled courses</span></router-link
+                    >
                   </li>
-
                 </ul>
               </div>
             </div>
@@ -186,68 +199,105 @@ const updateUserProfile = async () => {
     <div class="py-4 container">
       <div class="row">
         <div class="col">
-          <profile-card class="h-100"/>
+          <profile-card class="h-100" />
         </div>
         <div class="col">
           <div class="card row h-100">
             <div class="card-header pb-1">
               <div class="d-flex align-items-center">
-                <p v-if="userData.role !== 'Owner'" class="mb-0">Edit Profile</p>
-                <argon-button v-if="userData.role !== 'Owner'" size="lg" class="ms-auto"
-                              style="background-color: #E2725B; color: white;" @click="updateUserProfile"
-                >Update
-                </argon-button
-                >
+                <p v-if="userData.role !== 'Owner'" class="mb-0">
+                  Edit Profile
+                </p>
+                <argon-button
+                  v-if="userData.role !== 'Owner'"
+                  size="lg"
+                  class="ms-auto"
+                  style="background-color: #e2725b; color: white"
+                  @click="updateUserProfile"
+                  >Update
+                </argon-button>
               </div>
             </div>
             <div class="card-body">
-
               <p class="text-uppercase text-sm">User Information</p>
               <div class="mb-4">
                 <label for="name" class="form-label fs-6">Name</label>
                 <div class="input-group">
-                  <input id="name" class="form-control form-control-lg" type="text" v-model="name"
-                         placeholder="Enter your name" :readonly="userData.role === 'Owner'">
-                  <span class="input-group-text"><i class="fas fa-user"></i></span>
+                  <input
+                    id="name"
+                    class="form-control form-control-lg"
+                    type="text"
+                    v-model="name"
+                    placeholder="Enter your name"
+                    :readonly="userData.role === 'Owner'"
+                  />
+                  <span class="input-group-text"
+                    ><i class="fas fa-user"></i
+                  ></span>
                 </div>
               </div>
               <div class="mb-4">
                 <label for="email" class="form-label fs-6">Email address</label>
                 <div class="input-group">
-                  <input id="email" class="form-control form-control-lg" type="email" v-model="email"
-                         placeholder="Enter your email" :readonly="userData.role === 'Owner'">
-                  <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                  <input
+                    id="email"
+                    class="form-control form-control-lg"
+                    type="email"
+                    v-model="email"
+                    placeholder="Enter your email"
+                    :readonly="userData.role === 'Owner'"
+                  />
+                  <span class="input-group-text"
+                    ><i class="fas fa-envelope"></i
+                  ></span>
                 </div>
               </div>
               <div class="mb-4">
                 <label for="password" class="form-label fs-6">Password</label>
                 <div class="input-group">
-                  <input id="password" class="form-control form-control-lg" type="password" v-model="password"
-                         placeholder="Enter your password" :readonly="userData.role === 'Owner'">
-                  <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                  <input
+                    id="password"
+                    class="form-control form-control-lg"
+                    type="password"
+                    v-model="password"
+                    placeholder="Enter your password"
+                    :readonly="userData.role === 'Owner'"
+                  />
+                  <span class="input-group-text"
+                    ><i class="fas fa-lock"></i
+                  ></span>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <div class="alert alert-success text-white fs-6" v-if="successMessage">{{ successMessage }}</div>
-                  <div class="alert alert-danger text-white fs-6" v-if="errorMessage">{{ errorMessage }}</div>
+                  <div
+                    class="alert alert-success text-white fs-6"
+                    v-if="successMessage"
+                  >
+                    {{ successMessage }}
+                  </div>
+                  <div
+                    class="alert alert-danger text-white fs-6"
+                    v-if="errorMessage"
+                  >
+                    {{ errorMessage }}
+                  </div>
                 </div>
               </div>
-              <hr class="horizontal dark"/>
+              <hr class="horizontal dark" />
             </div>
           </div>
         </div>
-
       </div>
 
       <div class="py-4 container">
         <div class="row">
           <div class="col">
-            <div class="card  weekly-schedule-wrapper">
+            <div class="card weekly-schedule-wrapper">
               <WeeklySchedule
-                :displayType=userData.role.toLowerCase()
-                :customerId=userData.id
-                :instructorId=userData.id
+                :displayType="userData.role.toLowerCase()"
+                :customerId="userData.id"
+                :instructorId="userData.id"
               />
             </div>
           </div>
@@ -265,4 +315,3 @@ const updateUserProfile = async () => {
   width: 100%; /* Adjust width as needed */
 }
 </style>
-
