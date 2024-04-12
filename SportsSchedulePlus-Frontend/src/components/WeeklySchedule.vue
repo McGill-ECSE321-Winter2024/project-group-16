@@ -330,12 +330,10 @@ export default {
                 fontColor: "#E2725B",
             }));
         } else if (this.displayType === 'courseType') { // if we want to get the schеduled courses of a course type
-          console.log(this.courseTypeId);
           if (loggedIn) {
           // this load the whole schedule in the case there is a user logged in
           const userData = JSON.parse(localStorage.getItem("userData"));
             let userRole = userData.role;
-            console.log(userRole);
             let userId = userData.id;
             if (userRole === 'Instructor') {
               // this loads the whole schedule in the case the user that is logged in is an instructor
@@ -378,7 +376,7 @@ export default {
                   text: course.courseType.name, // display course type name as text
                   fontColor: "#6A6868",
                 })).filter(course => !events.some(event => event.id === course.id)); // filter out courses already present in events
-                newEvents.filter(course => course.courseType.id === this.courseTypeId);
+                events = events.concat(newEvents);
             } else if (userRole === 'Customer') {
                 // add the courses that the customer is registered for
                 endpoint = '/customers/' + userId + '/registrations'; // registration controller
@@ -601,6 +599,29 @@ export default {
         baseURL: "http://localhost:8080"
       });
       const scheduledCourseId = args.e.id();
+      if (this.loggedIn) {
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        if (userData.role === 'Instructor') {
+          try {
+            const instructorResponse = await axiosClient.get('/scheduledCourses/instructors/' + userData.id);
+            if (instructorResponse.data.scheduledCourses.some(course => course.id === scheduledCourseId)) {
+              try {
+                const deleteResponse = await axiosClient.delete('/scheduledCourses/' + scheduledCourseId);
+              } catch (error) {
+                console.error('Error deleting class: ', error);
+              }
+            }
+          } catch (error) {
+            console.error('Error deleting class: ', error);
+          }
+        } else if (userData.role === 'Owner') {
+          try {
+            const deleteResponse = await axiosClient.delete('/scheduledCourses/' + scheduledCourseId);
+          } catch (error) {
+            console.error('Error deleting class: ', error);
+          }
+        }
+      }
       try {
         const deleteResponse = await axiosClient.delete('/scheduledCourses/' + scheduledCourseId);
       } catch (error) {
@@ -616,7 +637,6 @@ export default {
         }
         if (this.loggedIn === true) {
           const userData = JSON.parse(localStorage.getItem('userData'));
-          console.log(userData.role);
           this.userRole = userData.role;
           if (userData.role === 'Customer') {
             this.config.timeRangeSelectedHandling= "Disabled";
