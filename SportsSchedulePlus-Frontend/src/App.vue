@@ -41,25 +41,24 @@ const navClasses = computed(() => {
 
 <template>
   <div>
-  <div
-    v-show="layout === 'landing'"
-    class="landing-bg h-100 bg-gradient-primary position-fixed w-100"
-  ></div>
+    <div
+      v-show="layout === 'landing'"
+      class="landing-bg h-100 bg-gradient-primary position-fixed w-100"
+    ></div>
 
-  <sidenav v-if="showSidenav" />
+    <sidenav v-if="showSidenav" />
 
-  <main
-    class=" main-content position-relative max-height-vh-100 h-100 border-radius-lg"
-  >
+    <main
+      class=" main-content position-relative max-height-vh-100 h-100 border-radius-lg"
+    >
 
-    <router-view />
+      <router-view />
 
-    <configurator
-      :toggle="toggleConfigurator"
-      :class="[showConfig ? 'show' : '', hideConfigButton ? 'd-none' : '']"
-    />
+      <configurator
+        :toggle="toggleConfigurator"
+        :class="[showConfig ? 'show' : '', hideConfigButton ? 'd-none' : '']"
+      />
 
-  </main>
-
-</div>
+    </main>
+  </div>
 </template>
