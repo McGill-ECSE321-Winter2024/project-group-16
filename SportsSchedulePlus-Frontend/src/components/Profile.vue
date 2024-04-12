@@ -202,7 +202,7 @@ const updateUserProfile = async () => {
           <profile-card class="h-100" />
         </div>
         <div class="col">
-          <div class="card row h-100">
+          <div class="card h-100">
             <div class="card-header pb-1">
               <div class="d-flex align-items-center">
                 <p v-if="userData.role !== 'Owner'" class="mb-0">

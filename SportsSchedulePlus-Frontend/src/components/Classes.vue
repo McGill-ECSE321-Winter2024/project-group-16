@@ -52,7 +52,7 @@
 
     <div class="container-fluid content">
       <div
-        style="max-height: 800px; overflow-y:auto; flex-grow: 1; text-align: left;"
+        style="max-height: 800px; flex-grow: 1; text-align: left;"
         class="classes-list">
         <div
           v-for="courseType in courseTypes"
@@ -200,6 +200,7 @@ onMounted(() => {
  
   font-size: 20px;
   font-family: "Roboto Slab", serif;
+  margin-bottom: 10px;
 }
 
 .class-item:hover {
