@@ -780,18 +780,13 @@ export default {
 	top: 0px;
 	bottom: 0px;
 	margin: 0px;
-	background-color: #ffffff;
-	background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#fafafa));  
-	background: -webkit-linear-gradient(top, #ffffff 0%, #fafafa);
-	background: -moz-linear-gradient(top, #ffffff 0%, #fafafa);
-	background: -ms-linear-gradient(top, #ffffff 0%, #fafafa);
-	background: -o-linear-gradient(top, #ffffff 0%, #fafafa);
+	background: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);background: -o-linear-gradient(top, #ffffff 0%, #fafafa);
 	background: linear-gradient(top, #ffffff 0%, #fafafa);
 	filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr="#ffffff", endColorStr="#fafafa");
 	padding: 2px;
 	padding-left: 6px;
   border-radius: 10px;
-  border: 1px solid #E2725B;
+  border: 1px solid #000000;
 }
 
 .swag_event_title {
