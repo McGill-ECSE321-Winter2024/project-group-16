@@ -1,5 +1,7 @@
+
 <script setup>
 import CourseRegistration from './CourseRegistration.vue';
+import CourseUpdate from './ScheduledCourseUpdate.vue';
 import ScheduledCourseCreation from './ScheduledCourseCreation.vue';
 </script>
 
@@ -15,6 +17,17 @@ import ScheduledCourseCreation from './ScheduledCourseCreation.vue';
       <DayPilotCalendar id="dp" :config="config" ref="calendar" />
     </div>
   </div>
+  <div style="text-align: center;">
+    <div style="display: inline-block; margin: 0 20px 20px 20px;">
+      <span style="font-weight: bold; color: #344767;">Available</span>
+    </div>
+    <div style="display: inline-block; margin: 0 20px 20px 20px;">
+      <span style="font-weight: bold; color: #E2725B;">You've registered</span>
+    </div>
+    <div id="supervisingDiv" style="display: none; margin: 0 20px 20px 20px;">
+      <span style="font-weight: bold; color: #F59300;">You're supervising</span>
+    </div>
+</div>
   <template>
     <div>
       <v-dialog v-model="registerDialogVisible" persistent>
@@ -42,6 +55,10 @@ import ScheduledCourseCreation from './ScheduledCourseCreation.vue';
           <input type="text" class="form-control" id="instructor" :value="courseDetails.instructor" disabled>
         </div>
         <div class="form-group">
+          <label for="startTime">Date</label>
+          <input type="text" class="form-control" id="date" :value="courseDetails.date" disabled>
+        </div>
+        <div class="form-group">
           <label for="startTime">Start Time</label>
           <input type="text" class="form-control" id="startTime" :value="courseDetails.startTime" disabled>
         </div>
@@ -57,6 +74,27 @@ import ScheduledCourseCreation from './ScheduledCourseCreation.vue';
           </v-card-text>
           <v-card-actions>
             <v-btn @click="registerDialogVisible = false" color="#E2725B">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+  </template>
+  <template>
+    <div>
+      <v-dialog v-model="updateDialogVisible" persistent>
+        <v-card class="popup"> <!-- change the style of this to be rounded corners like all other cards-->
+          <v-card-title>
+            <h2>  Update class information </h2>
+          </v-card-title>
+
+          <v-card-text>
+            <CourseUpdate />
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn @click="updateDialogVisible = false" color="#E2725B">
               Close
             </v-btn>
           </v-card-actions>
@@ -111,6 +149,9 @@ export default {
       selectedDayFormatted: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
       registerDialogVisible: false,
       creationDialogVisible: false,
+      updateDialogVisible: false,
+      loggedIn: false,
+      userRole: '',
       navigatorConfig: {
         showMonths: 1,
         skipMonths: 1,
@@ -141,7 +182,6 @@ export default {
         businessEndsHour: 18,
         heightSpec: "BusinessHoursNoScroll",
         onEventClick: (args) => {
-          this.registerDialogVisible = true;
           this.updateScheduledCourseInfo(args);
         },
         onEventMove: (args) => {
@@ -162,8 +202,12 @@ export default {
       courseDetails: {
         courseId: '',
         courseType: '',
+        courseTypeId: 0,
         instructor: '',
+        instructorId: 0,
         price: '',
+        location: '',
+        date: '',
         startTime: '',
         endTime: ''
       },
@@ -172,6 +216,7 @@ export default {
   mounted() {
     this.configPermissions();
     this.loadScheduledCourses();
+    this.renderSupervisingDiv();
   },
   props: {
     displayType: { // instructor, customer, courseType, anythin else will display all scheduled courses
@@ -243,7 +288,7 @@ export default {
               id: registration.scheduledCourse.id,
               start: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.startTime, // combine date and start time
               end: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.endTime, // combine date and end time
-              text: registration.scheduledCourse.courseType.description, // display course type name as text
+              text: registration.scheduledCourse.courseType.name, // display course type name as text
               fontColor: "#E2725B",
               moveDisabled: true,
           }));
@@ -260,8 +305,8 @@ export default {
               id: course.id,
               start: course.date + 'T' + course.startTime, // combine date and start time
               end: course.date + 'T' + course.endTime, // combine date and end time
-              text: course.courseType.description, // display course type name as text
-              fontColor: "#000000",
+              text: course.courseType.name, // display course type name as text
+              fontColor: "#F59300",
           })));
         } else if (this.displayType === 'customer') { // if we want to get the scheduled courses of a customer
             endpoint = '/customers/' + this.customerId + '/registrations'; // registration controller
@@ -270,7 +315,7 @@ export default {
                 id: registration.scheduledCourse.id,
                 start: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.startTime, // combine date and start time
                 end: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.endTime, // combine date and end time
-                text: registration.scheduledCourse.courseType.description, // display course type name as text
+                text: registration.scheduledCourse.courseType.name, // display course type name as text
                 fontColor: "#E2725B",
             }));
         } else if (this.displayType === 'courseType') { // if we want to get the schеduled courses of a course type
@@ -280,8 +325,8 @@ export default {
                 id: course.id,
                 start: course.date + 'T' + course.startTime, // combine date and start time
                 end: course.date + 'T' + course.endTime, // combine date and end time
-                text: course.courseType.description, // display course type name as text
-                fontColor: "#ffffff"
+                text: course.courseType.name, // display course type name as text
+                fontColor: "#344767"
             }));
         } else {
           if (loggedIn) {
@@ -298,7 +343,7 @@ export default {
                   id: registration.scheduledCourse.id,
                   start: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.startTime, // combine date and start time
                   end: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.endTime, // combine date and end time
-                  text: registration.scheduledCourse.courseType.description, // display course type name as text
+                  text: registration.scheduledCourse.courseType.name, // display course type name as text
                   fontColor: "#E2725B",
                   moveDisabled: true,
               }));
@@ -315,8 +360,8 @@ export default {
                   id: course.id,
                   start: course.date + 'T' + course.startTime, // combine date and start time
                   end: course.date + 'T' + course.endTime, // combine date and end time
-                  text: course.courseType.description, // display course type name as text
-                  fontColor: "#000000",
+                  text: course.courseType.name, // display course type name as text
+                  fontColor: "#F59300",
               })));
               // get all the rest
               const allScheduledCoursesResponse = await axiosClient.get('/scheduledCourses');
@@ -324,35 +369,45 @@ export default {
                   id: course.id,
                   start: course.date + 'T' + course.startTime, // combine date and start time
                   end: course.date + 'T' + course.endTime, // combine date and end time
-                  text: course.courseType.description, // display course type name as text
-                  fontColor: "#ffffff",
+                  text: course.courseType.name, // display course type name as text
+                  fontColor: "#344767",
                 })).filter(course => !events.some(event => event.id === course.id)); // filter out courses already present in events
 
               events = events.concat(newEvents);
             } else if (userRole === 'Customer') {
-              // add the courses that the customer is registered for
-              endpoint = '/customers/' + userId + '/registrations'; // registration controller
-              const registrationsResponse = await axiosClient.get(endpoint);
-              events = registrationsResponse.data.registrations.map(registration => ({
-                  id: registration.scheduledCourse.id,
-                  start: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.startTime, // combine date and start time
-                  end: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.endTime, // combine date and end time
-                  text: registration.scheduledCourse.courseType.description, // display course type name as text
-                  fontColor: "#E2725B",
-                  moveDisabled: true,
-              }));
-              // get all the rest
-              const allScheduledCoursesResponse = await axiosClient.get('/scheduledCourses');
-              const newEvents = allScheduledCoursesResponse.data.scheduledCourses.map(course => ({
-                  id: course.id,
-                  start: course.date + 'T' + course.startTime, // combine date and start time
-                  end: course.date + 'T' + course.endTime, // combine date and end time
-                  text: course.courseType.description, // display course type name as text
-                  fontColor: "#ffffff",
-                })).filter(course => !events.some(event => event.id === course.id)); // filter out courses already present in events
+                // add the courses that the customer is registered for
+                endpoint = '/customers/' + userId + '/registrations'; // registration controller
+                const registrationsResponse = await axiosClient.get(endpoint);
+                events = registrationsResponse.data.registrations.map(registration => ({
+                    id: registration.scheduledCourse.id,
+                    start: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.startTime, // combine date and start time
+                    end: registration.scheduledCourse.date + 'T' + registration.scheduledCourse.endTime, // combine date and end time
+                    text: registration.scheduledCourse.courseType.name, // display course type name as text
+                    fontColor: "#E2725B",
+                    moveDisabled: true,
+                }));
+                // get all the rest
+                const allScheduledCoursesResponse = await axiosClient.get('/scheduledCourses');
+                const newEvents = allScheduledCoursesResponse.data.scheduledCourses.map(course => ({
+                    id: course.id,
+                    start: course.date + 'T' + course.startTime, // combine date and start time
+                    end: course.date + 'T' + course.endTime, // combine date and end time
+                    text: course.courseType.name, // display course type name as text
+                    fontColor: "#344767",
+                  })).filter(course => !events.some(event => event.id === course.id)); // filter out courses already present in events
 
-              events = events.concat(newEvents);
-            } 
+                events = events.concat(newEvents);
+            } else {
+                // get all the rest
+                const allScheduledCoursesResponse = await axiosClient.get('/scheduledCourses');
+                events = allScheduledCoursesResponse.data.scheduledCourses.map(course => ({
+                    id: course.id,
+                    start: course.date + 'T' + course.startTime, // combine date and start time
+                    end: course.date + 'T' + course.endTime, // combine date and end time
+                    text: course.courseType.name, // display course type name as text
+                    fontColor: "#344767",
+                  }))
+              }
         } else {
           // get all the rest
           const allScheduledCoursesResponse = await axiosClient.get('/scheduledCourses');
@@ -360,8 +415,8 @@ export default {
               id: course.id,
               start: course.date + 'T' + course.startTime, // combine date and start time
               end: course.date + 'T' + course.endTime, // combine date and end time
-              text: course.courseType.description, // display course type name as text
-              fontColor: "#ffffff",
+              text: course.courseType.name, // display course type name as text
+              fontColor: "#344767",
             }))
         }
       }
@@ -382,8 +437,12 @@ export default {
         this.courseDetails = {
           courseId: scheduledCourseResponse.data.id,
           courseType: scheduledCourseResponse.data.courseType.name,
+          courseTypeId: scheduledCourseResponse.data.courseType.id,
           instructor: instructorResponse.data.persons[0].name,
+          instructorId: instructorResponse.data.persons[0].id,
           price: scheduledCourseResponse.data.courseType.price,
+          location: scheduledCourseResponse.data.location,
+          date: scheduledCourseResponse.data.date,
           startTime: scheduledCourseResponse.data.startTime,
           endTime: scheduledCourseResponse.data.endTime
         };
@@ -391,7 +450,26 @@ export default {
       } catch (error) {
         console.error('Error loading classes: ', error);
       }
-
+      const loggedIn = localStorage.getItem('loggedIn');
+      if (loggedIn) {
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        if (userData.role === 'Customer') { // customer can only register
+          this.registerDialogVisible = true;
+          this.updateDialogVisible = false;
+        } else if (userData.role === 'Instructor') {
+          if (userData.id === this.courseDetails.instructorId) { // if this is the instructor giving the course
+            this.registerDialogVisible = false;
+            this.updateDialogVisible = true;
+          } else {  // else allow instr to register
+            this.registerDialogVisible = true;
+            this.updateDialogVisible = false;
+          }
+        } else {  // if its the owner, only update, cannot register
+          this.registerDialogVisible = false;
+          this.updateDialogVisible = true;
+        }
+      }
+      localStorage.setItem("courseDetails", JSON.stringify(this.courseDetails));
     },
     async updateScheduledCourse(args) {
       const axiosClient = axios.create({
@@ -432,10 +510,14 @@ export default {
     },
     configPermissions() {
       try {
-        const loggedIn = localStorage.getItem('loggedIn');
-        if (loggedIn === 'true') {
+        const loggedInStored = localStorage.getItem('loggedIn');
+        if (loggedInStored) {
+          this.loggedIn = true;
+        }
+        if (this.loggedIn === true) {
           const userData = JSON.parse(localStorage.getItem('userData'));
           console.log(userData.role);
+          this.userRole = userData.role;
           if (userData.role === 'Customer') {
             this.config.timeRangeSelectedHandling= "Disabled";
             this.config.eventDeleteHandling= "Disabled";
@@ -452,7 +534,7 @@ export default {
             this.config.timeRangeSelectedHandling= "Disabled";
             this.config.eventDeleteHandling= "Enabled";
             this.config.eventMoveHandling= "Enabled";
-            this.config.eventClickHandling= "Disabled";
+            this.config.eventClickHandling= "Enabled";
             this.config.eventResizeHandling= "Enabled";
           }
         }
@@ -483,6 +565,13 @@ export default {
       this.message = { text, type };
       // Clear the message after 3 seconds
       setTimeout(this.clearMessage, 3000);
+    },
+    renderSupervisingDiv() {
+      if (this.loggedIn && this.userRole == 'Instructor') {
+          document.getElementById('supervisingDiv').style.display = 'inline-block';
+      } else {
+          document.getElementById('supervisingDiv').style.display = 'none';
+      }
     },
   }
 };
@@ -525,14 +614,13 @@ export default {
   color: #fff;
   font-weight: bold;
   border-radius: 10px; /* Rounded corners */
-  background-color: #4f69ec; /* Pretty color */
-  border-color: #35469D;
+  background-color: #f8f9fa; /* Pretty color */
   border-width: 2px;
-  padding: 20px; /* Increased padding for better appearance */
-  max-width: 250px; /* Adjust width as needed */
-  margin: 20px; /* Adjust margin as needed */
-  box-shadow: 0px 4px 8px rgba(76, 175, 80, 0.2); /* Add a subtle shadow for depth */
+  padding: 5px; /* Increased padding for better appearance */
+  margin: 0; /* Adjust margin as needed */
+  box-shadow: 0px 4px 8px #E9EAEA; /* Add a subtle shadow for depth */
   transition: transform 0.2s ease; /* Add smooth transition effect */
+  text-align: center; 
 }
 
 .swag_event:hover {
@@ -540,7 +628,25 @@ export default {
 }
 
 .swag_event_inner {
-  position: relative;
+  position: absolute;
+	overflow: hidden;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	margin: 0px;
+	background-color: #ffffff;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#fafafa));  
+	background: -webkit-linear-gradient(top, #ffffff 0%, #fafafa);
+	background: -moz-linear-gradient(top, #ffffff 0%, #fafafa);
+	background: -ms-linear-gradient(top, #ffffff 0%, #fafafa);
+	background: -o-linear-gradient(top, #ffffff 0%, #fafafa);
+	background: linear-gradient(top, #ffffff 0%, #fafafa);
+	filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr="#ffffff", endColorStr="#fafafa");
+	padding: 2px;
+	padding-left: 6px;
+  border-radius: 10px;
+  border: 1px solid #E2725B;
 }
 
 .swag_event_title {
@@ -700,7 +806,7 @@ export default {
 	opacity: 0.9;
 	filter: alpha(opacity=90);
 	color: #ffffff;
-	background: #ffa216;
+	background: #F59300;
 }
 .swag_shadow_inner 
 {
@@ -758,7 +864,7 @@ export default {
 .swagnavigator_title, .swagnavigator_titleleft, .swagnavigator_titleright { 
 	border-top: 1px solid #ffffff;
 	color: #000000;
-	background: #ffa216;
+	background: #F59300;
   font-weight: bold;
 }
 .swagnavigator_title { text-align: center;  }
@@ -766,6 +872,7 @@ export default {
 /* day headers */
 .swagnavigator_dayheader { 
 	color: #000000;
+	background: #f8f9fa;
 	padding: 0px;
 	text-align: center;
 }
