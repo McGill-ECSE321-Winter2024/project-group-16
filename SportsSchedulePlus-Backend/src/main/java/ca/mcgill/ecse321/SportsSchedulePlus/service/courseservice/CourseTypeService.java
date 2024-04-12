@@ -132,6 +132,24 @@ public class CourseTypeService {
          if (!optionalCourseType.isPresent() ) {
             throw new SportsScheduleException(HttpStatus.NOT_FOUND, "There is no course type with ID " + id + ".");
         } 
+        Instructor instructor = instructorRepository.findInstructorByInstructorSuggestedCourseTypes(optionalCourseType.get());
+        if(instructor != null){
+            instructor.removeInstructorSuggestedCourseType(optionalCourseType.get());
+            instructorRepository.save(instructor);
+        }
+
+        Owner owner =  ownerRepository.findOwnerByApprovedCourses(optionalCourseType.get());
+        if(owner != null){
+            owner.removeApprovedCourse(optionalCourseType.get());
+            ownerRepository.save(owner);
+        }
+        owner = ownerRepository.findOwnerByOwnerSuggestedCourses(optionalCourseType.get());
+        if(owner != null){
+            owner.removeOwnerSuggestedCourse(optionalCourseType.get());
+            ownerRepository.save(owner);
+        }
+
+        
         courseTypeRepository.deleteById(id);
     }
 
