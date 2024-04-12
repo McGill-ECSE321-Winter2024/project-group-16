@@ -780,12 +780,10 @@ export default {
 	top: 0px;
 	bottom: 0px;
 	margin: 0px;
-	background: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);background: -o-linear-gradient(top, #ffffff 0%, #fafafa);
-	background: linear-gradient(top, #ffffff 0%, #fafafa);
-	filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr="#ffffff", endColorStr="#fafafa");
 	padding: 2px;
 	padding-left: 6px;
   border-radius: 10px;
+  background: linear-gradient(111.5deg, rgb(228, 247, 255) 21.9%, rgb(255, 216, 194) 92.2%);
   border: 1px solid #000000;
 }
 
@@ -1057,15 +1055,5 @@ export default {
 .swag_cell_inner:hover {
   background-color: #f5f5f5; /* Lighter gray on hover */
 }
-
-
-
-
-
-
-
-
-
-
 
 </style>
