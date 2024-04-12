@@ -84,17 +84,17 @@ const updateUserProfile = async () => {
       setTimeout(() => {
         endpoint = `/customers/${userID}`;
 
-// Assign response data to userData variable
-var userData = {
-id: response.data.id,
-name: response.data.name,
-email: response.data.email,
-role: response.data.role,
-password: password.value
-};
-console.log(response.data);
-// Save user data to local storage
-localStorage.setItem('userData', JSON.stringify(userData));
+        // Assign response data to userData variable
+        var userData = {
+        id: response.data.id,
+        name: response.data.name,
+        email: response.data.email,
+        role: response.data.role,
+        password: password.value
+        };
+        console.log(response.data);
+        // Save user data to local storage
+        localStorage.setItem('userData', JSON.stringify(userData));
 
         successMessage.value = '';
       }, 2000);
@@ -209,7 +209,6 @@ localStorage.setItem('userData', JSON.stringify(userData));
                   Edit Profile
                 </p>
                 <argon-button
-                  v-if="userData.role !== 'Owner'"
                   size="lg"
                   class="ms-auto"
                   style="background-color: #e2725b; color: white"
@@ -229,7 +228,6 @@ localStorage.setItem('userData', JSON.stringify(userData));
                     type="text"
                     v-model="name"
                     placeholder="Enter your name"
-                    :readonly="userData.role === 'Owner'"
                   />
                   <span class="input-group-text"
                     ><i class="fas fa-user"></i
@@ -261,7 +259,6 @@ localStorage.setItem('userData', JSON.stringify(userData));
                     type="password"
                     v-model="password"
                     placeholder="Enter your password"
-                    :readonly="userData.role === 'Owner'"
                   />
                   <span class="input-group-text"
                     ><i class="fas fa-lock"></i
