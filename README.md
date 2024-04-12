@@ -1,8 +1,8 @@
-Hey, this is the Sports Scheduling App as seen by group 16.
+Hey, this is the Gold Gym app as seen by group 16.
 
 ## Project Overview
 
-For more information about the AssetPlus application, please consult the [wiki](../../wiki).
+For more information about the Gold Gym application, please consult the [wiki](../../wiki).
 
 ## Team Members
 
