@@ -2,7 +2,7 @@ Hey, this is the Gold Gym app as seen by group 16.
 
 ## Project Overview
 
-For more information about the Gold Gym application, please consult the [wiki](../../wiki).
+For more information about Gold Gym, please consult the [wiki](../../wiki).
 
 ## Team Members
 
@@ -20,7 +20,7 @@ Our team is composed of the same members that were present during our project in
 ## Scope of Project
 
 The scope of this project is to create a Sports Scheduling Web App which allows for the management of the sports classes taught in a Sports Center.
-We have called this app SportsSchedulePlus, as a reference to AssetPlus, the app we designed in ECSE 223.
+We have called this app Gold Gym.
 
 Our goals with this project are:
 * develop a full stack application which satisfies all client requirements as well as more advanced bonus features.
